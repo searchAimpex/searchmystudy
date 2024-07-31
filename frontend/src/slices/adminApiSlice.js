@@ -1,0 +1,237 @@
+
+import { apiSlice } from './apiSlice';
+const USERS_URL = '/api/admin';
+
+export const userApiSlice = apiSlice.injectEndpoints({ 
+    endpoints: (builder) => ({
+        CreateBanner: builder.mutation({
+            query: (data) => {
+                const url = `${USERS_URL}/createBanner`;
+                console.log('URL: ========>', url); // Log the URL
+                return {
+                    url,
+                    method: 'POST',
+                    body: data,
+                };
+            },
+        }),
+        GetAllBanner: builder.mutation({
+            query: () => ({
+              url: `${USERS_URL}/FetchAllBanner`,
+              method: 'GET',
+
+            }),
+          }),
+        DeleteBanner:builder.mutation({
+            query: (id) => ({
+                url: `${USERS_URL}/DeleteBanner/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        ServiceCreate:builder.mutation({
+            query:(data) => ({
+                url: `${USERS_URL}/CreateService`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        ServiceFetchAll:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/Services/all`,
+                method: 'GET',
+            })
+        }),
+        ServiceOne:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/Service/${id}`,
+                method: 'GET',
+            })
+        }),
+        ServiceDelete:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/DeleteService/${id}`,
+                method: 'DELETE',
+            })
+        }),
+        TestimonialCreate:builder.mutation({
+            query:(data) => ({
+                url: `${USERS_URL}/CreateTestimonials`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        TestimonialFetchAll:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/Testimonials/all`,
+                method: 'GET',
+            }),
+        }),
+        TestimonialDelete:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/DeleteTestimonials/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateCounsellor:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/CreateCounsellor`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        AllCounsellor:builder.mutation({
+            query: ()=> ({
+                url: `${USERS_URL}/Counsellor/all`,
+                method: 'GET',
+            }),
+        }),
+        CounsellorDelete:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/DeleteCounsellors/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateBlog:builder.mutation({
+            query:(data) => ({
+                url: `${USERS_URL}/Blog`,
+                method: 'POST',
+                body: data
+            }),
+        }),
+        FetchBlog:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/Blog`,
+                method: 'GET',
+            }),
+        }),
+        GetOneBlog:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/Blog/${id}`,
+                method: 'GET',
+            }),
+        }),
+        DeleteBlog:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/Blog/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateCountry:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/countries`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        CountryFetch:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/countries`,
+                method: 'GET',
+            }),
+        }),
+        CountryDelete:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/countries/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        CountryFetchOne:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/countries/${id}`,
+                method: 'GET',
+            }),
+        }),
+        CreateProvince:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/province`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchProvince:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/province`,
+                method: 'GET',
+            }),
+        }),
+        FetchOneProvince:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/province/${id}`,
+                method: 'GET',
+            }),
+        }),
+        DeleteProvince:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/province/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        
+        CreateUniversity:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/university`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchUniversity:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/university`,
+                method: 'GET',
+            }),
+        }),
+        FetchOneUniversity:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/university/${id}`,
+                method: 'GET',
+            }),
+        }),
+        DeleteUniversity:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/university/${id}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateCourse:builder.mutation({
+                query:(data)=>({
+                    url: `${USERS_URL}/course`,
+                    method: 'POST',
+                    body:data
+            }),
+        }),   
+        FetchCourse:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/course`,
+                method: 'GET'
+            }),
+        }),
+        FetchOneCourse:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/course/${id}`,
+                method: 'GET'
+            }),
+        }),
+        AllCourse: builder.mutation({
+            query:(filter)=>({
+                url: `${USERS_URL}/course/All`,
+                method: 'GET',
+                params: filter
+            }),
+          }),
+
+
+    })
+})
+
+
+export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMutation,
+    useServiceCreateMutation,useServiceFetchAllMutation,useServiceDeleteMutation,useServiceOneMutation,
+    useTestimonialCreateMutation,useTestimonialFetchAllMutation,useTestimonialDeleteMutation,
+    useCreateCounsellorMutation,useAllCounsellorMutation,useCounsellorDeleteMutation,
+    useCreateBlogMutation,useFetchBlogMutation,useGetOneBlogMutation,useDeleteBlogMutation,
+    useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,
+    useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,
+    useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
+    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation
+
+} = userApiSlice

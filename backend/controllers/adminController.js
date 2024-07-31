@@ -1,0 +1,841 @@
+import asyncHandler from 'express-async-handler';
+import Banner from "../models/bannerModel.js";
+import Service from '../models/servicesModel.js';
+import Testimonial from '../models/testimonialsModel.js';
+import Counsellor from '../models/counsellorModel.js';
+import Blog from '../models/blogModel.js';
+import Country from '../models/countryModel.js';
+import Province from '../models/provinceModel.js';
+import University from '../models/universityModel.js';
+import Course from '../models/courseModel.js';
+// @desc    Admin user & 
+// @route   POST /api/admin/CreateBanner
+// @access  Admin 
+const test = asyncHandler(async (req, res) => {
+    try {
+      
+      res.json({ msg:"working fine" });
+    } catch (error) {
+      res.status(400);
+      throw new Error('Please enter all required fields' );
+    }
+  });
+  
+// @desc    Admin Get All Banner & 
+// @route   POST /api/admin/CreateBanner
+// @access  Admin 
+const createBanner = asyncHandler(async (req, res) => {
+  try {
+    const { title, imageURL, altName } = req.body;
+    // Create new banner
+    const banner = new Banner({ title, imageURL, altName });
+    // Save to database
+    await banner.save();
+    res.json(banner);
+  } catch (error) {
+    res.status(401);
+    throw new Error('Please enter all required fields' );
+  }
+});
+// @desc    Admin Get All Banner & 
+// @route   POST /api/admin/FetchAllBanner
+// @access  Admin 
+const fetchAllBanner  =asyncHandler(async (req,res,next)=>{
+    try {
+        const banner = await Banner.find({});
+        res.json(banner);
+
+    }catch(error){
+        res.status(400);
+        throw new Error('Not Able to fetch give refresh' );
+    }
+})
+
+// @desc    Admin Get All Banner & 
+// @route   DELETE /api/admin/DeleteBanner/:id
+// @access  Admin 
+const deleteBanner =asyncHandler(async (req,res,next)=>{
+    try {
+        const  bannerId  = req.params.id;
+        console.log("params",req.params)
+        const banner = await Banner.findOneAndDelete({_id:bannerId})
+        res.json(banner);
+
+    }catch(error){
+        res.status(400);
+        throw new Error('Not Able to delete' );
+    }
+})
+
+
+// @desc    Create a new service
+// @route   POST /api/admin/CreateService
+// @access  Admin
+const createService = asyncHandler(async (req, res) => {
+  const { title, banner, heading, card, sectionOne, sectionTwo, sectionThree, elegiblity } = req.body;
+
+  const service = new Service({
+      title,
+      banner,
+      heading,
+      card,
+      sectionOne,
+      sectionTwo,
+      sectionThree,
+      elegiblity
+  });
+
+  const createdService = await service.save();
+  res.status(201).json(createdService);
+});
+
+// @desc    Get all services
+// @route   GET /api/admin/Services/all
+// @access  Public
+const getServices = asyncHandler(async (req, res) => {
+  const services = await Service.find({});
+  res.json(services);
+});
+
+// @desc    Get a service by ID
+// @route   GET /api/admin/Service/:id
+// @access  Public
+const getService = asyncHandler(async (req, res) => {
+  const service = await Service.findById(req.params.id);
+
+  if (service) {
+      res.json(service);
+  } else {
+      res.status(404);
+      throw new Error('Service not found');
+  }
+});
+
+// @desc    Update a service
+// @route   PUT /api/admin/UpdateServices/:id
+// @access  Admin
+const updateService = asyncHandler(async (req, res) => {
+  const { title, banner, heading, card, sectionOne, sectionTwo, sectionThree, elegiblity } = req.body;
+
+  const service = await Service.findById(req.params.id);
+
+  if (service) {
+      service.title = title;
+      service.banner = banner;
+      service.heading = heading;
+      service.card = card;
+      service.sectionOne = sectionOne;
+      service.sectionTwo = sectionTwo;
+      service.sectionThree = sectionThree;
+      service.elegiblity = elegiblity;
+
+      const updatedService = await service.save();
+      res.json(updatedService);
+  } else {
+      res.status(404);
+      throw new Error('Service not found');
+  }
+});
+
+// @desc    Delete a service
+// @route   DELETE /api/admin/DeleteService/:id
+// @access  Admin
+const deleteService = asyncHandler(async (req, res) => {
+  const service = await Service.findOneAndDelete(req.params.id);
+  if (service) {
+      console.log("service delete",service)
+      res.json(service)
+  } else {
+      res.status(404);
+      throw new Error('Service not found');
+  }
+});
+
+// @desc    Create a new testimonial
+// @route   POST /api/testimonials/create
+// @access  Admin
+const createTestimonial = asyncHandler(async (req, res) => {
+  const { title, imageURL, description, rating } = req.body;
+
+  if (!title || !imageURL || !rating) {
+    res.status(400);
+    throw new Error('Please enter all required fields');
+  }
+
+  const testimonial = new Testimonial({
+    title,
+    imageURL,
+    description,
+    rating,
+  });
+
+  const createdTestimonial = await testimonial.save();
+  res.status(201).json(createdTestimonial);
+});
+
+// @desc    Get all testimonials
+// @route   GET /api/testimonials/all
+// @access  Public
+const getTestimonials = asyncHandler(async (req, res) => {
+  const testimonials = await Testimonial.find({});
+  res.json(testimonials);
+});
+
+// @desc    Get a single testimonial by ID
+// @route   GET /api/testimonials/get/:id
+// @access  Public
+const getTestimonialById = asyncHandler(async (req, res) => {
+  const testimonial = await Testimonial.findById(req.params.id);
+
+  if (testimonial) {
+    res.json(testimonial);
+  } else {
+    res.status(404);
+    throw new Error('Testimonial not found');
+  }
+});
+
+// @desc    Update a testimonial
+// @route   PUT /api/testimonials/update/:id
+// @access  Admin
+const updateTestimonial = asyncHandler(async (req, res) => {
+  const { title, imageURL, description, rating } = req.body;
+
+  const testimonial = await Testimonial.findById(req.params.id);
+
+  if (testimonial) {
+    testimonial.title = title || testimonial.title;
+    testimonial.imageURL = imageURL || testimonial.imageURL;
+    testimonial.description = description || testimonial.description;
+    testimonial.rating = rating || testimonial.rating;
+
+    const updatedTestimonial = await testimonial.save();
+    res.json(updatedTestimonial);
+  } else {
+    res.status(404);
+    throw new Error('Testimonial not found');
+  }
+});
+
+// @desc    Delete a testimonial
+// @route   DELETE /api/testimonials/delete/:id
+// @access  Admin
+const deleteTestimonial = asyncHandler(async (req, res) => {
+  const testimonial = await Testimonial.findOneAndDelete(req.params.id);
+
+  if (testimonial) {
+    res.json(testimonial);
+  } else {
+    res.status(404);
+    throw new Error('Testimonial not found');
+  }
+});
+
+
+
+
+// @desc    Create a new counsellor
+// @route   POST /CreateCounsellor
+// @access  Public
+const createCounsellor = async (req, res) => {
+  const { name, imageURL, experience, course } = req.body;
+
+  if (!name || !imageURL || !course || !experience) {
+    res.status(400).json({ message: 'Please provide all required fields' });
+    return;
+  }
+
+  const counsellor = new Counsellor({
+    name,
+    imageURL,
+    experience,
+    course,
+  });
+
+  try {
+    const createdCounsellor = await counsellor.save();
+    res.status(201).json(createdCounsellor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get all counsellors
+// @route   GET /GetCounsellors/all
+// @access  Public
+const  getCounsellors = async (req, res) => {
+  try {
+
+    const counsellors = await Counsellor.find({});
+    res.json(counsellors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get a counsellor by ID
+// @route   GET /GetCounsellor/:id
+// @access  Public
+const getCounsellorById = async (req, res) => {
+  try {
+    const counsellor = await Counsellor.findById(req.params.id);
+
+    if (counsellor) {
+      res.json(counsellor);
+    } else {
+      res.status(404).json({ message: 'Counsellor not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Update a counsellor
+// @route   PUT /UpdateCounsellors/:id
+// @access  Public
+const updateCounsellor = async (req, res) => {
+  const { name, imageURL, experience, course } = req.body;
+
+  try {
+    const counsellor = await Counsellor.findById(req.params.id);
+
+    if (counsellor) {
+      counsellor.name = name || counsellor.name;
+      counsellor.imageURL = imageURL || counsellor.imageURL;
+      counsellor.experience = experience || counsellor.experience;
+      counsellor.course = course || counsellor.course;
+
+      const updatedCounsellor = await counsellor.save();
+      res.json(updatedCounsellor);
+    } else {
+      res.status(404).json({ message: 'Counsellor not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+// @desc    Delete a counsellor
+// @route   DELETE /DeleteCounsellors/:id
+// @access  Public
+const deleteCounsellor = async (req, res) => {
+  try {
+    const counsellor = await Counsellor.findOneAndDelete({_id:req.params.id});
+
+    if (counsellor) {
+      res.json(counsellor);
+    } else {
+      res.status(404).json({ message: 'Counsellor not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Create a new blog
+// @route   POST /api/blogs
+// @access  Public
+const createBlog = asyncHandler(async (req, res) => {
+  const { title, bannerURL, content, thumbnailURL } = req.body;
+
+  const blog = new Blog({
+    title,
+    bannerURL,
+    content,
+    thumbnailURL,
+  });
+
+  const createdBlog = await blog.save();
+  res.status(201).json(createdBlog);
+});
+
+// @desc    Get all blogs
+// @route   GET /api/blogs
+// @access  Public
+const getAllBlogs = asyncHandler(async (req, res) => {
+  const blogs = await Blog.find({});
+  res.json(blogs);
+});
+
+// @desc    Get a blog by ID
+// @route   GET /api/blogs/:id
+// @access  Public
+const getBlogById = asyncHandler(async (req, res) => {
+  const blog = await Blog.findById(req.params.id);
+
+  if (blog) {
+    res.json(blog);
+  } else {
+    res.status(404);
+    throw new Error('Blog not found');
+  }
+});
+
+// @desc    Update a blog
+// @route   PUT /api/blogs/:id
+// @access  Public
+const updateBlog = asyncHandler(async (req, res) => {
+  const { title, bannerURL, content, thumbnailURL } = req.body;
+
+  const blog = await Blog.findById(req.params.id);
+
+  if (blog) {
+    blog.title = title || blog.title;
+    blog.bannerURL = bannerURL || blog.bannerURL;
+    blog.content = content || blog.content;
+    blog.thumbnailURL = thumbnailURL || blog.thumbnailURL;
+
+    const updatedBlog = await blog.save();
+    res.json(updatedBlog);
+  } else {
+    res.status(404);
+    throw new Error('Blog not found');
+  }
+});
+
+// @desc    Delete a blog
+// @route   DELETE /api/blogs/:id
+// @access  Public
+const deleteBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.findOneAndDelete(req.params.id);
+
+  if (blog) {
+    res.json(blog);
+  } else {
+    res.status(404);
+    throw new Error('Blog not found');
+  }
+});
+
+// @desc    Create a new country
+// @route   POST /countries
+// @access  Public
+const createCountry = asyncHandler(async (req, res) => {
+  const { name, bannerURL, description, sections, flagURL,elegiblity } = req.body;
+
+  const country = new Country({
+    name,
+    bannerURL,
+    description,
+    sections,
+    flagURL,
+    elegiblity
+    
+  });
+
+  const createdCountry = await country.save();
+  res.status(201).json(createdCountry);
+});
+
+// @desc    Get all countries
+// @route   GET /countries
+// @access  Public
+const getCountries = asyncHandler(async (req, res) => {
+  const countries = await Country.find({})
+  res.json(countries);
+});
+
+// @desc    Get single country
+// @route   GET /countries/:id
+// @access  Public
+const getCountryById = asyncHandler(async (req, res) => {
+  const country = await Country.findById(req.params.id).populate('Province')
+  console.log("country",country)
+  if (country) {
+    res.json(country);
+  } else {
+    res.status(404);
+    throw new Error('Country not found');
+  }
+});
+
+// @desc    Update a country
+// @route   PUT /countries/:id
+// @access  Public
+const updateCountry = asyncHandler(async (req, res) => {
+  const { name, bannerURL, description, sections, provinces } = req.body;
+
+  const country = await Country.findById(req.params.id);
+
+  if (country) {
+    country.name = name || country.name;
+    country.bannerURL = bannerURL || country.bannerURL;
+    country.description = description || country.description;
+    country.sections = sections || country.sections;
+    country.provinces = provinces || country.provinces;
+
+    const updatedCountry = await country.save();
+    res.json(updatedCountry);
+  } else {
+    res.status(404);
+    throw new Error('Country not found');
+  }
+});
+
+// @desc    Delete a country
+// @route   DELETE /countries/:id
+// @access  Public
+const deleteCountry = asyncHandler(async (req, res) => {
+  const country = await Country.findByIdAndDelete(req.params.id);
+
+  if (country) {
+    res.json(country);
+  } else {
+    res.status(404);
+    throw new Error('Country not found');
+  }
+});
+
+
+
+// @desc    Create a new province
+// @route   POST /provinces
+// @access  Public
+const createProvince = asyncHandler(async (req, res) => {
+
+  const country = await Country.findOne({_id:req.body.Country})
+  if (!country) {
+    return res.status(404).json({ message: 'Country not found' });
+  }
+ 
+  const province = new Province(req.body);
+  await province.save();
+  country.Province.push(province._id)
+  country.save();
+  res.status(201).json(province);
+});
+
+// @desc    Get all provinces
+// @route   GET /provinces
+// @access  Public
+const getAllProvinces = asyncHandler(async (req, res) => {
+  const provinces = await Province.find().populate('Country');
+  res.status(200).json(provinces);
+});
+
+// @desc    Get a single province by ID
+// @route   GET /provinces/:id
+// @access  Public
+const getProvinceById = asyncHandler(async (req, res) => {
+  const province = await Province.findById(req.params.id).populate('Country University');
+  if (province) {
+    res.status(200).json(province);
+  } else {
+    res.status(404).json({ message: 'Province not found' });
+  }
+});
+
+// @desc    Update a province by ID
+// @route   PUT /provinces/:id
+// @access  Public
+const updateProvince = asyncHandler(async (req, res) => {
+  const province = await Province.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  if (province) {
+    res.status(200).json(province);
+  } else {
+    res.status(404).json({ message: 'Province not found' });
+  }
+});
+
+// @desc    Delete a province by ID
+// @route   DELETE /provinces/:id
+// @access  Public
+const deleteProvince = asyncHandler(async (req, res) => {
+  const province = await Province.findByIdAndDelete(req.params.id);
+  if (province) {
+    res.status(200).json({ message: 'Province deleted successfully', province });
+  } else {
+    res.status(404).json({ message: 'Province not found' });
+  }
+});
+
+// @desc    Get all universities
+// @route   GET /universities
+// @access  Public
+const getAllUniversities = asyncHandler(async (req, res) => {
+  const universities = await University.find().populate('Province');
+  res.status(200).json(universities);
+});
+
+// @desc    Get a single university
+// @route   GET /universities/:id
+// @access  Public
+const getUniversityById = asyncHandler(async (req, res) => {
+  const university = await University.findById(req.params.id).populate('Province').populate('Course');
+  
+  if (university) {
+    res.status(200).json(university);
+  } else {
+    res.status(404);
+    throw new Error('University not found');
+  }
+});
+
+// @desc    Create a new university
+// @route   POST /universities
+// @access  Private/Admin
+const createUniversity = asyncHandler(async (req, res) => {
+    const university = new University({
+    name:req.body.name,
+    bannerURL:req.body.bannerURL,
+    heroURL:req.body.heroURL,
+    description:req.body.description,
+    sections:req.body.sections,
+    eligiblity:req.body.eligiblity,
+    Province:req.body.Province,
+  });
+
+  const createdUniversity = await university.save();
+  const province = await Province.findById(createdUniversity.Province)
+  console.log("province", province)
+  province.University.push(createdUniversity._id)
+  await province.save();
+  res.status(201).json(createdUniversity);
+});
+
+// @desc    Update a university
+// @route   PUT /universities/:id
+// @access  Private/Admin
+const updateUniversity = asyncHandler(async (req, res) => {
+  const { name, bannerURL, heroURL, description, sections, eligiblity, Province } = req.body;
+
+  const university = await University.findById(req.params.id);
+
+  if (university) {
+    university.name = name || university.name;
+    university.bannerURL = bannerURL || university.bannerURL;
+    university.heroURL = heroURL || university.heroURL;
+    university.description = description || university.description;
+    university.sections = sections || university.sections;
+    university.eligiblity = eligiblity || university.eligiblity;
+    university.Province = Province || university.Province;
+
+    const updatedUniversity = await university.save();
+    res.status(200).json(updatedUniversity);
+  } else {
+    res.status(404);
+    throw new Error('University not found');
+  }
+});
+
+// @desc    Delete a university
+// @route   DELETE /universities/:id
+// @access  Private/Admin
+const deleteUniversity = asyncHandler(async (req, res) => {
+  const university = await University.findOneAndDelete(req.params.id);
+
+  if (university) {
+    res.status(200).json(university);
+  } else {
+    res.status(404);
+    throw new Error('University not found');
+  }
+});
+
+// @desc    Get all courses
+// @route   GET /courses
+// @access  Public
+const getAllCourses = asyncHandler(async (req, res) => {
+  const courses = await Course.find().populate('University');
+  res.status(200).json(courses);
+});
+
+// @desc    Get one course by ID
+// @route   GET /courses/:id
+// @access  Public
+const getCourseById = asyncHandler(async (req, res) => {
+  const course = await Course.findById(req.params.id).populate('University');
+  if (!course) {
+    res.status(404);
+    throw new Error('Course not found');
+  }
+  res.status(200).json(course);
+});
+
+// @desc    Create a course
+// @route   POST /courses
+// @access  Public
+const createCourse = asyncHandler(async (req, res) => {
+
+  const course = new Course({
+    ProgramName :req.body.ProgramName,
+    University:req.body.University,
+    WebsiteURL:req.body.WebsiteURL,
+    Location:req.body.Location,
+    Duration:req.body.Duration,
+    Intake:req.body.Intake,
+    Scholarships:req.body.Scholarships,
+    ProgramLevel:req.body.ProgramLevel,
+    LanguageRequirements:req.body.LanguageRequirements,
+    StandardizeRequirement:req.body.StandardizeRequirement,
+    Category:req.body.Category
+  });
+
+  const createdCourse = await course.save();
+  const university = await University.findById(createdCourse.University)
+  university.Course.push(createdCourse._id)
+  await university.save()
+
+  res.status(201).json(createdCourse);
+});
+
+// @desc    Update a course
+// @route   PUT /courses/:id
+// @access  Public
+const updateCourse = asyncHandler(async (req, res) => {
+  const { ProgramName, University, WebsiteURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
+
+  const course = await Course.findById(req.params.id);
+
+  if (course) {
+    course.ProgramName = ProgramName;
+    course.University = University;
+    course.WebsiteURL = WebsiteURL;
+    course.Location = Location;
+    course.Duration = Duration;
+    course.Intake = Intake;
+    course.Scholarships = Scholarships;
+    course.ProgramLevel = ProgramLevel;
+    course.LanguageRequirements = LanguageRequirements;
+    course.StandardizeRequirement = StandardizeRequirement;
+    course.Category = Category;
+
+    const updatedCourse = await course.save();
+    res.status(200).json(updatedCourse);
+  } else {
+    res.status(404);
+    throw new Error('Course not found');
+  }
+});
+
+// @desc    Delete a course
+// @route   DELETE /courses/:id
+// @access  Public
+const deleteCourse = asyncHandler(async (req, res) => {
+  const course = await Course.findOneAndDelete(req.params.id);
+
+  if (course) {
+    res.status(200).json(course);
+  } else {
+    res.status(404);
+    throw new Error('Course not found');
+  }
+});
+
+// @desc    GET FILTER DATA
+// @route   GET /course/All
+// @access  Public
+
+const getCourses = asyncHandler(async (req, res) => {
+  try {
+    const {
+      country,
+      province,
+      university,
+      programLevel,
+      category,
+      scholarships,
+      languageRequirement,
+      standardizeRequirement,
+    } = req.query;
+
+    let filter = {};
+
+    if (country) {
+      const countryDoc = await Country.findOne({ name: country });
+      if (countryDoc) {
+        const provinces = await Province.find({ Country: countryDoc._id });
+        const provinceIds = provinces.map((prov) => prov._id);
+        filter.Province = { $in: provinceIds };
+      } else {
+        // Country not found, return empty result
+        return res.status(200).json([]);
+      }
+    }
+
+    if (province) {
+      const provinceDoc = await Province.findOne({ name: province });
+      if (provinceDoc) {
+        filter.Province = provinceDoc._id;
+      } else {
+        // Province not found, return empty result
+        return res.status(200).json([]);
+      }
+    }
+
+    if (university) {
+      const universityDoc = await University.findOne({ name: university });
+      if (universityDoc) {
+        filter.University = universityDoc._id;
+      } else {
+        // University not found, return empty result
+        return res.status(200).json([]);
+      }
+    }
+
+    if (programLevel) {
+      filter.ProgramLevel = programLevel;
+    }
+
+    if (category) {
+      filter.Category = category;
+    }
+
+    if (scholarships) {
+      filter.Scholarships = scholarships === 'true';
+    }
+
+    if (languageRequirement) {
+      const languageReqArray = languageRequirement.split(',');
+      const languageReqFilter = {};
+      languageReqArray.forEach((lang) => {
+        languageReqFilter[`LanguageRequirements.${lang}.status`] = true;
+      });
+      filter = { ...filter, ...languageReqFilter };
+    }
+
+    if (standardizeRequirement) {
+      const standardizeReqArray = standardizeRequirement.split(',');
+      const standardizeReqFilter = {};
+      standardizeReqArray.forEach((test) => {
+        standardizeReqFilter[`StandardizeRequirement.${test}.status`] = true;
+      });
+      filter = { ...filter, ...standardizeReqFilter };
+    }
+
+    const courses = await Course.find(filter)
+      .populate({
+        path: 'University',
+        populate: {
+          path: 'Province',
+          populate: {
+            path: 'Country',
+          },
+        },
+      })
+      .exec();
+
+    res.status(200).json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+
+
+
+export {
+    createBanner,test,fetchAllBanner,deleteBanner,
+    deleteService,updateService,getService,getServices,createService,
+    deleteTestimonial,updateTestimonial,getTestimonialById,getTestimonials,createTestimonial,
+    deleteCounsellor,updateCounsellor,getCounsellorById,getCounsellors,createCounsellor,
+    deleteBlog,updateBlog,getBlogById,getAllBlogs,createBlog,
+    createCountry, getCountries, getCountryById, updateCountry, deleteCountry ,
+    createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince 
+    ,getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
+    getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses
+  };
