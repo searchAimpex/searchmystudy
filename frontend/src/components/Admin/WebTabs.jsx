@@ -15,7 +15,7 @@ import ServiceTable from "./ServiceTable";
 import TestimonialTable from "./TestimonialTable";
 import CounsellorTable from "./CounsellorTable";
 import WebinarTable from "./WebinarTable";
-import MediaTable from "./mediaTable";
+import MediaTable from "./MediaTable";
 
 const theme = createTheme({
     palette: {
