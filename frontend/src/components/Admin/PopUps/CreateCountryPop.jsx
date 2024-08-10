@@ -27,6 +27,7 @@ function CreateCountryPop({ open, handleClose }) {
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',
+    bullet:'',
     flagURL: '',
     description: '',
     sections: [
@@ -163,6 +164,15 @@ function CreateCountryPop({ open, handleClose }) {
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Flag Image"
+          />
+              <TextField
+            id="bullet"
+            name="bullet"
+            variant="standard"
+            onChange={handleChange}
+            InputLabelProps={{ shrink: true }}
+            className="mb-2"
+            label="Bullet Point"
           />
           <TextField
             id="description"

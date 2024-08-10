@@ -9,13 +9,15 @@ import AboutUsSection from './Public/AboutUsSection';
 import CourseSection from './Public/CourseSection';
 import ContactSection from './Public/ContactSection';
 import CourseFinder from './Public/CourseFinder';
-
+import WhyChoseUs from './Public/WhyChoseUs';
+import WebinarSection from './Public/WebinarSection';
+import MediaSection from './Public/MediaSection';
 const Hero = () => {
   return (
     <div>
        <Carousel />
         <CourseFinder />
-
+        <WhyChoseUs />
         <CountriesSection />
         <ServiceSection />
         <CounsellorSection />
@@ -23,6 +25,8 @@ const Hero = () => {
         <AboutUsSection />
         <CourseSection />
         <ContactSection />
+        <WebinarSection />
+        <MediaSection />
     </div>
   );
 };

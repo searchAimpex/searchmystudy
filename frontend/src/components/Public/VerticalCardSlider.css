@@ -1,107 +1,106 @@
-
-.wrapper {
-  max-width: 1080px; /* Set maximum width to 1080px */
-  overflow: hidden; /* Hide overflow to prevent horizontal scroll */
-  margin: 0 auto; /* Center align the wrapper horizontally */
+.vertical-card-slider-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
-.wrapper .outer {
+.vertical-card-slider-outer {
   display: flex;
-  padding: 10px;
+  transition: transform 2s ease-in-out;
+}
+
+.vertical-card-slider-card {
+  flex: 0 0 50%; /* Display two cards at a time */
+  padding: 20px;
+  transition: transform 2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 300px; /* Fixed height for all cards */
+  width: 100%; /* Ensure the card takes up the full width */
+  /* box-sizing: border-box; Include padding in the height/width */
+}
+
+.vertical-card-slider-card .content {
+  /* background: linear-gradient(to right, #3C6EDD, #264790); /* Gradient background */
+  border-radius: 20px; 
+  padding: 20px;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* Ensure cards are contained within the wrapper */
+  height: 100%; /* Make content fill the card height */
+  width: 100%; /* Make content fill the card width */
+  /* box-sizing: border-box; */
 }
 
-.wrapper .card {
-  background: #fff;
-  max-width: 100%; /* Ensure card does not exceed viewport width */
-  width: 430px; /* Adjust based on your design */
-  height: 200px; /* Increase height of the card */
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  opacity: 0;
-  pointer-events: none;
-  position: relative;
-  justify-content: space-between;
-  border-radius: 100px 20px 20px 100px;
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
-  animation: animate 15s linear infinite; /* Adjust animation duration and timing function */
-  animation-delay: calc(3s * var(--delay));
-  transform: translateX(100%); /* Start cards off-screen */
+.vertical-card-slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
 }
 
-.outer:hover .card {
-  animation-play-state: paused;
+.vertical-card-slider-button.left {
+  left: 10px;
+  color: white !important;
 }
 
-.wrapper .card:last-child {
-  animation-delay: calc(-3s * var(--delay));
+.vertical-card-slider-button.right {
+  right: 10px;
+  color: white !important;
 }
 
-@keyframes animate {
-  0% {
-    opacity: 0;
-    transform: translateX(100%) scale(0.5); /* Start off-screen */
-  }
-  5%, 20% {
-    opacity: 0.4;
-    transform: translateX(0%) scale(0.7); /* Slide in */
-  }
-  25%, 40% {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateX(0%) scale(1); /* Full display */
-  }
-  45%, 60% {
-    opacity: 0.4;
-    transform: translateX(-100%) scale(0.7); /* Slide out */
-  }
-  65%, 100% {
-    opacity: 0;
-    transform: translateX(-100%) scale(0.5); /* Off-screen */
-  }
+/* Add a vertical border between the two cards */
+.vertical-card-slider-card:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 10%;
+  bottom: 10%;
+  width: 2px;
+  background-color: white; /* Border color */
 }
 
-.card .content {
-  display: flex;
-  align-items: center;
-}
-
-.wrapper .card .img {
-  height: 150px; /* Adjust image container height */
-  width: 150px;
-  position: relative; /* Change to relative */
-  flex-shrink: 0; /* Prevent image from shrinking */
-  margin-right: 20px; /* Adjust margin as needed */
-}
-
-.card .img img {
-  height: 100%;
-  width: 100%;
+/* Image styling */
+.imgContainer {
   border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.imgContainer img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.card .details {
-  flex: 1; /* Expand details to fill remaining space */
+.details {
+  text-align: center;
+  margin-top: 10px;
 }
 
-.details span {
-  font-weight: 600;
-  font-size: 18px;
+.name {
+  font-size: 1.25rem;
+  font-weight: bold;
 }
 
-.card a {
-  text-decoration: none;
-  padding: 7px 18px;
-  border-radius: 25px;
-  color: #fff;
-  background: linear-gradient(to bottom, #bea2e7 0%, #86b7e7 100%);
-  transition: all 0.3s ease;
+p {
+  margin: 5px 0;
 }
-
-.card a:hover {
-  transform: scale(0.94);
+.img { 
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start; 
+  width: 100%;
 }

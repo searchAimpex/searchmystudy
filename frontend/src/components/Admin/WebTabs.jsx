@@ -14,6 +14,8 @@ import BannerTable from "./BannerTable";
 import ServiceTable from "./ServiceTable";
 import TestimonialTable from "./TestimonialTable";
 import CounsellorTable from "./CounsellorTable";
+import WebinarTable from "./WebinarTable";
+import MediaTable from "./mediaTable";
 
 const theme = createTheme({
     palette: {
@@ -88,6 +90,10 @@ export default function WebTabs() {
           <Tab label="SERVICE MANAGEMENT" {...a11yProps(1)} />
           <Tab label="COUNSELLOR MANAGMENT" {...a11yProps(2)} />
           <Tab label="TESTIMONIAL MANAGMENT" {...a11yProps(3)} />
+          <Tab label="WEBINAR MANAGMENT" {...a11yProps(4)} />
+          <Tab label="MEDIA MANAGMENT" {...a11yProps(5)} />
+
+
         </Tabs>
       </AppBar>
       </ThemeProvider>
@@ -107,6 +113,12 @@ export default function WebTabs() {
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
             <CounsellorTable />
+        </TabPanel>
+        <TabPanel value={value} index={4} dir={theme.direction}>
+            <WebinarTable />
+        </TabPanel>
+        <TabPanel value={value} index={5} dir={theme.direction}>
+            <MediaTable />
         </TabPanel>
       </SwipeableViews>
     </Box>

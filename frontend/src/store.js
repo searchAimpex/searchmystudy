@@ -9,8 +9,9 @@ import blogReducer from './slices/blogSlice';
 import countryReducer from './slices/countrySlice';
 import provinceReducer from './slices/provinceSlice';
 import universityReducer from './slices/universitySlice';
-
+import webinarReducer from './slices/webinarSlice';
 import courseReducer from './slices/courseSlice';
+import mediaReducer from './slices/mediaSlice';
 
 
 
@@ -27,7 +28,9 @@ const store = configureStore({
     country:countryReducer,
     province:provinceReducer,
     university:universityReducer,
-    course:courseReducer
+    course:courseReducer,
+    webinar:webinarReducer,
+    media:mediaReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

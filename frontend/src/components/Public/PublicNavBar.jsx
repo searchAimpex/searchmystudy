@@ -10,7 +10,7 @@ import LiveCounselling from "../Buttons/LiveCounselling";
 import CallUs from "../Buttons/CallUs";
 import WhatappUs from "../Buttons/WhatappUs";
 import DownloadApp from "../Buttons/DownloadApp";
-
+import Logo from "../../assets/NewLogo.png"
 const initialLinks = [
     {
         name: "HOME",
@@ -49,13 +49,7 @@ const initialLinks = [
         name: "ABOUT US",
         submenu: false,
         sublinks: [],
-        path: "/about-us"
-    },
-    {
-        name: "CONTACT US",
-        submenu: false,
-        sublinks: [],
-        path: "/contact-us"
+        path: "/aboutus"
     }
 ];
 
@@ -114,52 +108,21 @@ export default function PublicNavBar() {
     return (
         <div className="sticky top-0 z-50 bg-white shadow-md">
             <div className="flex w-full flex-col">
-                <div className="w-full">
-                    <div className="flex px-[50px] p-2 flex-row w-full items-center justify-between bg-custom-primary">
-                        <div className="flex items-center text-sm space-x-4">
-                            <button className="text-custom-color font-bold py-1 px-2 shadow-xl rounded-lg bg-white">
-                                APPLY ONLINE
-                            </button>
-                            <button className="text-custom-color font-bold py-1 px-2 shadow-xl rounded-lg bg-white">
-                                REQUEST A CALLBACK
-                            </button>
-                        </div>
-                        <div className="flex items-center space-x-4 text-white">
-                            <FaFacebook />
-                            <FaTwitter />
-                            <FaInstagramSquare />
-                            <FaLinkedin />
-                        </div>
-                    </div>
-                </div>
-
                 {/* Middle section with logo */}
-                <div className="flex justify-between w-full px-[50px] items-center px-6 py-3">
-                    <div>
-                        <span className="text-custom-color text-3xl border rounded-sm p-2">
-                            AIMPEX PVT
-                        </span>
-                        <div className="text-3xl md:hidden cursor-pointer" onClick={() => setOpen(!open)}>
-                            {open ? <ExpandLess /> : <ExpandMore />}
-                        </div>
-                    </div>
-                    <div className="flex items-center space-x-8">
-                        <LiveCounselling />
-                        <CallUs />
-                        <WhatappUs />
-                        <DownloadApp />
-                    </div>
-                </div>
 
                 {/* Links section */}
-                <div className="flex justify-between items-center w-full px-[50px] py-4 bg-gray-100">
+                <div className="flex justify-between  w-full px-[50px] py-4">
+                    <div className="flex flex-row space-x-10 w-full">
+                    <div>
+                        <img src={Logo} alt="Logo" />
+                    </div>
                     <ul className="flex space-x-8 font-bold uppercase">
                         {menuLinks.map((link) => (
-                            <div key={link.name} className="relative text-left md:cursor-pointer group">
+                            <div key={link.name} className="relative flex items-center text-left md:cursor-pointer group">
                                 {link.path ? (
                                     <Link to={link.path}>
                                         <h1
-                                            className="py-2 text-custom-color flex justify-start items-center md:pr-0 pr-5 group"
+                                            className="py-2 font-bold text-text-color flex justify-start items-center md:pr-0 pr-5 group"
                                             onClick={() => {
                                                 heading !== link.name ? setHeading(link.name) : setHeading("");
                                                 setSubHeading("");
@@ -169,14 +132,14 @@ export default function PublicNavBar() {
                                             <span className="text-xl md:hidden inline flex items-center">
                                                 {heading === link.name ? <ExpandLess /> : <ExpandMore />}
                                             </span>
-                                            <span className="text-xl md:block hidden group-hover:rotate-180">
+                                            <span className="text-xl md:hidden flex items-center group-hover:rotate-180">
                                                 {link?.submenu && (<ExpandMore />)}
                                             </span>
                                         </h1>
                                     </Link>
                                 ) : (
                                     <h1
-                                        className="py-2 text-custom-color flex justify-start items-center md:pr-0 pr-5 group"
+                                        className="py-2 text-text-color flex justify-start items-center md:pr-0 pr-5 group"
                                         onClick={() => {
                                             heading !== link.name ? setHeading(link.name) : setHeading("");
                                             setSubHeading("");
@@ -213,25 +176,24 @@ export default function PublicNavBar() {
                             </div>
                         ))}
                     </ul>
-                    <div className="flex items-center space-x-4">
-                        <input
-                            type="text"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Search..."
-                            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-custom-color transition duration-300 ease-in-out"
-                        />
+                    </div>
+                    <div className="flex items-center w-1/3 space-x-6">
                         <button
-                            onClick={handleSearch}
-                            className="text-custom-color font-bold py-2 px-4 shadow-xl rounded-lg bg-white hover:bg-custom-color hover:text-white transition duration-300 ease-in-out"
-                        >
-                            Search
-                        </button>
-                        <button
-                            className="text-custom-color font-bold py-2 px-4 shadow-xl rounded-lg bg-white hover:bg-custom-color hover:text-white transition duration-300 ease-in-out"
+                            className=" font-bold py-2 px-4 bg-gray-200 shadow-xl rounded-lg bg-white hover:bg-blue-main hover:text-white transition duration-300 ease-in-out"
                             onClick={() => navigate('/login')}
                         >
-                            LOGIN
+                            Log in
+                        </button>
+                        <button
+                            className="bg-gray-200 font-bold py-2 px-4 shadow-xl rounded-lg bg-white hover:bg-blue-main  hover:text-white transition duration-300 ease-in-out"
+                           
+                        >
+                            Contact Us
+                        </button>
+                        <button
+                            className="text-white bg-blue-main font-bold py-2 px-4 shadow-xl rounded-xl hover:bg-white  hover:text-blue-main transition duration-300 ease-in-out"
+                        >
+                            Get Counselling
                         </button>
                     </div>
                 </div>

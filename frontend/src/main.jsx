@@ -30,6 +30,7 @@ import ProvinceDetailed from './screens/Public/ProvinceDetailed.jsx';
 import UniversityDetailed from './screens/Public/UniversityDetailed.jsx';
 import CourseDetailed from './screens/Public/CourseDetailed.jsx';
 import AllCourseDetailed from './screens/Public/AllCourseDetailed.jsx';
+import AboutDetailed from './screens/Public/AboutDetailed.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
           <Route path = '/university/:id' element ={<UniversityDetailed />}  />
           <Route path = '/course/:id' element = { <CourseDetailed />} />
           <Route path = '/course/all' element=  {<AllCourseDetailed />} />
+          <Route path='/aboutus' element= {<AboutDetailed />} />
         </Route>
      
       {/* <Route path='/register' element={<RegisterScreen />} /> */}

@@ -1,90 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+const Categories = ['High School', 'UG Diploma/Certificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated)Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twinning Program(UG)', 'Twinning Program(PG)', 'Online Program/Distance Learning'];
+const Levels = [
+    'Arts', 'Accounts', 'Finance', 'Marketing', 'Science', 'Medical', 'Computers', 'Engineering', 'Law', 'Education', 'Social Sciences', 'Business Administration', 'Psychology', 'Economics', 'Architecture', 'Environmental Science', 'Nursing', 'Hospitality Management', 'Media and Communication', 'Information Technology', 'Pharmacy', 'Agriculture', 'Design', 'Public Health', 'Mathematics', 'Data Science', 'Artificial Intelligence'
+];
 
 export default function CourseFinder() {
+  const [filters, setFilters] = useState({
+    category: '',
+    level: '',
+    scholarship: ''
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFilters({
+      ...filters,
+      [name]: value
+    });
+  };
+
+  const handleSearch = () => {
+    navigate('/course/all', { state: { filters } });
+  };
+
   return (
-    <div className='mx-[100px] my-[20px]'>
-        <div className='flex flex-col shadow-xl rounded-md p-5 justify-center items-center'>
-            <div>
-                <p className=' text-4xl  font-bold  text-gradient'>Find Cousrse</p>
-            </div>  
-            <div className='my-5'>
-               <p className='text-2xl font-bold  text-gradient'>Discover dedicated professionals ready to support you on your journey</p>
-            </div>
-            <div className='flex flex-row mt-5 pb-10 items-center justify-between w-full space-x-4'>
-                <select className='p-2 border border-custom-color text-custom-color rounded-sm'>
-                    <option value="">All Universities</option>
-                    <option value="">University of Australia</option>
-                    <option value="">University of New South Wales</option>
-                    <option value="">University of Sydney</option>
-                    <option value="">University of Melbourne</option>
-                    <option value="">University of Queensland</option>
-                    <option value="">University of Western Sydney</option>
-                    <option value="">University of Tasmania</option>
-                    <option value="">University of Victoria</option>
-                    <option value="">University of South Australia</option>
-                    <option value="">University of Canberra</option>
-                    <option value="">University of Adelaide</option>
-                    <option value="">University of Southern Queensland</option>
-                    <option value="">University of Hawkebury</option>
-                    <option value="">University of Wollongong</option>
-                </select>
-                <select  className='p-2 border border-custom-color text-custom-color rounded-sm'>
-                    <option value="">All Course Categories</option>
-                    <option value="">Computer Science</option>
-                    <option value="">Business Administration</option>
-                    <option value="">Education</option>
-                    <option value="">Health &amp; Wellness</option>
-                    <option value="">Arts &amp; Humanities</option>
-                    <option value="">Science &amp; Engineering</option>
-                    <option value="">Language</option>
-                    <option value="">Creative Arts</option>
-                    <option value="">Travel &amp; Leisure</option>
-                    <option value="">Sports &amp; Recreation</option>
-                    <option value="">Science &amp; Technology</option>
-                    <option value="">Music &amp; Performing Arts</option>
-                    <option value="">Health &amp; Wellness</option>
-                    <option value="">Arts &amp; Humanities</option>
-                    <option value="">Science &amp; Engineering</option>
-                </select>
-                <select  className='p-2 border border-custom-color text-custom-color rounded-sm'>
-                    <option value="">All Course Levels</option>
-                    <option value="">Undergraduate</option>
-                    <option value="">Postgraduate</option>
-                    <option value="">Distance Learning</option>
-                    <option value="">International</option>
-                    <option value="">Career Counselling</option>
-                    <option value="">Diploma</option>
-                    <option value="">Advanced Diploma</option>
-                    <option value="">Degree</option>
-                    <option value="">Professional Certificate</option>
-                    <option value="">Diploma in Business Administration</option>
-                    <option value="">Diploma in Computer Science</option>
-                    <option value="">Diploma in Business Administration</option>
-                    <option value="">Diploma in Education</option>
-                    <option value="">Diploma in Health &amp; Wellness</option>
-                    <option value="">Diploma in Arts &amp; Human</option>
-                </select>
-                <select  className='p-2 border border-custom-color text-custom-color rounded-sm'>
-                    <option value="">All Course Levels</option>
-                    <option value="">Undergraduate</option>
-                    <option value="">Postgraduate</option>
-                    <option value="">Distance Learning</option>
-                    <option value="">International</option>
-                    <option value="">Career Counselling</option>
-                    <option value="">Diploma</option>
-                    <option value="">Advanced Diploma</option>
-                    <option value="">Degree</option>
-                    <option value="">Professional Certificate</option>
-                    <option value="">Diploma in Business Administration</option>
-                    <option value="">Diploma in Computer Science</option>
-                    <option value="">Diploma in Business Administration</option>
-                    <option value="">Diploma in Education</option>
-                    <option value="">Diploma in Health &amp; Wellness</option>
-                    <option value="">Diploma in Arts &amp; Human</option>
-                </select>
-                <button className='px-10 py-3 text-white rounded-md bg-gradient-to-r from-blue-500 to-purple-500'>Search</button>
-            </div>
+    <div className='mx-[200px] my-[20px]'>
+      <div className='flex flex-col p-5 justify-center items-center'>
+        <div className='flex flex-row w-full space-x-2 justify-center items-center'>
+          <span className='text-4xl font-bold text-blue-main'>Find</span>
+          <span className='text-4xl font-bold text-gold-main'>Your</span>
+          <span className='text-4xl font-bold text-blue-main'>Ideal</span>
+          <span className='text-4xl font-bold text-gold-main'>Course</span>
+
+          </div>
+        <div className='my-5'>
+          <p className='text-lg font-bold text-gray-600'>Discover dedicated professionals ready to support you on your journey</p>
         </div>
+        <div className='flex flex-row mt-5 pb-10 items-center justify-between w-full space-x-4'>
+          <select name="category" onChange={handleChange} className='p-2 border border-blue-main text-gold-main rounded-lg'>
+            <option value="">All Course Categories</option>
+            {Categories.map((item) => (
+              <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+          <select name="level" onChange={handleChange} className='p-2 border border-blue-main text-gold-main rounded-lg'>
+            <option value="">All Course Levels</option>
+            {Levels.map((item) => (
+              <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+          <select name="scholarship" onChange={handleChange} className='p-2 border border-blue-main text-gold-main rounded-lg'>
+            <option value=''>Scholarship</option>
+            <option value='true'>Scholarship Available</option>
+            <option value='false'>No Scholarship</option>
+          </select>
+          <button onClick={handleSearch} className='px-10 py-3 text-white rounded-md bg-blue-main font-bold'>Search</button>
+        </div>
+      </div>
     </div>
-  )
+  );
 }

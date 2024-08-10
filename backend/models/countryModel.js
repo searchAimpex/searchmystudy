@@ -5,6 +5,10 @@ const countrySchema = mongoose.Schema(
             type:String,
             required:true
         },
+        bullet:{
+            type:String,
+            default: ""
+        },
         bannerURL:{
             type:String,
             required:true

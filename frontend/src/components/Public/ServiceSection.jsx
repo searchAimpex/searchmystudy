@@ -9,8 +9,6 @@ function ServiceSection() {
     const dispatch = useDispatch()
     const [ServiceFetchAll,{isSuccess}] = useServiceFetchAllMutation()
     const { services } = useSelector((state) => state.service);
-
-
     useEffect(()=>{
         if(isSuccess){
             toast.success("Service Fetached Successfull")
@@ -29,31 +27,39 @@ function ServiceSection() {
 
     },[ServiceFetchAll])
   return (
-    <div className='mx-[100px] mt-[100px] py-2'>
+    <div className='mx-[200px] mt-[100px] py-2'>
         <div className='flex flex-col justify-center items-center'>
-            <div>
-                <p className=' text-4xl font-bold  text-gradient'>SERVICES WE PROVIDE</p>
+            <div className='flex flex-row space-x-3'>
+                <span className='text-4xl font-bold  text-blue-main'>SERVICES</span>
+                <span className='text-4xl font-bold  text-gold-main'>WE</span>
+                <span className='text-4xl font-bold  text-blue-main'>PROVIDE</span>
             </div>
             <div className='my-2'>
-               <p className='text-2xl font-bold  text-gradient'> Empowering Your Journey with Personalized Guidance and Support</p>
+               <p className='text-xl font-bold  text-gray-500'> Empowering Your Journey with Personalized Guidance and Support</p>
             </div>
+          
             <div className='grid grid-cols-4 gap-20 mt-10'>
-                {   services?.map((service, index) => (
-                        <div className='flex flex-col items-center justify-center p-5 border border-[#9B2948] rounded-sm shadow-custom-shadow' >
-                            <div className='w-[70px] h-[70px]'>
+                {services?.map((service, index) => (
+                    <div
+                        className={`flex flex-col items-center justify-center p-2 rounded-lg shadow-xl ${index === 0 ? '' : 'bg-white'}`}
+                        style={index === 0 ? { background: 'linear-gradient(to right, #3C6EDD, #264790)' } : {}}
+                    >
+                        <div className='flex flex-row items-center space-x-4 w-full p-2'>
+                            <div className='w-[50px] h-[50px] bg-white'>
                                 <img className='object-contained' src={service.card.cardImage} alt="fix" />
                             </div>
                             <div>
-                                <p className='text-lg font-bold text-[#9B2948]'>{service.card.title}</p>
+                                <p className={`text-lg font-bold ${index === 0 ? 'text-white' : 'text-black'}`}>{service.card.title}</p>
                             </div>
-                            <div>
-                                <p className='text-[10px] font-bold leading-1'>{service.card.shortDescription}</p>
-                            </div>
-
                         </div>
-                       
-                    ))
-                }
+                        <div className='p-2'>
+                            <p className={`text-sm font-bold leading-1 ${index === 0 ? 'text-white' : 'text-black'}`}>{service.card.shortDescription}</p>
+                        </div>
+                        <div className={`p-2 flex justify-start w-full ${index === 0 ? 'text-white' : 'text-black'}`}>
+                            <button>Learn More</button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     </div>

@@ -4,15 +4,21 @@ import VerticalCardSlider from './VerticalCardsSlider'
 
  function TestmonialSection() {
   return (
-    <div className='mx-[100px] mt-[100px] py-2'>
+    <div className='mt-[100px] py-2'>
         <div className='flex flex-col justify-center items-center'>
-            <div>
-                <p className=' text-4xl font-bold  text-gradient'>WHAT OUR STUDENT SAY</p>
+            <div className='flex flex-row space-x-4'>
+                <span className='text-4xl font-bold text-blue-main'>What</span>
+                <span className='text-4xl font-bold text-gold-main'>Our</span>
+
+                <span className='text-4xl font-bold text-blue-main'>Studeny</span>
+
+                <span className='text-4xl font-bold text-gold-main'>Say</span>
+
             </div>
             <div className='my-2'>
-               <p className='text-2xl font-bold  text-gradient'>Discover dedicated professionals ready to support you on your journey</p>
+               <p className='text-xl font-bold  text-gray-500'>Discover dedicated professionals ready to support you on your journey</p>
             </div>
-            <div className='mt-10'>
+            <div className='mt-10 bg-gradient-to-r from-[#3C6EDD] to-[#264790] px-[200px]'>
             <VerticalCardSlider />
             </div>
         </div>

@@ -196,6 +196,10 @@ const courseSchema = mongoose.Schema(
                 }
             }
 
+        },
+        Fees: {
+            type: Number,
+            default:0
         }
     },
     {

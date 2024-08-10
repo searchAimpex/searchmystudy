@@ -28,9 +28,9 @@ export default function BlogDetailed() {
             <img className='object-cover h-[600px] w-full'  src={SingleBlog.bannerURL} />
         </div>
         <div className='p-8 mx-[150px]'>
-            <h1 className='text-4xl font-bold justify-center text-custom-color'>{SingleBlog.title}</h1>
+            <h1 className='text-4xl font-bold justify-center text-blue-main'>{SingleBlog.title}</h1>
         </div>
-        <div className='p-8 mx-[200px]'>
+        <div className='p-8 mx-[200px] border shadow-xl'>
             <div dangerouslySetInnerHTML={{ __html: SingleBlog?.content }} ></div>
         </div>
     </div>

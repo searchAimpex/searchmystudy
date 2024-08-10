@@ -217,7 +217,53 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
                 params: filter
             }),
-          }),
+        }),
+        AllWebinar: builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/webinar`,
+                method: 'GET',
+            }),
+        }),
+        PostWebinar: builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/webinar`,
+                method: 'GET',
+                body:data
+            }),
+        }),
+        DeleteWebinar: builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/webinar/${data}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateWebinar: builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/webinar`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        CreateMedia: builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/media`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchMedia: builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/media`,
+                method: 'GET',
+            
+            }),
+        }),
+        DeleteMedia: builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/webinar/${data}`,
+                method: 'DELETE'
+            }),
+        }),
 
 
     })
@@ -232,6 +278,8 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
-    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation
+    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,
+    usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
+    useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation
 
 } = userApiSlice

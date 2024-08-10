@@ -3,9 +3,9 @@ import ContactUsForm from './ContactUsForm'
 
 function ContactSection() {
   return (
-    <div className='mt-[100px] py-2'>
-    <div className='bg-custom-primary '>
-        <div className='flex flex-col justify-center items-center p-[100px]'>
+    <div className='mx-[200px] py-2'>
+    <div>
+        <div className='flex flex-col justify-center items-center'>
             <ContactUsForm />
         </div>
     </div>

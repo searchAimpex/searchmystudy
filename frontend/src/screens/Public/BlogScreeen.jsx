@@ -26,19 +26,27 @@ export default function BlogScreeen() {
       console.log('blog',blog)
   return (
     <div>
-        <div className='px-[100px] mt-[100px] flex flex-row w-full justify-between items-center space-x-10'>
-            <div className='h-[10px] w-full bg-custom-color rounded-xl' >
+        <div className='flex flex-col items-center justify-center space-y-10 bg-blue-200 p-10'>
+            <div className='flex flex-row space-x-6'>
+                <span className='text-6xl font-bold text-blue-main'>Read</span>
+                <span className='text-6xl font-bold text-gold-main'>Our</span>
+                <span className='text-6xl font-bold text-blue-main'>Blog</span>
+
 
             </div>
             <div>
-                <span className='text-4xl'>BLOGS</span>
-            </div>
-            <div className='h-[10px] w-full bg-custom-color  rounded-xl'>
+            <span className='text-3xl font-bold'>Stay Updated with the Latest Insights and Stories</span>
 
             </div>
+            <div className='flex flex-col items-center justify-center'>
+                <span className='text-sm font-bold text-gray-600'>Stay informed with our curated articles on studying abroad,</span>
+                <span  className='text-sm font-bold text-gray-600'>edical courses, and university life.</span>
+            </div>
+
         </div>
+        
         <div className='px-[150px] my-[10px] flex flex-row w-full justify-between space-x-5'>
-            <div className='w-2/3 flex flex-col p-4'>
+            <div className='w-full grid grid-cols-3 p-4 gap-6'>
                 
                     {blog && blog?.length > 0 ? (
                         blog?.map((item) => <BlogCard key={item?._id} blog={item} />)
@@ -47,36 +55,7 @@ export default function BlogScreeen() {
                     )}
                 
             </div>
-            <div className='w-1/3 flex flex-col w-full space-y-4 justify-start p-4'>
-                <div>
-                    <input className='w-full rounded-xl p-2 border border-custom-color' placeholder='Search' />
-                </div>
-                <div className='border border-custom-color p-4 rounded-xl'>
-                    <div className='flex flex-row  items-center space-x-8'>
-                        <div className='h-[10px] w-full bg-custom-color  rounded-xl'>
-
-                        </div>
-                        <div>
-                            <span className='text-md font-bold inline'>Recent</span>
-                        </div>
-                        <div className='h-[10px] w-full bg-custom-color  rounded-xl'>
-                    
-                        </div>
-                    </div>
-                    <div>
-                    {blog && blog?.length > 0 ? (
-                                blog?.map((item) =>(
-                                     <div key={item?._id} className='border-b border-custom-color px-4 py-2'>
-                                        <Link to={`/blog/${item._id}`}>{item?.title}</Link>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>No blogs available</p>
-                            )}
-
-                    </div>
-                </div>
-            </div>
+           
 
         </div>
     </div>

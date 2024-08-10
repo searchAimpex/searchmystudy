@@ -33,6 +33,37 @@ import { FetchUniversitys } from '../../../slices/universitySlice';
 import { AddCourse } from '../../../slices/courseSlice';
 
 const storage = getStorage(app);
+const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG','UG+PG(Accelerated)Degree','PhD','Foundation','Short Term Program','Pathway Program','Twiming Program(UG)','Twiming Program(PG)','Online Programe/Distance Learning']
+
+const categories =  [
+  'Arts',
+  'Accounts',
+  'Finance',
+  'Marketing',
+  'Science',
+  'Medical',
+  'Computers',
+  'Engineering',
+  'Law',
+  'Education',
+  'Social Sciences',
+  'Business Administration',
+  'Psychology',
+  'Economics',
+  'Architecture',
+  'Environmental Science',
+  'Nursing',
+  'Hospitality Management',
+  'Media and Communication',
+  'Information Technology',
+  'Pharmacy',
+  'Agriculture',
+  'Design',
+  'Public Health',
+  'Mathematics',
+  'Data Science',
+  'Artificial Intelligence'
+]
 
 export default function CreateCoursePop({ open, handleClose }) {
   const dispatch = useDispatch();
@@ -75,6 +106,7 @@ export default function CreateCoursePop({ open, handleClose }) {
     Location: '',
     Duration: '',
     Category: '',
+    Fees: 0 ,
     Intake: [{ status: true, date: '' }],
     Scholarships: false,
     ProgramLevel: '',
@@ -262,6 +294,16 @@ export default function CreateCoursePop({ open, handleClose }) {
               className="mb-2"
               sx={{ flex: '1 1 30%' }}
             />
+            <TextField
+              id="Fees"
+              name="Fees"
+              label="Fees in Indian Rupee"
+              variant="standard"
+              value={formValues.Fees}
+              onChange={handleChange}
+              className="mb-2"
+              sx={{ flex: '1 1 30%' }}
+            />
             <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="Category-label">Category</InputLabel>
               <Select
@@ -271,10 +313,13 @@ export default function CreateCoursePop({ open, handleClose }) {
                 value={formValues.Category}
                 onChange={handleChange}
                 label="Category"
-              >
-                <MenuItem value="Science">Science</MenuItem>
-                <MenuItem value="Arts">Arts</MenuItem>
-                <MenuItem value="Commerce">Commerce</MenuItem>
+              >{ 
+                categories.map((item)=> {
+                    return (
+                      <MenuItem value={item}>{item}</MenuItem>
+
+                    )
+              })}
               </Select>
             </FormControl>
           </Box>
@@ -334,9 +379,15 @@ export default function CreateCoursePop({ open, handleClose }) {
               onChange={handleChange}
               label="Program Level"
             >
-              <MenuItem value="Bachelor">Bachelor</MenuItem>
-              <MenuItem value="Master">Master</MenuItem>
-              <MenuItem value="PhD">PhD</MenuItem>
+              {
+                level.map((item)=>{
+                  return (
+                    <MenuItem value={item}>{item}</MenuItem>
+                  )
+                })
+              }
+      
+             
             </Select>
           </FormControl>
 

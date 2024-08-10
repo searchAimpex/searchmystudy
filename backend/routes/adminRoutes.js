@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import { createBanner,test,fetchAllBanner,deleteBanner, createService, deleteService, updateService, getService, getServices, createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById, createCounsellor, getCounsellors, deleteCounsellor, createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, createCountry, getCountries, getCountryById, updateCountry, deleteCountry, createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses } from '../controllers/adminController.js';
+import { createBanner,test,fetchAllBanner,deleteBanner, createService, deleteService, updateService, getService, getServices, createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById, createCounsellor, getCounsellors, deleteCounsellor, createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, createCountry, getCountries, getCountryById, updateCountry, deleteCountry, createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses, getWebinars, createWebinar, getWebinarById, updateWebinar, deleteWebinar, getMediaItems, createMediaItem, getMediaItemById, updateMediaItem, deleteMediaItem } from '../controllers/adminController.js';
 const router = express.Router();
 
 
@@ -72,6 +72,34 @@ router.route('/university/:id')
   .put(updateUniversity)
   .delete(deleteUniversity);
 /*************** UNIVERSITY ROUTES **********************/
+
+/*************** WEBINAR ROUTES **********************/
+
+router.route('/webinar')
+  .get(getWebinars)
+  .post(createWebinar);
+
+router.route('/webinar/:id')
+  .get(getWebinarById)
+  .put(updateWebinar)
+  .delete(deleteWebinar);
+
+/*************** WEBINAR ROUTES **********************/
+
+
+
+/*************** MEDIA ROUTES **********************/
+
+router.route('/media')
+  .get(getMediaItems)
+  .post(createMediaItem);
+
+router.route('/media/:id')
+  .get(getMediaItemById)
+  .put(updateMediaItem)
+  .delete(deleteMediaItem);
+
+/*************** MEDIA ROUTES **********************/
 
 
 

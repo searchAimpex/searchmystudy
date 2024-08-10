@@ -113,8 +113,8 @@ export default function TestimonialCard() {
                         {counsellor.name} - {counsellor.course}
                       </div>
                     </div>
-                    <div className="flex flex-col items-center w-[20%]">
-                      <div className="w-[100px] h-[100px]">
+                    <div className="flex flex-col items-center w-[15%]">
+                      <div className="w-[60px] h-[60px]">
                         <img
                           loading="lazy"
                           src={counsellor.imageURL}

@@ -8,6 +8,8 @@ import Country from '../models/countryModel.js';
 import Province from '../models/provinceModel.js';
 import University from '../models/universityModel.js';
 import Course from '../models/courseModel.js';
+import Webinar from '../models/webinarsModel.js';
+import Media from '../models/mediaModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -413,7 +415,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, flagURL,elegiblity } = req.body;
+  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet } = req.body;
 
   const country = new Country({
     name,
@@ -421,7 +423,8 @@ const createCountry = asyncHandler(async (req, res) => {
     description,
     sections,
     flagURL,
-    elegiblity
+    elegiblity,
+    bullet
     
   });
 
@@ -670,7 +673,8 @@ const createCourse = asyncHandler(async (req, res) => {
     ProgramLevel:req.body.ProgramLevel,
     LanguageRequirements:req.body.LanguageRequirements,
     StandardizeRequirement:req.body.StandardizeRequirement,
-    Category:req.body.Category
+    Category:req.body.Category,
+    Fees:req.body.Fees,
   });
 
   const createdCourse = await course.save();
@@ -739,6 +743,7 @@ const getCourses = asyncHandler(async (req, res) => {
       scholarships,
       languageRequirement,
       standardizeRequirement,
+      Fees
     } = req.query;
 
     let filter = {};
@@ -823,6 +828,159 @@ const getCourses = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get all webinars
+// @route   GET /api/webinars
+// @access  Public
+const getWebinars = asyncHandler(async (req, res) => {
+  const webinars = await Webinar.find({});
+  res.json(webinars);
+});
+
+// @desc    Create a new webinar
+// @route   POST /api/webinars
+// @access  Public
+const createWebinar = asyncHandler(async (req, res) => {
+  const { title, imageURL, date, day, time } = req.body;
+
+  const webinar = new Webinar({
+    title,
+    imageURL,
+    date,
+    day,
+    time,
+  });
+
+  const createdWebinar = await webinar.save();
+  res.status(201).json(createdWebinar);
+});
+
+// @desc    Get a single webinar by ID
+// @route   GET /api/webinars/:id
+// @access  Public
+const getWebinarById = asyncHandler(async (req, res) => {
+  const webinar = await Webinar.findById(req.params.id);
+
+  if (webinar) {
+    res.json(webinar);
+  } else {
+    res.status(404);
+    throw new Error('Webinar not found');
+  }
+});
+
+// @desc    Update a webinar
+// @route   PUT /api/webinars/:id
+// @access  Public
+const updateWebinar = asyncHandler(async (req, res) => {
+  const { title, imageURL, date, day, time } = req.body;
+
+  const webinar = await Webinar.findById(req.params.id);
+
+  if (webinar) {
+    webinar.title = title || webinar.title;
+    webinar.imageURL = imageURL || webinar.imageURL;
+    webinar.date = date || webinar.date;
+    webinar.day = day || webinar.day;
+    webinar.time = time || webinar.time;
+
+    const updatedWebinar = await webinar.save();
+    res.json(updatedWebinar);
+  } else {
+    res.status(404);
+    throw new Error('Webinar not found');
+  }
+});
+
+// @desc    Delete a webinar
+// @route   DELETE /api/webinars/:id
+// @access  Public
+const deleteWebinar = asyncHandler(async (req, res) => {
+  const webinar = await Webinar.findOneAndDelete(req.params.id);
+
+  if (webinar) {
+    res.json(webinar);
+  } else {
+    res.status(404);
+    throw new Error('Webinar not found');
+  }
+});
+
+
+// @desc    Get all media items
+// @route   GET /api/media
+// @access  Public
+const getMediaItems = asyncHandler(async (req, res) => {
+  const mediaItems = await Media.find({});
+  res.json(mediaItems);
+});
+
+// @desc    Create a new media item
+// @route   POST /api/media
+// @access  Public
+const createMediaItem = asyncHandler(async (req, res) => {
+  const { title, imageURL, articalURL, description } = req.body;
+
+  const mediaItem = new Media({
+    title,
+    imageURL,
+    articalURL,
+    description,
+  });
+
+  const createdMediaItem = await mediaItem.save();
+  res.status(201).json(createdMediaItem);
+});
+
+// @desc    Get a single media item by ID
+// @route   GET /api/media/:id
+// @access  Public
+const getMediaItemById = asyncHandler(async (req, res) => {
+  const mediaItem = await Media.findById(req.params.id);
+
+  if (mediaItem) {
+    res.json(mediaItem);
+  } else {
+    res.status(404);
+    throw new Error('Media item not found');
+  }
+});
+
+// @desc    Update a media item
+// @route   PUT /api/media/:id
+// @access  Public
+const updateMediaItem = asyncHandler(async (req, res) => {
+  const { title, imageURL, articalURL, description } = req.body;
+
+  const mediaItem = await Media.findById(req.params.id);
+
+  if (mediaItem) {
+    mediaItem.title = title || mediaItem.title;
+    mediaItem.imageURL = imageURL || mediaItem.imageURL;
+    mediaItem.articalURL = articalURL || mediaItem.articalURL;
+    mediaItem.description = description || mediaItem.description;
+
+    const updatedMediaItem = await mediaItem.save();
+    res.json(updatedMediaItem);
+  } else {
+    res.status(404);
+    throw new Error('Media item not found');
+  }
+});
+
+// @desc    Delete a media item
+// @route   DELETE /api/media/:id
+// @access  Public
+const deleteMediaItem = asyncHandler(async (req, res) => {
+  const mediaItem = await Media.findOneAndDelete(req.params.id);
+
+  if (mediaItem) {
+ 
+    res.json(mediaItem);
+  } else {
+    res.status(404);
+    throw new Error('Media item not found');
+  }
+});
 
 
 
@@ -835,7 +993,9 @@ export {
     deleteCounsellor,updateCounsellor,getCounsellorById,getCounsellors,createCounsellor,
     deleteBlog,updateBlog,getBlogById,getAllBlogs,createBlog,
     createCountry, getCountries, getCountryById, updateCountry, deleteCountry ,
-    createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince 
-    ,getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
-    getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses
+    createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince ,
+    getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
+    getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,
+    getWebinars,createWebinar,getWebinarById,updateWebinar,deleteWebinar,
+    getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,
   };

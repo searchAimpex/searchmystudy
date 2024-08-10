@@ -1,94 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import Box from '@mui/joy/Box';
-import { useGetAllBannerMutation } from '../slices/adminApiSlice';
-import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
-import { FetchBanner } from '../slices/bannerSlice';
+import Hero from '../assets/Hero.png'
 
 const Carousel = ({ interval = 3000 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const dispatch = useDispatch();
-  const { banner } = useSelector((state) => state.banner);
-  const [GetAllBanner, { isSuccess }] = useGetAllBannerMutation();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await GetAllBanner();
-        dispatch(FetchBanner(res.data));
-      } catch (error) {
-        toast.error('Failed to fetch data');
-      }
-    };
-
-    fetchData();
-  }, [GetAllBanner, dispatch]);
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('Images loaded successfully');
-    }
-  }, [isSuccess]);
-
-  useEffect(() => {
-    if (banner?.length > 0) {
-      const timer = setInterval(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % banner?.length);
-      }, interval);
-
-      return () => clearInterval(timer);
-    }
-  }, [interval, banner]);
-
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: '100%',
-        height: '500px', // Set a fixed height for the carousel
-        overflow: 'hidden',
-      }}
-    >
-      {banner?.map((image, index) => (
-        <Box
-          key={index}
-          component="img"
-          src={image?.imageURL}
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            transition: 'opacity 1s ease-in-out',
-            opacity: currentIndex === index ? 1 : 0,
-          }}
-        />
-      ))}
-      <Box
-        sx={{
-          position: 'absolute',
-          bottom: 10,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: 1,
-        }}
-      >
-        {banner?.map((_, index) => (
-          <Box
-            key={index}
-            sx={{
-              width: 10,
-              height: 10,
-              borderRadius: '50%',
-              backgroundColor: currentIndex === index ? 'white' : 'grey',
-            }}
-          />
-        ))}
-      </Box>
-    </Box>
+    <div className='w-full flex flex-row p-24 bg-blue-100 h-[680px]'>
+        <div className='flex flex-col items-center p-24 justify-start w-1/2 space-y-5'>
+            <div className='flex flex-row w-full justify-start space-x-5'>
+              <span className='text-blue-main text-6xl font-bold'>Achive</span>
+              <span  className='text-gold-main text-6xl font-bold'>Your</span>
+              <span  className='text-blue-main text-6xl font-bold'>Dream</span>
+
+            </div>
+            <div className='flex flex-row w-full justify-start space-x-5'>
+              <span  className='text-gold-main text-6xl font-bold'>With</span>
+              <span  className='text-blue-main text-6xl font-bold'>The</span>
+              <span  className='text-gold-main text-6xl font-bold'>Best</span>
+            </div>
+            <div className='flex flex-row w-full space-x-5'>
+              <span  className='text-blue-main text-6xl font-bold'>Medical</span>
+              <span  className='text-gold-main text-6xl font-bold'>And</span>
+              <span  className='text-blue-main text-6xl font-bold'>Study</span>
+            </div>
+            <div className='flex flex-row w-full space-x-5'>
+              <span  className='text-gold-main text-6xl font-bold'>Abrod</span>
+              <span  className='text-blue-main text-6xl font-bold'>Program</span>
+            </div>
+            <div className='flex w-full'>
+              <span className='text-gray-600 font-bold'>Discover Top universities,explore exiting course and get personlize Counselling to guide your education journey</span>
+
+            </div>
+            <div className='flex flex-row w-full space-x-6'>
+              <button  className='p-2 rounded-xl text-black font-bold shadow-xl'>Explore Course</button>
+              <button className='bg-blue-main p-2 rounded-xl text-white font-bold shadow-xl'>Get Counselling</button>
+
+            </div>
+        </div>
+        <div className='w-1/2'>
+          <img src={Hero} alt="Hero" className="w-full h-[600px] object-contained" />
+        </div>
+
+    </div>
   );
 };
 
