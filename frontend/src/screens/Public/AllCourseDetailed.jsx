@@ -151,9 +151,9 @@ const AllCourseDetailed = () => {
     return Object.keys(requirements)
       .filter((key) => requirements[key]?.status)
       .map((key) => (
-        <div className="flex flex-row space-x-2">
+        <div>
           <p key={key} className="text-gray-600">
-            {key}: {requirements[key].minRequirement}
+            {key}: {requirements[key].minRequirement},
           </p>
         </div>
       ));
@@ -167,9 +167,9 @@ const AllCourseDetailed = () => {
     return Object.keys(requirements)
       .filter((key) => requirements[key]?.status)
       .map((key) => (
-        <div className="flex flex-row space-x-2">
-          <p key={key} className="flex flex-row space-x-2 text-gray-600">
-            {key}: {requirements[key].minRequirement}
+        <div >
+          <p key={key} className="text-gray-600">
+            {key}: {requirements[key].minRequirement},
           </p>
         </div>
       ));
@@ -185,7 +185,7 @@ const AllCourseDetailed = () => {
       .map((intake, index) => (
         <div>
           <p key={index} className="flex flex-row space-x-2 text-gray-600">
-            Intake Date: {intake.date}
+          {intake.date}
           </p>
         </div>
       ));
@@ -285,40 +285,40 @@ const AllCourseDetailed = () => {
                 <img
                   src={course.University.heroURL}
                   alt={course.ProgramName}
-                  className="w-full h-full object-cover rounded"
+                  className="w-full h-auto object-cover rounded"
                 />
               </div>
               <div className="col-span-2">
-                <h3 className="text-xl font-bold mb-2">{course.ProgramName}</h3>
-                <p className="text-gray-600 mb-2">{course.University.name}</p>
-                <p className="text-gray-600 mb-2">{course.Location}</p>
+                <h3 className="text-xl font-bold">{course.ProgramName}</h3>
+                <p className="text-gray-600">{course.University.name}</p>
+                <p className="text-gray-600 font-bold">{course.Location}</p>
                 <div className="grid grid-cols-2 gap-4">
                   {course.Intake && (
-                    <div>
+                    <div className='flex flex-row items-center'>
                       <h4 className="text-md font-bold">Intake:</h4>
                       {renderIntakes(course.Intake)}
                     </div>
                   )}
                   {course.Duration && (
-                    <div>
+                    <div className='flex flex-row items-center'>
                       <h4 className="text-md font-bold">Duration:</h4>
-                      <p className="text-gray-600">{course.Duration}</p>
+                      <p className="text-gray-600">{course.Duration} Months</p>
                     </div>
                   )}
-                  {course.Fees && (
-                    <div>
+                 
+                    <div className='flex flex-row items-center'>
                       <h4 className="text-md font-bold">Fees:</h4>
-                      <p className="text-gray-600">{course.Fees}</p>
+                      <p className="text-gray-600 text-md font-bold">{course?.Fees}INR</p>
                     </div>
-                  )}
+                  
                   {course.LanguageRequirements && (
-                    <div>
+                    <div className='flex flex-row items-center'>
                       <h4 className="text-md font-bold">Language Requirements:</h4>
                       {renderLanguageRequirements(course.LanguageRequirements)}
                     </div>
                   )}
                   {course.StandardizeRequirement && (
-                    <div>
+                    <div className='flex flex-row items-center'>
                       <h4 className="text-md font-bold">Standardized Requirements:</h4>
                       {renderStandardizedRequirements(course.StandardizeRequirement)}
                     </div>
@@ -340,5 +340,4 @@ const AllCourseDetailed = () => {
     </div>
   );
 };
-
 export default AllCourseDetailed;

@@ -38,7 +38,7 @@ function ServiceSection() {
                <p className='text-xl font-bold  text-gray-500'> Empowering Your Journey with Personalized Guidance and Support</p>
             </div>
           
-            <div className='grid grid-cols-4 gap-20 mt-10'>
+            <div className='grid grid-cols-3 gap-20 mt-10'>
                 {services?.map((service, index) => (
                     <div
                         className={`flex flex-col items-center justify-center p-2 rounded-lg shadow-xl ${index === 0 ? '' : 'bg-white'}`}

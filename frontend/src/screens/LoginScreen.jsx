@@ -7,7 +7,8 @@ import { setCredentials } from '../slices/authSlice';
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
-import LoginHero from "../assets/LoginHero.jpg";
+import LoginHero from "../assets/LoginHero2.png";
+import Women from "../assets/Women.png"
 
 const Schema = yup.object({
   email: yup
@@ -72,9 +73,7 @@ const LoginScreen = () => {
   return (
     <div className="bg-white flex justify-center min-h-screen w-screen h-screen">
     <div className="flex flex-col lg:flex-row bg-white w-full h-full">
-      <div className="relative lg:w-1/2 w-full h-1/2 lg:h-full">
-        <img className="w-full h-full object-cover" alt="Image" src={LoginHero} />
-      </div>
+     
       <div className="relative lg:w-1/2 w-full p-6 lg:p-16 flex items-center justify-center">
         <form onSubmit={handleSubmit}>
         <div className="w-full lg:w-[434px]">
@@ -116,16 +115,36 @@ const LoginScreen = () => {
           <div className="flex items-center mb-6">
             <input type="checkbox" className="w-4 h-4 text-[#7754f6] rounded mr-2" />
             <label className="text-[#6e6e6e] text-base">Keep me logged in</label>
-            <a href="#" className="ml-auto text-[#7754f6] text-base">Forgot Password?</a>
+            <a href="#" className="ml-auto text-gold-main font-bold text-base">Forgot Password?</a>
           </div>
-          <button className="w-full h-[60px] bg-[#7754f6] text-white rounded-[10px] mb-6">
-            Login
+          <button className="w-full h-[60px] bg-blue-main text-white rounded-[10px] mb-6">
+            LOGIN
           </button>
 
          
         </div>
         </form>
       </div>
+      <div className="relative lg:w-1/2 w-full h-1/2 lg:h-full bg-blue-main">
+        <img className="w-full h-full object-cover" alt="Login Hero" src={LoginHero} />
+        
+        {/* Centered overlapping image */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <img className="w-[600px] h-[450px] rounded-full" alt="Women" src={Women} />
+          
+          {/* Text below the image */}
+          {/* <p className="mt-4 text-white text-lg font-bold">Welcome Back!</p>
+          <p className="text-white text-sm">We're glad to see you again.</p> */}
+        </div>
+        <div className="absolute inset-10 flex flex-col mr-20 items-center justify-center">
+            
+          
+          {/* Text below the image */}
+          {/* <p className="mt-4 text-white text-lg font-bold">Welcome Back!</p>
+          <p className="text-white text-sm">We're glad to see you again.</p> */}
+        </div>
+    </div>
+
     </div>
   </div>
   );

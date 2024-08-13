@@ -34,22 +34,21 @@ function CountriesSection() {
         <div className='my-2'>
           <p className='text-xl text-gray-600 font-bold'>500+ Universities around the world</p>
         </div>
-        <div className='grid grid-cols-2 gap-10 mt-10 w-full'>
+        <div className='grid grid-cols-3 gap-6 mt-10 w-full'>
           {countries.map((item) => (
             <div
               className='cursor-pointer flex flex-row space-x-10 shadow-xl rounded-md items-center p-4'
               key={item.id} 
               onClick={() => navigate(`/country/${item._id}`)}
             >
-              <div className='rounded-full flex items-center justify-center h-[100px] w-[100px] overflow-hidden'>
+              <div className='rounded-full flex items-center justify-center border shadow-xl h-[100px] w-[100px] overflow-hidden'>
                 <img src={item.flagURL} alt="flag" className='object-cover h-[200px] w-[200px]' />
               </div>
               <div className='flex flex-col space-x-4'>
                 <p className='text-2xl font-bold'>{item.name}</p>
-                <ul>
-                    <li className='text-md font-bold text-gray-600'>{item.bullet}
-                    </li>
-                </ul>
+                
+                <span className='text-[6px] font-bold text-gray-600'>{item.bullet}</span>
+                 
               </div>
             </div>
           ))}

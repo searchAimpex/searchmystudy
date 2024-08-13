@@ -31,24 +31,28 @@ import UniversityDetailed from './screens/Public/UniversityDetailed.jsx';
 import CourseDetailed from './screens/Public/CourseDetailed.jsx';
 import AllCourseDetailed from './screens/Public/AllCourseDetailed.jsx';
 import AboutDetailed from './screens/Public/AboutDetailed.jsx';
+import AllCountryDetailled from './screens/Public/AllCountryDetailled.jsx';
+import ContactUs from './screens/Public/ContactUs.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
       <Route path='/login' element={<LoginScreen />} />
-        <Route  element={<PublicRoutes />} >
-          <Route index={true} path='/' element={<HomeScreen />} />
-          <Route path='/services'  element={<ServiceScreen />} />
-          <Route path="/service/:id" element={<ServiceDetailed/>} />
-          <Route path = "/blog" element = {<BlogScreeen /> } />
-          <Route path = "/blog/:id" element = {<BlogDetailed /> } />
-          <Route path = '/country/:id' element = { <CountryDetailed />} />
-          <Route path = '/province/:id' element ={<ProvinceDetailed />}  />
-          <Route path = '/university/:id' element ={<UniversityDetailed />}  />
-          <Route path = '/course/:id' element = { <CourseDetailed />} />
-          <Route path = '/course/all' element=  {<AllCourseDetailed />} />
-          <Route path='/aboutus' element= {<AboutDetailed />} />
-        </Route>
+      <Route  element={<PublicRoutes />} >
+        <Route index={true} path='/' element={<HomeScreen />} />
+        <Route path='/services'  element={<ServiceScreen />} />
+        <Route path="/service/:id" element={<ServiceDetailed/>} />
+        <Route path = "/blog" element = {<BlogScreeen /> } />
+        <Route path = "/blog/:id" element = {<BlogDetailed /> } />
+        <Route path = '/country/:id' element = { <CountryDetailed />} />
+        <Route path = '/country' element={< AllCountryDetailled/>} />
+        <Route path = '/province/:id' element ={<ProvinceDetailed />}  />
+        <Route path = '/university/:id' element ={<UniversityDetailed />}  />
+        <Route path = '/course/:id' element = { <CourseDetailed />} />
+        <Route path = '/course/all' element=  {<AllCourseDetailed />} />
+        <Route path='/aboutus' element= {<AboutDetailed />} />
+        <Route path = '/contactus' element = { <ContactUs />}/>
+      </Route>
      
       {/* <Route path='/register' element={<RegisterScreen />} /> */}
       <Route path='' element={<PrivateRoute />}>

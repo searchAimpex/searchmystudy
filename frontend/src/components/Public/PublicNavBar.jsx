@@ -11,21 +11,11 @@ import CallUs from "../Buttons/CallUs";
 import WhatappUs from "../Buttons/WhatappUs";
 import DownloadApp from "../Buttons/DownloadApp";
 import Logo from "../../assets/NewLogo.png"
+import CounsellingModal from "./PopUp/CounsellingModal";
 const initialLinks = [
+
     {
-        name: "HOME",
-        submenu: false,
-        sublinks: [],
-        path: "/"
-    },
-    {
-        name: "SERVICE",
-        submenu: true,
-        sublinks: [],
-        path: "/services" // Initially empty, will be populated dynamically
-    },
-    {
-        name: "STUDY ABROAD",
+        name: "ABROAD",
         submenu: true,
         sublinks: []
     },
@@ -37,19 +27,19 @@ const initialLinks = [
     {
         name: "COUNTRIES",
         submenu: true,
-        sublinks: []
-    },
-    {
-        name: "BLOG",
-        submenu: false,
         sublinks: [],
-        path: "/blog"
+        path: '/country'
     },
+
     {
-        name: "ABOUT US",
-        submenu: false,
-        sublinks: [],
-        path: "/aboutus"
+        name: "RESOURCES",
+        submenu:true,
+        sublinks: [
+            {name: "ABOUT US", link: "/aboutus", path: "/aboutus"},
+            {name: "BLOG", link: "/blog", path: "/blog"},
+            {name: "SERVICE", link: "/services", path: "/services"},
+            {name:"CONTACT US",link:"/contactus",path:"/contactus"},
+        ]
     }
 ];
 
@@ -66,6 +56,7 @@ export default function PublicNavBar() {
     const [subHeading, setSubHeading] = useState("");
     const [menuLinks, setMenuLinks] = useState(initialLinks);
     const [searchQuery, setSearchQuery] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
 
     useEffect(() => {
         const fetchData = async () => {
@@ -109,11 +100,17 @@ export default function PublicNavBar() {
         <div className="sticky top-0 z-50 bg-white shadow-md">
             <div className="flex w-full flex-col">
                 {/* Middle section with logo */}
+                <div className="bg-gold-main h-[20px] w-full flex flex-row items-center justify-end text-white space-x-4 px-[50px]">
+                    <FaFacebook />
+                    <FaInstagramSquare />
+                    <FaTwitter />
+                    <FaLinkedin />
+                </div>
 
                 {/* Links section */}
-                <div className="flex justify-between  w-full px-[50px] py-4">
-                    <div className="flex flex-row space-x-10 w-full">
-                    <div>
+                <div className="flex space-x-10 w-full px-[50px] py-2">
+                    <div className="flex flex-row space-x-6 w-full">
+                    <div className="border cursor-pointer" onClick={(e)=> navigate('/')}>
                         <img src={Logo} alt="Logo" />
                     </div>
                     <ul className="flex space-x-8 font-bold uppercase">
@@ -177,7 +174,7 @@ export default function PublicNavBar() {
                         ))}
                     </ul>
                     </div>
-                    <div className="flex items-center w-1/3 space-x-6">
+                    <div className="flex items-center w-full space-x-2 justify-end">
                         <button
                             className=" font-bold py-2 px-4 bg-gray-200 shadow-xl rounded-lg bg-white hover:bg-blue-main hover:text-white transition duration-300 ease-in-out"
                             onClick={() => navigate('/login')}
@@ -185,12 +182,13 @@ export default function PublicNavBar() {
                             Log in
                         </button>
                         <button
-                            className="bg-gray-200 font-bold py-2 px-4 shadow-xl rounded-lg bg-white hover:bg-blue-main  hover:text-white transition duration-300 ease-in-out"
+                            className="bg-gray-200 font-bold  py-2 px-4 shadow-xl rounded-lg bg-white hover:bg-blue-main  hover:text-white transition duration-300 ease-in-out"
                            
                         >
                             Contact Us
                         </button>
                         <button
+                            onClick={() => setIsModalOpen(true)} 
                             className="text-white bg-blue-main font-bold py-2 px-4 shadow-xl rounded-xl hover:bg-white  hover:text-blue-main transition duration-300 ease-in-out"
                         >
                             Get Counselling
@@ -266,6 +264,8 @@ export default function PublicNavBar() {
                     </ul>
                 </ul>
             </div>
+             {/* Render the Counselling Modal */}
+             <CounsellingModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
         </div>
     );
 }
