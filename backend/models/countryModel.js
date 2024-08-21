@@ -31,10 +31,16 @@ const countrySchema = mongoose.Schema(
       eligiblity: [{
         type:String
     }],    
-        Province: [{
+    Province: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Province'
-        }]
+        }],
+    faq:[
+        {
+            question:String,
+            answer:String
+        }
+    ]
     },
     {
       timestamps: true,

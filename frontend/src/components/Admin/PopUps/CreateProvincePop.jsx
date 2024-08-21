@@ -37,7 +37,6 @@ export default function CreateProvincePop({ open, handleClose }) {
       { title: '', description: '', url: '' }
     ],
     eligiblity: ['', '', '', '', '', '', ''],
-    University: '',
     Country: ''
   });
 
@@ -245,16 +244,6 @@ export default function CreateProvincePop({ open, handleClose }) {
             </AccordionDetails>
           </Accordion>
 
-          {/* University */}
-          <TextField
-            id="University"
-            name="University"
-            label="University"
-            variant="standard"
-            value={formValues.University}
-            onChange={handleChange}
-            className="mb-2"
-          />
 
           {/* Country */}
           <FormControl variant="standard" className="mb-2">

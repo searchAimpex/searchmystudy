@@ -18,6 +18,14 @@ const universitySchema = mongoose.Schema(
             type:String,
             default:""
         },
+        grade: {
+            type: String,
+            default:"A"
+        },
+        rating: {
+            type:String,
+            default:"5"
+        },
         sections: [
             {
             title: String,
@@ -25,11 +33,13 @@ const universitySchema = mongoose.Schema(
             url: String
             }
         ], 
-        eligiblity: [
-            {
+        eligiblity: {
             type:String
-            }
-        ],    
+        },    
+        logo: {
+            type: String,
+            default: 'https://via.placeholder.com/150x150.png'
+        },
         Province: { 
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Province',
@@ -41,6 +51,26 @@ const universitySchema = mongoose.Schema(
             ref: 'Course',
             }
         ],
+        campusLife: {
+            type: String,
+            default: ''
+        },
+        hostel : {
+            type: String,
+            default: ''
+        },
+        type:{
+            type: String,
+            default: 'Public'
+        },
+        rank: {
+            type: Number,
+            default: 0
+        },
+        UniLink: {
+            type: String,
+            default: ''
+        }
         
     },
     {

@@ -27,13 +27,12 @@ function CreateCountryPop({ open, handleClose }) {
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',
-    bullet:'',
+    bullet: '',
     flagURL: '',
     description: '',
-    sections: [
-      { title: '', description: '', url: '' }
-    ],
+    sections: [{ title: '', description: '', url: '' }],
     eligiblity: ['', '', '', '', '', '', ''],
+    faq: [{ question: '', answer: '' }],
   });
 
   const [createCountry, { isSuccess }] = useCreateCountryMutation();
@@ -53,13 +52,13 @@ function CreateCountryPop({ open, handleClose }) {
             [section]: [
               ...prevValues[section].slice(0, index),
               { ...prevValues[section][index], [field]: imageURL },
-              ...prevValues[section].slice(Number(index) + 1)
-            ]
+              ...prevValues[section].slice(Number(index) + 1),
+            ],
           }));
         } else {
           setFormValues((prevValues) => ({
             ...prevValues,
-            [name]: imageURL
+            [name]: imageURL,
           }));
         }
       }
@@ -70,13 +69,13 @@ function CreateCountryPop({ open, handleClose }) {
           [section]: [
             ...prevValues[section].slice(0, index),
             { ...prevValues[section][index], [field]: value },
-            ...prevValues[section].slice(Number(index) + 1)
-          ]
+            ...prevValues[section].slice(Number(index) + 1),
+          ],
         }));
       } else {
         setFormValues((prevValues) => ({
           ...prevValues,
-          [name]: value
+          [name]: value,
         }));
       }
     }
@@ -98,17 +97,28 @@ function CreateCountryPop({ open, handleClose }) {
   const addSection = () => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      sections: [
-        ...prevValues.sections,
-        { title: '', description: '', url: '' }
-      ]
+      sections: [...prevValues.sections, { title: '', description: '', url: '' }],
     }));
   };
 
   const removeSection = (index) => {
     setFormValues((prevValues) => ({
       ...prevValues,
-      sections: prevValues.sections.filter((_, i) => i !== index)
+      sections: prevValues.sections.filter((_, i) => i !== index),
+    }));
+  };
+
+  const addFaq = () => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      faq: [...prevValues.faq, { question: '', answer: '' }],
+    }));
+  };
+
+  const removeFaq = (index) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      faq: prevValues.faq.filter((_, i) => i !== index),
     }));
   };
 
@@ -136,6 +146,7 @@ function CreateCountryPop({ open, handleClose }) {
           }}
           className="space-y-6 my-2"
         >
+          {/* Existing Fields */}
           <TextField
             id="name"
             name="name"
@@ -165,7 +176,7 @@ function CreateCountryPop({ open, handleClose }) {
             className="mb-2"
             label="Flag Image"
           />
-              <TextField
+          <TextField
             id="bullet"
             name="bullet"
             variant="standard"
@@ -229,10 +240,10 @@ function CreateCountryPop({ open, handleClose }) {
             Add Section
           </Button>
 
-          {/* Eligiblity */}
+          {/* Eligibility */}
           <Accordion>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Eligiblity</Typography>
+              <Typography>Eligibility</Typography>
             </AccordionSummary>
             <AccordionDetails className='flex flex-col gap-6'>
               {formValues.eligiblity.map((pointer, index) => (
@@ -249,13 +260,49 @@ function CreateCountryPop({ open, handleClose }) {
               ))}
             </AccordionDetails>
           </Accordion>
+
+          {/* FAQ Section */}
+          <Accordion>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>FAQ</Typography>
+            </AccordionSummary>
+            <AccordionDetails className='flex flex-col gap-6'>
+              {formValues.faq.map((item, index) => (
+                <div key={index} className="flex flex-col gap-4">
+                  <TextField
+                    id={`faqQuestion${index}`}
+                    name={`faq.${index}.question`}
+                    label="Question"
+                    variant="standard"
+                    value={item.question}
+                    onChange={handleChange}
+                    className="mb-2"
+                  />
+                  <TextField
+                    id={`faqAnswer${index}`}
+                    name={`faq.${index}.answer`}
+                    label="Answer"
+                    variant="standard"
+                    value={item.answer}
+                    onChange={handleChange}
+                    className="mb-2"
+                  />
+                  <Button variant="contained" color="error" onClick={() => removeFaq(index)}>
+                    Remove FAQ
+                  </Button>
+                </div>
+              ))}
+              <Button variant="contained" color="primary" onClick={addFaq}>
+                Add FAQ
+              </Button>
+            </AccordionDetails>
+          </Accordion>
+
         </Box>
       </DialogContent>
       <DialogActions>
-        <div className='text-white bg-custom-primary px-10 py-2 font-bold flex flex-row w-full justify-between'>
-          <button onClick={handleClose} className="bg-white text-custom-color rounded-xl p-2 cursor-pointer">Close</button>
-          <button onClick={onSubmit} className="bg-white text-custom-color rounded-xl p-2 cursor-pointer">Submit</button>
-        </div>
+        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={onSubmit}>Submit</Button>
       </DialogActions>
     </Dialog>
   );

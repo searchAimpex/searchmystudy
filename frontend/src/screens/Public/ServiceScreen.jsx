@@ -1,140 +1,189 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Typography from '@mui/material/Typography';
-import ServiceBanner from '../../assets/BannerService.png';
-import './ServiceScreen.css'; // Import the CSS file
-import { useDispatch, useSelector } from 'react-redux';
-import { useServiceFetchAllMutation } from '../../slices/adminApiSlice';
-import { FetchAllServices } from '../../slices/serviceSlice';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from 'react'
+import ServiceHero from '../../assets/ServiceHero.png'
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import HowItWorks from '../../assets/HowItWorks.png'
+import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
+const conselling = [
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+    {
+        title: "Visa Guide",
+        desciption:"Step-by-step guidance for the visa application process. The F-1 visa is the most common type of visa for international students planning to pursue academic studies in the United States. Whether you're enrolling in a bachelor's, master's, or Ph.D. program, this visa allows you to stay in the U.S. for the duration of your studies.",
+        logo: <MenuBookIcon />
+    },
+]
 
-const colorArray = [
-    '#FFEB3B', // Yellow
-    '#FF8A65', // Orange
-    '#81C784', // Green
-    '#64B5F6', // Blue
-    '#BA68C8', // Purple
-    '#FFD54F', // Amber
-    '#4DD0E1', // Cyan
-    '#AED581', // Light Green
-];
 
-function ServiceScreen() {
-    const [expandedIndices, setExpandedIndices] = useState([]);
+export default function ServiceScreen() {
     const cardRefs = useRef([]);
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const [ServiceFetchAll, { isSuccess }] = useServiceFetchAllMutation();
-    const { services } = useSelector((state) => state.service);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await ServiceFetchAll().unwrap();
-                dispatch(FetchAllServices(result));
-            } catch (error) {
-                console.error('Failed to fetch services:', error);
-            }
-        };
-        fetchData();
-    }, [ServiceFetchAll, dispatch]);
-
-    useEffect(() => {
-        let lastScrollY = window.scrollY;
-        let ticking = false;
-
-        const handleScroll = () => {
-            lastScrollY = window.scrollY;
-
-            if (!ticking) {
-                window.requestAnimationFrame(() => {
-                    const visibleCards = getVisibleCards();
-                    updateExpandedIndices(visibleCards);
-                    ticking = false;
-                });
-
-                ticking = true;
-            }
-        };
-
-        const getVisibleCards = () => {
-            return cardRefs.current.map((ref, index) => {
-                const cardTop = ref.offsetTop;
-                const cardBottom = cardTop + ref.offsetHeight;
-
-                return {
-                    index,
-                    isVisible: lastScrollY + window.innerHeight > cardTop && lastScrollY < cardBottom,
-                };
-            });
-        };
-
-        const updateExpandedIndices = (visibleCards) => {
-            const newExpandedIndices = visibleCards
-                .filter((card) => card.isVisible)
-                .map((card) => card.index);
-
-            setExpandedIndices(newExpandedIndices);
-        };
-
-        window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    const [selectedCardIndex, setSelectedCardIndex] = useState(null);
+  
+    const scrollToCard = (index) => {
+      cardRefs.current[index]?.scrollIntoView({ behavior: 'smooth' });
+      setSelectedCardIndex(index);
+    };
 
     return (
-        <div className="service-screen">
-            <div className="service-header">
-                <img className="service-banner" src={ServiceBanner} alt="Service Banner" />
-                <div className='service-title'>
-                    <span className='whitespace-pre'>
-                        <div className='flex justify-center'> Empowering the World’s Top 5%,</div>
-                       <div className='text-color-1' > Highly-Skilled, 21st Century Student.</div>
-                    </span>
+        <div>
+            <div className='flex flex-row px-[100px] py-5 h-[500px] space-x-4 bg-blue-200'>
+                <div className='w-1/2 flex flex-col py-10 space-y-6'>
+                    <div className='flex flex-row space-x-4 items-center justify-start'>
+                        <span className='text-5xl font-bold text-blue-main'>Discover</span>
+                        <span className='text-5xl font-bold text-gold-main'>Our</span>
+                        <span className='text-5xl font-bold text-blue-main'>Service</span>
+                    </div>
+                    <div>
+                        <span className='text-4xl'>Explore the range of professional services we offer to support your educational and career goals.</span>
+                    </div>
+                    <div>
+                        <span className='text-xl'>Explore the range of professional services we offer to support your educational and career goals.</span>
+                    </div>
+                    <div>
+                        <button className='px-4 py-2 bg-blue-main rounded-xl text-white font-bold'>Get Counselling</button>
+                    </div>
+                </div>
+                <div className='w-1/2'>
+                    <img className='h-auto object-cover' src={ServiceHero} alt="Service Hero" />
                 </div>
             </div>
-            <div className='service-description'>
-                <div className='p-5'>
-                    <Typography sx={{ fontSize: '20px' }}> 
-                    Embark on your educational journey with confidence through our holistic student services. Whether you're seeking guidance on student visas, expert advice on university selection, or personalized career counseling, we're here to empower you every step of the way. Our services extend beyond academics, offering support for spouse visas, air ticket arrangements, and comprehensive student counseling.<br></br> At [Your Company Name], we are committed to shaping your future by providing the resources and expertise you need to succeed in today's competitive academic landscape.
-                    </Typography>
+            
+            <div className='mt-10 mx-[200px]'>
+                {/* Quick Links Section */}
+                <div className='flex space-x-4 mb-6'>
+                    {conselling.map((item, index) => (
+                        <button
+                            key={index}
+                            onClick={() => scrollToCard(index)}
+                            className={`px-2 py-1 rounded-lg text-[10px] font-bold ${selectedCardIndex === index ? 'bg-blue-main text-white' : 'bg-white text-blue-main border border-blue-main'}`}
+                        >
+                            {item.title}
+                        </button>
+                    ))}
                 </div>
-            </div>
-            <div>
-                <div className='service-cards'>
-                    {services?.map((content, index) => (
+    
+                {/* Card Grid */}
+                <div className='grid grid-cols-1 gap-10'>
+                    {conselling.map((item, index) => (
                         <div
                             key={index}
-                            id={`panel${index}`}
-                            className={`card ${expandedIndices.includes(index) ? 'expanded' : ''}`}
                             ref={(el) => (cardRefs.current[index] = el)}
+                            className={`flex flex-col p-6 rounded-xl shadow-lg transform transition-transform duration-300 ${selectedCardIndex === index ? 'bg-blue-600 text-white' : 'bg-white text-blue-main border border-blue-main'} hover:shadow-xl hover:border hover:border-white`}
                         >
-                            <div className="card-header" style={{ backgroundColor: colorArray[index % colorArray.length] }}>
-                                <Typography>{content?.title}</Typography>
+                            <div className='flex flex-row items-center space-x-6'>
+                                <div className='text-2xl'>{item.logo}</div>
+                                <div className='text-xl font-bold'>{item.title}</div>
                             </div>
-                            {expandedIndices.includes(index) && (
-                                <div className="card-body">
-                                    <div className="flex flex-col items-center justify-center md:flex-row justify-between items-center">
-                                        <img src={content?.sectionOne?.heroOne} alt={content?.title} className="w-64 h-64 rounded-md object-cover mr-4" />
-                                        <Typography>
-                                            {content?.sectionOne?.content}
-                                        </Typography>
-                                        <button onClick={() => navigate(`/service/${content?._id}`)} 
-                                  
-                                        className={`font-bold border border-${colorArray[index % colorArray.length]} p-2 rounded-sm text-${colorArray[index % colorArray.length]}`}
-                                        style={{ borderColor: colorArray[index % colorArray.length],color :colorArray[index % colorArray.length]}}
-                                    
-                                        >View</button>
-                                    </div>
-                                </div>
-                            )}
+                            <div className='mt-4'>
+                                <span className='text-base'>{item.desciption}</span>
+                            </div>
                         </div>
                     ))}
                 </div>
+                <div className='flex flex-col space-y-6 items-center mt-10'>
+                    <div className='flex flex-row space-x-4 items-center justify-start'>
+                        <span className='text-5xl font-bold text-blue-main'>How</span>
+                        <span className='text-5xl font-bold text-gold-main'>It</span>
+                        <span className='text-5xl font-bold text-blue-main'>Works</span>
+                    </div>
+                    <div>
+                        <span className='text-md'>Discover the range of professional services we offer to support your educational and career goals.</span>
+                    </div>
+                    <div className='flex flex-row space-x-4 w-full'>
+                        <div className='flex flex-col space-y-6'>
+                            <div className='flex flex-row shadow-xl p-4 space-x-2 items-center rounded-xl'>
+                                    <span className='text-blue-main text-md'>
+                                        <CheckBoxRoundedIcon />
+                                    </span>
+                                    <div>
+                                        <span className='text-md font-bold'>Initial Consultation :  Discuss your needs and goals with our expert team.</span>
+                                    </div>
+                            </div>
+                            <div className='flex flex-row shadow-xl p-4 space-x-2 items-center rounded-xl'>
+                                    <span className='text-blue-main'>
+                                        <CheckBoxRoundedIcon />
+                                    </span>
+                                    <div>
+                                        <span className='text-md font-bold'>Personalized Plan :  Receive a tailored action plan and recommendations.</span>
+                                    </div>
+                            </div>
+                            <div className='flex flex-row shadow-xl p-4 space-x-2 items-center rounded-xl'>
+                                    <span className='text-blue-main'>
+                                        <CheckBoxRoundedIcon />
+                                    </span>
+                                    <div>
+                                        <span className='text-md font-bold'>Implementation Support :  Get ongoing assistance throughout the  process.</span>
+                                    </div>
+                            </div>
+                            <div className='flex flex-row shadow-xl p-4 space-x-2 items-center rounded-xl'>
+                                    <span className='text-blue-main'>
+                                        <CheckBoxRoundedIcon />
+                                    </span>
+                                    <div>
+                                        <span className='text-md font-bold'>Follow-Up :  Enjoy continuous support and follow-up to ensure your success.</span>
+                                    </div>
+                            </div>
+
+                        </div>
+                        <div>
+                            <img className='h-auto w-full' src={HowItWorks} alt="How It Works" />
+                        </div>
+
+                    </div>
+                </div>
             </div>
         </div>
-    );
+    )
 }
-
-export default ServiceScreen;

@@ -3,7 +3,7 @@ import Hero from '../assets/Hero.png'
 
 const Carousel = ({ interval = 3000 }) => {
   return (
-    <div className='w-full flex flex-row p-24 bg-blue-100 h-[680px]'>
+    <div className='w-full flex flex-row bg-blue-100 h-[680px]'>
         <div className='flex flex-col items-center p-24 justify-start w-1/2 space-y-5'>
             <div className='flex flex-row w-full justify-start space-x-5'>
               <span className='text-blue-main text-6xl font-bold'>Achive</span>

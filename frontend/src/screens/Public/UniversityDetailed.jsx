@@ -1,25 +1,81 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useFetchOneProvinceMutation, useFetchOneUniversityMutation } from '../../slices/adminApiSlice';
-import { FetchOneProvinces } from '../../slices/provinceSlice';
-import Loader from '../../components/Loader';
+import { useFetchOneUniversityMutation } from '../../slices/adminApiSlice';
 import { FetchOneUniversitys } from '../../slices/universitySlice';
+import Loader from '../../components/Loader';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Tab, Tabs, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import InfoIcon from '@mui/icons-material/Info';
+import SchoolIcon from '@mui/icons-material/School';
+import CategoryIcon from '@mui/icons-material/Category';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Star, StarBorder } from '@mui/icons-material';
+
+function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <AnimatePresence mode="wait">
+            {value === index && (
+                <motion.div
+                    role="tabpanel"
+                    id={`tabpanel-${index}`}
+                    aria-labelledby={`tab-${index}`}
+                    {...other}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 20 }}
+                    transition={{ duration: 0.5 }}
+                    className="border p-4 rounded-lg bg-white shadow-sm"
+                >
+                    <Box>
+                        {children}
+                    </Box>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+}
+
+
+const renderStars = (grade) => {
+    const totalStars = 5; // Total number of stars
+    const filledStars = Math.round(grade); // Number of filled stars based on grade
+
+    return (
+        <div className='flex items-center'>
+            {[...Array(totalStars)].map((_, index) => (
+                index < filledStars ? (
+                    <Star key={index} color="primary" />
+                ) : (
+                    <StarBorder key={index} color="primary" />
+                )
+            ))}
+        </div>
+    );
+};
 
 export default function UniversityDetailed() {
     const { id } = useParams();
     const dispatch = useDispatch();
+    const [tabValue, setTabValue] = React.useState(0);
+
     const navigate = useNavigate();
     const [FetchOneUniversity, { isLoading }] = useFetchOneUniversityMutation();
     const { singleUniversity } = useSelector((state) => state.university);
-    const singleProvince = singleUniversity
+
+    const handleTabChange = (event, newValue) => {
+        setTabValue(newValue);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await FetchOneUniversity(id).unwrap();
                 dispatch(FetchOneUniversitys(result));
             } catch (error) {
-                console.error('Failed to fetch province:', error);
+                console.error('Failed to fetch university:', error);
             }
         };
         fetchData();
@@ -30,85 +86,163 @@ export default function UniversityDetailed() {
     }
 
     return (
-        <div>
-            <div>
-                <img className='h-[600px] object-cover w-full' src={singleProvince?.bannerURL} />
-            </div>
-            <div className='mx-[100px]'>
+        <div className='mx-[200px]'>
+            <div className='flex flex-col space-y-20'>
+                <div className='relative'>
+                    {/* Rounded Banner Image */}
+                    <motion.img 
+                        src={singleUniversity.bannerURL} 
+                        className='w-full h-[400px] rounded-lg object-cover' 
+                        alt='University Banner' 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                    />
 
-                <div className='px-[100px] mt-[50px] grid grid-cols-3 w-full justify-between items-center gap-10'>
-                    <div className='h-[10px] w-full bg-custom-color rounded-xl'></div>
-                    <div className='flex items-center justify-center'>
-                        <p className='text-4xl text-gradient w-full'>{singleProvince?.name}</p>
-                    </div>
-                    <div className='h-[10px] w-full bg-custom-color rounded-xl'></div>
-                </div>
-                <div className='mt-[50px] flex flex-row w-full space-x-4 justify-between'>
-                    <div className='w-1/3  flex items-center justify-center'>
-                        <img src={singleProvince?.heroURL} />
-                    </div>
-                    <div className='w-2/3 flex items-center justify-center'>
-                        <p className='text-xl'>{singleProvince?.description}</p>
-                    </div>
-                </div>
-                <div>
-                    {singleProvince?.sections?.map((item, index) => (
-                        <div key={index}>
-                            <div className='px-[100px] mt-[50px] flex flex-row w-full justify-start items-center space-x-10'>
-                                <div className='h-[10px] w-1/6 bg-custom-color rounded-xl'></div>
-                                <div>
-                                    <span className='text-4xl text-gradient'>{item?.title}</span>
+                    {/* Logo, University Name, and Province Name */}
+                    <motion.div 
+                        className='absolute bottom-[-75px] left-4 flex items-center space-x-4'
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.5 }}
+                    >
+                        <div className='bg-white rounded-full border'>
+                            <img src={singleUniversity.logo} className='w-[150px] h-[150px] rounded-full border-4 border-white object-cover' alt='University Logo' />
+                        </div>
+                        <div className='text-white mt-[75px]'>
+                            <h2 className='text-2xl text-black font-bold'>{singleUniversity.name}</h2>
+                            <div className='flex flex-row mt-2 items-center'>
+                                <div className='rounded-full w-[60px] h-[60px] flex items-center border-r p-2'>
+                                    <img className='object-cover rounded-full' src={singleUniversity?.Province?.Country?.flagURL} alt="Country Flag"/>
                                 </div>
-                            </div>
-                            <div className='mt-[50px] flex flex-row w-full'>
-                                <div className='w-1/2 flex items-center justify-center'>
-                                    <p className='text-xl'>{item?.description}</p>
+                                <div className='p-2 border-r'>
+                                    <span className='text-lg text-black'>{singleUniversity?.Province?.Country.name}</span>
                                 </div>
-                                <div className='w-1/2 flex items-center justify-center'>
-                                    <img src={item?.url} className='h-[450px] object-cover' />
+                                <div className='p-2'>
+                                    <span className='text-lg text-black'>{singleUniversity?.Province?.name}</span>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    </motion.div>
                 </div>
-                <div className='my-[50px]'>
-                    <div className='grid grid-cols-4 gap-10 my-[50px]'>
-                        {singleProvince?.University?.map((items)=>{
-                            return (
-                                <div className='shadow-xl flex flex-col p-2'>
-                                    <div className='flex items-center'>
-                                        <img src={items?.heroURL} className='object-cover h-[150px] w-full' />
-                                    </div>
-                                    <div className='flex flex-row justify-between p-5 items-center'>
-                                        <p className='text-xl text-gradient font-bold'>{items.name}</p>
-                                        <button
-                                        onClick={()=>navigate(`/province/${items._id}`)} 
-                                        className='text-xl text-gradient font-bold'>VIEW</button>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                    </div>
-                </div>
-                <div className='my-[50px]'>
-                    <div className='grid grid-cols-4 gap-10 my-[50px]'>
-                    {singleProvince?.Course?.map((items)=>{
-                        return (
-                            <div className='shadow-xl flex flex-col p-2'>
-                                <div className='flex items-center'>
-                                    <div>{items.ProgramName} </div>
-                                </div>
-                                <div className='flex flex-row justify-between p-5 items-center'>
-                                    <p className='text-xl text-gradient font-bold'>{items.Location}</p>
-                                    <button
-                                    onClick={()=>navigate(`/course/${items._id}`)} 
-                                    className='text-xl text-gradient font-bold'>VIEW</button>
-                                </div>
-                            </div>
-                        )
-                    })}
-                    </div>
-                </div>
+
+                {/* Tabs Section */}
+                <Box>
+                    <Tabs
+                        value={tabValue}
+                        onChange={handleTabChange}
+                        aria-label="university tabs"
+                        className="mb-4"
+                        indicatorColor="primary"
+                        textColor="primary"
+                        variant="fullWidth"
+                        centered
+                    >
+                        <Tab label="Overview" icon={<InfoIcon />} iconPosition="start" />
+                        <Tab label="Fees & Campus Life" icon={<SchoolIcon />} iconPosition="start" />
+                        <Tab label="Eligibility" icon={<CategoryIcon />} iconPosition="start" />
+                    </Tabs>
+
+                    {/* Overview Tab */}
+                    <TabPanel value={tabValue} index={0}>
+                        <Box
+                            sx={{
+                                padding: 4,
+                                borderRadius: 2,
+                                boxShadow: 1,
+                                backgroundColor: 'background.paper',
+                                maxWidth: 800,
+                                margin: '0 auto',
+                            }}
+                        >
+                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                Overview
+                            </Typography>
+                            {/* Display information in a row */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    marginBottom: 2,
+                                }}
+                            >
+                                 <Typography variant="body1">
+                                    <strong>Grade:</strong>{singleUniversity.grade}
+                                   
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Rank:</strong> {singleUniversity.rank}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Rating</strong>
+                                    {renderStars(singleUniversity.rating)}
+                                </Typography>
+                                <Typography variant="body1">
+                                    <strong>Type:</strong> {singleUniversity.type}
+                                </Typography>
+                            </Box>
+
+                            {/* Section for university description */}
+                            <Box sx={{ marginTop: 4 }}>
+                                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                    About the University
+                                </Typography>
+                                <Typography variant="body1">
+                                    {singleUniversity.description || 'No description available.'}
+                                </Typography>
+                            </Box>
+                        </Box>
+                    </TabPanel>
+
+                    {/* Fees & Campus Life Tab */}
+                    <TabPanel value={tabValue} index={1}>
+                        <Box
+                            sx={{
+                                padding: 4,
+                                borderRadius: 2,
+                                boxShadow: 1,
+                                backgroundColor: 'background.paper',
+                                maxWidth: 800,
+                                margin: '0 auto',
+                            }}
+                        >
+                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                Fees & Campus Life
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Fees:</strong> {singleUniversity?.fees || 'N/A'}
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Campus Life:</strong> {singleUniversity.campusLife}
+                            </Typography>
+                            <Typography variant="body1">
+                                <strong>Hostel:</strong> {singleUniversity.hostel}
+                            </Typography>
+                        </Box>
+                    </TabPanel>
+
+                    {/* Eligibility Tab */}
+                    <TabPanel value={tabValue} index={2}>
+                        <Box
+                            sx={{
+                                padding: 4,
+                                borderRadius: 2,
+                                boxShadow: 1,
+                                backgroundColor: 'background.paper',
+                                maxWidth: 800,
+                                margin: '0 auto',
+                            }}
+                        >
+                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                Eligibility
+                            </Typography>
+                            <Typography variant="body1">
+                                {singleUniversity.eligiblity}
+                            </Typography>
+                        </Box>
+                    </TabPanel>
+                </Box>
             </div>
         </div>
     );

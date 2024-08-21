@@ -5,7 +5,6 @@ import { useFetchOneCourseMutation } from '../../slices/adminApiSlice';
 import { FetchOneCourses } from '../../slices/courseSlice';
 import {
   Box,
-  Card,
   CardContent,
   CardMedia,
   Tab,
@@ -14,6 +13,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -21,6 +21,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import InfoIcon from '@mui/icons-material/Info';
 import CategoryIcon from '@mui/icons-material/Category';
 import TimerIcon from '@mui/icons-material/Timer';
+import { motion } from 'framer-motion';
 
 export default function CourseDetailed() {
   const { id } = useParams();
@@ -47,10 +48,20 @@ export default function CourseDetailed() {
   };
 
   return (
-    <div className="p-4 mx-auto max-w-7xl my-8">
+    <motion.div
+      className="p-4 mx-auto max-w-7xl my-8"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+    >
       {singleCourse && (
         <>
-          <Card className="mb-6 shadow-lg">
+          <motion.div
+            className="relative mb-6"
+            initial={{ scale: 0.95 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+          >
             <CardMedia
               component="img"
               height="300"
@@ -58,18 +69,54 @@ export default function CourseDetailed() {
               alt={singleCourse?.University?.name}
               className="object-cover"
             />
-            <CardContent>
-              <Typography variant="h4" component="div" gutterBottom>
+            {/* <div className="absolute top-1/6 left-8 transform -translate-y-1/2"> */}
+            <div className='flex flex-row  mt-6 space-x-10'>
+              <motion.img
+                src={singleCourse?.University?.logo}
+                alt={singleCourse?.University?.name}
+                className="w-40 h-40 rounded-full border-4 border-white shadow-lg"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              />
+            {/* </div> */}
+            <CardContent className="relative flex flex-col items-start space-y-2">
+              <Box className="flex space-x-4">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  sx={{ boxShadow: 2, fontWeight: 'bold', textTransform: 'none' }}
+                >
+                  Apply
+                </Button>
+                <Button
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    boxShadow: 1,
+                    fontWeight: 'bold',
+                    textTransform: 'none',
+                    '&:hover': {
+                      backgroundColor: 'primary.main',
+                      color: 'white',
+                    },
+                  }}
+                >
+                  Brochure
+                </Button>
+              </Box>
+              <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
+                {singleCourse?.ProgramName}
+              </Typography>
+              <Typography variant="h5" component="div" gutterBottom>
                 {singleCourse?.University?.name}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary">
                 {singleCourse?.Location}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {singleCourse?.description}
-              </Typography>
             </CardContent>
-          </Card>
+            </div>
+          </motion.div>
 
           <Box>
             <Tabs
@@ -85,6 +132,9 @@ export default function CourseDetailed() {
               <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
               <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
               <Tab label="Requirements" icon={<SchoolIcon />} iconPosition="start" />
+              <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
+              <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
+              <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" />
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>
@@ -101,7 +151,6 @@ export default function CourseDetailed() {
                 <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
                   Program Details
                 </Typography>
-                
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
                     <InfoIcon sx={{ mr: 1, color: 'primary.main' }} />
@@ -120,22 +169,25 @@ export default function CourseDetailed() {
                     Program Level: <strong>{singleCourse.ProgramLevel}</strong>
                   </Typography>
                 </Box>
-                
+
                 <Typography variant="body1">
-                  <span style={{ fontWeight: 'bold' }}>Website URL:</span> 
+                  <span style={{ fontWeight: 'bold' }}>Website URL:</span>
                   <a href={singleCourse.WebsiteURL} className="text-blue-500 underline">
                     {singleCourse.WebsiteURL}
                   </a>
                 </Typography>
+
               </Box>
             </TabPanel>
 
             <TabPanel value={tabValue} index={1}>
-              <Typography variant="h6" gutterBottom>Intake Details</Typography>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                Intake Details
+              </Typography>
               {singleCourse?.Intake?.map((intake, index) => (
                 <Accordion key={index} className="mb-2">
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                    <Typography>Intake {index + 1}</Typography>
+                    <Typography sx={{ fontWeight: 'bold' }}>Intake {index + 1}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>Status: {intake.status ? 'Yes' : 'No'}</Typography>
@@ -146,12 +198,14 @@ export default function CourseDetailed() {
             </TabPanel>
 
             <TabPanel value={tabValue} index={2}>
-              <Typography variant="h6" gutterBottom>Language Requirements</Typography>
+              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
+                Language Requirements
+              </Typography>
               {singleCourse?.LanguageRequirements ? (
                 Object.entries(singleCourse.LanguageRequirements).map(([key, req]) => (
                   <Accordion key={key} className="mb-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography>{key}</Typography>
+                      <Typography sx={{ fontWeight: 'bold' }}>{key}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
@@ -163,13 +217,15 @@ export default function CourseDetailed() {
               ) : (
                 <Typography>No language requirements available</Typography>
               )}
-              
-              <Typography variant="h6" className="mt-4 mb-2">Standardized Requirements</Typography>
+
+              <Typography variant="h6" className="mt-4 mb-2" sx={{ fontWeight: 'bold' }}>
+                Standardized Requirements
+              </Typography>
               {singleCourse?.StandardizeRequirement ? (
                 Object.entries(singleCourse.StandardizeRequirement).map(([key, req]) => (
                   <Accordion key={key} className="mb-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography>{key}</Typography>
+                      <Typography sx={{ fontWeight: 'bold' }}>{key}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
@@ -182,10 +238,12 @@ export default function CourseDetailed() {
                 <Typography>No standardized requirements available</Typography>
               )}
             </TabPanel>
+
+            {/* Add additional tabs content here */}
           </Box>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 
@@ -199,13 +257,8 @@ function TabPanel(props) {
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       {...other}
-      className="border p-4 rounded-lg bg-white shadow-sm"
     >
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }

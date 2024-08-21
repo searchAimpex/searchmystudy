@@ -4,6 +4,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useFetchOneProvinceMutation } from '../../slices/adminApiSlice';
 import { FetchOneProvinces } from '../../slices/provinceSlice';
 import Loader from '../../components/Loader';
+import { motion } from 'framer-motion';
+import Section from '../../components/Public/Section'; // Import the Section component
 
 export default function ProvinceDetailed() {
     const { id } = useParams();
@@ -29,65 +31,95 @@ export default function ProvinceDetailed() {
     }
 
     return (
-        <div>
-            <div>
-                <img className='h-[600px] object-cover w-full' src={singleProvince?.bannerURL} />
+        <div className='bg-gray-100'>
+            <div className='relative'>
+                <motion.img
+                    className='h-[450px] w-full object-cover'
+                    src={singleProvince?.bannerURL}
+                    alt="Province Banner"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1 }}
+                />
+                <div className='absolute inset-0 flex items-center justify-center'>
+                    <div className='bg-black bg-opacity-30 p-4 rounded-lg text-white'>
+                        <h1 className='text-5xl font-bold'>{singleProvince?.name}</h1>
+                    </div>
+                </div>
             </div>
-            <div className='mx-[100px]'>
-
-                <div className='px-[100px] mt-[50px] flex flex-row w-full justify-between items-center space-x-10'>
-                    <div className='h-[10px] w-full bg-custom-color rounded-xl'></div>
-                    <div>
-                        <span className='text-4xl text-gradient'>{singleProvince?.name}</span>
-                    </div>
-                    <div className='h-[10px] w-full bg-custom-color rounded-xl'></div>
-                </div>
-                <div className='mt-[50px] flex flex-row w-full space-x-4 justify-between'>
-                    <div className='w-1/3  flex items-center justify-center'>
-                        <img src={singleProvince?.heroURL} />
-                    </div>
-                    <div className='w-2/3 flex items-center justify-center'>
-                        <p className='text-xl'>{singleProvince?.description}</p>
-                    </div>
-                </div>
+            <div className='mx-[200px] my-[50px]'>
+                <motion.div
+                    className='flex flex-row space-x-24'
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 1 }}
+                >
+                    <motion.div
+                        className='w-1/3 h-[400px] rounded-xl overflow-hidden'
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <img
+                            src={singleProvince?.heroURL}
+                            alt="Province Hero"
+                            className='w-full h-full object-cover'
+                        />
+                    </motion.div>
+                    <motion.div
+                        className='w-2/3 flex items-start'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1 }}
+                    >
+                        <p className='text-md'>{singleProvince?.description}</p>
+                    </motion.div>
+                </motion.div>
                 <div>
                     {singleProvince?.sections?.map((item, index) => (
-                        <div key={index}>
-                            <div className='px-[100px] mt-[50px] flex flex-row w-full justify-start items-center space-x-10'>
-                                <div className='h-[10px] w-1/6 bg-custom-color rounded-xl'></div>
-                                <div>
-                                    <span className='text-4xl text-gradient'>{item?.title}</span>
-                                </div>
-                            </div>
-                            <div className='mt-[50px] flex flex-row w-full'>
-                                <div className='w-1/2 flex items-center justify-center'>
-                                    <p className='text-xl'>{item?.description}</p>
-                                </div>
-                                <div className='w-1/2 flex items-center justify-center'>
-                                    <img src={item?.url} className='h-[450px] object-cover' />
-                                </div>
-                            </div>
-                        </div>
+                        <Section key={index} item={item} index={index} />
                     ))}
                 </div>
                 <div className='my-[50px]'>
-                    <div className='grid grid-cols-4 gap-10 my-[50px]'>
-                        {singleProvince?.University?.map((items)=>{
-                            return (
-                                <div className='shadow-xl flex flex-col p-2'>
-                                    <div className='flex items-center'>
-                                        <img src={items?.heroURL} className='object-cover h-[150px] w-full' />
+                    <motion.div
+                        className='grid grid-cols-3 gap-6'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1 }}
+                    >
+                        {singleProvince?.University?.map((items) => (
+                            <motion.div
+                                key={items._id}
+                                className='shadow-xl flex flex-col p-2'
+                                whileHover={{ scale: 1.05 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <div className='flex items-center justify-center'>
+                                    <img
+                                        src={items?.heroURL}
+                                        alt={items.name}
+                                        className='object-contain w-[350px] h-[350px] rounded-xl'
+                                    />
+                                </div>
+                                <div className='flex flex-col items-start p-5'>
+                                    <div className='flex justify-start items-start'> 
+                                        <span className='text-xl font-bold'>{items.name}</span>
+
                                     </div>
-                                    <div className='flex flex-row justify-between p-5 items-center'>
-                                        <p className='text-xl text-gradient font-bold'>{items.name}</p>
+                                    <div>
+                                        <span className='text-sm text-gray-500 font-bold'>{items.description.slice(0,50)}</span>
+                                    </div>
+                                    <div className='flex flex-col w-full justify-end items-end'>
                                         <button
-                                        onClick={()=>navigate(`/university/${items._id}`)} 
-                                        className='text-xl text-gradient font-bold'>VIEW</button>
+                                            onClick={() => navigate(`/university/${items._id}`)}
+                                            className='text-md text-white px-4 py-2 rounded-xl bg-blue-main font-bold mt-2 hover:text-gold-main transition-colors duration-300'
+                                        >
+                                            VIEW
+                                        </button>
                                     </div>
                                 </div>
-                            )
-                        })}
-                    </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </div>
             </div>
         </div>

@@ -415,7 +415,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet } = req.body;
+  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet ,faq} = req.body;
 
   const country = new Country({
     name,
@@ -424,7 +424,8 @@ const createCountry = asyncHandler(async (req, res) => {
     sections,
     flagURL,
     elegiblity,
-    bullet
+    bullet,
+    faq
     
   });
 
@@ -566,7 +567,15 @@ const getAllUniversities = asyncHandler(async (req, res) => {
 // @route   GET /universities/:id
 // @access  Public
 const getUniversityById = asyncHandler(async (req, res) => {
-  const university = await University.findById(req.params.id).populate('Province').populate('Course');
+  const university = await University.findById(req.params.id)
+  .populate({
+    path: 'Province',
+    populate: {
+      path: 'Country', // Populate the Country field inside Province
+    },
+  })
+  .populate('Course'); // Populate the Course field
+
   
   if (university) {
     res.status(200).json(university);
@@ -588,6 +597,11 @@ const createUniversity = asyncHandler(async (req, res) => {
     sections:req.body.sections,
     eligiblity:req.body.eligiblity,
     Province:req.body.Province,
+    logo:req.body.logo,
+    campusLife:req.body.campusLife ,
+    hostel:req.body.hostel,
+    rank:req.body.rank,
+    UniLink:req.body.UniLink
   });
 
   const createdUniversity = await university.save();
@@ -602,7 +616,7 @@ const createUniversity = asyncHandler(async (req, res) => {
 // @route   PUT /universities/:id
 // @access  Private/Admin
 const updateUniversity = asyncHandler(async (req, res) => {
-  const { name, bannerURL, heroURL, description, sections, eligiblity, Province } = req.body;
+  const { name, bannerURL, heroURL, description, sections, eligiblity, Province ,logo,campusLife ,hostel,rank,UniLink} = req.body;
 
   const university = await University.findById(req.params.id);
 
@@ -614,6 +628,12 @@ const updateUniversity = asyncHandler(async (req, res) => {
     university.sections = sections || university.sections;
     university.eligiblity = eligiblity || university.eligiblity;
     university.Province = Province || university.Province;
+    university.logo = logo || university.logo;
+    university.campusLife = campusLife || university.campusLife;
+    university.hostel = hostel  || university.hostel;
+    university.type = type || university.type;
+    university.rank = rank || university.rank;
+    university.UniLink = UniLink || university.UniLink
 
     const updatedUniversity = await university.save();
     res.status(200).json(updatedUniversity);
@@ -731,7 +751,6 @@ const deleteCourse = asyncHandler(async (req, res) => {
 // @desc    GET FILTER DATA
 // @route   GET /course/All
 // @access  Public
-
 const getCourses = asyncHandler(async (req, res) => {
   try {
     const {
@@ -743,55 +762,33 @@ const getCourses = asyncHandler(async (req, res) => {
       scholarships,
       languageRequirement,
       standardizeRequirement,
-      Fees
     } = req.query;
 
     let filter = {};
 
-    if (country) {
-      const countryDoc = await Country.findOne({ name: country });
-      if (countryDoc) {
-        const provinces = await Province.find({ Country: countryDoc._id });
-        const provinceIds = provinces.map((prov) => prov._id);
-        filter.Province = { $in: provinceIds };
-      } else {
-        // Country not found, return empty result
-        return res.status(200).json([]);
-      }
-    }
-
-    if (province) {
-      const provinceDoc = await Province.findOne({ name: province });
-      if (provinceDoc) {
-        filter.Province = provinceDoc._id;
-      } else {
-        // Province not found, return empty result
-        return res.status(200).json([]);
-      }
-    }
-
+   
+    // Filter by University
     if (university) {
-      const universityDoc = await University.findOne({ name: university });
-      if (universityDoc) {
-        filter.University = universityDoc._id;
-      } else {
-        // University not found, return empty result
-        return res.status(200).json([]);
-      }
+      // If a university ID is provided, filter by university ID
+      filter.University = university;
     }
 
+    // Filter by Program Level
     if (programLevel) {
       filter.ProgramLevel = programLevel;
     }
 
+    // Filter by Category
     if (category) {
       filter.Category = category;
     }
 
+    // Filter by Scholarships
     if (scholarships) {
       filter.Scholarships = scholarships === 'true';
     }
 
+    // Filter by Language Requirements
     if (languageRequirement) {
       const languageReqArray = languageRequirement.split(',');
       const languageReqFilter = {};
@@ -801,6 +798,7 @@ const getCourses = asyncHandler(async (req, res) => {
       filter = { ...filter, ...languageReqFilter };
     }
 
+    // Filter by Standardized Requirements
     if (standardizeRequirement) {
       const standardizeReqArray = standardizeRequirement.split(',');
       const standardizeReqFilter = {};
@@ -810,6 +808,9 @@ const getCourses = asyncHandler(async (req, res) => {
       filter = { ...filter, ...standardizeReqFilter };
     }
 
+    console.log("Constructed Filter:", filter);
+
+    // Fetch courses based on the constructed filter
     const courses = await Course.find(filter)
       .populate({
         path: 'University',
@@ -823,7 +824,9 @@ const getCourses = asyncHandler(async (req, res) => {
       .exec();
 
     res.status(200).json(courses);
+    console.log("Courses Found:", courses);
   } catch (error) {
+    console.error("Error fetching courses:", error);
     res.status(500).json({ message: error.message });
   }
 });

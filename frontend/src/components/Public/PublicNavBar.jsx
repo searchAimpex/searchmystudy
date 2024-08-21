@@ -100,7 +100,7 @@ export default function PublicNavBar() {
         <div className="sticky top-0 z-50 bg-white shadow-md">
             <div className="flex w-full flex-col">
                 {/* Middle section with logo */}
-                <div className="bg-gold-main h-[20px] w-full flex flex-row items-center justify-end text-white space-x-4 px-[50px]">
+                <div className="bg-gold-main h-[30px] w-full flex flex-row items-center justify-end text-white space-x-4 px-[50px]">
                     <FaFacebook />
                     <FaInstagramSquare />
                     <FaTwitter />
