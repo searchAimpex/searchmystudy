@@ -34,7 +34,8 @@ const universitySchema = mongoose.Schema(
             }
         ], 
         eligiblity: {
-            type:String
+            type:String,
+            default:""
         },    
         logo: {
             type: String,

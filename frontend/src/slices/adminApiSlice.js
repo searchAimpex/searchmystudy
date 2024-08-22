@@ -218,6 +218,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 params: filter
             }),
         }),
+        LinkFetch: builder.mutation({
+            query:()=> ({
+                url: `${USERS_URL}/course/medical`,
+                method: 'GET',
+            })
+        }),
         AllWebinar: builder.mutation({
             query:()=>({
                 url: `${USERS_URL}/webinar`,
@@ -278,7 +284,7 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
-    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,
+    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,
     usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
     useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation
 

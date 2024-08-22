@@ -1,6 +1,6 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import { createBanner,test,fetchAllBanner,deleteBanner, createService, deleteService, updateService, getService, getServices, createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById, createCounsellor, getCounsellors, deleteCounsellor, createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, createCountry, getCountries, getCountryById, updateCountry, deleteCountry, createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses, getWebinars, createWebinar, getWebinarById, updateWebinar, deleteWebinar, getMediaItems, createMediaItem, getMediaItemById, updateMediaItem, deleteMediaItem } from '../controllers/adminController.js';
+import { createBanner,test,fetchAllBanner,deleteBanner, createService, deleteService, updateService, getService, getServices, createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById, createCounsellor, getCounsellors, deleteCounsellor, createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, createCountry, getCountries, getCountryById, updateCountry, deleteCountry, createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses, getWebinars, createWebinar, getWebinarById, updateWebinar, deleteWebinar, getMediaItems, createMediaItem, getMediaItemById, updateMediaItem, deleteMediaItem, getCoursesForIndiaMedical } from '../controllers/adminController.js';
 const router = express.Router();
 
 
@@ -107,7 +107,7 @@ router.route('/media/:id')
 
 
 router.get('/course/All',getCourses)
-
+router.get('/course/medical',getCoursesForIndiaMedical)
 
 router.route('/course')
   .get(getAllCourses)
@@ -118,7 +118,6 @@ router.route('/course/:id')
   .get(getCourseById)
   .put(updateCourse)
   .delete(deleteCourse);
-
 
 /***************** COURSE ROUTES *********************/
 

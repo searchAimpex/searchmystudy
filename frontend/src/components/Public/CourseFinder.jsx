@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCountryFetchMutation } from '../../slices/adminApiSlice';
 
 const Categories = ['High School', 'UG Diploma/Certificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated)Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twinning Program(UG)', 'Twinning Program(PG)', 'Online Program/Distance Learning'];
 const Levels = [
@@ -12,6 +13,24 @@ export default function CourseFinder() {
     level: '',
     scholarship: ''
   });
+  const [countries, setCountries] = useState([]);
+  const [fetchCountries] = useCountryFetchMutation();
+
+  useEffect(() => {
+    const getCountries = async () => {
+      try {
+        const result = await fetchCountries().unwrap();
+        if (Array.isArray(result)) {
+          setCountries(result);
+        } else {
+          console.error('Expected an array but got:', result);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+      }
+    };
+    getCountries()
+  },[] )
 
   const navigate = useNavigate();
 
@@ -53,11 +72,19 @@ export default function CourseFinder() {
               <option key={item} value={item}>{item}</option>
             ))}
           </select>
-          <select name="scholarship" onChange={handleChange} className='p-2 border border-blue-main text-gold-main rounded-lg'>
-            <option value=''>Scholarship</option>
-            <option value='true'>Scholarship Available</option>
-            <option value='false'>No Scholarship</option>
-          </select>
+          <select
+                name="country"
+                value={filters.country}
+                onChange={handleChange}
+                 className='p-2 border border-blue-main text-gold-main rounded-lg'
+              >
+                <option value="">Select Country</option>
+                {countries?.map((country) => (
+                  <option key={country} value={country._id}>
+                    {country.name}
+                  </option>
+                ))}
+            </select>
           <button onClick={handleSearch} className='px-10 py-3 text-white rounded-md bg-blue-main font-bold'>Search</button>
         </div>
       </div>

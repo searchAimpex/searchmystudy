@@ -766,10 +766,32 @@ const getCourses = asyncHandler(async (req, res) => {
 
     let filter = {};
 
-   
+    // Filter by Country
+    if (country) {
+      // Fetch provinces related to the country
+      const provinces = await Province.find({ Country: country }).select('_id');
+      const provinceIds = provinces.map(province => province._id);
+
+      // Fetch universities related to the provinces
+      const universities = await University.find({ Province: { $in: provinceIds } }).select('_id');
+      const universityIds = universities.map(university => university._id);
+
+      // Filter courses by the universities in the country
+      filter.University = { $in: universityIds };
+    }
+
+    // Filter by Province
+    if (province) {
+      // Fetch universities related to the province
+      const universities = await University.find({ Province: province }).select('_id');
+      const universityIds = universities.map(university => university._id);
+
+      // Filter courses by the universities in the province
+      filter.University = { $in: universityIds };
+    }
+
     // Filter by University
     if (university) {
-      // If a university ID is provided, filter by university ID
       filter.University = university;
     }
 
@@ -830,6 +852,36 @@ const getCourses = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+// Function to get courses with the country name 'India' and category 'Medical'
+const getCoursesForIndiaMedical = async (req, res) => {
+  try {
+      // Find courses where the category is 'Medical'
+      const medicalCourses = await Course.find({ Category: 'Medical' }).populate({
+          path: 'University',
+          populate: {
+              path: 'Province',
+              populate: {
+                  path: 'Country',
+                  match: { name: 'INDIA' } // Filter for Country name 'India'
+              }
+          }
+      });
+      console.log("fsa",medicalCourses)
+      // Filter courses where the Country name is 'India'
+      const filteredCourses = medicalCourses.filter(course => {
+          const university = course.University;
+          const province = university?.Province;
+          const country = province?.Country;
+          return country?.name === 'INDIA';
+      });
+
+      res.status(200).json(filteredCourses);
+  } catch (error) {
+      res.status(500).json({ message: error.message });
+  }
+};
 
 // @desc    Get all webinars
 // @route   GET /api/webinars
@@ -1001,4 +1053,5 @@ export {
     getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,
     getWebinars,createWebinar,getWebinarById,updateWebinar,deleteWebinar,
     getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,
+    getCoursesForIndiaMedical
   };

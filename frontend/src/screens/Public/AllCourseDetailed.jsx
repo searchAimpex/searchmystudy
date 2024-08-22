@@ -60,7 +60,7 @@ const AllCourseDetailed = () => {
   const location = useLocation();
   const state = location.state;
   const [filters, setFilters] = useState({
-    country: '',
+    country: state.filters.country || '',
     province: '',
     university: '',
     programLevel: state.filters.category || '',
@@ -292,7 +292,7 @@ const AllCourseDetailed = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="e.g., GRE, GMAT"
               />
-            </div>
+            </div> 
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Country</label>
               <select
@@ -303,7 +303,7 @@ const AllCourseDetailed = () => {
               >
                 <option value="">Select Country</option>
                 {countries.map((country) => (
-                  <option key={country} value={country.name}>
+                  <option key={country} value={country._id}>
                     {country.name}
                   </option>
                 ))}
@@ -372,26 +372,49 @@ const AllCourseDetailed = () => {
                   <div>
                     <img className='h-[200px] w-[350px]' src={course.University.logo} />
                   </div>
-                  <div className='flex flex-col space-y-10 w-full'>
+                  <div className='flex flex-col space-y-2 w-full'>
                       <div className='flex flex-row w-full justify-between items-center'>
                             <div>
                                 <span className='text-lg font-bold flex flex-row space-x-4'>University:{course?.University?.name}</span>
                             </div>
-                            <div>
+                            <div className='flex flex-row justify-start items-start w-1/4'>
                                 <span className='text-lg font-bold'>Location: {course.Location}</span>
                             </div>
 
                       </div>
-                      <div className='flex flex-row space-x-4 w-1/2 bg-gray-300 rounded-xl  items-center'>
+                      <div className='flex flex-row justify-between w-full rounded-xl  items-center'>
                             <div className='bg-blue-main p-2 rounded-xl space-x-4 flex flex-row items-center '> 
                                 <span className='text-md font-bold  text-white flex flex-row space-x-4'>Fees</span>
                                 <span className='text-md font-bold text-white'>{course?.Fees} INR</span>
                             </div>
-                            <div>
+                            <div className='flex flex-row justify-start items-start w-1/4'>
                                 <span className='text-md font-bold'>Duration: {course.Duration}</span>
                             </div>
 
                       </div>
+                      <div className='flex flex-row justify-between rounded-xl  items-center'>
+                            <div className='bg-blue-main p-2 rounded-xl space-x-4 flex flex-row items-center '> 
+                            <span className='text-md font-bold text-white'>Level: {course.ProgramLevel}</span>
+
+                            </div>
+                            <div className='flex flex-row justify-start items-start w-1/4'>
+                                <span className='text-md font-bold'>Type: {course.University.type}</span>
+                            </div>
+
+                      </div>
+                      <div className='flex flex-row justify-between'>
+                        <div className='rounded-xl  items-center'>
+                              <div className='rounded-xl flex flex-row items-center '> 
+                                <span className='text-md font-bold'>Rank: {course.University.rank}</span>
+
+                              </div>
+                            
+
+                        </div>
+                          <div className='flex flex-row justify-start items-start w-1/4'>
+                                <span className='text-md font-bold'>Rating: {course.University.rating}</span>
+                         </div>
+                         </div>
                       <div className='flex flex-row w-full justify-between items-center'>
                             <div className='flex flex-row space-x-2'>
                                 <span className='text-lg font-bold flex flex-row space-x-4'>{course?.ProgramName},</span>
