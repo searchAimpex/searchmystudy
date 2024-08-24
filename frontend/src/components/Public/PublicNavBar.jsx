@@ -17,10 +17,12 @@ import { FetchedLinked } from "../../slices/courseSlice";
 
 const initialLinks = [
     {
-        name: "ABROAD",
-        submenu: true,
-        sublinks: []
+        name: "HOME",
+        submenu:false,
+     
+        path: '/'
     },
+  
     {
         name: "MEDICAL",
         submenu: true,
@@ -30,7 +32,7 @@ const initialLinks = [
         ],
     },
     {
-        name: "COUNTRIES",
+        name: "ABROAD STUDY",
         submenu: true,
         sublinks: [],
         path: '/country'
@@ -41,10 +43,11 @@ const initialLinks = [
         sublinks: [
             { name: "ABOUT US", link: "/aboutus", path: "/aboutus" },
             { name: "BLOG", link: "/blog", path: "/blog" },
-            { name: "SERVICE", link: "/services", path: "/services" },
             { name: "CONTACT US", link: "/contactus", path: "/contactus" },
         ]
-    }
+    },
+    { name: "SERVICE", link: "/services", path: "/services" },
+
 ];
 
 export default function PublicNavBar() {
@@ -87,7 +90,7 @@ export default function PublicNavBar() {
                                 flagURL: service.card.cardImage
                             }))
                         };
-                    } else if (link.name === "COUNTRIES") {
+                    } else if (link.name === "ABROAD STUDY") {
                         return {
                             ...link,
                             sublinks: countryResult.map(country => ({

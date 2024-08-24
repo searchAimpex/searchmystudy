@@ -82,9 +82,6 @@ function WhyChoseUs() {
                         <p className='font-bold text-lg text-gray-400'>Access Detailed Information on thousand of universities and course</p>
                     </div>
                 </div>
-                
-
-
             </div>
 
         </div>

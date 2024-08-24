@@ -11,6 +11,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormImage from '../../assets/FormImage.png';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 export default function CountryDetailed() {
     const { id } = useParams();
@@ -19,7 +21,14 @@ export default function CountryDetailed() {
     const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
     const { singleCountry } = useSelector((state) => state.country);
 
-    // Fetch Country Data
+    // Ensure all hooks are called consistently
+    const [refBanner, inViewBanner] = useInView({ triggerOnce: true });
+    const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
+    const [refSections, inViewSections] = useInView({ triggerOnce: true });
+    const [refProvinces, inViewProvinces] = useInView({ triggerOnce: true });
+    const [refHelp, inViewHelp] = useInView({ triggerOnce: true });
+    const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -32,7 +41,7 @@ export default function CountryDetailed() {
         fetchData();
     }, [id, dispatch, CountryFetchOne]);
 
-    // Handle loading state
+    // Render loading state after hooks have been initialized
     if (isLoading) {
         return <Loader />;
     }
@@ -40,43 +49,98 @@ export default function CountryDetailed() {
     return (
         <div>
             {/* Section 1: Country Banner */}
-            <div>
+            <motion.div
+                ref={refBanner}
+                initial={{ opacity: 0 }}
+                animate={inViewBanner ? { opacity: 1 } : {}}
+                transition={{ duration: 1 }}
+            >
                 <img src={singleCountry?.bannerURL} className="h-[450px] w-full object-cover" alt="Country Banner" />
-            </div>
+            </motion.div>
 
             {/* Section 2: Country Information */}
-            <div className='flex flex-col items-center space-x-12 mt-10 justify-center mx-[200px]'>
+            <motion.div
+                ref={refInfo}
+                className='flex flex-col items-center space-x-12 mt-10 justify-center mx-[200px]'
+                initial={{ opacity: 0, y: 50 }}
+                animate={inViewInfo ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 1 }}
+            >
                 <span className='text-4xl font-bold text-blue-main'>{singleCountry?.name}</span>
                 <span className='text-md font-bold mt-5 text-gray-600'>{singleCountry?.description}</span>
-            </div>
+            </motion.div>
 
             {/* Render sections if they exist */}
             {singleCountry.sections && singleCountry.sections.length > 0 && (
-                <div className="mt-10 mx-[200px] space-y-16">
+                <motion.div
+                    ref={refSections}
+                    className="mt-10 mx-[200px] space-y-16"
+                    initial={{ opacity: 0 }}
+                    animate={inViewSections ? { opacity: 1 } : {}}
+                    transition={{ duration: 1 }}
+                >
                     {singleCountry.sections.map((section, index) => (
-                        <div
+                        <motion.div
                             key={section._id}
                             className={`flex flex-col md:flex-row ${index % 2 === 0 ? 'md:flex-row-reverse' : ''} items-center`}
+                            initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
+                            animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                            transition={{ duration: 1 }}
                         >
                             <div className="md:w-1/2 text-center md:text-left">
                                 <h3 className="text-2xl font-bold px-10 text-blue-main mb-4">{section.title}</h3>
                                 <p className="text-gray-600 p-10">{section.description}</p>
                             </div>
                             <div className="md:w-1/2 mt-4 md:mt-0">
-                                <img src={section.url} alt={section.title} className="w-full h-auto object-cover rounded-lg shadow-lg" />
+                                <motion.img
+                                    src={section.url}
+                                    alt={section.title}
+                                    className="w-full h-auto object-cover rounded-lg shadow-lg"
+                                    whileHover={{ scale: 1.05 }}
+                                    transition={{ duration: 0.3 }}
+                                />
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
-                </div>
+                </motion.div>
             )}
-            <div className='mt-10 flex flex-col items-center justify-center'>
+
+            {/* Section: Province Header */}
+            <motion.div
+                ref={refProvinces}
+                className='mt-10 flex flex-col items-center justify-center'
+                initial={{ opacity: 0 }}
+                animate={inViewProvinces ? { opacity: 1 } : {}}
+                transition={{ duration: 1 }}
+            >
                 <span className='text-blue-main text-4xl font-bold'>PROVINCE</span>
-            </div>
+            </motion.div>
 
             {/* Section 3: Province Cards */}
-            <div className='grid grid-cols-3 gap-10 mt-10 mx-[200px]'>
+            <motion.div
+                ref={refProvinces}
+                className='grid grid-cols-3 gap-10 mt-10 mx-[200px]'
+                initial="hidden"
+                animate={inViewProvinces ? "visible" : "hidden"}
+                variants={{
+                    hidden: { opacity: 0, y: 20 },
+                    visible: {
+                        opacity: 1,
+                        y: 0,
+                        transition: {
+                            delayChildren: 0.3,
+                            staggerChildren: 0.2,
+                        },
+                    },
+                }}
+            >
                 {singleCountry?.Province?.map((province) => (
-                    <div key={province._id} className="relative group perspective">
+                    <motion.div
+                        key={province._id}
+                        className="relative group perspective"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.3 }}
+                    >
                         <div className="flip-card flex flex-col items-center justify-center border-2 shadow-xl p-6 bg-white rounded-lg">
                             {/* Front side */}
                             <div className="flip-card-front flex flex-col items-center justify-center">
@@ -96,10 +160,18 @@ export default function CountryDetailed() {
                                 </button>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
-            </div>
-            <div className='my-20 pt-10 border-2 shadow-xl'>
+            </motion.div>
+
+            {/* Section: Help with Application */}
+            <motion.div
+                ref={refHelp}
+                className='my-20 pt-10 border-2 shadow-xl'
+                initial={{ opacity: 0, y: 50 }}
+                animate={inViewHelp ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 1 }}
+            >
                 <div className='flex flex-row items-center justify-center mt-10 space-x-4'>
                     <span className='text-4xl font-bold text-blue-main'>Need</span>
                     <span className='text-4xl font-bold text-gold-main'>help</span>
@@ -109,12 +181,22 @@ export default function CountryDetailed() {
                 </div>
                 <div className='flex flex-row p-10 mx-[200px]'>
                     {/* Image Div */}
-                    <div className='w-1/2 flex items-center'>
+                    <motion.div
+                        className='w-1/2 flex items-center'
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 1 }}
+                    >
                         <img src={FormImage} className='object-cover w-[520px] h-[450px]' alt='Contact Form' />
-                    </div>
+                    </motion.div>
 
                     {/* Form Div */}
-                    <div className='w-1/2 flex flex-col p-14 bg-blue-main h-[450px]'>
+                    <motion.div
+                        className='w-1/2 flex flex-col p-14 bg-blue-main h-[450px]'
+                        initial={{ opacity: 0, x: 100 }}
+                        animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 1 }}
+                    >
                         <span className='text-xl text-white font-bold mb-4'>
                             Contact our admissions team for personalized guidance.
                         </span>
@@ -144,40 +226,45 @@ export default function CountryDetailed() {
                                 Submit
                             </button>
                         </form>
-                    </div>
+                    </motion.div>
                 </div>
-            </div>
-
+            </motion.div>
 
             {/* Section 4: FAQ Section */}
-            <div className='mx-[200px] my-20'>
-            <div className='flex flex-row items-center justify-center space-x-4 my-10'>
+            <motion.div
+                ref={refFaq}
+                className='mx-[200px] my-20'
+                initial={{ opacity: 0, y: 50 }}
+                animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 1 }}
+            >
+                <div className='flex flex-row items-center justify-center space-x-4 my-10'>
                     <span className='text-4xl font-bold text-blue-main'>Frequently</span>
                     <span className='text-4xl font-bold text-gold-main'>asked</span>
                     <span className='text-4xl font-bold text-blue-main'>question ? </span>
-            </div>
-            {singleCountry?.faq?.map((faqItem, index) => (
-                <Accordion key={index}>
-                    <AccordionSummary
-                        expandIcon={<ExpandMoreIcon className="text-white" />}
-                        aria-controls={`panel${index}-content`}
-                        id={`panel${index}-header`}
-                        sx={{
-                            bgcolor: 'primary.main', // You can replace this with 'bg-blue-main' if you defined it in your Tailwind config
-                            color: 'white',
-                            fontWeight: 'bold',
-                        }}
-                    >
-                        <Typography className="font-bold">{faqItem.question}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Typography>
-                            {faqItem.answer}
-                        </Typography>
-                    </AccordionDetails>
-                </Accordion>
-            ))}
-        </div>
+                </div>
+                {singleCountry?.faq?.map((faqItem, index) => (
+                    <Accordion key={index}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon className="text-white" />}
+                            aria-controls={`panel${index}-content`}
+                            id={`panel${index}-header`}
+                            sx={{
+                                bgcolor: 'primary.main', // You can replace this with 'bg-blue-main' if you defined it in your Tailwind config
+                                color: 'white',
+                                fontWeight: 'bold',
+                            }}
+                        >
+                            <Typography className="font-bold">{faqItem.question}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Typography>
+                                {faqItem.answer}
+                            </Typography>
+                        </AccordionDetails>
+                    </Accordion>
+                ))}
+            </motion.div>
         </div>
     );
 }
