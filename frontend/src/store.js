@@ -12,8 +12,9 @@ import universityReducer from './slices/universitySlice';
 import webinarReducer from './slices/webinarSlice';
 import courseReducer from './slices/courseSlice';
 import mediaReducer from './slices/mediaSlice';
-
-
+import counsellerLeadReducer from './slices/counsellerLeadSlice'
+import homeLeadReducer from './slices/leadSlice'
+import contactLeadReducer from './slices/contactLeadSlice'
 
 
 const store = configureStore({
@@ -30,7 +31,10 @@ const store = configureStore({
     university:universityReducer,
     course:courseReducer,
     webinar:webinarReducer,
-    media:mediaReducer
+    media:mediaReducer,
+    counsellerLead : counsellerLeadReducer,
+    homeLead: homeLeadReducer,
+    contactLead : contactLeadReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

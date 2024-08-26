@@ -270,7 +270,64 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE'
             }),
         }),
-
+        CounsellerCreateLead :builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/lead`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        CounsellerFetchLead :builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/lead`,
+                method: 'GET',
+                body:data
+            }),
+        }),
+        CounsellerDeleteLead :builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/lead/${data}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateLead : builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/homelead`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        GetLead :builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/homelead`,
+                method: 'GET',
+            }),
+        }),
+        HomeLeadDelete :builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/homelead/${data}`,
+                method: 'DELETE',
+            }),
+        }),
+        CreateContactLead : builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/contactlead`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        GetContactLead :builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/contactlead`,
+                method: 'GET',
+            }),
+        }),
+        DeleteContactLead :builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/contactlead/${data}`,
+                method: 'DELETE',
+            }),
+        }),
 
     })
 })
@@ -286,6 +343,8 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
     useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,
     usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
-    useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation
-
+    useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation,
+    useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,
+    useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,
+    useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation
 } = userApiSlice

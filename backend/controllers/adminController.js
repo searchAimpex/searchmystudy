@@ -10,6 +10,9 @@ import University from '../models/universityModel.js';
 import Course from '../models/courseModel.js';
 import Webinar from '../models/webinarsModel.js';
 import Media from '../models/mediaModel.js';
+import CounsellerLead from '../models/counsellerLeadModel.js';
+import HomeLead from '../models/homeLeadModel.js';
+import ContactLead from '../models/contactLeadModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1038,8 +1041,130 @@ const deleteMediaItem = asyncHandler(async (req, res) => {
 });
 
 
+// @desc    Create a lead item
+// @route   GET /api/lead
+// @access  Public
+const GetOneLead =  asyncHandler(async (req, res) => {
+  const lead = await CounsellerLead.findById(req.params.id);
+  if (lead) {
+      res.status(200).json(lead);
+  } else {
+      res.status(404).json({ message: 'Lead not found' });
+  }
+})
+
+// @desc    Create a lead item
+// @route   POST /api/lead
+// @access  Public
+const createLead = asyncHandler(async (req, res) => {
+    const lead = new CounsellerLead(req.body);
+    const savedLead = await lead.save();
+    res.status(201).json(savedLead);
+});
 
 
+// @desc    Create a lead item
+// @route   GET /api/lead
+// @access  Public
+const getLead = asyncHandler(async (req, res) => {
+  const leads = await CounsellerLead.find();
+  res.status(200).json(leads);
+});
+
+
+// @desc    Create a lead item
+// @route   DELETE /api/lead
+// @access  Public
+const deleteLead  =asyncHandler(async (req, res) => {
+  const lead = await CounsellerLead.findByIdAndDelete(req.params.id);
+  if (lead) {
+      res.status(200).json({ message: 'Lead deleted successfully', lead });
+  } else {
+      res.status(404).json({ message: 'Lead not found' });
+  }
+})
+
+// @desc    Create a lead item
+// @route   POST /api/lead
+// @access  Public
+const createHomeLead = asyncHandler(async (req, res) => {
+  const { name, phoneNo, email } = req.body;
+
+  const lead = new HomeLead({
+      name,
+      phoneNo,
+      email,
+  });
+
+  const createdLead = await lead.save();
+  res.status(201).json(createdLead);
+});
+// @desc    Get all leads
+// @route   GET /api/lead
+// @access  Public
+const getLeads = asyncHandler(async (req, res) => {
+  const leads = await HomeLead.find({});
+  res.status(200).json(leads);
+});
+
+// @desc    Delete a lead
+// @route   DELETE /api/lead/:id
+// @access  Public
+const deleteHomeLead = asyncHandler(async (req, res) => {
+  const lead = await HomeLead.findByIdAndDelete(req.params.id);
+
+  if (lead) {
+      res.status(200).json({ message: 'Lead deleted successfully', lead });
+  } else {
+      res.status(404).json({ message: 'Lead not found' });
+  }
+});
+
+
+// @desc    Create a new contact lead
+// @route   POST /api/contact-leads
+// @access  Public
+const createContactLead = asyncHandler(async (req, res) => {
+  const { name, phoneNo, email, occupation, comment } = req.body;
+
+  if (!name || !phoneNo) {
+    res.status(400);
+    throw new Error('Name and phone number are required');
+  }
+
+  const contactLead = new ContactLead({
+    name,
+    phoneNo,
+    email,
+    occupation,
+    comment,
+  });
+
+  const createdContactLead = await contactLead.save();
+  res.status(201).json(createdContactLead);
+});
+
+// @desc    Get all contact leads
+// @route   GET /api/contact-leads
+// @access  Public
+const getContactLeads = asyncHandler(async (req, res) => {
+  const contactLeads = await ContactLead.find({});
+  res.json(contactLeads);
+});
+
+// @desc    Delete a contact lead
+// @route   DELETE /api/contact-leads/:id
+// @access  Public
+const deleteContactLead = asyncHandler(async (req, res) => {
+  const contactLead = await ContactLead.findById(req.params.id);
+  if (contactLead) {
+    await contactLead.remove();
+    res.json({ message: 'Contact lead removed' });
+  } else {
+    res.status(404);
+    throw new Error('Contact lead not found');
+  }
+});
 
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
@@ -1052,6 +1177,8 @@ export {
     getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
     getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,
     getWebinars,createWebinar,getWebinarById,updateWebinar,deleteWebinar,
-    getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,
-    getCoursesForIndiaMedical
+    getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,getCoursesForIndiaMedical,
+    createLead,getLead,deleteLead,GetOneLead,
+    createHomeLead, getLeads, deleteHomeLead,
+    deleteContactLead,getContactLeads,createContactLead
   };

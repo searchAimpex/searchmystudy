@@ -1,6 +1,25 @@
 import express from 'express';
 import { protect } from '../middleware/authMiddleware.js';
-import { createBanner,test,fetchAllBanner,deleteBanner, createService, deleteService, updateService, getService, getServices, createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById, createCounsellor, getCounsellors, deleteCounsellor, createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog, createCountry, getCountries, getCountryById, updateCountry, deleteCountry, createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses, getWebinars, createWebinar, getWebinarById, updateWebinar, deleteWebinar, getMediaItems, createMediaItem, getMediaItemById, updateMediaItem, deleteMediaItem, getCoursesForIndiaMedical } from '../controllers/adminController.js';
+import { createBanner,test,fetchAllBanner,deleteBanner,
+      createService, deleteService, updateService, getService, getServices, 
+      createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById,
+      createCounsellor, getCounsellors, deleteCounsellor, 
+      createBlog, getAllBlogs, getBlogById, updateBlog, deleteBlog,
+      createCountry, getCountries, getCountryById, updateCountry, deleteCountry,
+      createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince, 
+      createUniversity, getAllUniversities, getUniversityById, updateUniversity, deleteUniversity, 
+      getAllCourses, createCourse, getCourseById, updateCourse, deleteCourse, getCourses, 
+      getWebinars, createWebinar, getWebinarById, updateWebinar, deleteWebinar, getMediaItems, createMediaItem, getMediaItemById,
+      updateMediaItem, deleteMediaItem, getCoursesForIndiaMedical ,
+      createLead,getLead,deleteLead,GetOneLead,
+      createHomeLead,
+      getLeads,
+      deleteHomeLead,
+      createContactLead,
+      getContactLeads,
+      deleteContactLead
+
+      } from '../controllers/adminController.js';
 const router = express.Router();
 
 
@@ -120,5 +139,32 @@ router.route('/course/:id')
   .delete(deleteCourse);
 
 /***************** COURSE ROUTES *********************/
+
+
+
+
+/****************** Counselling Lead Routes     ***********************/
+
+router.post('/lead',createLead)
+router.get('/lead',getLead)
+router.delete('/lead/:id',deleteLead)
+router.get('/lead/:id',GetOneLead)
+/****************** Lead Routes     ***********************/
+
+
+/********************* Home Lead Routes  ***********************/
+router.post('/homelead',createHomeLead)
+router.get('/homelead',getLeads)
+router.delete('/homelead/:id',deleteHomeLead)
+/**************************************************************/
+
+
+
+
+/********************* Contact Lead Routes  ***********************/
+router.post('/contactlead',createContactLead)
+router.get('/contactlead',getContactLeads)
+router.delete('/contactlead/:id',deleteContactLead)
+/******************************************************************/
 
 export default router;

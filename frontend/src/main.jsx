@@ -33,6 +33,7 @@ import AllCourseDetailed from './screens/Public/AllCourseDetailed.jsx';
 import AboutDetailed from './screens/Public/AboutDetailed.jsx';
 import AllCountryDetailled from './screens/Public/AllCountryDetailled.jsx';
 import ContactUs from './screens/Public/ContactUs.jsx';
+import AdminLeadManagement from './screens/Admin/AdminLeadManagement.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,6 +62,7 @@ const router = createBrowserRouter(
         <Route path= "/admin/webManager" element={<AdminWebManagement />} />
         <Route path= "/admin/blog" element={<AdminBlogManagement />} />
         <Route path = "/admin/course" element={<AdminCourseManagement />} />
+        < Route path = "/admin/leads" element={<AdminLeadManagement/>}/>
       </Route>
     </Route>
   )
