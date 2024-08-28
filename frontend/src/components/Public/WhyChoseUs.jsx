@@ -23,63 +23,63 @@ function WhyChoseUs() {
 
                 </div>
                 <div>
-                    <p className='text-lg font-bold text-gray-500'>Explore the Unique Features That Make SearchMyStudy Your Ideal Educational Partner</p>
+                    <p className='text-md font-bold text-gray-500'>Explore the Unique Features That Make SearchMyStudy Your Ideal Educational Partner</p>
                 </div>
 
             </div>
             <div className='grid grid-cols-3 gap-5'>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs1} />
                     </div>
-                    <div className='p-6'>
+                    <div className='p-3'>
                         <p className='font-bold text-2xl'>Comprehensive Database</p>
-                        <p className='font-bold text-lg text-gray-400'>Access Detailed Information on thousand of universities and course</p>
+                        <p className='font-bold text-md text-gray-400'>Access Detailed Information on thousand of universities and course</p>
                     </div>
                 </div>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs2} />
                     </div>
-                    <div className='p-6'>
+                    <div className='p-3'>
                         <p className='font-bold text-2xl'>Expert conselling</p>
-                        <p className='font-bold text-lg text-gray-400'>Get personal guidance from our expert counseler</p>
+                        <p className='font-bold text-md text-gray-400'>Get personal guidance from our expert counseler</p>
                     </div>
                 </div>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs3} />
                     </div>
-                    <div className='p-6'>
-                        <p className='font-bold text-2xl'>Country and Universities Profile</p>
-                        <p className='font-bold text-lg text-gray-400'>Offering detailed insights into different study desitination </p>
+                    <div className='p-3'>
+                        <p className='font-bold text-2xl'>Country and Universities</p>
+                        <p className='font-bold text-md text-gray-400'>Offering detailed insights into different study desitination </p>
                     </div>
                 </div>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs4} />
                     </div>
-                    <div className='p-6'>
-                        <p className='font-bold text-2xl'>Comprehensive Database</p>
-                        <p className='font-bold text-lg text-gray-400'>Access Detailed Information on thousand of universities and course</p>
+                    <div className='p-3'>
+                        <p className='font-bold text-2xl'>Proven Success</p>
+                        <p className='font-bold text-md text-gray-400'>Hear from students who have successfully secured their dream courses through our platform.</p>
                     </div>
                 </div>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs5} />
                     </div>
-                    <div className='p-6'>
-                        <p className='font-bold text-2xl'>Comprehensive Database</p>
-                        <p className='font-bold text-lg text-gray-400'>Access Detailed Information on thousand of universities and course</p>
+                    <div className='p-3'>
+                        <p className='font-bold text-2xl'>Real-Time Assistance</p>
+                        <p className='font-bold text-md text-gray-400'>Promoting the chatbots and live chat features for instant help</p>
                     </div>
                 </div>
-                <div className='bg-white rounded-xl shadow-xl p-6'>
+                <div className='bg-white rounded-xl shadow-xl p-3'>
                     <div className='h-1/2'>
                         <img src= {ChoseUs6} />
                     </div>
-                    <div className='p-6'>
-                        <p className='font-bold text-2xl'>Comprehensive Database</p>
-                        <p className='font-bold text-lg text-gray-400'>Access Detailed Information on thousand of universities and course</p>
+                    <div className='p-3'>
+                        <p className='font-bold text-2xl'>Advance Search</p>
+                        <p className='font-bold text-md text-gray-400'>Allowing users to find courses that match their criteria</p>
                     </div>
                 </div>
             </div>

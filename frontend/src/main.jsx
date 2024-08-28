@@ -34,6 +34,8 @@ import AboutDetailed from './screens/Public/AboutDetailed.jsx';
 import AllCountryDetailled from './screens/Public/AllCountryDetailled.jsx';
 import ContactUs from './screens/Public/ContactUs.jsx';
 import AdminLeadManagement from './screens/Admin/AdminLeadManagement.jsx';
+import MbbsIndia from './screens/Public/MbbsIndia.jsx';
+import CounsellorAll from './components/Public/CounsellorAll.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,6 +55,9 @@ const router = createBrowserRouter(
         <Route path = '/course/all' element=  {<AllCourseDetailed />} />
         <Route path='/aboutus' element= {<AboutDetailed />} />
         <Route path = '/contactus' element = { <ContactUs />}/>
+        <Route path = '/mbbsindia' element = { <MbbsIndia />}/>
+        <Route  path = '/counseller' element={<CounsellorAll />}/>
+
       </Route>
      
       {/* <Route path='/register' element={<RegisterScreen />} /> */}

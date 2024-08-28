@@ -14,7 +14,7 @@ const counsellerLeadSchema = mongoose.Schema(
             type:String,
             required:true
         },
-        phoneNo:{
+        phone:{
             type:String,
             required:true
         },

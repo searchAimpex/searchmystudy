@@ -5,6 +5,7 @@ import Loader from "../Loader";
 import { FetchAllTestimonial } from "../../slices/testimonialSlice";
 import { toast } from "react-toastify";
 import { Rating } from "@mui/material";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import "./Gallery.css"; // Import CSS for animations
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -12,6 +13,7 @@ import Slider from "react-slick";
 
 const Gallery = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [TestimonialFetchAll, { isSuccess, isLoading }] = useTestimonialFetchAllMutation();
   const { testimonial } = useSelector((state) => state.testimonial);
 
@@ -49,12 +51,15 @@ const Gallery = () => {
     speed: 1500,
     cssEase: "linear"
   };
-
+  // Handle card click to navigate to CounsellorAll
+  const handleCardClick = () => {
+    navigate("/counseller"); // Replace with your actual route to CounsellorAll
+  };
   return (
     <div className="slider-container">
       <Slider {...settings}>
         {testimonial.map((item, index) => (
-          <div key={index} className="testimonial-card">
+          <div key={index} className="testimonial-card" onClick={handleCardClick}>
             <div className="card-content">
               <img src={item.imageURL} alt={item.name} className="card-image" />
               <h3 className="card-title">{item.title}</h3>
