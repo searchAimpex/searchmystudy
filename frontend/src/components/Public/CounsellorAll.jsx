@@ -107,7 +107,7 @@ export default function CounsellorAll() {
             </Button>
           </div>
           <div className="flex-1">
-            <img src={CounsellerHero} alt="Counsellor Hero" className="w-full h-auto rounded-lg shadow-lg" />
+            <img src={CounsellerHero} alt="Counsellor Hero" className="w-full h-[450px]" />
           </div>
         </div>
       </section>

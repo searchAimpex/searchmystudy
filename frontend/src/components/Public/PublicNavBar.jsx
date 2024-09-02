@@ -27,7 +27,23 @@ const initialLinks = [
         name: "MEDICAL",
         submenu: true,
         tabs: [
-            { name: "INDIA", sublinks: [] },
+            { name: "INDIA", sublinks: [
+                {name:"MBBS",link:"/mbbsindia",path:"/mbbsindia"},
+                {name:"MD",link:"/mdindia",path:"/mdindia"},
+
+                {name:"BAMS",link:"/bamsindia",path:"/bamsindia"},
+
+                {name:"BHMS",link:"/bhmsindia",path:"/bhmsindia"},
+
+                {name:"BDS",link:"/bdsindia",path:"/bdsindia"},
+
+                {name:"NURSING",link:"/nursingindia",path:"/nursingindia"},
+
+                {name:"PHARMACY",link:"/pharmacyindia",path:"/pharmacyindia"},
+
+                {name:"Bv Sc",link:"/bvScindia",path:"/bvScindia"}
+
+            ] },
             { name: "ABROAD", sublinks: [] },
         ],
     },
@@ -101,7 +117,7 @@ export default function PublicNavBar() {
                         };
                     } else if (link.name === "MEDICAL") {
                         const updatedTabs = link.tabs.map(tab => {
-                            if (tab.name === "INDIA") {
+                            if (tab.name === "ABROAD") {
                                 return {
                                     ...tab,
                                     sublinks: linkResult.map(item => ({

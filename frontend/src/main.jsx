@@ -36,6 +36,13 @@ import ContactUs from './screens/Public/ContactUs.jsx';
 import AdminLeadManagement from './screens/Admin/AdminLeadManagement.jsx';
 import MbbsIndia from './screens/Public/MbbsIndia.jsx';
 import CounsellorAll from './components/Public/CounsellorAll.jsx';
+import MdIndia from './screens/Public/MdIndia.jsx';
+import BamsIndia from './screens/Public/BamsIndia.jsx';
+import BhmsIndia from './screens/Public/BhmsIndia.jsx';
+import BdsIndia from './screens/Public/BdsIndia.jsx';
+import NursingIndia from './screens/Public/NursingIndia.jsx';
+import PharmacyIndia from './screens/Public/PharmacyIndia.jsx';
+import BvScIndia from './screens/Public/BvScIndia.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -53,21 +60,27 @@ const router = createBrowserRouter(
         <Route path = '/university/:id' element ={<UniversityDetailed />}  />
         <Route path = '/course/:id' element = { <CourseDetailed />} />
         <Route path = '/course/all' element=  {<AllCourseDetailed />} />
-        <Route path='/aboutus' element= {<AboutDetailed />} />
+        <Route path = '/aboutus' element= {<AboutDetailed />} />
         <Route path = '/contactus' element = { <ContactUs />}/>
         <Route path = '/mbbsindia' element = { <MbbsIndia />}/>
-        <Route  path = '/counseller' element={<CounsellorAll />}/>
-
+        <Route path = '/counseller' element={<CounsellorAll />} />
+        <Route path = '/mdindia' element= { <MdIndia />} />
+        <Route path = "/bamsindia"  element= {<BamsIndia />}/>
+        <Route path = "/bhmsindia"  element= {<BhmsIndia />}/>
+        <Route path = '/bdsindia' element={<BdsIndia />} />
+        <Route path = '/nursingindia' element= {< NursingIndia/> }/>
+        <Route path = '/pharmacyindia' element =  {<PharmacyIndia />} />
+        <Route path = '/bvScindia' element= {< BvScIndia/>}/>
       </Route>
      
       {/* <Route path='/register' element={<RegisterScreen />} /> */}
       <Route path='' element={<PrivateRoute />}>
-        <Route path='/profile' element={<ProfileScreen />} />
-        <Route path= "/admin/dashboard" element={<AdminDashboard />} />
-        <Route path= "/admin/webManager" element={<AdminWebManagement />} />
-        <Route path= "/admin/blog" element={<AdminBlogManagement />} />
+        <Route path ='/profile' element={<ProfileScreen />} />
+        <Route path = "/admin/dashboard" element={<AdminDashboard />} />
+        <Route path = "/admin/webManager" element={<AdminWebManagement />} />
+        <Route path = "/admin/blog" element={<AdminBlogManagement />} />
         <Route path = "/admin/course" element={<AdminCourseManagement />} />
-        < Route path = "/admin/leads" element={<AdminLeadManagement/>}/>
+        <Route path = "/admin/leads" element={<AdminLeadManagement/>}/>
       </Route>
     </Route>
   )
