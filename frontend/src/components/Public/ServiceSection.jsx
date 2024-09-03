@@ -4,6 +4,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useServiceFetchAllMutation } from '../../slices/adminApiSlice'
 import { toast } from 'react-toastify'
 import { FetchAllServices } from '../../slices/serviceSlice'
+import  campusbuddy from '../../assets/campus-buddy.png'
+import  careercounselling from '../../assets/career-counselling.png'
+
+import  currencyexchange from '../../assets/currency-exchange.png'
+
+import  icondocument from '../../assets/icon-document.png'
+import  interviewtraining from '../../assets/interview-training.png'
+import  liveapplicationtracking from '../../assets/live-application-tracking.png'
+import  postarrivalservices from '../../assets/post-arrival-services.png'
+import  predepartureorientation from '../../assets/pre-departure-orientation.png'
+import  successfuladmits from '../../assets/successful-admits.png'
+import  travelpackage from '../../assets/travel-package.png'
+import  visadocumentation from '../../assets/visa-documentation.png'
+import  universityshortlists from '../../assets/university-shortlists.png'
 
 function ServiceSection() {
     const dispatch = useDispatch()
@@ -38,28 +52,104 @@ function ServiceSection() {
                <p className='text-xl font-bold  text-gray-500'> Empowering Your Journey with Personalized Guidance and Support</p>
             </div>
           
-            <div className='grid grid-cols-3 gap-20 mt-10'>
-                {services?.map((service, index) => (
-                    <div
-                        className={`flex flex-col items-center justify-center p-2 rounded-lg shadow-xl ${index === 0 ? '' : 'bg-white'}`}
-                        style={index === 0 ? { background: 'linear-gradient(to right, #3C6EDD, #264790)' } : {}}
-                    >
-                        <div className='flex flex-row items-center space-x-4 w-full p-2'>
-                            <div className='w-[50px] h-[50px] bg-white'>
-                                <img className='object-contained' src={service.card.cardImage} alt="fix" />
-                            </div>
-                            <div>
-                                <p className={`text-lg font-bold ${index === 0 ? 'text-white' : 'text-black'}`}>{service.card.title}</p>
-                            </div>
+            <div className='grid grid-cols-6 gap-4 mt-10'>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {careercounselling} />
                         </div>
-                        <div className='p-2'>
-                            <p className={`text-sm font-bold leading-1 ${index === 0 ? 'text-white' : 'text-black'}`}>{service.card.shortDescription}</p>
-                        </div>
-                        <div className={`p-2 flex justify-start w-full ${index === 0 ? 'text-white' : 'text-black'}`}>
-                            <button>Learn More</button>
+                        <div className='flex items-center justify-center w-full'>
+                            Career Counselling
                         </div>
                     </div>
-                ))}
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {universityshortlists} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            University Shortlists
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {icondocument} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Application Document
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {liveapplicationtracking} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Application Tracking
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {interviewtraining} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Interview Training
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {successfuladmits} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Successfull Admits
+                            </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {visadocumentation} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Visa Documentation
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {travelpackage} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Travel Package
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {currencyexchange} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Currency Exchange
+                            </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {predepartureorientation} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Departure Orientation
+                        </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {postarrivalservices} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Post Arrival Services
+                            </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                        <div>
+                            <img className='w-[80px] h-[80px]' src= {campusbuddy} />
+                        </div>
+                        <div className='flex items-center justify-center w-full'>
+                            Campus Buddy
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

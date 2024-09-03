@@ -1,6 +1,7 @@
 import React from 'react';
-import { Container, Typography, Grid, Card, CardContent, Button } from '@mui/material';
+import { Container, Typography, Grid, Card, CardHeader, CardContent, Button, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { motion } from 'framer-motion';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import bvScImage from '../../assets/BannerService.png';
 
 const pageVariants = {
@@ -15,6 +16,44 @@ const sectionVariants = {
 };
 
 const BvScIndia = () => {
+  const documentsRequired = [
+    "10th & 12th Marksheet",
+    "NEET Scorecard",
+    "Passport Size Photographs",
+    "Aadhar Card",
+    "Category Certificate (if applicable)"
+  ];
+
+  const admissionProcess = [
+    "Appear for the NEET exam",
+    "Apply to colleges through the centralized counseling process",
+    "Participate in the counseling process and select your preferred college",
+    "Complete the admission formalities at the allocated college",
+  ];
+
+  const bvscColleges = [
+    { name: "Indian Veterinary Research Institute", location: "Bareilly, Uttar Pradesh" },
+    { name: "College of Veterinary Science and Animal Husbandry", location: "Anand, Gujarat" },
+    { name: "Rajiv Gandhi Institute of Veterinary Education and Research", location: "Puducherry" }
+  ];
+
+  const faqData = [
+    { question: "What is the duration of the B.V.Sc & AH course?", answer: "The duration of the course is 5.5 years, including a compulsory internship." },
+    { question: "What is the eligibility criteria for B.V.Sc & AH?", answer: "Students must have passed 10+2 with Physics, Chemistry, Biology, and English, and should have appeared for NEET." },
+    { question: "What is the average salary after completing B.V.Sc & AH?", answer: "The average salary ranges from INR 5 LPA to INR 8 LPA." }
+  ];
+
+  const bvscSpecialisations = [
+    "Animal Genetics and Breeding",
+    "Veterinary Microbiology",
+    "Veterinary Surgery & Radiology",
+    "Animal Production & Management",
+    "Animal Nutrition",
+    "Livestock Production and Management",
+    "Veterinary Medicine, Public Health & Hygiene",
+    "Veterinary Pathology"
+  ];
+
   return (
     <Container maxWidth="lg" className="py-8">
       {/* Hero Section */}
@@ -31,11 +70,10 @@ const BvScIndia = () => {
           alt="Bachelor of Veterinary Sciences & Animal Husbandry"
           className="object-cover w-full h-72 md:h-80 lg:h-96"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-green-800 via-green-600 to-green-800 opacity-70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-200 to-green-100 opacity-70" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-8 space-y-6">
           <Typography variant="h1" className="text-4xl md:text-5xl font-bold">Bachelor in Veterinary Sciences & Animal Husbandry</Typography>
           <Typography variant="h6" className="text-lg md:text-xl font-light">A comprehensive 5½ years program for aspiring veterinarians.</Typography>
-          <Button variant="contained" color="secondary" size="large" className="hover:bg-secondary-dark transition-colors">Get Free Counselling</Button>
         </div>
       </motion.div>
 
@@ -48,7 +86,7 @@ const BvScIndia = () => {
             variants={sectionVariants}
             transition={{ duration: 0.8 }}
           >
-            <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-green-900">About B.V.Sc & AH</Typography>
+            <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">About B.V.Sc & AH</Typography>
             <Typography variant="body1" className="text-base md:text-lg mb-6 leading-relaxed">
               Bachelor in Veterinary Sciences & Animal Husbandry (B.V.Sc. & A.H.) is a 5½ years undergraduate program under the medical discipline. It focuses on the study of medical diagnostics and treatment of animal diseases. The course includes subjects like Veterinary Anatomy, Histology, Physiology, Biochemistry, Pharmacology, and Toxicology.
             </Typography>
@@ -73,7 +111,7 @@ const BvScIndia = () => {
       </Grid>
 
       {/* Course Details Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-green-900">Course Details</Typography>
+      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Course Details</Typography>
       <Grid container spacing={6} className="mb-12">
         <Grid item xs={12} md={6}>
           <Typography variant="h6" className="text-xl font-semibold mb-4">Course Highlights</Typography>
@@ -103,7 +141,85 @@ const BvScIndia = () => {
         </Grid>
       </Grid>
 
-     
+      {/* Documents Required Section */}
+      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Documents Required</Typography>
+      <Grid container spacing={6} className="mb-12">
+        {documentsRequired.map((doc, index) => (
+          <Grid item xs={12} md={4} key={index}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={sectionVariants}
+              transition={{ duration: 0.8 }}
+            >
+              <Card elevation={3} className="p-4 rounded-lg">
+                <Typography variant="body1">{doc}</Typography>
+              </Card>
+            </motion.div>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Admission Process Section */}
+      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Admission Process</Typography>
+      <Grid container spacing={6} className="mb-12">
+        {admissionProcess.map((step, index) => (
+          <Grid item xs={12} md={12} key={index}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={sectionVariants}
+              transition={{ duration: 0.8 }}
+            >
+              <Typography variant="body1" className="mb-2">{step}</Typography>
+            </motion.div>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* Top B.V.Sc Colleges Section */}
+      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Top B.V.Sc Colleges in India</Typography>
+      <Grid container spacing={6} className="mb-12">
+        {bvscColleges.map((college, index) => (
+          <Grid item xs={12} md={4} key={index}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={sectionVariants}
+              transition={{ duration: 0.8 }}
+            >
+              <Card elevation={3} className="p-4 rounded-lg">
+                <Typography variant="h6" className="font-semibold">{college.name}</Typography>
+                <Typography variant="body2">{college.location}</Typography>
+              </Card>
+            </motion.div>
+          </Grid>
+        ))}
+      </Grid>
+
+      {/* FAQ Section */}
+      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Frequently Asked Questions (FAQs)</Typography>
+      <Grid container spacing={6} className="mb-12">
+        {faqData.map((faq, index) => (
+          <Grid item xs={12} key={index}>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              variants={sectionVariants}
+              transition={{ duration: 0.8 }}
+            >
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Typography variant="h6" className="font-semibold">{faq.question}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography variant="body1">{faq.answer}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            </motion.div>
+          </Grid>
+        ))}
+      </Grid>
     </Container>
   );
 };

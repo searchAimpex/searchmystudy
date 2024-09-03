@@ -14,6 +14,38 @@ const blogs = [
   { title: "Specializations in MD: A Guide", description: "Explore the various specializations available in MD programs in India.", link: "#" },
 ];
 
+const branches = [
+  "MD (Obstetrics and Gynecology)",
+  "MD (Tuberculosis And Respiratory Diseases)",
+  "MD (Psychiatry)",
+  "MD (Dermatology)",
+  "MD (Radio Diagnosis)",
+  "MD (Pediatrics)",
+  "MD (General Medicine)",
+  "MD (Anesthesia)",
+  "MD (Pharmacology)",
+  "MD (Pathology)",
+  "MD (Physiology)",
+  "MS (General Surgery)",
+  "MS (Orthopedics)",
+  "MS (Ear Nose Throat)",
+  "MS (Ophthalmology)",
+  "MD (Forensic)",
+  "MD (Radiology)",
+  "MDS",
+];
+
+const states = [
+  "MD MS in DELHI NCR",
+  "MD MS UTTAR PRADESH",
+  "MD MS in KARNATAKA",
+  "MD MS in RAJASTHAN",
+  "MD MS in MAHARASHTRA",
+  "MD MS in MADHYA PRADESH",
+  "MD MS in UTTARAKHAND",
+  "MD MS in BIHAR",
+];
+
 const MdIndia = () => {
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -26,9 +58,9 @@ const MdIndia = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 md:px-8 lg:px-12">
+    <div className="">
       {/* Hero Section */}
-      <section className="relative flex flex-col md:flex-row items-center bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 py-8 px-4 md:px-12 lg:px-24 overflow-hidden shadow-lg rounded-lg">
+      <section className="relative flex flex-col md:flex-row items-center space-x-10 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 py-8 md:px-12 lg:px-24 overflow-hidden shadow-lg rounded-lg">
         {/* Left Side: Image */}
         <motion.div
           className="flex-1 w-full md:w-1/2 flex items-center justify-center"
@@ -36,7 +68,7 @@ const MdIndia = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
         >
-          <img src={MdIndiaImage} alt="MD in India" className="w-full h-auto rounded-lg shadow-md" />
+          <img src={MdIndiaImage} alt="MD in India" className="w-full h-auto rounded-lg" />
         </motion.div>
         {/* Right Side: Text Content */}
         <motion.div
@@ -78,6 +110,30 @@ const MdIndia = () => {
             </CardContent>
           </Card>
 
+          {/* Branches Available Section */}
+          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader title="Branches Available in MD/MS" className="text-blue-main flex items-center justify-center" />
+            <CardContent>
+              <ul className="list-disc list-inside space-y-2">
+                {branches?.map((branch, index) => (
+                  <li key={index} className="text-gray-600">{branch}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* States Offering MD/MS */}
+          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardHeader title="MD/MS Colleges and Institutes by State" className="text-blue-main flex items-center justify-center" />
+            <CardContent>
+              <ul className="list-disc list-inside space-y-2">
+                {states?.map((state, index) => (
+                  <li key={index} className="text-gray-600">{state}</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+
           {/* Admission Information */}
           <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader title="MD / MS Admission in India" className="text-blue-main flex items-center justify-center" />
@@ -105,7 +161,7 @@ const MdIndia = () => {
           <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
             <CardHeader title="Frequently Asked Questions" className="text-blue-main flex items-center justify-center" />
             <CardContent>
-              {faq.map((item, index) => (
+              {faq?.map((item, index) => (
                 <Accordion key={index}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`panel${index}-content`} id={`panel${index}-header`}>
                     <Typography variant="subtitle1" className="font-medium text-gray-700">
@@ -124,36 +180,20 @@ const MdIndia = () => {
 
           {/* Blog Section */}
           <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="Latest Blogs" className="text-blue-main flex items-center justify-center" />
+            <CardHeader title="Recent Blogs" className="text-blue-main flex items-center justify-center" />
             <CardContent>
-              {blogs.map((blog, index) => (
-                <motion.div key={index} className="mb-4" initial="hidden" animate="visible" variants={listVariants}>
-                  <Typography variant="h6" className="font-medium text-gray-800">
-                    {blog.title}
-                  </Typography>
-                  <Typography variant="body2" className="text-gray-600">
-                    {blog.description}
-                  </Typography>
-                  <a href={blog.link} className="text-blue-500 hover:underline">
-                    Read More
-                  </a>
-                </motion.div>
-              ))}
-            </CardContent>
-          </Card>
-
-          {/* Contact Form Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="Contact Us" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <form className="space-y-4">
-                <TextField label="Full Name" variant="outlined" fullWidth />
-                <TextField label="Email" variant="outlined" fullWidth />
-                <TextField label="Phone Number" variant="outlined" fullWidth />
-                <Button variant="contained" color="primary" className="bg-blue-main text-white">
-                  Submit
-                </Button>
-              </form>
+              <ul className="space-y-4">
+                {blogs.map((blog, index) => (
+                  <li key={index}>
+                    <Typography variant="h6" className="font-semibold text-blue-600 hover:underline cursor-pointer">
+                      {blog.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" className="leading-relaxed text-gray-600">
+                      {blog.description}
+                    </Typography>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </motion.div>

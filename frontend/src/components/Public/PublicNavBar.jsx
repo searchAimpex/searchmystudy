@@ -250,8 +250,6 @@ export default function PublicNavBar() {
                             ))}
                         </ul>
                     </div>
-
-                 
                 </div>
             </div>
 
