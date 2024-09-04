@@ -120,7 +120,6 @@ export default function CounsellorAll() {
             <motion.div
               key={item._id}
               className="flex bg-white border border-gray-200 rounded-lg p-4 shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
-              onClick={() => handleCardClick(item._id)}
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
@@ -211,54 +210,102 @@ export default function CounsellorAll() {
           {activeStep === 1 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
               <FormControl fullWidth margin="normal">
-                <InputLabel>City</InputLabel>
-                <Select
+                <TextField
                   name="city"
+                  label="City "
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
                   value={formValues.city}
                   onChange={handleChange}
-                >
-                  <MenuItem value="City1">City1</MenuItem>
-                  <MenuItem value="City2">City2</MenuItem>
-                </Select>
+                />
+             
               </FormControl>
+              <FormControl fullWidth margin="normal">
+                <TextField
+                    name="intersetedCountry"
+                    label="Interested Country "
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={formValues.intersetedCountry}
+                    onChange={handleChange}
+                  />
+              
+              </FormControl>
+              <FormControl fullWidth margin="normal">
               <TextField
-                name="intersetedCountry"
-                label="Interested Country"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={formValues.intersetedCountry}
-                onChange={handleChange}
-              />
-              <TextField
-                name="intersetedCourse"
-                label="Interested Course"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={formValues.intersetedCourse}
-                onChange={handleChange}
-              />
+                    name="intersetedCourse"
+                    label="Interested Course"
+                    variant="outlined"
+                    fullWidth
+                    margin="normal"
+                    value={formValues.intersetedCourse}
+                    onChange={handleChange}
+                  />
+              
+              </FormControl>
             </motion.div>
           )}
           {activeStep === 2 && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-              <TextField
-                name="test"
-                label="Test"
-                variant="outlined"
-                fullWidth
-                margin="normal"
-                value={formValues.test}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth margin="normal">
+                <InputLabel>Type</InputLabel>
+                <Select
+                  name="type"
+                  value={formValues.type}
+                  onChange={handleChange}
+                  label="Eligiblity TestType"
+                >
+                  <MenuItem value="ABROAD">ABROAD</MenuItem>
+                  <MenuItem value="MEDICAL">MEDICAL</MenuItem>
+                </Select>
+              </FormControl>
+              {formValues.type === 'ABROAD' && (
+                <FormControl fullWidth margin="normal">
+                  <InputLabel>Test</InputLabel>
+                  <Select
+                    name="test"
+                    value={formValues.test}
+                    onChange={handleChange}
+                    label="Eligiblity Test"
+                  >
+                    <MenuItem value="TestA">I don't have it</MenuItem>
+                    <MenuItem value="TestB">I will provide later</MenuItem>
+                    <MenuItem value="TestA">IELTS</MenuItem>
+                    <MenuItem value="TestB">TOEFL</MenuItem>
+                    <MenuItem value="TestA">PTE</MenuItem>
+                    <MenuItem value="TestB">GRE</MenuItem>
+                    <MenuItem value="TestB">DET</MenuItem>
+
+                    <MenuItem value="TestB">GERMENY</MenuItem>
+
+                    {/* Add more tests as needed */}
+                  </Select>
+                </FormControl>
+              )}
+              {formValues.type === 'MEDICAL' && (
+                <FormControl fullWidth margin="normal">
+                  <InputLabel>Medical Test</InputLabel>
+                  <Select
+                    name="test"
+                    value={formValues.test}
+                    onChange={handleChange}
+                    label="Medical Test"
+                  >
+                    <MenuItem value="MedTestA">Don't have it</MenuItem>
+                    <MenuItem value="MedTestB">NEET</MenuItem>
+                    {/* Add more medical tests as needed */}
+                  </Select>
+                </FormControl>
+              )}
               <TextField
                 name="score"
                 label="Score"
+                type="number"
                 variant="outlined"
                 fullWidth
                 margin="normal"
-                type="number"
                 value={formValues.score}
                 onChange={handleChange}
               />
@@ -274,6 +321,7 @@ export default function CounsellorAll() {
           ) : (
             <Button onClick={handleNext}>Next</Button>
           )}
+          <Button onClick={handleCloseStepper}>Close</Button>
         </DialogActions>
       </Dialog>
     </div>

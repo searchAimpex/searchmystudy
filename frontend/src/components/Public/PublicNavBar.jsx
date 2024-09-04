@@ -121,8 +121,8 @@ export default function PublicNavBar() {
                                 return {
                                     ...tab,
                                     sublinks: linkResult.map(item => ({
-                                        name: `${item.ProgramName} in ${item.Location}`,
-                                        link: `/course/${item._id}`,
+                                        name: `MBBS in ${item.name}`,
+                                        link: `/country/${item._id}`,
                                         flagURL: item.flagURL
                                     }))
                                 };

@@ -16,14 +16,13 @@ import EditIcon from '@mui/icons-material/Edit';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
-import {  useCountryFetchMutation, useCountryDeleteMutation } from '../../slices/adminApiSlice';
-
+import { useEffect, useState } from 'react';
+import { useCountryFetchMutation, useCountryDeleteMutation } from '../../slices/adminApiSlice';
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
 import { RemoveRedEye } from '@mui/icons-material';
-import { useState } from 'react';
 import CreateCountryPop from './PopUps/CreateCountryPop.jsx';
 import { DeleteCountry, FetchCountry } from '../../slices/countrySlice.js';
+import StatusUpdatePop from './StatusUpdatePop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -126,17 +125,18 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
     const [open, setOpen] = useState(false);
-    const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
+    const [viewBannerOpen, setViewBannerOpen] = useState(false);
+    const [viewUpdateOpen, setViewUpdateOpen] = useState(false);
+
 
     const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
-    const handleClose = () => {
-        setOpen(false);
-    }
-    useEffect(() => {
-        console.log("Dialog open state:", open);
-      }, [open]);
+
+    const handleClose = () => setOpen(false);
+    const handleViewUpdateOpen = () => setViewUpdateOpen(true);
+    const handleViewUpdateClose = () => setViewUpdateOpen(false);
+
     return (
         <Box
             sx={{
@@ -179,13 +179,21 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                             <EditIcon />
                         </IconButton>
                     </Tooltip>
+                    <Tooltip title="Status Country">
+                        <IconButton size="sm" color="danger" variant='solid' >
+                            <EditIcon
+                                onClick = {()=>{
+                                    handleViewUpdateOpen()
+                                }}
+                            />
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="View Hero Image">
                         <IconButton  size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
+                                onViewBanner(selectedRow?.banner);
+                                handleViewBannerOpen();
                             }}/>
-                            
                         </IconButton>
                     </Tooltip>
                 </div>
@@ -198,6 +206,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
+            < StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
         </Box>
     );
 }
@@ -221,14 +230,14 @@ function CountryTable() {
     const [CountryDelete, DeleteState] = useCountryDeleteMutation();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Data fetched successfully');
-        }
-        if (DeleteState.isSuccess) {
-            toast.success('Service deleted successfully');
-        }
-    }, [isSuccess, DeleteState.isSuccess]);
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success('Data fetched successfully');
+    //     }
+    //     if (DeleteState.isSuccess) {
+    //         toast.success('Service deleted successfully');
+    //     }
+    // }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -236,7 +245,7 @@ function CountryTable() {
                 const result = await CountryFetch().unwrap();
                 dispatch(FetchCountry(result));
             } catch (error) {
-                console.error('Failed to fetch services:', error);
+                toast.error('Something went wrong while fetching the countries.');
             }
         };
         fetchData();
@@ -250,19 +259,19 @@ function CountryTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services?.map((n) => n._id);
+            const newSelected = services.map((n) => n._id);
             setSelected(newSelected);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, _id) => {
+        const selectedIndex = selected.indexOf(_id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, _id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -273,6 +282,7 @@ function CountryTable() {
                 selected.slice(selectedIndex + 1)
             );
         }
+
         setSelected(newSelected);
     };
 
@@ -285,135 +295,86 @@ function CountryTable() {
         setPage(0);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
-
-    const handleViewBanner = (banner) => {
-        console.log('Viewing banner:', banner);
-    };
+    const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
     const handleDelete = async (id) => {
         try {
-            const res = await CountryDelete(id).unwrap();
-            dispatch(DeleteCountry(res))
+            await CountryDelete(id).unwrap();
+            dispatch(DeleteCountry(id));
+            toast.success('Country deleted successfully');
         } catch (error) {
-            toast.error('Error deleting banner');
+            toast.error('Something went wrong while deleting the country.');
         }
     };
 
+    const handleViewBanner = (banner) => {
+        // Do something with the banner image, e.g., set state to show it in a modal
+    };
+
     return (
-        <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={services?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
+        <Box sx={{ width: '100%', mt: 3 }}>
+            <EnhancedTableToolbar
+                numSelected={selected.length}
+                selectedRow={services.find((row) => row._id === selected[0])}
+                onViewBanner={handleViewBanner}
+                onDelete={handleDelete}
+            />
+            <Table aria-labelledby="tableTitle" size="small">
                 <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={services.length}
                 />
                 <tbody>
                     {stableSort(services, getComparator(order, orderBy))
-                        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        ?.map((row, index) => {
-                            const isItemSelected = isSelected(row?._id);
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((row, index) => {
+                            const isItemSelected = isSelected(row._id);
                             const labelId = `enhanced-table-checkbox-${index}`;
+
                             return (
                                 <tr
                                     hover
-                                    onClick={(event) => handleClick(event, row?._id)}
+                                    onClick={(event) => handleClick(event, row._id)}
                                     role="checkbox"
                                     aria-checked={isItemSelected}
                                     tabIndex={-1}
-                                    key={row?._id}
+                                    key={row._id}
                                     selected={isItemSelected}
                                 >
                                     <td>
                                         <Checkbox
-                                            color={isItemSelected ? 'primary' : 'neutral'}
                                             checked={isItemSelected}
-                                            slotProps={{ input: { 'aria-labelledby': labelId } }}
-                                            sx={{ verticalAlign: 'sub' }}
+                                            inputProps={{
+                                                'aria-labelledby': labelId,
+                                            }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.name}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
+                                    <td>{row._id}</td>
+                                    <td>{row.name}</td>
+                                    <td>{row.heading}</td>
+                                    <td>{new Date(row.createdAt).toLocaleDateString()}</td>
+                                    <td>{new Date(row.updatedAt).toLocaleDateString()}</td>
                                 </tr>
                             );
                         })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
                 </tbody>
             </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
                 <Select
-                    variant="outlined"
-                    size="sm"
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
+                    sx={{ width: 100 }}
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
-                        <Option key={rowsPerPageOption} value={rowsPerPageOption}>
-                            {rowsPerPageOption} rows
+                    {[5, 10, 25].map((rows) => (
+                        <Option key={rows} value={rows}>
+                            {rows}
                         </Option>
                     ))}
                 </Select>
-                <Typography textColor="text.secondary" fontSize="sm">
-                    {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > services?.length
-                        ? services?.length
-                        : page * rowsPerPage + rowsPerPage}{' '}
-                    of {services?.length}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(null, page - 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
-                    </IconButton>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
-                        onClick={() => handleChangePage(null, page + 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
-                    </IconButton>
-                </Box>
             </Box>
         </Box>
     );

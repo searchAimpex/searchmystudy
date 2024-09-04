@@ -353,3 +353,77 @@
       </div>
     )
 },
+
+
+
+
+
+
+
+return (
+<Box sx={{ width: '100%', mt: 3 }}>
+    <EnhancedTableToolbar
+        numSelected={selected.length}
+        selectedRow={services.find((row) => row._id === selected[0])}
+        onViewBanner={handleViewBanner}
+        onDelete={handleDelete}
+    />
+    <Table aria-labelledby="tableTitle" size="small">
+        <EnhancedTableHead
+            numSelected={selected.length}
+            order={order}
+            orderBy={orderBy}
+            onSelectAllClick={handleSelectAllClick}
+            onRequestSort={handleRequestSort}
+            rowCount={services.length}
+        />
+        <tbody>
+            {stableSort(services, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                    const isItemSelected = isSelected(row._id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                        <tr
+                            hover
+                            onClick={(event) => handleClick(event, row._id)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row._id}
+                            selected={isItemSelected}
+                        >
+                            <td>
+                                <Checkbox
+                                    checked={isItemSelected}
+                                    inputProps={{
+                                        'aria-labelledby': labelId,
+                                    }}
+                                />
+                            </td>
+                            <td>{row._id}</td>
+                            <td>{row.name}</td>
+                            <td>{row.heading}</td>
+                            <td>{new Date(row.createdAt).toLocaleDateString()}</td>
+                            <td>{new Date(row.updatedAt).toLocaleDateString()}</td>
+                        </tr>
+                    );
+                })}
+        </tbody>
+    </Table>
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
+        <Select
+            value={rowsPerPage}
+            onChange={handleChangeRowsPerPage}
+            sx={{ width: 100 }}
+        >
+            {[5, 10, 25].map((rows) => (
+                <Option key={rows} value={rows}>
+                    {rows}
+                </Option>
+            ))}
+        </Select>
+    </Box>
+</Box>
+);

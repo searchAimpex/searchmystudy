@@ -135,6 +135,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+        CountryStatusUpdate:builder.mutation({
+            query:(data)=>({
+                
+                url: `${USERS_URL}/countries/${data.id}`,
+                method: 'PUT',
+                body:data,
+            }),
+        }),
         CountryFetchOne:builder.mutation({
             query:(id)=>({
                 url: `${USERS_URL}/countries/${id}`,
@@ -192,6 +200,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+       
         CreateCourse:builder.mutation({
                 query:(data)=>({
                     url: `${USERS_URL}/course`,
@@ -338,7 +347,7 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useTestimonialCreateMutation,useTestimonialFetchAllMutation,useTestimonialDeleteMutation,
     useCreateCounsellorMutation,useAllCounsellorMutation,useCounsellorDeleteMutation,
     useCreateBlogMutation,useFetchBlogMutation,useGetOneBlogMutation,useDeleteBlogMutation,
-    useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,
+    useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,useCountryStatusUpdateMutation,
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
     useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,

@@ -462,16 +462,18 @@ const getCountryById = asyncHandler(async (req, res) => {
 // @route   PUT /countries/:id
 // @access  Public
 const updateCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, provinces } = req.body;
+  const { name, bannerURL, description, sections, provinces,status } = req.body;
 
   const country = await Country.findById(req.params.id);
-
+  console.log("req.body===>",req.body)
+  // console.log("counbtry",country,status)
   if (country) {
     country.name = name || country.name;
     country.bannerURL = bannerURL || country.bannerURL;
     country.description = description || country.description;
     country.sections = sections || country.sections;
     country.provinces = provinces || country.provinces;
+    country.mbbsAbroad = status || mbbsAbroad;
 
     const updatedCountry = await country.save();
     res.json(updatedCountry);
@@ -857,30 +859,14 @@ const getCourses = asyncHandler(async (req, res) => {
 });
 
 
-// Function to get courses with the country name 'India' and category 'Medical'
 const getCoursesForIndiaMedical = async (req, res) => {
   try {
       // Find courses where the category is 'Medical'
-      const medicalCourses = await Course.find({ Category: 'Medical' }).populate({
-          path: 'University',
-          populate: {
-              path: 'Province',
-              populate: {
-                  path: 'Country',
-                  match: { name: 'INDIA' } // Filter for Country name 'India'
-              }
-          }
-      });
-      console.log("fsa",medicalCourses)
-      // Filter courses where the Country name is 'India'
-      const filteredCourses = medicalCourses.filter(course => {
-          const university = course.University;
-          const province = university?.Province;
-          const country = province?.Country;
-          return country?.name === 'INDIA';
-      });
+      const medicalCourses = await Country.find({mbbsAbroad:true})
+    
+      
 
-      res.status(200).json(filteredCourses);
+      res.status(200).json(medicalCourses);
   } catch (error) {
       res.status(500).json({ message: error.message });
   }
