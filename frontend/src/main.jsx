@@ -7,8 +7,7 @@ import {
   Route,
   RouterProvider,
 } from 'react-router-dom';
-import '../src/index.css'
-
+import '../src/index.css';
 import store from './store';
 import { Provider } from 'react-redux';
 import HomeScreen from './screens/HomeScreen';
@@ -50,8 +49,8 @@ const router = createBrowserRouter(
       <Route path='/login' element={<LoginScreen />} />
       <Route  element={<PublicRoutes />} >
         <Route index={true} path='/' element={<HomeScreen />} />
-        <Route path='/services'  element={<ServiceScreen />} />
-        <Route path="/service/:id" element={<ServiceDetailed/>} />
+        <Route path =  '/services'  element={<ServiceScreen />} />
+        <Route path =  "/service/:id" element={<ServiceDetailed/>} />
         <Route path = "/blog" element = {<BlogScreeen /> } />
         <Route path = "/blog/:id" element = {<BlogDetailed /> } />
         <Route path = '/country/:id' element = { <CountryDetailed />} />
@@ -71,8 +70,7 @@ const router = createBrowserRouter(
         <Route path = '/nursingindia' element= {< NursingIndia/> }/>
         <Route path = '/pharmacyindia' element =  {<PharmacyIndia />} />
         <Route path = '/bvScindia' element= {< BvScIndia/>}/>
-      </Route>
-     
+      </Route>     
       {/* <Route path='/register' element={<RegisterScreen />} /> */}
       <Route path='' element={<PrivateRoute />}>
         <Route path ='/profile' element={<ProfileScreen />} />

@@ -255,7 +255,7 @@ export default function CounsellorAll() {
                   name="type"
                   value={formValues.type}
                   onChange={handleChange}
-                  label="Eligiblity TestType"
+                  label="Eligiblity Test Type"
                 >
                   <MenuItem value="ABROAD">ABROAD</MenuItem>
                   <MenuItem value="MEDICAL">MEDICAL</MenuItem>

@@ -14,6 +14,7 @@ import Logo from "../../assets/NewLogo.png";
 import CounsellingModal from "./PopUp/CounsellingModal";
 import { Tabs, Tab } from '@mui/material';
 import { FetchedLinked } from "../../slices/courseSlice";
+import Footer from "./Footer";
 
 const initialLinks = [
     {
