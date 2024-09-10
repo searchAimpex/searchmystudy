@@ -29,7 +29,7 @@ export default {
         'gradient-end': '#FF69B4',
         'text-color':'#3A3742',
         'blue-main':'#264790',
-        'gold-main':'#E58013'
+        'gold-main':'#DB7E19'
       },
       backgroundImage: {
         'custom-primary': 'linear-gradient(270deg, #E13B68 0%, #7B2039 100%)',

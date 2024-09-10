@@ -1,7 +1,9 @@
 import React from 'react'
 import AboutHero from '../../assets/AboutHero.png'
+import { useNavigate } from 'react-router-dom'
 
 function AboutUsSection() {
+    const navigate = useNavigate()
   return (
     <div className='mt-[100px] mx-[200px] py-2'>
         <div className='flex flex-row w-full'>
@@ -17,7 +19,7 @@ function AboutUsSection() {
                     <p className='font-bold text-xl text-gray-700'>At SearchMyStudy, we are dedicated to helping students achieve their academic dreams. Our comprehensive platform offers detailed information on a wide range of medical and study abroad courses, extensive databases of universities and countries, and personalized counseling services. We strive to provide an intuitive and user-friendly experience, guiding you every step of the way in your educational journey.</p>
                 </div>
                 <div className='w-full'>
-                    <button className='p-2 bg-blue-main rounded-xl text-white font-bold'>Know More</button>
+                    <button  onClick = {()=>navigate('/aboutus')}className='p-2 bg-blue-main rounded-xl text-white font-bold'>Know More</button>
                 </div>
             </div>  
         </div>

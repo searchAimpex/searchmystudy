@@ -370,18 +370,20 @@ const AllCourseDetailed = () => {
             {courses.map((course) => (
               <div key={course._id} className="bg-white p-4 flex flex-row space-x-6 rounded-lg shadow-md">
                   <div>
-                    <img className='h-[200px] w-[350px]' src={course.University.logo} />
+                    <img className='h-[250px] w-[350px]' src={course.University.logo} />
                   </div>
                   <div className='flex flex-col space-y-2 w-full'>
                       <div className='flex flex-row w-full justify-between items-center'>
                             <div>
                                 <span className='text-lg font-bold flex flex-row space-x-4'>University:{course?.University?.name}</span>
                             </div>
-                            <div className='flex flex-row justify-start items-start w-1/4'>
-                                <span className='text-lg font-bold'>Location: {course.Location}</span>
-                            </div>
-
+                   
                       </div>
+                      <div className='flex flex-row space-x-2'>
+                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.ProgramName},</span>
+                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.Category}</span>
+
+                            </div>
                       <div className='flex flex-row justify-between w-full rounded-xl  items-center'>
                             <div className='bg-blue-main p-2 rounded-xl space-x-4 flex flex-row items-center '> 
                                 <span className='text-md font-bold  text-white flex flex-row space-x-4'>Fees</span>
@@ -416,11 +418,11 @@ const AllCourseDetailed = () => {
                          </div>
                          </div>
                       <div className='flex flex-row w-full justify-between items-center'>
-                            <div className='flex flex-row space-x-2'>
-                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.ProgramName},</span>
-                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.Category}</span>
-
+                    
+                            <div className='flex flex-row justify-start items-start w-1/4'>
+                                <span className='text-lg font-bold'>Location: {course.Location}</span>
                             </div>
+
                             <div>
                                 <button 
                                 className='px-2 py-2 rounded-xl text-white font-bold bg-blue-main'

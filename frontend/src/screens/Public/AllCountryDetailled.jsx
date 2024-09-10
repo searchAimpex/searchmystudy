@@ -55,7 +55,9 @@ export default function AllCountryDetailled() {
                                 />
                             </div>
                             <div className='ml-5 flex flex-col w-full justify-center'>
+                                <div>
                                 <p className='text-xl text-blue-main font-bold'>{item.name}</p>
+                                </div>
                                 <p className='text-sm text-gray-600 mt-2'>
                                     {item.description || 'A brief description about the country.'}
                                 </p>
