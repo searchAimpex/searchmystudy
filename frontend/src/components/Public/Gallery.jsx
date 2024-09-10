@@ -11,31 +11,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-const Gallery = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate hook
-  const [TestimonialFetchAll, { isSuccess, isLoading }] = useTestimonialFetchAllMutation();
-  const { testimonial } = useSelector((state) => state.testimonial);
+const Gallery = ({testimonial,isLoading}) => {
 
-  const carouselRef = useRef(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await TestimonialFetchAll().unwrap();
-        dispatch(FetchAllTestimonial(result));
-      } catch (error) {
-        console.error('Failed to fetch testimonials:', error);
-      }
-    };
-    fetchData();
-  }, [TestimonialFetchAll, dispatch]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Testimonials Fetched Successfully");
-    }
-  }, [isSuccess]);
 
   if (isLoading) {
     return <Loader />;
