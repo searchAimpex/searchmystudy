@@ -331,10 +331,29 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
-        DeleteContactLead :builder.mutation({
+        DeleteContactLead:builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/contactlead/${data}`,
                 method: 'DELETE',
+            }),
+        }),
+        fetchNotifcation:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/notify-me/${data}`,
+                method: 'GET'
+            }),
+        }),
+        fetchAllNotifcation:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/notify-all`,
+                method: 'GET'
+            }),
+        }),
+        createNotifcation:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/notify-role`,
+                method: 'POST',
+                body:data
             }),
         }),
 
@@ -355,5 +374,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation,
     useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,
     useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,
-    useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation
+    useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation,
+    useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation
 } = userApiSlice

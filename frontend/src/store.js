@@ -15,7 +15,7 @@ import mediaReducer from './slices/mediaSlice';
 import counsellerLeadReducer from './slices/counsellerLeadSlice'
 import homeLeadReducer from './slices/leadSlice'
 import contactLeadReducer from './slices/contactLeadSlice'
-
+import notificationReducer from './slices/notificationSlice'
 
 const store = configureStore({
   reducer: {
@@ -34,7 +34,8 @@ const store = configureStore({
     media:mediaReducer,
     counsellerLead : counsellerLeadReducer,
     homeLead: homeLeadReducer,
-    contactLead : contactLeadReducer
+    contactLead : contactLeadReducer,
+    notification: notificationReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

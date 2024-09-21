@@ -44,7 +44,7 @@ export default function AllCountryDetailled() {
                 </div>
             </div>
             <div className='mx-[200px] p-10'>
-                <div className='grid grid-cols-1 gap-10'>
+                <div className='grid grid-cols-3 gap-10'>
                     {countries.map((item) => (
                         <div key={item._id} className='shadow-xl flex w-full p-5'>
                             <div className='flex-shrink-0 overflow-hidden'>

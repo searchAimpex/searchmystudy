@@ -17,18 +17,10 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     role:{ type:String,default:"admin"},
-    permissions: {
-      type: [
-        {
-          management: { type: String, required: true },
-          actions: { type: [String], required: true },
-        },
-      ],
-      default: [],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User', // Reference to the User model
     },
-  
- 
-
   },
   {
     timestamps: true,

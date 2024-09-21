@@ -79,6 +79,8 @@ const router = createBrowserRouter(
         <Route path = "/admin/blog" element={<AdminBlogManagement />} />
         <Route path = "/admin/course" element={<AdminCourseManagement />} />
         <Route path = "/admin/leads" element={<AdminLeadManagement/>}/>
+        <Route path = "/admin/notification" element={<AdminLeadManagement/>}/>
+
       </Route>
     </Route>
   )

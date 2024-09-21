@@ -13,6 +13,9 @@ import Media from '../models/mediaModel.js';
 import CounsellerLead from '../models/counsellerLeadModel.js';
 import HomeLead from '../models/homeLeadModel.js';
 import ContactLead from '../models/contactLeadModel.js';
+import User from '../models/userModel.js';
+import generateToken from '../utils/generateToken.js';
+import Notification from '../models/notificationModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1152,6 +1155,155 @@ const deleteContactLead = asyncHandler(async (req, res) => {
   }
 });
 
+
+
+// @desc    CREATE USER 
+// @route   DELETE /api/createUser
+// @access  Public
+// @desc    Auth user & get token
+// @route   POST /api/users/auth
+// @access  Public
+const authPartner = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(401);
+    throw new Error('Invalid email or password');
+  }
+  if (user.role === 'admin') {
+    res.status(401);
+    throw new Error('Access Denied (Role -Admin');
+  }
+  if (user && (await user.matchPassword(password))) {
+    generateToken(res, user._id);
+
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role:user.role,
+      permissions: user.permissions
+    });
+  } else {
+    res.status(401);
+    throw new Error('Invalid email or password');
+  }
+});
+
+
+
+// @desc    Register a new user
+// @route   POST /api/extraUser
+// @access  Public
+const extraUser = asyncHandler(async (req, res) => {
+  const { name, email, password ,role,createdBy} = req.body;
+
+  const userExists = await User.findOne({ email });
+
+  if (userExists) {
+    res.status(400);
+    throw new Error('User already exists');
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+    role,
+    createdBy
+  });
+
+  if (user) {
+    generateToken(res, user._id);
+
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role:user.role,
+      createdBy:user.createdBy
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+});
+
+
+// @desc    GET EXTRA user
+// @route   GET /api/extraUser
+// @access  Public
+const extraUserFetch = asyncHandler(async (req, res) => {
+  const createdBy = req.params.id;
+
+  const userExists = await User.find({ createdBy:createdBy }).populate('createdBy');
+
+
+
+  if (userExists) {
+  
+
+    res.status(201).json(userExists);
+  } else {
+    res.status(400);
+    throw new Error('Invalid user data');
+  }
+});
+
+
+
+// Function to send notifications to users with a specific role
+const sendNotificationToRole = async (req, res) => {
+  try {
+    const { message, role } = req.body;  // The notification message and target role (e.g., "partner")
+    console.log("fix",message,role)
+    if (!message || !role) {
+      return res.status(400).json({ message: 'Message and role are required.' });
+    }
+
+    // Find users with the specified role
+    const users = await User.find({ role });
+    if (users.length === 0) {
+      return res.status(404).json({ message: `No users found with role: ${role}` });
+    }
+
+    // Loop through each user and create a notification for them
+    const notifications = users.map(user => ({
+      user: user._id,
+      message,
+    }));
+
+    // Insert all notifications at once using insertMany
+    await Notification.insertMany(notifications);
+    res.status(200).json({ message: `Notification sent to all users with role: ${role}` });
+  } catch (error) {
+    res.status(500).json({ message: 'Error sending notifications', error });
+  }
+};
+
+
+// Get notifications for the logged-in user
+const getNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find({ user: req.params.id }).sort({ createdAt: -1 });
+
+    res.status(200).json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+};
+
+// Get All notifications 
+const getAllNotifications = async (req, res) => {
+  try {
+    const notifications = await Notification.find().sort({ createdAt: -1 });
+    res.status(200).json(notifications);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching notifications', error });
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1166,5 +1318,7 @@ export {
     getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,getCoursesForIndiaMedical,
     createLead,getLead,deleteLead,GetOneLead,
     createHomeLead, getLeads, deleteHomeLead,
-    deleteContactLead,getContactLeads,createContactLead
+    deleteContactLead,getContactLeads,createContactLead,
+    extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications
+    
   };

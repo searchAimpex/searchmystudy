@@ -443,5 +443,4 @@ const AllCourseDetailed = () => {
     </div>
   );
 };
-
 export default AllCourseDetailed;

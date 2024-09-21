@@ -17,7 +17,12 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       deleteHomeLead,
       createContactLead,
       getContactLeads,
-      deleteContactLead
+      deleteContactLead,
+      extraUser,
+      extraUserFetch,
+      sendNotificationToRole,
+      getNotifications,
+      getAllNotifications
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -165,6 +170,22 @@ router.delete('/homelead/:id',deleteHomeLead)
 router.post('/contactlead',createContactLead)
 router.get('/contactlead',getContactLeads)
 router.delete('/contactlead/:id',deleteContactLead)
+/******************************************************************/
+
+
+
+/********************* Extra User Routes  ***********************/
+router.post('/extrauser',extraUser)
+router.get('/extrauser/:id',extraUserFetch)
+/******************************************************************/
+
+
+
+
+/********************* Notification User Routes  ***********************/
+router.post('/notify-role', sendNotificationToRole);
+router.get('/notify-me/:id',getNotifications)
+router.get('/notfiy-all',getAllNotifications)
 /******************************************************************/
 
 export default router;

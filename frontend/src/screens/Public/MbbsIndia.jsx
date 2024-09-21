@@ -105,6 +105,331 @@ const MbbsIndia = () => {
                   <td className="border-b border-gray-300 p-2">1</td>
                   <td className="border-b border-gray-300 p-2">100</td>
                 </tr>
+                
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Andhra Pradesh</td>
+              <td className="border-b border-gray-300 p-2">13</td>
+              <td className="border-b border-gray-300 p-2">2485</td>
+              <td className="border-b border-gray-300 p-2">18</td>
+              <td className="border-b border-gray-300 p-2">2850</td>
+              <td className="border-b border-gray-300 p-2">31</td>
+              <td className="border-b border-gray-300 p-2">5335</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Arunachal Pradesh</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">50</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">50</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Assam</td>
+              <td className="border-b border-gray-300 p-2">9</td>
+              <td className="border-b border-gray-300 p-2">1150</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">9</td>
+              <td className="border-b border-gray-300 p-2">1150</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Bihar</td>
+              <td className="border-b border-gray-300 p-2">12</td>
+              <td className="border-b border-gray-300 p-2">1515</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">900</td>
+              <td className="border-b border-gray-300 p-2">20</td>
+              <td className="border-b border-gray-300 p-2">2415</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Chandigarh</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">150</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">150</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Chhattisgarh</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">965</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">600</td>
+              <td className="border-b border-gray-300 p-2">12</td>
+              <td className="border-b border-gray-300 p-2">1565</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Dadra and Nagar Haveli</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">150</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">150</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Delhi</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1247</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">250</td>
+              <td className="border-b border-gray-300 p-2">10</td>
+              <td className="border-b border-gray-300 p-2">1497</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Goa</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">180</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">180</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Gujarat</td>
+              <td className="border-b border-gray-300 p-2">18</td>
+              <td className="border-b border-gray-300 p-2">3700</td>
+              <td className="border-b border-gray-300 p-2">11</td>
+              <td className="border-b border-gray-300 p-2">1940</td>
+              <td className="border-b border-gray-300 p-2">29</td>
+              <td className="border-b border-gray-300 p-2">5640</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Haryana</td>
+              <td className="border-b border-gray-300 p-2">7</td>
+              <td className="border-b border-gray-300 p-2">1407</td>
+              <td className="border-b border-gray-300 p-2">10</td>
+              <td className="border-b border-gray-300 p-2">1175</td>
+              <td className="border-b border-gray-300 p-2">17</td>
+              <td className="border-b border-gray-300 p-2">2582</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Himachal Pradesh</td>
+              <td className="border-b border-gray-300 p-2">5</td>
+              <td className="border-b border-gray-300 p-2">425</td>
+              <td className="border-b border-gray-300 p-2">3</td>
+              <td className="border-b border-gray-300 p-2">690</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1115</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Jammu and Kashmir</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">475</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">150</td>
+              <td className="border-b border-gray-300 p-2">6</td>
+              <td className="border-b border-gray-300 p-2">625</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Jharkhand</td>
+              <td className="border-b border-gray-300 p-2">7</td>
+              <td className="border-b border-gray-300 p-2">940</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">500</td>
+              <td className="border-b border-gray-300 p-2">11</td>
+              <td className="border-b border-gray-300 p-2">1440</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Karnataka</td>
+              <td className="border-b border-gray-300 p-2">18</td>
+              <td className="border-b border-gray-300 p-2">3470</td>
+              <td className="border-b border-gray-300 p-2">14</td>
+              <td className="border-b border-gray-300 p-2">3050</td>
+              <td className="border-b border-gray-300 p-2">32</td>
+              <td className="border-b border-gray-300 p-2">6520</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Kerala</td>
+              <td className="border-b border-gray-300 p-2">14</td>
+              <td className="border-b border-gray-300 p-2">2500</td>
+              <td className="border-b border-gray-300 p-2">6</td>
+              <td className="border-b border-gray-300 p-2">1050</td>
+              <td className="border-b border-gray-300 p-2">20</td>
+              <td className="border-b border-gray-300 p-2">3550</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Ladakh</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">65</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">65</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Lakshadweep</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">50</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">50</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Ladakh</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">65</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">65</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Madhya Pradesh</td>
+              <td className="border-b border-gray-300 p-2">16</td>
+              <td className="border-b border-gray-300 p-2">2495</td>
+              <td className="border-b border-gray-300 p-2">7</td>
+              <td className="border-b border-gray-300 p-2">1230</td>
+              <td className="border-b border-gray-300 p-2">23</td>
+              <td className="border-b border-gray-300 p-2">3725</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Maharashtra</td>
+              <td className="border-b border-gray-300 p-2">16</td>
+              <td className="border-b border-gray-300 p-2">3300</td>
+              <td className="border-b border-gray-300 p-2">11</td>
+              <td className="border-b border-gray-300 p-2">2280</td>
+              <td className="border-b border-gray-300 p-2">27</td>
+              <td className="border-b border-gray-300 p-2">5580</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Manipur</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">145</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">190</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">335</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Meghalaya</td>
+              <td className="border-b border-gray-300 p-2">5</td>
+              <td className="border-b border-gray-300 p-2">640</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">130</td>
+              <td className="border-b border-gray-300 p-2">7</td>
+              <td className="border-b border-gray-300 p-2">770</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Mizoram</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">185</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">440</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">625</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Nagaland</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">185</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">440</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">625</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Odisha</td>
+              <td className="border-b border-gray-300 p-2">6</td>
+              <td className="border-b border-gray-300 p-2">825</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">340</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1165</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Puducherry</td>
+              <td className="border-b border-gray-300 p-2">3</td>
+              <td className="border-b border-gray-300 p-2">480</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">0</td>
+              <td className="border-b border-gray-300 p-2">3</td>
+              <td className="border-b border-gray-300 p-2">480</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Punjab</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1235</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1030</td>
+              <td className="border-b border-gray-300 p-2">16</td>
+              <td className="border-b border-gray-300 p-2">2265</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Rajasthan</td>
+              <td className="border-b border-gray-300 p-2">22</td>
+              <td className="border-b border-gray-300 p-2">4385</td>
+              <td className="border-b border-gray-300 p-2">7</td>
+              <td className="border-b border-gray-300 p-2">925</td>
+              <td className="border-b border-gray-300 p-2">29</td>
+              <td className="border-b border-gray-300 p-2">5310</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Sikkim</td>
+              <td className="border-b border-gray-300 p-2">3</td>
+              <td className="border-b border-gray-300 p-2">185</td>
+              <td className="border-b border-gray-300 p-2">1</td>
+              <td className="border-b border-gray-300 p-2">115</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">300</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Tamil Nadu</td>
+              <td className="border-b border-gray-300 p-2">21</td>
+              <td className="border-b border-gray-300 p-2">4100</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1610</td>
+              <td className="border-b border-gray-300 p-2">29</td>
+              <td className="border-b border-gray-300 p-2">5710</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Telangana</td>
+              <td className="border-b border-gray-300 p-2">5</td>
+              <td className="border-b border-gray-300 p-2">1045</td>
+              <td className="border-b border-gray-300 p-2">6</td>
+              <td className="border-b border-gray-300 p-2">1420</td>
+              <td className="border-b border-gray-300 p-2">11</td>
+              <td className="border-b border-gray-300 p-2">2465</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Tripura</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">260</td>
+              <td className="border-b border-gray-300 p-2">2</td>
+              <td className="border-b border-gray-300 p-2">490</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">750</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Uttar Pradesh</td>
+              <td className="border-b border-gray-300 p-2">35</td>
+              <td className="border-b border-gray-300 p-2">5900</td>
+              <td className="border-b border-gray-300 p-2">23</td>
+              <td className="border-b border-gray-300 p-2">4300</td>
+              <td className="border-b border-gray-300 p-2">58</td>
+              <td className="border-b border-gray-300 p-2">10200</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">Uttarakhand</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1470</td>
+              <td className="border-b border-gray-300 p-2">4</td>
+              <td className="border-b border-gray-300 p-2">620</td>
+              <td className="border-b border-gray-300 p-2">12</td>
+              <td className="border-b border-gray-300 p-2">2090</td>
+            </tr>
+            <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <td className="border-b border-gray-300 p-2">West Bengal</td>
+              <td className="border-b border-gray-300 p-2">15</td>
+              <td className="border-b border-gray-300 p-2">2330</td>
+              <td className="border-b border-gray-300 p-2">8</td>
+              <td className="border-b border-gray-300 p-2">1220</td>
+              <td className="border-b border-gray-300 p-2">23</td>
+              <td className="border-b border-gray-300 p-2">3550</td>
+            </tr>
             
                
               </tbody>
