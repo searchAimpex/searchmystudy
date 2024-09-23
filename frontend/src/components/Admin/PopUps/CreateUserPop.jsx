@@ -9,19 +9,21 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import { toast } from 'react-toastify';
-import { useCreateNotifcationMutation } from '../../../slices/adminApiSlice';
+import { useCreateUserMutation } from '../../../slices/usersApiSlice'; // Assuming you have a slice for creating users
 import { useDispatch } from 'react-redux';
-import { AddNotifcation } from '../../../slices/notificationSlice';
 
-function CreateNotificationPop({ open, handleClose }) {
-    const [CreateNotifcation,{isSuccess}] = useCreateNotifcationMutation()
-    const dispatch = useDispatch()
+function CreateUserPop({ open, handleClose }) {
+  const [createUser, { isSuccess }] = useCreateUserMutation(); // Updated mutation for creating users
+  const dispatch = useDispatch();
+  
   const [formValues, setFormValues] = useState({
-    message: '',
+    email: '',
+    password: '',
     role: '',
+    name:''
   });
 
-  const roles = ['partner', 'franchise', 'counsellor'];
+  const roles = ['partner', 'franchise', 'counsellor']; // Update role options as needed
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -32,25 +34,22 @@ function CreateNotificationPop({ open, handleClose }) {
   };
 
   const onSubmit = async () => {
-
-    console.log("fix",formValues)
-    const res = await CreateNotifcation(formValues)
-    dispatch(AddNotifcation(res))
+    const res = await createUser(formValues); // Assuming the API expects these fields// Update the Redux store with the new user
     handleClose(); // Close the dialog after submission
   };
+
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Notification Added Successfully');
+      toast.success('User Created Successfully');
     }
-  }, [isSuccess])
-
+  }, [isSuccess]);
 
   return (
     <Dialog fullWidth={true} open={open} onClose={handleClose}>
-      <DialogTitle>Create Notification</DialogTitle>
+      <DialogTitle>Create User</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Create a notification for partners, franchise, or counsellors.
+          Create a user by filling in the following fields.
         </DialogContentText>
         <Box
           noValidate
@@ -62,15 +61,41 @@ function CreateNotificationPop({ open, handleClose }) {
             width: 'fit-content',
           }}
         >
-          {/* Message Input */}
+          {/* Email Input */}
           <TextField
-            id="message"
-            name="message"
-            label="Message"
+            id="email"
+            name="email"
+            label="Email"
             variant="standard"
-            value={formValues.message}
+            value={formValues.email}
             onChange={handleChange}
             required
+            sx={{ mb: 2 }}
+          />
+            {/* Name Input */}
+            <TextField
+            id="name"
+            name="name"
+            label="Name"
+            variant="standard"
+            value={formValues.name}
+            onChange={handleChange}
+            required
+            sx={{ mb: 2 }}
+          />
+
+
+          {/* Password Input */}
+          <TextField
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            variant="standard"
+            value={formValues.password}
+            onChange={handleChange}
+            required
+            sx={{ mb: 2 }}
           />
 
           {/* Role Dropdown */}
@@ -83,7 +108,6 @@ function CreateNotificationPop({ open, handleClose }) {
             onChange={handleChange}
             variant="standard"
             required
-            sx={{ mt: 2 }}
           >
             {roles.map((role) => (
               <MenuItem key={role} value={role}>
@@ -101,4 +125,4 @@ function CreateNotificationPop({ open, handleClose }) {
   );
 }
 
-export default CreateNotificationPop;
+export default CreateUserPop;

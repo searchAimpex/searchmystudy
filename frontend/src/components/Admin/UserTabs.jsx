@@ -10,13 +10,6 @@ import Box from "@mui/material/Box";
 // theme.js
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material';
-import BannerTable from "./BannerTable";
-import ServiceTable from "./ServiceTable";
-import TestimonialTable from "./TestimonialTable";
-import CounsellorTable from "./CounsellorTable";
-import WebinarTable from "./WebinarTable";
-import MediaTable from "./MediaTable";
-import NotificationTable from "./NotificationTable";
 import UserTable from "./UserTable";
 
 const theme = createTheme({
@@ -63,7 +56,7 @@ function a11yProps(index) {
 }
 
 
-export default function WebTabs() {
+export default function UserTabs() {
 //   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -88,16 +81,7 @@ export default function WebTabs() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="BANNER MANAGEMENT" {...a11yProps(0)} />
-          <Tab label="SERVICE MANAGEMENT" {...a11yProps(1)} />
-          <Tab label="COUNSELLOR MANAGMENT" {...a11yProps(2)} />
-          <Tab label="TESTIMONIAL MANAGMENT" {...a11yProps(3)} />
-          <Tab label="WEBINAR MANAGMENT" {...a11yProps(4)} />
-          <Tab label="MEDIA MANAGMENT" {...a11yProps(5)} />
-          <Tab label="NOTIFICATION MANAGMENT" {...a11yProps(6)} />
-
-
-
+          <Tab label="USER MANAGEMENT" {...a11yProps(0)} />
         </Tabs>
       </AppBar>
       </ThemeProvider>
@@ -107,26 +91,9 @@ export default function WebTabs() {
         onChangeIndex={handleChangeIndex}
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
-           <BannerTable />
+           <UserTable />
         </TabPanel>
-        <TabPanel value={value} index={1} dir={theme.direction}>
-            <ServiceTable />
-        </TabPanel>
-        <TabPanel value={value} index={2} dir={theme.direction}>
-            <TestimonialTable />
-        </TabPanel>
-        <TabPanel value={value} index={3} dir={theme.direction}>
-            <CounsellorTable />
-        </TabPanel>
-        <TabPanel value={value} index={4} dir={theme.direction}>
-            <WebinarTable />
-        </TabPanel>
-        <TabPanel value={value} index={5} dir={theme.direction}>
-            <MediaTable />
-        </TabPanel>
-        <TabPanel value={value} index={6} dir={theme.direction}>
-            <NotificationTable />
-        </TabPanel>
+      
       
       </SwipeableViews>
     </Box>

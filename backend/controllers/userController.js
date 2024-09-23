@@ -43,6 +43,10 @@ const authPartner = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Acess Denied');
   }
+  if(user.block){
+    res.status(401);
+    throw new Error('User Blocked');
+  }
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
 
@@ -65,7 +69,7 @@ const authPartner = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password,role } = req.body;
 
   const userExists = await User.findOne({ email });
 
@@ -78,6 +82,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    role
   });
 
   if (user) {
@@ -150,19 +155,45 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+const blockUser = asyncHandler(async (req,res)=>{
+  const user = await User.findByIdAndUpdate(req.params.id,{block:req.body.block},{new:true});
+  if(user) {
+    res.json(user).status(200)
+  }else {
+    res.status(401);
+    throw new Error('User not found');
+  }
+})
 
 const test = async (req, res) => {
   try {
-    
     res.json({ msg:"working fine" });
   } catch (error) {
     res.status(401);
     throw new Error('Please enter all required fields' );
   }
 };
+const getAllUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.find();
 
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
 
+const deleteUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndDelete({_id:req.params.id});
 
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
 export {
   authUser,
   registerUser,
@@ -170,6 +201,9 @@ export {
   getUserProfile,
   updateUserProfile,
   authPartner,
-  test
+  test,
+  blockUser,
+  getAllUserProfile,
+  deleteUserProfile
 };
 

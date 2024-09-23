@@ -47,6 +47,14 @@ function AdminDashboard() {
                 <span>NOTIFICATION MANAGER</span>
               </div>
             </div>
+            <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/user')}> 
+              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+                <img src={WebManagement} alt="web" />
+              </div>
+              <div className='flex items-center justify-center'>
+                <span>USER MANAGER</span>
+              </div>
+            </div>
         </div>
     </div>
   )

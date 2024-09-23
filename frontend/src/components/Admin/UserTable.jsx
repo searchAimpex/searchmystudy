@@ -17,21 +17,18 @@ import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation, useCounsellerFetchLeadMutation, useCreateContactLeadMutation, useGetContactLeadMutation } from '../../slices/adminApiSlice';
-import { DeleteService, FetchAllServices } from '../../slices/serviceSlice.js';
-import CreateServicePop from './PopUps/CreateServicePop.jsx';
-import ImageViewPop from './PopUps/ImageViewPop.jsx';
+import ImageViewPop from './PopUps/ImageViewPop';
 import { RemoveRedEye } from '@mui/icons-material';
-import { useState } from 'react';
-import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
-import { FetchContactLead } from '../../slices/contactLeadSlice.js';
+import { useDeleteUserMutation, useGetAllUserMutation } from '../../slices/usersApiSlice';
+import { deleteUser, fetchUser } from '../../slices/authSlice';
+import CreateUserPop from './PopUps/CreateUserPop';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
-    { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
-    { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
+    { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
+    { id: 'role', numeric: false, disablePadding: false, label: 'ROle' },
+    { id: 'block', numeric: false, disablePadding: false, label: 'Block' },
+    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' }
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -68,7 +65,7 @@ function EnhancedTableHead(props) {
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
-                        slotProps={{ input: { 'aria-label': 'select all services' } }}
+                        slotProps={{ input: { 'aria-label': 'select all testimonials' } }}
                         sx={{ verticalAlign: 'sub' }}
                     />
                 </th>
@@ -126,18 +123,14 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = React.useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
 
     const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
-    const handleClose = () => {
-        setOpen(false);
-    }
-    useEffect(() => {
-        console.log("Dialog open state:", open);
-      }, [open]);
+    const handleClose = () => setOpen(false);
+
     return (
         <Box
             sx={{
@@ -164,41 +157,40 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     id="tableTitle"
                     component="div"
                 >
-                    SERVICES
+                    USERS
                 </Typography>
             )}
 
             {numSelected > 0 ? (
                 <div className='flex flex-row justify-between w-[150px]'>
-                    <Tooltip title="Delete Banner">
+                    <Tooltip title="Delete Testimonial">
                         <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Edit Service">
+                    <Tooltip title="Edit Testimonial">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
-                            <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
+                    <Tooltip title="View Banner">
+                        <IconButton size="sm" color="danger" variant="solid" onClick={() => {
+                            onViewBanner(selectedRow?.banner);
                             handleViewBannerOpen();
-                            }}/>
-                            
+                        }}>
+                            <RemoveRedEye />
                         </IconButton>
                     </Tooltip>
                 </div>
             ) : (
-                <Tooltip title="Create Services">
+                <Tooltip title="Create Testimonial">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
                         <AddIcon />
-                        <CreateServicePop open={open} handleClose={handleClose} />
                     </IconButton>
                 </Tooltip>
             )}
-            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.banner || ''} />
+            <CreateUserPop open={open} handleClose={handleClose} />
+            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.imageURL || ''} />
         </Box>
     );
 }
@@ -210,38 +202,38 @@ EnhancedTableToolbar.propTypes = {
     onDelete: PropTypes.func.isRequired,
 };
 
-function ContactLeadTable() {
+function UserTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const { contactLead } = useSelector((state) => state.contactLead);
-    const  counsellerLead = contactLead
-    const [GetContactLead, { isSuccess }] = useGetContactLeadMutation();
-    const [ServiceDelete, DeleteState] = useServiceDeleteMutation();
+    const { user } = useSelector((state) => state.auth);
+    const services = user || []; // Assuming `testimonial` state holds the array of testimonials
+    const [GetAllUser, { isSuccess }] = useGetAllUserMutation()
+    const [DeleteUser, DeleteState] = useDeleteUserMutation()
     const dispatch = useDispatch();
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('Data fetched successfully');
+            toast.success('User fetched successfully');
         }
         if (DeleteState.isSuccess) {
-            toast.success('Service deleted successfully');
+            toast.success('User deleted successfully');
         }
     }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await GetContactLead().unwrap();
-                dispatch(FetchContactLead(result));
+                const result = await GetAllUser().unwrap();
+                dispatch(fetchUser(result));
             } catch (error) {
-                console.error('Failed to fetch services:', error);
+                console.error('Failed to fetch testimonials:', error);
             }
         };
         fetchData();
-    }, [GetContactLead, dispatch]);
+    }, [GetAllUser, dispatch]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -251,19 +243,19 @@ function ContactLeadTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = counsellerLead?.map((n) => n._id);
+            const newSelected = services?.map((n) => n._id);
             setSelected(newSelected);
             return;
         }
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -286,9 +278,7 @@ function ContactLeadTable() {
         setPage(0);
     };
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, counsellerLead?.length - page * rowsPerPage);
+    const isSelected = (id) => selected.indexOf(id) !== -1;
 
     const handleViewBanner = (banner) => {
         console.log('Viewing banner:', banner);
@@ -296,16 +286,23 @@ function ContactLeadTable() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await ServiceDelete(id).unwrap();
-            dispatch(DeleteService(res))
+            const res = await DeleteUser(id).unwrap();
+            dispatch(deleteUser(res));
         } catch (error) {
-            toast.error('Error deleting banner');
+            toast.error('Error deleting testimonial');
         }
     };
 
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
+
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
+            <EnhancedTableToolbar
+                numSelected={selected.length}
+                selectedRow={services?.find((service) => service._id === selected[0])}
+                onViewBanner={handleViewBanner}
+                onDelete={handleDelete}
+            />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -313,10 +310,10 @@ function ContactLeadTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={counsellerLead?.length}
+                    rowCount={services?.length}
                 />
                 <tbody>
-                    {stableSort(counsellerLead, getComparator(order, orderBy))
+                    {stableSort(services, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -340,10 +337,11 @@ function ContactLeadTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.title}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
+                                    <td>{row?.email}</td>
+                                    <td>{row?.role}</td>
+                                    <td>{row?.block}</td>
+
                                     <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
                                 </tr>
                             );
                         })}
@@ -382,10 +380,10 @@ function ContactLeadTable() {
                 </Select>
                 <Typography textColor="text.secondary" fontSize="sm">
                     {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > counsellerLead?.length
-                        ? counsellerLead?.length
+                    {page * rowsPerPage + rowsPerPage > services?.length
+                        ? services?.length
                         : page * rowsPerPage + rowsPerPage}{' '}
-                    of {counsellerLead?.length}
+                    of {services?.length}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
@@ -405,7 +403,7 @@ function ContactLeadTable() {
                         size="sm"
                         color="neutral"
                         variant="outlined"
-                        disabled={page >= Math.ceil(counsellerLead?.length / rowsPerPage) - 1}
+                        disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
                         onClick={() => handleChangePage(null, page + 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
@@ -420,4 +418,4 @@ function ContactLeadTable() {
     );
 }
 
-export default ContactLeadTable;
+export default UserTable;
