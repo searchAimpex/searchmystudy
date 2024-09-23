@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material';
 import UserTable from "./UserTable";
+import FrenchiseTable from "./FrenchiseTable";
 
 const theme = createTheme({
     palette: {
@@ -81,7 +82,8 @@ export default function UserTabs() {
           variant="fullWidth"
           aria-label="full width tabs example"
         >
-          <Tab label="USER MANAGEMENT" {...a11yProps(0)} />
+          <Tab label="PARTNER MANAGEMENT" {...a11yProps(0)} />
+          <Tab label="FRECHISE MANAGEMENT" {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       </ThemeProvider>
@@ -92,6 +94,9 @@ export default function UserTabs() {
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
            <UserTable />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+           <FrenchiseTable />
         </TabPanel>
       
       

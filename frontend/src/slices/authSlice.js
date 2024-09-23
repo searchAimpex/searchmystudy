@@ -4,7 +4,8 @@ const initialState = {
   userInfo: localStorage.getItem('userInfo')
     ? JSON.parse(localStorage.getItem('userInfo'))
     : null,
-  user:[]
+  user:[],
+  frenchise:[]
 };
 
 const authSlice = createSlice({
@@ -24,10 +25,13 @@ const authSlice = createSlice({
     },
     deleteUser:(state,action)=>{
       state.user = state.user.filter(item => item._id!== action.payload._id)
-  }
+  },
+  fetchFrenchise: (state,action)=>{
+    state.frenchise = action.payload;
+  },
   },
 });
 
-export const { setCredentials, logout,fetchUser ,deleteUser} = authSlice.actions;
+export const { setCredentials, logout,fetchUser ,deleteUser,fetchFrenchise} = authSlice.actions;
 
 export default authSlice.reducer;

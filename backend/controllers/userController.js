@@ -174,7 +174,17 @@ const test = async (req, res) => {
   }
 };
 const getAllUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.find();
+  const user = await User.find({role:'partner'});
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
+  const user = await User.find({role:'frenchise'});
 
   if (user) {
     res.json(user);
@@ -204,6 +214,7 @@ export {
   test,
   blockUser,
   getAllUserProfile,
-  deleteUserProfile
+  deleteUserProfile,
+  getAllFrenchiseProfile
 };
 

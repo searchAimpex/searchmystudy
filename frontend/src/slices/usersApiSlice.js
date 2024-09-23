@@ -56,6 +56,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
        
       }),
     }),
+    getAllfrechise: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/profile/frenchise`,
+        method: 'GET'
+      }),
+    }),
   
 
   }),
@@ -68,4 +74,5 @@ export const {
   useGetAllUserMutation,
   useCreateUserMutation,
   useDeleteUserMutation,
+  useGetAllfrechiseMutation
 } = userApiSlice;

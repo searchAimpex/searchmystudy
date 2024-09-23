@@ -21,7 +21,79 @@ const userSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User', // Reference to the User model
     },
-    block: {type:Boolean,default:false}
+    block: {type:Boolean,default:false},
+    OwnerName: {
+      type: String,
+      default:""
+    },
+    OwnerFatherName: {
+      type: String,
+      default:""
+    },
+    InsitutionName: {
+      type: String,
+      default:""
+    },
+    ContactNumber:{
+      type:String,
+      default:""
+    },
+    WhatappNumber: {
+      type:String,
+      default:""
+    },
+    CenterCode: {
+      type:String,
+      default:""
+    },
+    DateOfBirth:{
+      type:Date,
+      default:""
+    },
+    city:{
+      type:String,
+      default:""
+    },
+    state:{
+      type:String,
+      default:""
+    },
+    zipCode:{
+      type:Number,
+      default:0
+
+    },
+    address:{
+      type:String,
+      default:""
+    },
+    FrontAdhar:{
+      type:String,
+      default:""
+    },
+    BackAdhar:{
+      type:String,
+      default:""
+  },
+  PanCard:{
+      type:String,
+      default:""
+  },
+  ProfilePhoto: {
+      type:String,
+      default:""
+  },
+  VistOffice : {
+      type:String,
+      default:""
+  }, CancelledCheck: {
+    type: String,
+    default: '',
+  },
+  Logo: {
+    type: String,
+    default: '',
+  }
   },
   {
     timestamps: true,

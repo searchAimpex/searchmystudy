@@ -10,6 +10,7 @@ import {
   blockUser,
   getAllUserProfile,
   deleteUserProfile,
+  getAllFrenchiseProfile,
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -26,6 +27,7 @@ router
 router.put('/block/:id',blockUser);
 router.delete('/profile/delete/:id',deleteUserProfile)
 router.get('/profile/all',getAllUserProfile)
+router.get('/profile/frenchise',getAllFrenchiseProfile)
 router.get('/test',test);
 
 export default router;
