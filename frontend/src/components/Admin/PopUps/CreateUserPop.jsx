@@ -8,6 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
+import Grid from '@mui/material/Grid';
 import { toast } from 'react-toastify';
 import { useCreateUserMutation } from '../../../slices/usersApiSlice'; 
 import { useDispatch } from 'react-redux';
@@ -19,7 +20,7 @@ const storage = getStorage(app);
 function CreateUserPop({ open, handleClose }) {
   const [createUser, { isSuccess }] = useCreateUserMutation();
   const dispatch = useDispatch();
-  
+
   const [formValues, setFormValues] = useState({
     email: '',
     password: '',
@@ -43,9 +44,12 @@ function CreateUserPop({ open, handleClose }) {
     VisitOffice: '',
     CancelledCheck: null,
     Logo: null,
+    accountedDetails:'',
+    IFSC:'',
+    bankName:''
   });
 
-  const roles = ['partner', 'franchise', 'counsellor']; 
+  const roles = ['partner', 'franchise', ]; 
 
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
@@ -108,54 +112,380 @@ function CreateUserPop({ open, handleClose }) {
 
   return (
     <Dialog fullWidth={true} open={open} onClose={handleClose}>
-      <DialogTitle>Create User</DialogTitle>
-      <DialogContent>
-        <DialogContentText>Create a user by filling in the fields.</DialogContentText>
-        <Box
-          noValidate
-          component="form"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            m: 'auto',
-            width: 'fit-content',
-          }}
-        >
-          <TextField id="email" name="email" label="Email" variant="standard" value={formValues.email} onChange={handleChange} required sx={{ mb: 2 }} />
-          <TextField id="name" name="name" label="Name" variant="standard" value={formValues.name} onChange={handleChange} required sx={{ mb: 2 }} />
-          <TextField id="password" name="password" label="Password" type="password" variant="standard" value={formValues.password} onChange={handleChange} required sx={{ mb: 2 }} />
-          <TextField id="role" name="role" label="Role" select value={formValues.role} onChange={handleChange} variant="standard" required>
-            {roles.map((role) => (
-              <MenuItem key={role} value={role}>
-                {role.charAt(0).toUpperCase() + role.slice(1)}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField id="OwnerName" name="OwnerName" label="Owner Name" variant="standard" value={formValues.OwnerName} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="OwnerFatherName" name="OwnerFatherName" label="Owner Father Name" variant="standard" value={formValues.OwnerFatherName} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="InstitutionName" name="InstitutionName" label="Institution Name" variant="standard" value={formValues.InstitutionName} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="ContactNumber" name="ContactNumber" label="Contact Number" variant="standard" value={formValues.ContactNumber} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="WhatsAppNumber" name="WhatsAppNumber" label="WhatsApp Number" variant="standard" value={formValues.WhatsAppNumber} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="CenterCode" name="CenterCode" label="Center Code" variant="standard" value={formValues.CenterCode} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="DateOfBirth" name="DateOfBirth" label="Date of Birth" type="date" variant="standard" value={formValues.DateOfBirth} onChange={handleChange} sx={{ mb: 2 }} InputLabelProps={{ shrink: true }} />
-          <TextField id="city" name="city" label="City" variant="standard" value={formValues.city} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="state" name="state" label="State" variant="standard" value={formValues.state} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="zipCode" name="zipCode" label="Zip Code" type="number" variant="standard" value={formValues.zipCode} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="address" name="address" label="Address" variant="standard" value={formValues.address} onChange={handleChange} sx={{ mb: 2 }} />
+      <DialogTitle sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Create New User</DialogTitle>
+      <DialogContent sx={{ padding: '2rem' }}>
+        <DialogContentText sx={{ mb: 3, fontSize: '1rem', color: '#6b6b6b' }}>
+          Fill in the form to create a new user. Please ensure all required fields are completed.
+        </DialogContentText>
+        
+        {/* Form fields */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="email"
+              name="email"
+              label="Email"
+              fullWidth
+              variant="outlined"
+              value={formValues.email}
+              onChange={handleChange}
+              required
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="name"
+              name="name"
+              label="Name"
+              fullWidth
+              variant="outlined"
+              value={formValues.name}
+              onChange={handleChange}
+              required
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="password"
+              name="password"
+              label="Password"
+              type="password"
+              fullWidth
+              variant="outlined"
+              value={formValues.password}
+              onChange={handleChange}
+              required
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="role"
+              name="role"
+              label="Role"
+              select
+              fullWidth
+              variant="outlined"
+              value={formValues.role}
+              onChange={handleChange}
+              required
+              sx={{ mb: 2 }}
+            >
+              {roles.map((role) => (
+                <MenuItem key={role} value={role}>
+                  {role.charAt(0).toUpperCase() + role.slice(1)}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
 
-          {/* Add File Inputs */}
-          <TextField id="FrontAadhar" name="FrontAadhar" type="file" label="Front Aadhar" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-          <TextField id="BackAadhar" name="BackAadhar" type="file" label="Back Aadhar" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-          <TextField id="PanCard" name="PanCard" type="file" label="Pan Card" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-          <TextField id="ProfilePhoto" name="ProfilePhoto" type="file" label="Profile Photo" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-          <TextField id="VisitOffice" name="VisitOffice" label="Visit Office" variant="standard" value={formValues.VisitOffice} onChange={handleChange} sx={{ mb: 2 }} />
-          <TextField id="CancelledCheck" name="CancelledCheck" type="file" label="Cancelled Check" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-          <TextField id="Logo" name="Logo" type="file" label="Logo" onChange={handleChange} InputLabelProps={{ shrink: true }} />
-        </Box>
+          {/* Additional Fields */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="OwnerName"
+              name="OwnerName"
+              label="Owner Name"
+              fullWidth
+              variant="outlined"
+              value={formValues.OwnerName}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="OwnerFatherName"
+              name="OwnerFatherName"
+              label="Owner Father Name"
+              fullWidth
+              variant="outlined"
+              value={formValues.OwnerFatherName}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="CenterCode"
+              name="CenterCode"
+              label="Center Code"
+              fullWidth
+              variant="outlined"
+              value={formValues.CenterCode}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="ContactNumber"
+              name="ContactNumber"
+              label="Contact Number"
+              fullWidth
+              variant="outlined"
+              value={formValues.ContactNumber}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="WhatsAppNumber"
+              name="WhatsAppNumber"
+              label="WhatsApp Number"
+              fullWidth
+              variant="outlined"
+              value={formValues.WhatsAppNumber}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="DateOfBirth"
+              name="DateOfBirth"
+              label="Date of Birth"
+              type="date"
+              fullWidth
+              variant="outlined"
+              value={formValues.DateOfBirth}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="city"
+              name="city"
+              label="City"
+              fullWidth
+              variant="outlined"
+              value={formValues.city}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="state"
+              name="state"
+              label="State"
+              fullWidth
+              variant="outlined"
+              value={formValues.state}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="zipCode"
+              name="zipCode"
+              label="Zip Code"
+              fullWidth
+              variant="outlined"
+              value={formValues.zipCode}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="address"
+              name="address"
+              label="Address"
+              fullWidth
+              variant="outlined"
+              value={formValues.address}
+              onChange={handleChange}
+              multiline
+              rows={2}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+
+          {/* File Uploads */}
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="FrontAadhar"
+              name="FrontAadhar"
+              label="Upload Front Aadhar"
+              type="file"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="BackAadhar"
+              name="BackAadhar"
+              label="Back Aadhar"
+              type="file"
+              fullWidth
+              variant="standard"
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="PanCard"
+              name="PanCard"
+              label="Upload Pan Card"
+              type="file"
+              fullWidth
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="ProfilePhoto"
+              name="ProfilePhoto"
+              label="Upload Profile Photo"
+              type="file"
+              fullWidth
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="CancelledCheck"
+              name="CancelledCheck"
+              label="Upload Cancelled Check"
+              type="file"
+              fullWidth
+              
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="Logo"
+              name="Logo"
+              label="Upload Logo"
+              type="file"
+              fullWidth
+              onChange={handleChange}
+              inputProps={{ accept: 'image/*' }}
+              sx={{
+                mb: 2,
+                '& .MuiInputLabel-root': {
+                  transform: 'translate(14px, 12px) scale(1)', // Adjust label position
+                },
+                '& .MuiInputBase-root': {
+                  paddingTop: '20px', // Adjust padding to create space
+                },
+              }}
+            />
+          </Grid>   
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="VisitOffice"
+              name="VisitOffice"
+              label="Visit Office"
+              fullWidth
+              variant="outlined"
+              value={formValues.VisitOffice}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="accountedDetails"
+              name="accountedDetails"
+              label="Account Number"
+              fullWidth
+              variant="outlined"
+              value={formValues.accountedDetails}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="IFSC"
+              name="IFSC"
+              label="IFSC CODE"
+              fullWidth
+              variant="outlined"
+              value={formValues.IFSC}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              id="bankName"
+              name="bankName"
+              label="Bank Name"
+              fullWidth
+              variant="outlined"
+              value={formValues.VisitOffice}
+              onChange={handleChange}
+              sx={{ mb: 2 }}
+            />
+          </Grid>
+        </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-        <Button onClick={onSubmit}>Submit</Button>
+        <Button onClick={handleClose} color="secondary">Cancel</Button>
+        <Button onClick={onSubmit} color="primary">Create User</Button>
       </DialogActions>
     </Dialog>
   );

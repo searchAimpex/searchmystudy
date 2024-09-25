@@ -24,11 +24,13 @@ import { deleteUser, fetchFrenchise, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
+    { id: 'OwnerName', numeric: false, disablePadding: true, label: 'OwnerName' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-    { id: 'role', numeric: false, disablePadding: false, label: 'ROle' },
-    { id: 'block', numeric: false, disablePadding: false, label: 'Block' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' }
+    { id: 'role', numeric: false, disablePadding: false, label: 'Role' },
+    { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
+    { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
+    { id: 'city', numeric: false, disablePadding: false, label: 'City' },
+
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -202,14 +204,15 @@ EnhancedTableToolbar.propTypes = {
     onDelete: PropTypes.func.isRequired,
 };
 
-function FrenchiseTable() {
+function FranchiseTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
+    const [searchTerm, setSearchTerm] = React.useState('');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { frenchise } = useSelector((state) => state.auth);
-    const services = frenchise || []; // Assuming `testimonial` state holds the array of testimonials
+    const services = frenchise || []; // Assuming `frenchise` state holds the array of testimonials
     const [GetAllfrechise, { isSuccess }] = useGetAllfrechiseMutation()
     const [DeleteUser, DeleteState] = useDeleteUserMutation()
     const dispatch = useDispatch();
@@ -240,6 +243,10 @@ function FrenchiseTable() {
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
+        // Filter rows based on search term
+        const filteredRows = services.filter(row =>
+            row?.CenterCode?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -297,6 +304,14 @@ function FrenchiseTable() {
 
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
+                 {/* Search input for filtering by Center Code */}
+                 <input
+                type="text"
+                placeholder="Search by Center Code"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border px-2 py-1 mb-4"
+            />
             <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedRow={services?.find((service) => service._id === selected[0])}
@@ -310,10 +325,10 @@ function FrenchiseTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={filteredRows?.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
+                    {stableSort(filteredRows, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -336,12 +351,14 @@ function FrenchiseTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
+                                    <td id={labelId}>{row?.OwnerName}</td>
                                     <td>{row?.email}</td>
                                     <td>{row?.role}</td>
-                                    <td>{row?.block}</td>
+                                    
+                                    <td>{row?.ContactNumber}</td>
+                                    <td>{row?.CenterCode}</td>
+                                    <td>{row?.city}</td>
 
-                                    <td>{row?.createdAt}</td>
                                 </tr>
                             );
                         })}
@@ -418,4 +435,4 @@ function FrenchiseTable() {
     );
 }
 
-export default FrenchiseTable;
+export default FranchiseTable;

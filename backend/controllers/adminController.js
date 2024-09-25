@@ -656,7 +656,6 @@ const updateUniversity = asyncHandler(async (req, res) => {
 // @access  Private/Admin
 const deleteUniversity = asyncHandler(async (req, res) => {
   const university = await University.findOneAndDelete(req.params.id);
-
   if (university) {
     res.status(200).json(university);
   } else {
@@ -1320,5 +1319,4 @@ export {
     createHomeLead, getLeads, deleteHomeLead,
     deleteContactLead,getContactLeads,createContactLead,
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications
-    
   };

@@ -24,11 +24,14 @@ import { deleteUser, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
+    { id: 'OwnerName', numeric: false, disablePadding: true, label: 'OwnerName' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-    { id: 'role', numeric: false, disablePadding: false, label: 'ROle' },
+    { id: 'role', numeric: false, disablePadding: false, label: 'Role' },
     { id: 'block', numeric: false, disablePadding: false, label: 'Block' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' }
+    { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
+    { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
+    { id: 'city', numeric: false, disablePadding: false, label: 'City' },
+
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -205,6 +208,7 @@ EnhancedTableToolbar.propTypes = {
 function UserTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
+    const [searchTerm, setSearchTerm] = React.useState('');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -240,6 +244,10 @@ function UserTable() {
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
+        // Filter rows based on search term
+        const filteredRows = services.filter(row =>
+            row?.CenterCode?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -297,6 +305,14 @@ function UserTable() {
 
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
+                 {/* Search input for filtering by Center Code */}
+                 <input
+                type="text"
+                placeholder="Search by Center Code"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="border px-2 py-1 mb-4"
+            />
             <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedRow={services?.find((service) => service._id === selected[0])}
@@ -310,10 +326,10 @@ function UserTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={filteredRows?.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
+                    {stableSort(filteredRows, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -336,12 +352,15 @@ function UserTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
+                                    <td id={labelId}>{row?.OwnerName}</td>
                                     <td>{row?.email}</td>
                                     <td>{row?.role}</td>
                                     <td>{row?.block}</td>
+                                    
+                                    <td>{row?.ContactNumber}</td>
+                                    <td>{row?.CenterCode}</td>
+                                    <td>{row?.city}</td>
 
-                                    <td>{row?.createdAt}</td>
                                 </tr>
                             );
                         })}

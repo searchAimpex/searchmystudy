@@ -69,8 +69,37 @@ const authPartner = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password,role } = req.body;
+  const {
+    name,
+    email,
+    password,
+    role,
+    createdBy,
+    block,
+    OwnerName,
+    OwnerFatherName,
+    InsitutionName,
+    ContactNumber,
+    WhatappNumber,
+    CenterCode,
+    DateOfBirth,
+    city,
+    state,
+    zipCode,
+    address,
+    FrontAdhar,
+    BackAdhar,
+    PanCard,
+    ProfilePhoto,
+    VistOffice,
+    CancelledCheck,
+    Logo,
+    accountedDetails,
+    IFSC,
+    bankName
+  } = req.body;
 
+  // Check if user with the same email already exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -78,26 +107,78 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('User already exists');
   }
 
+  // Create a new user with all the provided fields
   const user = await User.create({
     name,
     email,
     password,
-    role
+    role,
+    createdBy,
+    block,
+    OwnerName,
+    OwnerFatherName,
+    InsitutionName,
+    ContactNumber,
+    WhatappNumber,
+    CenterCode,
+    DateOfBirth,
+    city,
+    state,
+    zipCode,
+    address,
+    FrontAdhar,
+    BackAdhar,
+    PanCard,
+    ProfilePhoto,
+    VistOffice,
+    CancelledCheck,
+    Logo,
+    accountedDetails,
+    IFSC,
+    bankName
   });
 
+  // If user creation is successful
   if (user) {
+    // Generate token (assuming a generateToken function exists)
     generateToken(res, user._id);
 
+    // Send the created user data in response
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      role: user.role,
+      createdBy: user.createdBy,
+      block: user.block,
+      OwnerName: user.OwnerName,
+      OwnerFatherName: user.OwnerFatherName,
+      InsitutionName: user.InsitutionName,
+      ContactNumber: user.ContactNumber,
+      WhatappNumber: user.WhatappNumber,
+      CenterCode: user.CenterCode,
+      DateOfBirth: user.DateOfBirth,
+      city: user.city,
+      state: user.state,
+      zipCode: user.zipCode,
+      address: user.address,
+      FrontAdhar: user.FrontAdhar,
+      BackAdhar: user.BackAdhar,
+      PanCard: user.PanCard,
+      ProfilePhoto: user.ProfilePhoto,
+      VistOffice: user.VistOffice,
+      CancelledCheck: user.CancelledCheck,
+      Logo: user.Logo,
+      accountedDetails:user.accountedDetails,
+      IFSC:user.IFSC,
+      bankName:user.bankName
     });
   } else {
     res.status(400);
     throw new Error('Invalid user data');
   }
 });
+
 
 // @desc    Logout user / clear cookie
 // @route   POST /api/users/logout

@@ -93,7 +93,21 @@ const userSchema = mongoose.Schema(
   Logo: {
     type: String,
     default: '',
-  }
+  },
+  accountedDetails : {
+    type: String,
+    default:''
+
+  },
+  IFSC: {
+    type: String,
+    default:''
+  },
+  bankName: {
+    type: String,
+    default:''
+  },
+  
   },
   {
     timestamps: true,
