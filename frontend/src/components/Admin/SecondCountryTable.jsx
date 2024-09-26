@@ -19,18 +19,20 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import ImageViewPop from './PopUps/ImageViewPop';
 import { AppBlockingRounded, BlockRounded, RemoveRedEye, RemoveRedEyeOutlined } from '@mui/icons-material';
-import { useDeleteUserMutation, useGetAllfrechiseMutation, useGetAllUserMutation, useUserBlockMutation } from '../../slices/usersApiSlice';
+import { useCountryDeleteMutation, useCountryGetMutation, useDeleteUserMutation, useGetAllUserMutation, useUserBlockMutation } from '../../slices/usersApiSlice';
 import { deleteUser, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
 import UpdateUserPop from './PopUps/UpdateUserPop';
+import { FetchSecondCountry } from '../../slices/secondCountrySlice';
+import CreateSecondCountryPop from './PopUps/CreateSecondCountryPop';
 
 const headCells = [
-    { id: 'OwnerName', numeric: false, disablePadding: true, label: 'OwnerName' },
-    { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
+    { id: 'Name', numeric: false, disablePadding: true, label: 'Name' },
+    { id: 'Currency', numeric: false, disablePadding: false, label: 'Currency' },
    
-    { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
-    { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
-    { id: 'city', numeric: false, disablePadding: false, label: 'City' },
+    { id: 'Code', numeric: false, disablePadding: false, label: 'COUNTRY CODE' },
+    { id: 'VFS', numeric: false, disablePadding: false, label: 'VFS' },
+    { id: 'step', numeric: false, disablePadding: false, label: 'STEP' },
 
 ];
 
@@ -172,38 +174,34 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             {numSelected > 0 ? (
                 <div className='flex flex-row justify-between w-[150px]'>
                     <Tooltip title="Delete Testimonial">
-                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
+                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow._id)}>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Edit Testimonial">
+                    <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon  onClick={handleViewUpdateOpen}/>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="View Banner">
+                    <Tooltip title="View FLag">
                         <IconButton size="sm" color="danger" variant="solid" onClick={() => {
-                            onViewBanner(selectedRow?.banner);
+                            onViewBanner(selectedRow?.flagURL);
                             handleViewBannerOpen();
                         }}>
                             <RemoveRedEye />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title={selectedRow?.block ? "Unblock User" : "Block User"}>
-                    <IconButton size="sm" color="danger" variant="solid" onClick={() => onToggleBlock(selectedRow?._id, selectedRow?.block)}>
-                        {selectedRow?.block ? <RemoveRedEyeOutlined /> : <AppBlockingRounded />} {/* BlockIcon is an example, you can choose any icon */}
-                    </IconButton>
-                </Tooltip>
+                    
                 </div>
             ) : (
-                <Tooltip title="Create Testimonial">
+                <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
                         <AddIcon />
                     </IconButton>
                 </Tooltip>
             )}
-            <CreateUserPop open={open} handleClose={handleClose} />
-            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.imageURL || ''} />
+            <CreateSecondCountryPop open={open} handleClose={handleClose} />
+            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
             <UpdateUserPop open ={viewUpdateOpen} handleClose= {handleViewUpdateClose} userData={selectedRow} />
         </Box>
     );
@@ -217,56 +215,43 @@ EnhancedTableToolbar.propTypes = {
     onToggleBlock:  PropTypes.func.isRequired,
 };
 
-function FrenchiseTable() {
+function SecondCountryTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [searchTerm, setSearchTerm] = React.useState('');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const { frenchise } = useSelector((state) => state.auth);
-    const services = frenchise || []; // Assuming `testimonial` state holds the array of testimonials
-    const [GetAllfrechise, { isSuccess }] = useGetAllfrechiseMutation()
-    const [DeleteUser, DeleteState] = useDeleteUserMutation()
-    const [UserBlock] = useUserBlockMutation()
+    const { SecondCountries } = useSelector((state) => state.secondCountry);
+    console.log(SecondCountries)
+    const services = SecondCountries || []; 
+    console.log("service",services)// Assuming `testimonial` state holds the array of testimonials
+    const [CountryGet, { isSuccess }] = useCountryGetMutation()
+    const [CountryDelete, DeleteState] = useCountryDeleteMutation()
     const dispatch = useDispatch();
 
-    const handleToggleBlock = async (id, block) => {
-        try {
-            const data =  { 
-                userId:id,
-                status: { 
-                    block:!block
-                }
-            }
-            const result = await UserBlock(data).unwrap();
-            dispatch(fetchUser(result));  // Update user state
-            toast.success(`User ${block ? 'unblocked' : 'blocked'} successfully`);
-        } catch (error) {
-            toast.error('Error blocking/unblocking user');
-        }
-    };
+
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('User fetched successfully');
+            toast.success('Country fetched successfully');
         }
         if (DeleteState.isSuccess) {
-            toast.success('User deleted successfully');
+            toast.success('Country deleted successfully');
         }
     }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await GetAllfrechise().unwrap();
-                dispatch(fetchUser(result));
+                const result = await CountryGet().unwrap();
+                dispatch(FetchSecondCountry(result));
             } catch (error) {
                 console.error('Failed to fetch testimonials:', error);
             }
         };
         fetchData();
-    }, [GetAllfrechise, dispatch]);
+    }, [CountryGet,dispatch]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -323,7 +308,8 @@ function FrenchiseTable() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await DeleteUser(id).unwrap();
+            console.log("fix",id)
+            const res = await CountryDelete(id).unwrap();
             dispatch(deleteUser(res));
         } catch (error) {
             toast.error('Error deleting testimonial');
@@ -335,19 +321,12 @@ function FrenchiseTable() {
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
                  {/* Search input for filtering by Center Code */}
-                 <input
-                type="text"
-                placeholder="Search by Center Code"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="border px-2 py-1 mb-4"
-            />
+            
             <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedRow={services?.find((service) => service._id === selected[0])}
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
-                onToggleBlock={handleToggleBlock}  // New prop
             />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
@@ -359,7 +338,7 @@ function FrenchiseTable() {
                     rowCount={filteredRows?.length}
                 />
                 <tbody>
-                    {stableSort(filteredRows, getComparator(order, orderBy))
+                    {stableSort(services, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -382,13 +361,11 @@ function FrenchiseTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?.OwnerName}</td>
-                                    <td>{row?.email}</td>
-                                 
-                                    
-                                    <td>{row?.ContactNumber}</td>
-                                    <td>{row?.CenterCode}</td>
-                                    <td>{row?.city}</td>
+                                    <td id={labelId}>{row?.name}</td>
+                                    <td>{row?.currency}</td>
+                                    <td>{row?.code}</td>
+                                    <td>{row?.vfs?.length > 0 ? <a href={row.vfs} target="_blank" >LINK</a> : "Not Uploaded"}</td>
+                                    <td>{row?.step?.length > 0 ? <a href={row.step} target="_blank" >LINK</a> : "Not Uploaded"}</td>
 
                                 </tr>
                             );
@@ -466,4 +443,4 @@ function FrenchiseTable() {
     );
 }
 
-export default FrenchiseTable;
+export default SecondCountryTable;

@@ -18,16 +18,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import ImageViewPop from './PopUps/ImageViewPop';
-import { RemoveRedEye } from '@mui/icons-material';
-import { useDeleteUserMutation, useGetAllUserMutation } from '../../slices/usersApiSlice';
+import { AppBlockingRounded, BlockRounded, RemoveRedEye, RemoveRedEyeOutlined } from '@mui/icons-material';
+import { useDeleteUserMutation, useGetAllUserMutation, useUserBlockMutation } from '../../slices/usersApiSlice';
 import { deleteUser, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
+import UpdateUserPop from './PopUps/UpdateUserPop';
 
 const headCells = [
     { id: 'OwnerName', numeric: false, disablePadding: true, label: 'OwnerName' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-    { id: 'role', numeric: false, disablePadding: false, label: 'Role' },
-    { id: 'block', numeric: false, disablePadding: false, label: 'Block' },
+   
     { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
     { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
     { id: 'city', numeric: false, disablePadding: false, label: 'City' },
@@ -125,11 +125,16 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
+function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete,onToggleBlock }) {
     const [open, setOpen] = React.useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
+    const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
+
 
     const handleClickOpen = () => setOpen(true);
+    const handleViewUpdateOpen = () => setViewUpdateOpen(true);
+    const handleViewUpdateClose = () => setViewUpdateOpen(false);
+
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
     const handleClose = () => setOpen(false);
@@ -173,7 +178,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </Tooltip>
                     <Tooltip title="Edit Testimonial">
                         <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon />
+                            <EditIcon  onClick={handleViewUpdateOpen}/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="View Banner">
@@ -184,6 +189,11 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                             <RemoveRedEye />
                         </IconButton>
                     </Tooltip>
+                    <Tooltip title={selectedRow?.block ? "Unblock User" : "Block User"}>
+                    <IconButton size="sm" color="danger" variant="solid" onClick={() => onToggleBlock(selectedRow?._id, selectedRow?.block)}>
+                        {selectedRow?.block ? <RemoveRedEyeOutlined /> : <AppBlockingRounded />} {/* BlockIcon is an example, you can choose any icon */}
+                    </IconButton>
+                </Tooltip>
                 </div>
             ) : (
                 <Tooltip title="Create Testimonial">
@@ -194,6 +204,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             )}
             <CreateUserPop open={open} handleClose={handleClose} />
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.imageURL || ''} />
+            <UpdateUserPop open ={viewUpdateOpen} handleClose= {handleViewUpdateClose} userData={selectedRow} />
         </Box>
     );
 }
@@ -203,6 +214,7 @@ EnhancedTableToolbar.propTypes = {
     selectedRow: PropTypes.object,
     onViewBanner: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
+    onToggleBlock:  PropTypes.func.isRequired,
 };
 
 function UserTable() {
@@ -216,7 +228,24 @@ function UserTable() {
     const services = user || []; // Assuming `testimonial` state holds the array of testimonials
     const [GetAllUser, { isSuccess }] = useGetAllUserMutation()
     const [DeleteUser, DeleteState] = useDeleteUserMutation()
+    const [UserBlock] = useUserBlockMutation()
     const dispatch = useDispatch();
+
+    const handleToggleBlock = async (id, block) => {
+        try {
+            const data =  { 
+                userId:id,
+                status: { 
+                    block:!block
+                }
+            }
+            const result = await UserBlock(data).unwrap();
+            dispatch(fetchUser(result));  // Update user state
+            toast.success(`User ${block ? 'unblocked' : 'blocked'} successfully`);
+        } catch (error) {
+            toast.error('Error blocking/unblocking user');
+        }
+    };
 
     useEffect(() => {
         if (isSuccess) {
@@ -245,7 +274,7 @@ function UserTable() {
         setOrderBy(property);
     };
         // Filter rows based on search term
-        const filteredRows = services.filter(row =>
+        const filteredRows = services?.filter(row =>
             row?.CenterCode?.toLowerCase().includes(searchTerm.toLowerCase())
         );
 
@@ -318,6 +347,7 @@ function UserTable() {
                 selectedRow={services?.find((service) => service._id === selected[0])}
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
+                onToggleBlock={handleToggleBlock}  // New prop
             />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
@@ -354,8 +384,7 @@ function UserTable() {
                                     </td>
                                     <td id={labelId}>{row?.OwnerName}</td>
                                     <td>{row?.email}</td>
-                                    <td>{row?.role}</td>
-                                    <td>{row?.block}</td>
+                                 
                                     
                                     <td>{row?.ContactNumber}</td>
                                     <td>{row?.CenterCode}</td>

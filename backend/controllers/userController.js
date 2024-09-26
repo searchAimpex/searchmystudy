@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import Counsellor from '../models/counsellorModel.js';
+import SecondCountry from '../models/secondCountryModel.js';
 
 // @desc    Auth user & get token
 // @route   POST /api/users/auth
@@ -213,22 +214,76 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
+  const user = await User.findById(req.body.userId);
 
   if (user) {
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
+    console.log("fix",user)
+    console.log("updatte",req.body)
+    // Update general fields
+    user.name = req.body.data.name || user.name;
+    user.email = req.body.data.email || user.email;
+    
+    // Update additional fields
+    user.role = req.body.data.role || user.role;
+    user.OwnerName = req.body.data.OwnerName || user.OwnerName;
+    user.OwnerFatherName = req.body.data.OwnerFatherName || user.OwnerFatherName;
+    user.InsitutionName = req.body.data.InsitutionName || user.InsitutionName;
+    user.ContactNumber = req.body.data.ContactNumber || user.ContactNumber;
+    user.WhatappNumber = req.body.data.WhatappNumber || user.WhatappNumber;
+    user.CenterCode = req.body.data.CenterCode || user.CenterCode;
+    user.DateOfBirth = req.body.data.DateOfBirth || user.DateOfBirth;
+    user.city = req.body.data.city || user.city;
+    user.state = req.body.data.state || user.state;
+    user.zipCode = req.body.data.zipCode || user.zipCode;
+    user.address = req.body.data.address || user.address;
+    user.FrontAdhar = req.body.data.FrontAdhar || user.FrontAdhar;
+    user.BackAdhar = req.body.data.BackAdhar || user.BackAdhar;
+    user.PanCard = req.body.data.PanCard || user.PanCard;
+    user.ProfilePhoto = req.body.data.ProfilePhoto || user.ProfilePhoto;
+    user.VistOffice = req.body.data.VistOffice || user.VistOffice;
+    user.CancelledCheck = req.body.data.CancelledCheck || user.CancelledCheck;
+    user.Logo = req.body.data.Logo || user.Logo;
+    user.accountedDetails = req.body.data.accountedDetails || user.accountedDetails;
+    user.IFSC = req.body.data.IFSC || user.IFSC;
+    user.bankName = req.body.data.bankName || user.bankName;
+    user.block = req.body.data.block || user.block;
+    user.createdBy = req.body.data.createdBy || user.createdBy;
 
+    // Update password if provided
     if (req.body.password) {
-      user.password = req.body.password;
+      user.password = req.body.data.password;
     }
 
     const updatedUser = await user.save();
-
+    console.log("update user",updatedUser);
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
+      role: updatedUser.role,
+      OwnerName: updatedUser.OwnerName,
+      OwnerFatherName: updatedUser.OwnerFatherName,
+      InsitutionName: updatedUser.InsitutionName,
+      ContactNumber: updatedUser.ContactNumber,
+      WhatappNumber: updatedUser.WhatappNumber,
+      CenterCode: updatedUser.CenterCode,
+      DateOfBirth: updatedUser.DateOfBirth,
+      city: updatedUser.city,
+      state: updatedUser.state,
+      zipCode: updatedUser.zipCode,
+      address: updatedUser.address,
+      FrontAdhar: updatedUser.FrontAdhar,
+      BackAdhar: updatedUser.BackAdhar,
+      PanCard: updatedUser.PanCard,
+      ProfilePhoto: updatedUser.ProfilePhoto,
+      VistOffice: updatedUser.VistOffice,
+      CancelledCheck: updatedUser.CancelledCheck,
+      Logo: updatedUser.Logo,
+      accountedDetails: updatedUser.accountedDetails,
+      IFSC: updatedUser.IFSC,
+      bankName: updatedUser.bankName,
+      block: updatedUser.block,
+      createdBy: updatedUser.createdBy,
     });
   } else {
     res.status(404);
@@ -277,7 +332,6 @@ const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
 
 const deleteUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndDelete({_id:req.params.id});
-
   if (user) {
     res.json(user);
   } else {
@@ -285,6 +339,111 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+// @desc    Get all countries
+// @route   GET /api/secondCountries
+// @access  Public
+const getAllCountries = async (req, res) => {
+  try {
+    const countries = await SecondCountry.find();
+    res.json(countries);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to retrieve countries' });
+  }
+};
+
+// @desc    Get single country by ID
+// @route   GET /api/secondCountries/:id
+// @access  Public
+const getCountryById = async (req, res) => {
+  try {
+    const country = await SecondCountry.findById(req.params.id);
+    
+    if (country) {
+      res.json(country);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving country' });
+  }
+};
+
+// @desc    Create a new country
+// @route   POST /api/secondCountries
+// @access  Private
+const createCountry = async (req, res) => {
+  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
+
+  if (!name || !flagURL || !currency || !code) {
+    return res.status(400).json({ message: 'Please provide all required fields' });
+  }
+
+  try {
+    const country = new SecondCountry({
+      name,
+      flagURL,
+      currency,
+      code,
+      vfs,
+      step,
+      whyThisCountry,
+      faq,
+    });
+
+    const createdCountry = await country.save();
+    res.status(201).json(createdCountry);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create country' });
+  }
+};
+
+// @desc    Update country by ID
+// @route   PUT /api/secondCountries/:id
+// @access  Private
+const updateCountry = async (req, res) => {
+  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
+
+  try {
+    const country = await SecondCountry.findById(req.params.id);
+
+    if (country) {
+      country.name = name || country.name;
+      country.flagURL = flagURL || country.flagURL;
+      country.currency = currency || country.currency;
+      country.code = code || country.code;
+      country.vfs = vfs || country.vfs;
+      country.step = step || country.step;
+      country.whyThisCountry = whyThisCountry || country.whyThisCountry;
+      country.faq = faq || country.faq;
+
+      const updatedCountry = await country.save();
+      res.json(updatedCountry);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update country' });
+  }
+};
+
+// @desc    Delete country by ID
+// @route   DELETE /api/secondCountries/:id
+// @access  Private
+const deleteCountry = async (req, res) => {
+  try {
+    console.log("fix",req.params.id)
+    const country = await SecondCountry.findByIdAndDelete(req.params.id);
+
+    if (country) {
+      
+      res.json(country);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete country' });
+  }
+};
 export {
   authUser,
   registerUser,
@@ -296,6 +455,11 @@ export {
   blockUser,
   getAllUserProfile,
   deleteUserProfile,
-  getAllFrenchiseProfile
+  getAllFrenchiseProfile,
+  getAllCountries,
+  getCountryById,
+  createCountry,
+  updateCountry,
+  deleteCountry
 };
 

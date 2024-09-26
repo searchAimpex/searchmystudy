@@ -16,6 +16,7 @@ import counsellerLeadReducer from './slices/counsellerLeadSlice'
 import homeLeadReducer from './slices/leadSlice'
 import contactLeadReducer from './slices/contactLeadSlice'
 import notificationReducer from './slices/notificationSlice'
+import secondCountryReducer from './slices/secondCountrySlice'
 
 const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ const store = configureStore({
     testimonial:testimonialReducer,
     counsellor:counsellorReducer,
     blog:blogReducer,
+
     country:countryReducer,
     province:provinceReducer,
     university:universityReducer,
@@ -35,11 +37,12 @@ const store = configureStore({
     counsellerLead : counsellerLeadReducer,
     homeLead: homeLeadReducer,
     contactLead : contactLeadReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    secondCountry:secondCountryReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
-  devTools: true,
+    devTools: true,
 });
 
 export default store;

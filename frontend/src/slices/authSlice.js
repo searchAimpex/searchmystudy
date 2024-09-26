@@ -22,16 +22,31 @@ const authSlice = createSlice({
     },
     fetchUser: (state,action)=>{
       state.user = action.payload;
+    },UpdateUser: (state,action)=>{  
+        // Find the index of the user to update
+        const index = state.user.findIndex(user => user._id === action.payload._id);
+          if (index !== -1) {
+            // Replace the old user with the updated user
+            state.user[index] = action.payload;
+          }
     },
     deleteUser:(state,action)=>{
       state.user = state.user.filter(item => item._id!== action.payload._id)
-  },
-  fetchFrenchise: (state,action)=>{
-    state.frenchise = action.payload;
-  },
+    },
+    fetchFrenchise: (state,action)=>{
+      state.frenchise = action.payload;
+    },
+    UpdateFrenchise: (state,action)=>{
+      // Find the index of the user to update
+      const index = state.frenchise.findIndex(user => user._id === action.payload._id);
+      if (index !== -1) {
+        // Replace the old user with the updated user
+        state.frenchise[index] = action.payload;
+      }
+    },
   },
 });
 
-export const { setCredentials, logout,fetchUser ,deleteUser,fetchFrenchise} = authSlice.actions;
+export const { setCredentials, logout,fetchUser ,deleteUser,fetchFrenchise,UpdateUser,UpdateFrenchise} = authSlice.actions;
 
 export default authSlice.reducer;

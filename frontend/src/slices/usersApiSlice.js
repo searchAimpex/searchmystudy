@@ -29,13 +29,6 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
-    updateUser: builder.mutation({
-      query: (data) => ({
-        url: `${USERS_URL}/profile`,
-        method: 'PUT',
-        body: data,
-      }),
-    }),
     getAllUser: builder.mutation({
       query: () => ({
         url: `${USERS_URL}/profile/all`,
@@ -62,8 +55,46 @@ export const userApiSlice = apiSlice.injectEndpoints({
         method: 'GET'
       }),
     }),
-  
-
+    userBlock: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/block/${data.userId}`,
+        method: 'PUT',
+        body: data.status
+      }),
+    }),
+    CountryCreate: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/secondcountry`,
+        method: 'POST',
+        body: data
+      }),
+    }),
+    CountryGet: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/secondcountry`,
+        method: 'GET',
+      }),
+    }),
+    CountryGetOne: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/secondcountry/${data}`,
+        method: 'GET',
+      
+      }),
+    }),
+    CountryUpdate: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/secondcountry/${data.id}`,
+        method: 'PUT',
+        body: data
+      }),
+    }),
+    CountryDelete: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/secondcountry/${data}`,
+        method: 'DELETE'
+      }),
+    }),
   }),
 });
 export const {
@@ -74,5 +105,11 @@ export const {
   useGetAllUserMutation,
   useCreateUserMutation,
   useDeleteUserMutation,
-  useGetAllfrechiseMutation
+  useGetAllfrechiseMutation,
+  useUserBlockMutation,
+  useCountryCreateMutation,
+  useCountryGetMutation,
+  useCountryGetOneMutation,
+  useCountryUpdateMutation,
+  useCountryDeleteMutation
 } = userApiSlice;

@@ -11,6 +11,11 @@ import {
   getAllUserProfile,
   deleteUserProfile,
   getAllFrenchiseProfile,
+  getAllCountries,
+  getCountryById,
+  updateCountry,
+  deleteCountry,
+  createCountry,
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -29,5 +34,13 @@ router.delete('/profile/delete/:id',deleteUserProfile)
 router.get('/profile/all',getAllUserProfile)
 router.get('/profile/frenchise',getAllFrenchiseProfile)
 router.get('/test',test);
+
+/********************* Second Country Routes  ***********************/
+router.post('/secondcountry', createCountry);
+router.get('/secondcountry/:id',getCountryById);
+router.get('/secondcountry',getAllCountries);
+router.put('/secondcountry/:id',updateCountry);
+router.delete('/secondcountry/:id',deleteCountry);
+/**********************************************************************/
 
 export default router;

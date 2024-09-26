@@ -12,6 +12,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material';
 import UserTable from "./UserTable";
 import FrenchiseTable from "./FrenchiseTable";
+import SecondCountryTable from "./SecondCountryTable";
 
 const theme = createTheme({
     palette: {
@@ -84,6 +85,8 @@ export default function UserTabs() {
         >
           <Tab label="PARTNER MANAGEMENT" {...a11yProps(0)} />
           <Tab label="FRECHISE MANAGEMENT" {...a11yProps(1)} />
+          <Tab label="COUNTRY MANAGEMENT" {...a11yProps(2)} />
+
         </Tabs>
       </AppBar>
       </ThemeProvider>
@@ -97,6 +100,9 @@ export default function UserTabs() {
         </TabPanel>
         <TabPanel value={value} index={1} dir={theme.direction}>
            <FrenchiseTable />
+        </TabPanel>
+        <TabPanel value={value} index={2} dir={theme.direction}>
+           <SecondCountryTable />
         </TabPanel>
       
       
