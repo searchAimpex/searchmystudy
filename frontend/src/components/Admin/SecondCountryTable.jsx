@@ -25,6 +25,7 @@ import CreateUserPop from './PopUps/CreateUserPop';
 import UpdateUserPop from './PopUps/UpdateUserPop';
 import { FetchSecondCountry } from '../../slices/secondCountrySlice';
 import CreateSecondCountryPop from './PopUps/CreateSecondCountryPop';
+import UpdateSecondCountryPop from './PopUps/UpdateSecondCountryPop';
 
 const headCells = [
     { id: 'Name', numeric: false, disablePadding: true, label: 'Name' },
@@ -41,13 +42,11 @@ function descendingComparator(a, b, orderBy) {
     if (b[orderBy] > a[orderBy]) return 1;
     return 0;
 }
-
 function getComparator(order, orderBy) {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
 }
-
 function stableSort(array, comparator) {
     const stabilizedThis = array?.map((el, index) => [el, index]);
     stabilizedThis?.sort((a, b) => {
@@ -57,7 +56,6 @@ function stableSort(array, comparator) {
     });
     return stabilizedThis?.map((el) => el[0]);
 }
-
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = (property) => (event) => onRequestSort(event, property);
@@ -109,6 +107,7 @@ function EnhancedTableHead(props) {
                                 <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
+
                             )}
                         </Link>
                     </th>
@@ -202,7 +201,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             )}
             <CreateSecondCountryPop open={open} handleClose={handleClose} />
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            <UpdateUserPop open ={viewUpdateOpen} handleClose= {handleViewUpdateClose} userData={selectedRow} />
+            <UpdateSecondCountryPop open ={viewUpdateOpen} handleClose= {handleViewUpdateClose} userData={selectedRow} />
         </Box>
     );
 }
@@ -308,7 +307,6 @@ function SecondCountryTable() {
 
     const handleDelete = async (id) => {
         try {
-            console.log("fix",id)
             const res = await CountryDelete(id).unwrap();
             dispatch(deleteUser(res));
         } catch (error) {

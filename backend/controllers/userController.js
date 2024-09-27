@@ -405,7 +405,7 @@ const updateCountry = async (req, res) => {
 
   try {
     const country = await SecondCountry.findById(req.params.id);
-
+    
     if (country) {
       country.name = name || country.name;
       country.flagURL = flagURL || country.flagURL;

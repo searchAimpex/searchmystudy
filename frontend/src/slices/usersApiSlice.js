@@ -79,14 +79,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({
         url: `${USERS_URL}/secondcountry/${data}`,
         method: 'GET',
-      
       }),
     }),
     CountryUpdate: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/secondcountry/${data.id}`,
         method: 'PUT',
-        body: data
+        body: data.formValues
       }),
     }),
     CountryDelete: builder.mutation({

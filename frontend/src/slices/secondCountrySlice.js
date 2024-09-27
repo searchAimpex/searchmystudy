@@ -18,8 +18,15 @@ const initialState = {
         },
         DeleteSecondCountry:(state,action)=>{
             state.SecondCountries = state.SecondCountries.filter(item => item._id!== action.payload._id)
+        },
+        updateSecondCountry:(state,action)=>{
+          const index = state.SecondCountries.findIndex(user => user._id === action.payload._id);
+          if (index !== -1) {
+            // Replace the old user with the updated user
+            state.SecondCountries[index] = action.payload;
+          }
         }
     }
   })
-export const { AddSecondCountry,FetchSecondCountry,DeleteSecondCountry } = secondCountrySlice.actions;
+export const { AddSecondCountry,FetchSecondCountry,updateSecondCountry } = secondCountrySlice.actions;
 export default secondCountrySlice.reducer;
