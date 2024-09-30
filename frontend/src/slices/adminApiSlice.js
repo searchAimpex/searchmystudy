@@ -356,6 +356,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body:data
             }),
         }),
+        GetAllStudent:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/student`,
+                method: 'GET'
+            }),
+        }),
+        ChangeStatusStudent:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/student/status/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            }),
+        })
 
     })
 })
@@ -375,5 +388,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,
     useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,
     useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation,
-    useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation
+    useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation,
+    useGetAllStudentMutation,useChangeStatusStudentMutation
 } = userApiSlice

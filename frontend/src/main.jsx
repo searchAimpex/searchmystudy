@@ -43,6 +43,7 @@ import NursingIndia from './screens/Public/NursingIndia.jsx';
 import PharmacyIndia from './screens/Public/PharmacyIndia.jsx';
 import BvScIndia from './screens/Public/BvScIndia.jsx';
 import AdminUserManagement from './screens/Admin/AdminUserManagement.jsx';
+import AdminStudentManagement from './screens/Admin/AdminStudentManagement.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -82,6 +83,7 @@ const router = createBrowserRouter(
         <Route path = "/admin/leads" element={<AdminLeadManagement/>}/>
         <Route path = "/admin/notification" element={<AdminLeadManagement/>}/>
         <Route path = '/admin/user' element= { <AdminUserManagement />} />
+        <Route path = '/admin/student' element= { <AdminStudentManagement />} />
 
       </Route>
     </Route>

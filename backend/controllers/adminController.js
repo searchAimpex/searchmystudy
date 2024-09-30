@@ -16,6 +16,7 @@ import ContactLead from '../models/contactLeadModel.js';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import Notification from '../models/notificationModel.js';
+import Student from '../models/studentModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1303,6 +1304,121 @@ const getAllNotifications = async (req, res) => {
   }
 };
 
+
+
+// @desc    Create a new student
+// @route   POST /api/students
+// @access  Public (or Private, depending on your setup)
+export const createStudent = async (req, res) => {
+  try {
+    console.log("fix")
+    const {
+      firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
+      photo, postCode, mobileNumber, emailID, address, country, state, city,
+      Country, Province, University, Course,
+      grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
+      grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
+      extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
+      letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
+      bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
+      declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
+      medicalCertificate,User
+      
+    } = req.body;
+
+    // Check for required fields
+     // Check for empty ObjectId values
+
+
+    // Create the new student
+    const student = await Student.create({
+      firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
+      photo, postCode, mobileNumber, emailID, address, country, state, city,
+      grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
+      grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
+      extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
+      letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
+      bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
+      declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
+      medicalCertificate,
+      Country: Country ? Country : null, // Use null if Country is not provided
+            Province: Province ? Province : null, // Use null if Province is not provided
+            University: University ? University : null, // Use null if University is not provided
+            Course: Course ? Course : null, // Use null if Course is not provided
+            User: User ? User : null // Use null if User is not provided
+    });
+    console.log("fiix",student)
+    // Send a response
+    res.status(201).json(student);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+};
+
+// @desc    Create a new student
+// @route   GET /api/students/:id
+// @access  Public (or Private, depending on your setup)
+export const fetchByUserStudent = async (req, res) => { 
+  try {
+    const student = await Student.find({User:req.params.id});
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+// @desc    Create a new student
+// @route   GET /api/students
+// @access  Public (or Private, depending on your setup)
+const fetchStudent = async (req, res) => { 
+  try {
+    const student = await Student.find();
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+// @desc    Create a new student
+// @route   PUT /api/students/status
+// @access  Public (or Private, depending on your setup)
+const UpdateStudentStatus = async (req, res) => { 
+  try {
+    console.log("fix",req.body,req.params.id)
+    const student = await Student.findOneAndUpdate({_id:req.params.id},{status:req.body.status});
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+// @desc    Create a new student
+// @route   DELETE /api/students/:id
+// @access  Public (or Private, depending on your setup)
+const DeleteStudent = async (req, res) => { 
+  try {
+    const student = await Student.findOneAndDelete({id:req.params.id});
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+
+
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1318,5 +1434,6 @@ export {
     createLead,getLead,deleteLead,GetOneLead,
     createHomeLead, getLeads, deleteHomeLead,
     deleteContactLead,getContactLeads,createContactLead,
-    extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications
+    extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
+    fetchStudent,UpdateStudentStatus,DeleteStudent
   };

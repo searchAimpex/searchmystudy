@@ -17,6 +17,8 @@ import homeLeadReducer from './slices/leadSlice'
 import contactLeadReducer from './slices/contactLeadSlice'
 import notificationReducer from './slices/notificationSlice'
 import secondCountryReducer from './slices/secondCountrySlice'
+import studentReducer from './slices/studentSlice'
+
 
 const store = configureStore({
   reducer: {
@@ -38,7 +40,8 @@ const store = configureStore({
     homeLead: homeLeadReducer,
     contactLead : contactLeadReducer,
     notification: notificationReducer,
-    secondCountry:secondCountryReducer
+    secondCountry:secondCountryReducer,
+    student:studentReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

@@ -300,6 +300,7 @@ function BannerTable() {
       const fetchData = async () => {
         try {
           const res = await GetAllBanner();
+    
           dispatch(FetchBanner(res.data));
         } catch (error) {
           toast.error('Failed to fetch data');

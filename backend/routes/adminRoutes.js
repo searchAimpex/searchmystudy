@@ -22,7 +22,12 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       extraUserFetch,
       sendNotificationToRole,
       getNotifications,
-      getAllNotifications
+      getAllNotifications,
+      createStudent,
+      fetchByUserStudent,
+      fetchStudent,
+      DeleteStudent,
+      UpdateStudentStatus
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -189,6 +194,14 @@ router.get('/notfiy-all',getAllNotifications)
 /******************************************************************/
 
 
+/********************* student Routes  ***********************/
+router.post('/student', createStudent);
+router.get('/student/:id',fetchByUserStudent)
+router.get('/student',fetchStudent)
+router.put('/student/status/:id',UpdateStudentStatus)
+router.delete('/student/:id',DeleteStudent
+)
+/******************************************************************/
 
 
 
