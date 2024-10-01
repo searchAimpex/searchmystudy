@@ -22,7 +22,10 @@ const initialState = {
               // Replace the old user with the updated user
               state.student[index] = action.payload;
             }
-          }
+          },
+          DeleteOneStudent:(state,action)=>{
+            state.student = state.student.filter(item => item._id!== action.payload._id)
+          },
         },
         
 
@@ -31,6 +34,6 @@ const initialState = {
 
 
   
-export const { FetchAllStudent,statusUpdate} = studentSlice.actions;
+export const { FetchAllStudent,statusUpdate,DeleteOneStudent} = studentSlice.actions;
 
 export default studentSlice.reducer;

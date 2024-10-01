@@ -1375,7 +1375,7 @@ export const fetchByUserStudent = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const fetchStudent = async (req, res) => { 
   try {
-    const student = await Student.find();
+    const student = await Student.find().populate('User');
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }
@@ -1406,7 +1406,7 @@ const UpdateStudentStatus = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const DeleteStudent = async (req, res) => { 
   try {
-    const student = await Student.findOneAndDelete({id:req.params.id});
+    const student = await Student.findOneAndDelete({_id:req.params.id});
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }

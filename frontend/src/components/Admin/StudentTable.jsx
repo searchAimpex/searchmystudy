@@ -11,12 +11,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/joy/Modal';
 import Button from '@mui/joy/Button';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
+import TablePagination from '@mui/material/TablePagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useGetAllStudentMutation, useChangeStatusStudentMutation } from '../../slices/adminApiSlice';
-import { FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
+import { useGetAllStudentMutation, useChangeStatusStudentMutation, useStudentDeleteMutation } from '../../slices/adminApiSlice';
+import { DeleteOneStudent, FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
 
 function StudentTable() {
   const [order, setOrder] = useState('asc');
@@ -25,20 +24,24 @@ function StudentTable() {
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [page, setPage] = useState(0); // Pagination state
+  const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page state
 
   const { student } = useSelector((state) => state.student);
   const dispatch = useDispatch();
   const [GetAllStudent, { isSuccess }] = useGetAllStudentMutation();
   const [ChangeStatusStudent] = useChangeStatusStudentMutation();
+  const [StudentDelete,data] = useStudentDeleteMutation()
 
-  // Handle success feedback
   useEffect(() => {
     if (isSuccess) {
       toast.success('Data fetched successfully');
     }
-  }, [isSuccess]);
+    if (data.isSuccess) {
+      toast.success('Student deleted successfully');
+    }
+  }, [isSuccess,data.isSuccess]);
 
-  // Fetch all students
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -51,112 +54,168 @@ function StudentTable() {
     fetchData();
   }, [GetAllStudent, dispatch]);
 
-  // Handle modal open for editing student status
   const handleEdit = (id) => {
     setSelectedStudentId(id);
     setOpenModal(true);
   };
 
-  // Handle modal close
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedStudentId(null);
     setSelectedStatus('');
   };
 
-  // Update status logic
   const handleStatusChange = async () => {
     if (selectedStudentId && selectedStatus) {
       try {
-        const data =  { 
-            id: selectedStudentId, 
-            raw:{
-            status: selectedStatus
-            } 
-        }
-        console.log("data i am sending",data)
-         const res = await ChangeStatusStudent(data).unwrap();
-         console.log("data i am sending",res)
-         dispatch(statusUpdate(res))
+        const data = { id: selectedStudentId, raw: { status: selectedStatus } };
+        const res = await ChangeStatusStudent(data).unwrap();
+        dispatch(statusUpdate(res));
         toast.success('Student status updated successfully');
         handleCloseModal();
       } catch (error) {
-        console.error('Failed to update student status:', error);
         toast.error('Failed to update status');
       }
     }
   };
 
-  // Handle delete functionality (dummy for now)
-  const handleDelete = (id) => {
-    // Replace with actual delete logic
-    console.log(`Delete student with ID: ${id}`);
-    toast.info('Delete functionality not implemented');
+  const handleDelete = async (id) => {
+    try {
+      const data = await StudentDelete(id).unwrap()
+      dispatch(DeleteOneStudent(data))
+    }catch(error){
+      toast.error('Failed to delete student')
+    }
+  };
+
+  // Pagination handlers
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
-      <Table aria-label="student table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>Gender</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {student.map((row) => (
-            <tr key={row._id}>
-              <td>{row.firstName} {row.lastName}</td>
-              <td>{row.address}</td>
-              <td>{row.city}</td>
-              <td>{row.gender}</td>
-              <td>{row.status}</td>
-              <td>
-                <Tooltip title="Edit">
-                  <IconButton onClick={() => handleEdit(row._id)}>
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Delete">
-                  <IconButton onClick={() => handleDelete(row._id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </td>
+      <Box sx={{ overflowX: 'auto' }}>
+        <Table aria-label="student table" stickyHeader>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Create By</th>
+              <th>Role</th>
+              <th>Country</th>
+              <th>Province</th>
+              <th>University</th>
+              <th>Course</th>
+              <th>City</th>
+              <th>Gender</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {student
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => (
+                <tr key={row._id}>
+                  <td>{row.firstName} {row.lastName}</td>
+                  <td>{row?.User?.email}</td>
+                  <td>{row?.User?.role.toUpperCase()}</td>
+                  <td>{row.city}</td>
+                  <td>{row.city}</td>
+                  <td>{row.city}</td>
+                  <td>{row.city}</td>
+                  <td>{row.city}</td>
+                  <td>{row.gender}</td>
+                  <td>{row.mobileNumber}</td>
+                  <td>{row.emailID}</td>
+                  <td>{row.status}</td>
+                  <td>
+                    <Tooltip title="Edit">
+                      <IconButton onClick={() => handleEdit(row._id)}>
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <IconButton onClick={() => handleDelete(row._id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </Table>
+      </Box>
+
+      {/* Pagination component */}
+      <TablePagination
+        component="div"
+        count={student.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[5, 10, 15]}
+      />
 
       {/* Modal for changing student status */}
-      <Modal open={openModal} onClose={handleCloseModal}>
-        <Box sx={{ padding: '2rem', backgroundColor: 'white', borderRadius: '8px', minWidth: '300px' }}>
-          <Typography variant="h6">Change Student Status</Typography>
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            padding: '3rem',
+            backgroundColor: 'white',
+            borderRadius: '20px',
+            minWidth: '300px',
+            maxWidth: '600px',
+            width: '100%',
+            boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          <Typography variant="h6" sx={{ marginBottom: '1rem' }}>
+            Change Student Status
+          </Typography>
           <select
             placeholder="Select status"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            sx={{ marginTop: '1rem', marginBottom: '1rem' }}
+            style={{
+              width: '100%',
+              padding: '8px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+              marginBottom: '1rem',
+            }}
           >
-        
-              <option  value='Stage 1'>
-                Stage 1
-              </option>
-              
-              <option  value='Stage 2'>
-                Stage 2
-              </option>
-
-           
+            <option value="Stage 1">Stage 1</option>
+            <option value="Stage 2">Stage 2</option>
           </select>
-          <Button variant="contained" onClick={handleStatusChange}>
+          <Button
+            variant="contained"
+            onClick={handleStatusChange}
+            sx={{ width: '100%', marginBottom: '1rem' }}
+          >
             Update Status
           </Button>
-          <Button variant="outlined" onClick={handleCloseModal} sx={{ marginLeft: '1rem' }}>
+          <Button
+            variant="outlined"
+            onClick={handleCloseModal}
+            sx={{ width: '100%' }}
+          >
             Cancel
           </Button>
         </Box>

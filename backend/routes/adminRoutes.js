@@ -199,8 +199,7 @@ router.post('/student', createStudent);
 router.get('/student/:id',fetchByUserStudent)
 router.get('/student',fetchStudent)
 router.put('/student/status/:id',UpdateStudentStatus)
-router.delete('/student/:id',DeleteStudent
-)
+router.delete('/student/:id',DeleteStudent)
 /******************************************************************/
 
 
