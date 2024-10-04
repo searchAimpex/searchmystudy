@@ -1,9 +1,18 @@
 import mongoose from 'mongoose';
 
+const generateTrackingId = () => {
+    const randomFourDigit = Math.floor(1000 + Math.random() * 9000);
+    return `STU${randomFourDigit}`;
+};
+
 const studentSchema = new mongoose.Schema({
     firstName: {
         type: String,
         default: ""
+    },
+    trackingId: {
+        type: String,
+        unique: true
     },
     middleName: {
         type: String,
@@ -127,11 +136,25 @@ const studentSchema = new mongoose.Schema({
     medicalCertificate: { type: String },
 
     // Additional fields
-    status: { type: String, default: "Stage 1" }
+    status: { 
+        type: String, 
+        default: "Inquiry" ,
+        enum: ['Inquiry','Assessment','Offer Letter','Fees Paid','Acceptance Letter','VFS date booked','File Submitted','Visa Approved'],
+
+    }
 }, 
 {
     timestamps: true,
 });
+
+
+// Pre-save hook to generate a unique tracking ID
+studentSchema.pre('save', function (next) {
+    if (!this.trackingId) {
+      this.trackingId = generateTrackingId();
+    }
+    next();
+  });
 
 const Student = mongoose.model('Student', studentSchema);
 

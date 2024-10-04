@@ -201,8 +201,15 @@ function StudentTable() {
               marginBottom: '1rem',
             }}
           >
-            <option value="Stage 1">Stage 1</option>
-            <option value="Stage 2">Stage 2</option>
+            <option value="Inquiry">Inquiry</option>
+            <option value="Assessment">Assessment</option>
+            <option value="Offer Letter">Offer Letter</option>
+            <option value="Fees Paid">Fees Paid</option>
+            <option value="Acceptance Letter">Acceptance Letter</option>
+            <option value="VFS date booked">VFS date booked</option>
+            <option value="File Submitted">File Submitted</option>
+            <option value="Visa Approved">Visa Approved</option>
+
           </select>
           <Button
             variant="contained"

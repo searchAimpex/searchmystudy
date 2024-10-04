@@ -1417,6 +1417,33 @@ const DeleteStudent = async (req, res) => {
   }
 }
 
+// @desc    Create a new student
+// @route   DELETE /api/students/:id
+// @access  Public (or Private, depending on your setup)
+const GetOneStudent = async (req, res) => { 
+  try {
+    const student = await Student.findOne({_id:req.params.id}).populate('University');
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+const GetOneStudentByTracking = async (req, res) => { 
+  try {
+    const student = await Student.findOne({trackingId:req.params.id}).populate('University').populate('Course');
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
 
 
 export {
@@ -1435,5 +1462,5 @@ export {
     createHomeLead, getLeads, deleteHomeLead,
     deleteContactLead,getContactLeads,createContactLead,
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
-    fetchStudent,UpdateStudentStatus,DeleteStudent
+    fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking
   };

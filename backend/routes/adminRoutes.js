@@ -27,7 +27,9 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       fetchByUserStudent,
       fetchStudent,
       DeleteStudent,
-      UpdateStudentStatus
+      UpdateStudentStatus,
+      GetOneStudent,
+      GetOneStudentByTracking
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -200,6 +202,8 @@ router.get('/student/:id',fetchByUserStudent)
 router.get('/student',fetchStudent)
 router.put('/student/status/:id',UpdateStudentStatus)
 router.delete('/student/:id',DeleteStudent)
+router.get("/student/one/:id",GetOneStudent)
+router.get('/student/track/:id',GetOneStudentByTracking)
 /******************************************************************/
 
 
