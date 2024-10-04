@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import Box from '@mui/joy/Box';
 import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
-import Checkbox from '@mui/joy/Checkbox';
-import Link from '@mui/joy/Link';
 import Tooltip from '@mui/joy/Tooltip';
 import IconButton from '@mui/joy/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -16,22 +14,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useGetAllStudentMutation, useChangeStatusStudentMutation, useStudentDeleteMutation } from '../../slices/adminApiSlice';
 import { DeleteOneStudent, FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 function StudentTable() {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('_id');
   const [selected, setSelected] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [page, setPage] = useState(0); // Pagination state
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Rows per page state
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { student } = useSelector((state) => state.student);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
   const [GetAllStudent, { isSuccess }] = useGetAllStudentMutation();
   const [ChangeStatusStudent] = useChangeStatusStudentMutation();
-  const [StudentDelete,data] = useStudentDeleteMutation()
+  const [StudentDelete, data] = useStudentDeleteMutation();
 
   useEffect(() => {
     if (isSuccess) {
@@ -40,7 +39,7 @@ function StudentTable() {
     if (data.isSuccess) {
       toast.success('Student deleted successfully');
     }
-  }, [isSuccess,data.isSuccess]);
+  }, [isSuccess, data.isSuccess]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +56,11 @@ function StudentTable() {
   const handleEdit = (id) => {
     setSelectedStudentId(id);
     setOpenModal(true);
+  };
+
+  const handleUpdate = (student) => {
+    // Navigate to the update page and pass student data
+    navigate('/admin/student/update', { state: student });
   };
 
   const handleCloseModal = () => {
@@ -81,10 +85,10 @@ function StudentTable() {
 
   const handleDelete = async (id) => {
     try {
-      const data = await StudentDelete(id).unwrap()
-      dispatch(DeleteOneStudent(data))
-    }catch(error){
-      toast.error('Failed to delete student')
+      const data = await StudentDelete(id).unwrap();
+      dispatch(DeleteOneStudent(data));
+    } catch (error) {
+      toast.error('Failed to delete student');
     }
   };
 
@@ -124,20 +128,20 @@ function StudentTable() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <tr key={row._id}>
-                  <td>{row.firstName} {row.lastName}</td>
-                  <td>{row?.User?.email}</td>
-                  <td>{row?.User?.role.toUpperCase()}</td>
-                  <td>{row.city}</td>
-                  <td>{row.city}</td>
-                  <td>{row.city}</td>
-                  <td>{row.city}</td>
-                  <td>{row.city}</td>
-                  <td>{row.gender}</td>
-                  <td>{row.mobileNumber}</td>
-                  <td>{row.emailID}</td>
-                  <td>{row.status}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.firstName} {row.lastName}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.email}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.role?.toUpperCase()}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Country?.name}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Province?.name}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.University?.name}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Course?.ProgramName}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.city}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.gender}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.mobileNumber}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.emailID}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.status}</td>
                   <td>
-                    <Tooltip title="Edit">
+                    <Tooltip title="Edit Status">
                       <IconButton onClick={() => handleEdit(row._id)}>
                         <EditIcon />
                       </IconButton>
@@ -145,6 +149,11 @@ function StudentTable() {
                     <Tooltip title="Delete">
                       <IconButton onClick={() => handleDelete(row._id)}>
                         <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit Student">
+                      <IconButton onClick={() => handleUpdate(row)}> {/* Pass the entire row object */}
+                        <EditIcon />
                       </IconButton>
                     </Tooltip>
                   </td>
@@ -195,7 +204,7 @@ function StudentTable() {
             onChange={(e) => setSelectedStatus(e.target.value)}
             style={{
               width: '100%',
-              padding: '8px',
+              padding: '4px',
               borderRadius: '4px',
               border: '1px solid #ccc',
               marginBottom: '1rem',
@@ -207,28 +216,27 @@ function StudentTable() {
             <option value="Fees Paid">Fees Paid</option>
             <option value="Acceptance Letter">Acceptance Letter</option>
             <option value="VFS date booked">VFS date booked</option>
-            <option value="File Submitted">File Submitted</option>
-            <option value="Visa Approved">Visa Approved</option>
-
+            <option value="Visa Granted">Visa Granted</option>
+            <option value="Traveling">Traveling</option>
+            <option value="Traveling">Completed</option>
+            <option value="Canceled">Canceled</option>
           </select>
-          <Button
-            variant="contained"
-            onClick={handleStatusChange}
-            sx={{ width: '100%', marginBottom: '1rem' }}
-          >
-            Update Status
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleCloseModal}
-            sx={{ width: '100%' }}
-          >
-            Cancel
-          </Button>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Button variant="outlined" onClick={handleCloseModal}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="primary" onClick={handleStatusChange}>
+              Update
+            </Button>
+          </Box>
         </Box>
       </Modal>
     </Box>
   );
 }
+
+StudentTable.propTypes = {
+  students: PropTypes.array.isRequired,
+};
 
 export default StudentTable;

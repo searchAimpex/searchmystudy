@@ -1354,6 +1354,60 @@ export const createStudent = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.',error });
   }
 };
+// @desc    Update an existing student
+// @route   PUT /api/students/:id
+// @access  Public (or Private, depending on your setup)
+ const updateStudentdetails = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the student ID from the request parameters
+    const {
+      firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
+      photo, postCode, mobileNumber, emailID, address, country, state, city, 
+      Country, Province, University, Course,
+      grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
+      grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
+      extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
+      letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
+      bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
+      declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
+      medicalCertificate, User
+    } = req.body;
+
+    // Find the student by ID and update their information
+    const student = await Student.findByIdAndUpdate(
+      id,
+      {
+        firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
+        photo, postCode, mobileNumber, emailID, address, country, state, city,
+        grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
+        grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
+        extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
+        letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
+        bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
+        declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
+        medicalCertificate,
+        Country: Country ? Country : null,
+        Province: Province ? Province : null,
+        University: University ? University : null,
+        Course: Course ? Course : null,
+        User: User ? User : null
+      },
+      { new: true } // Return the updated document
+    );
+
+    // If student not found, return 404
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Send a response with the updated student data
+    res.status(200).json(student);
+  } catch (error) {
+    // Log the error and return a server error response
+    console.error(error);
+    res.status(500).json({ message: 'Server error, please try again later.', error });
+  }
+};
 
 // @desc    Create a new student
 // @route   GET /api/students/:id
@@ -1375,7 +1429,7 @@ export const fetchByUserStudent = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const fetchStudent = async (req, res) => { 
   try {
-    const student = await Student.find().populate('User');
+    const student = await Student.find().populate('User').populate('Country').populate('Province').populate('University').populate('Course');
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
     }
@@ -1462,5 +1516,5 @@ export {
     createHomeLead, getLeads, deleteHomeLead,
     deleteContactLead,getContactLeads,createContactLead,
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
-    fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking
+    fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails
   };

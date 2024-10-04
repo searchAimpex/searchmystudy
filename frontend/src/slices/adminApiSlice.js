@@ -375,6 +375,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             
             }),
+        }),
+        UpdateStudent:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/student/detail/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            }),
         })
 
     })
@@ -396,5 +403,5 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,
     useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation,
     useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation,
-    useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation
+    useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation
 } = userApiSlice
