@@ -10,6 +10,7 @@ import { useCountryFetchMutation, useLinkFetchMutation } from '../../slices/admi
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import { FetchedLinked } from '../../slices/courseSlice';
 import { FetchCountry } from '../../slices/countrySlice';
+import Logo from '../../assets/SearchMyStudy.png';
 export default function Footer() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -40,9 +41,9 @@ export default function Footer() {
                 {/* Section 1: Head Office and Contact Info */}
                 <div className="grid grid-cols-1 gap-8 border-b border-white pb-8">
                     {/* Row 1: Head Office */}
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="flex items-center justify-center">
                     <div className='text-center'>
-                        <h3 className="text-2xl font-bold mb-4">LOGO</h3>
+                        <img src={Logo} alt="Logo" className="h-[60px] w-[240px]" />
                     </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
