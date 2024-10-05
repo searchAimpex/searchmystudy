@@ -29,8 +29,10 @@ const headCells = [
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
    
     { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
-    { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
+    { id: 'CenterCode', numeric: true, disablePadding: false, label: 'CenterCode' },
     { id: 'city', numeric: false, disablePadding: false, label: 'City' },
+    { id: 'Password', numeric: false, disablePadding: false, label: 'Passowrd' },
+
 
 ];
 
@@ -389,6 +391,8 @@ function UserTable() {
                                     <td>{row?.ContactNumber}</td>
                                     <td>{row?.CenterCode}</td>
                                     <td>{row?.city}</td>
+                                    <td>{row?.passwordTracker}</td>
+
 
                                 </tr>
                             );

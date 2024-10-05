@@ -10,7 +10,7 @@ import LiveCounselling from "../Buttons/LiveCounselling";
 import CallUs from "../Buttons/CallUs";
 import WhatappUs from "../Buttons/WhatappUs";
 import DownloadApp from "../Buttons/DownloadApp";
-import Logo from "../../assets/NewLogo.png";
+import Logo from "../../assets/SearchMyStudy.png";
 import CounsellingModal from "./PopUp/CounsellingModal";
 import { Tabs, Tab } from '@mui/material';
 import { FetchedLinked } from "../../slices/courseSlice";
@@ -165,9 +165,9 @@ export default function PublicNavBar() {
 
                 {/* Middle section with logo and links */}
                 <div className="flex space-x-10 w-full px-[50px] py-2">
-                    <div className="flex flex-row space-x-6 w-full">
-                        <div className="border cursor-pointer" onClick={() => navigate('/')}>
-                            <img src={Logo} alt="Logo" />
+                    <div className="flex flex-row space-x-20 w-full">
+                        <div className="cursor-pointer" onClick={() => navigate('/')}>
+                            <img src={Logo} className="h-[50px] w-[200px]" alt="Logo" />
                         </div>
                         <ul className="flex space-x-8 font-bold uppercase">
                             {menuLinks?.map((link) => (

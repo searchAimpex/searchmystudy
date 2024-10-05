@@ -15,13 +15,7 @@ const authUser = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
 
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role:user.role,
-      permissions: user.permissions
-    });
+    res.json(user);
   } else {
     res.status(401);
     throw new Error('Invalid email or password');
@@ -51,13 +45,7 @@ const authPartner = asyncHandler(async (req, res) => {
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
 
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role:user.role,
-      permissions: user.permissions
-    });
+    res.json(user);
   } else {
     res.status(401);
     throw new Error('Invalid email or password');
@@ -113,6 +101,7 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    passwordTracker:password,
     role,
     createdBy,
     block,
@@ -174,6 +163,7 @@ const registerUser = asyncHandler(async (req, res) => {
       IFSC:user.IFSC,
       bankName:user.bankName
     });
+
   } else {
     res.status(400);
     throw new Error('Invalid user data');
@@ -211,7 +201,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 // @desc    Update user profile
-// @route   PUT /api/users/profile
+// @route   PUT /api/users/profile/:id
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.userId);
@@ -254,6 +244,60 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.data.password;
     }
 
+    const updatedUser = await user.save();
+    console.log("update user",updatedUser);
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      OwnerName: updatedUser.OwnerName,
+      OwnerFatherName: updatedUser.OwnerFatherName,
+      InsitutionName: updatedUser.InsitutionName,
+      ContactNumber: updatedUser.ContactNumber,
+      WhatappNumber: updatedUser.WhatappNumber,
+      CenterCode: updatedUser.CenterCode,
+      DateOfBirth: updatedUser.DateOfBirth,
+      city: updatedUser.city,
+      state: updatedUser.state,
+      zipCode: updatedUser.zipCode,
+      address: updatedUser.address,
+      FrontAdhar: updatedUser.FrontAdhar,
+      BackAdhar: updatedUser.BackAdhar,
+      PanCard: updatedUser.PanCard,
+      ProfilePhoto: updatedUser.ProfilePhoto,
+      VistOffice: updatedUser.VistOffice,
+      CancelledCheck: updatedUser.CancelledCheck,
+      Logo: updatedUser.Logo,
+      accountedDetails: updatedUser.accountedDetails,
+      IFSC: updatedUser.IFSC,
+      bankName: updatedUser.bankName,
+      block: updatedUser.block,
+      createdBy: updatedUser.createdBy,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+
+
+// @desc    Update user profile
+// @route   PUT /api/users/profile/:id
+// @access  Private
+const updateUserOneProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    console.log("fix",user)
+    console.log("updatte",req.body)
+    // Update general fields
+ 
+    user.Logo = req.body.Logo || user.Logo;
+   
+
+  
     const updatedUser = await user.save();
     console.log("update user",updatedUser);
     res.json({
@@ -451,6 +495,7 @@ export {
   getUserProfile,
   updateUserProfile,
   authPartner,
+  updateUserOneProfile,
   test,
   blockUser,
   getAllUserProfile,

@@ -16,6 +16,10 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    passwordTracker: {
+      type: String,
+      default:''
+    },
     role:{ type:String,default:"admin"},
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,

@@ -20,7 +20,7 @@ import { useEffect } from 'react';
 import ImageViewPop from './PopUps/ImageViewPop';
 import { AppBlockingRounded, BlockRounded, RemoveRedEye, RemoveRedEyeOutlined } from '@mui/icons-material';
 import { useDeleteUserMutation, useGetAllfrechiseMutation, useGetAllUserMutation, useUserBlockMutation } from '../../slices/usersApiSlice';
-import { deleteUser, fetchUser } from '../../slices/authSlice';
+import { deleteUser, fetchFrenchise, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
 import UpdateUserPop from './PopUps/UpdateUserPop';
 
@@ -260,7 +260,7 @@ function FrenchiseTable() {
         const fetchData = async () => {
             try {
                 const result = await GetAllfrechise().unwrap();
-                dispatch(fetchUser(result));
+                dispatch(fetchFrenchise(result));
             } catch (error) {
                 console.error('Failed to fetch testimonials:', error);
             }
