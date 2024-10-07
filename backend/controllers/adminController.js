@@ -1410,21 +1410,46 @@ export const createStudent = async (req, res) => {
   }
 };
 
-// @desc    Create a new student
-// @route   GET /api/students/:id
-// @access  Public (or Private, depending on your setup)
-export const fetchByUserStudent = async (req, res) => { 
-  try {
-    const student = await Student.find({User:req.params.id});
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found.' });
-    }
-    res.json(student);
+// Helper function to recursively fetch all sub-users
+const getAllSubUsers = async (userId) => {
+  const subUsers = await User.find({ createdBy: userId }).select('_id');
 
-  }catch(error){
-    res.status(500).json({ message: 'Server error, please try again later.',error });
+  // If no sub-users, return empty array
+  if (subUsers.length === 0) return [];
+
+  // Recursively fetch sub-users of these sub-users
+  let allSubUsers = [...subUsers];
+  for (let subUser of subUsers) {
+    const nestedSubUsers = await getAllSubUsers(subUser._id);
+    allSubUsers = [...allSubUsers, ...nestedSubUsers];
   }
-}
+
+  return allSubUsers;
+};
+
+export const fetchByUserStudent = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Fetch all sub-users recursively
+    const subUsers = await getAllSubUsers(userId);
+
+    // Include the main user ID and all sub-user IDs in the query
+    const userIds = [userId, ...subUsers.map(user => user._id)];
+
+    // Fetch students created by the main user and their sub-user hierarchy
+    const students = await Student.find({ User: { $in: userIds } }).populate('User', 'name'); // Populate with 'name' for easier identification
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({ message: 'No students found for this user and sub-users.' });
+    }
+
+    res.json(students);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.', error });
+  }
+};
 // @desc    Create a new student
 // @route   GET /api/students
 // @access  Public (or Private, depending on your setup)
