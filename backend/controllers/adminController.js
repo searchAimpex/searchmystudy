@@ -1453,21 +1453,33 @@ export const fetchByUserStudent = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
-// @desc    Create a new student
-// @route   GET /api/students
-// @access  Public (or Private, depending on your setup)
 const fetchStudent = async (req, res) => { 
   try {
-    const student = await Student.find().populate('User').populate('Country').populate('Province').populate('University').populate('Course');
-    if (!student) {
+    // Fetch students and populate all related fields
+    const student = await Student.find()
+      .populate({
+        path: 'User',
+        populate: {
+          path: 'createdBy', // Populate 'createdBy' from User
+          model: 'User', // Make sure it refers to the correct model
+        }
+      })
+      .populate('Country')
+      .populate('Province')
+      .populate('University')
+      .populate('Course');
+
+    if (!student || student.length === 0) {
       return res.status(404).json({ message: 'Student not found.' });
     }
+
     res.json(student);
 
-  }catch(error){
-    res.status(500).json({ message: 'Server error, please try again later.',error });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.', error });
   }
-}
+};
+
 // @desc    Create a new student
 // @route   PUT /api/students/status
 // @access  Public (or Private, depending on your setup)
