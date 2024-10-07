@@ -29,7 +29,7 @@ const authUser = asyncHandler(async (req, res) => {
 const authPartner = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate('createdBy');
   if (!user) {
     res.status(401);
     throw new Error('Invalid email or password');

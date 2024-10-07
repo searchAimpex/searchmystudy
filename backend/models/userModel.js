@@ -87,6 +87,10 @@ const userSchema = mongoose.Schema(
       type:String,
       default:""
   },
+  CounsellorCOde:{
+    type: String,
+    default:""
+  },
   VistOffice : {
       type:String,
       default:""
