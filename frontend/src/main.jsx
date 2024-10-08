@@ -45,6 +45,7 @@ import BvScIndia from './screens/Public/BvScIndia.jsx';
 import AdminUserManagement from './screens/Admin/AdminUserManagement.jsx';
 import AdminStudentManagement from './screens/Admin/AdminStudentManagement.jsx';
 import StudentUpdate from './screens/Admin/StudentUpdate.jsx';
+import AdminTicketManagement from './screens/Admin/AdminTicketManagement.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -86,6 +87,7 @@ const router = createBrowserRouter(
         <Route path = '/admin/user' element= { <AdminUserManagement />} />
         <Route path = '/admin/student' element= { <AdminStudentManagement />} />
         <Route path = '/admin/student/update' element= { <StudentUpdate />} />
+        <Route path = '/admin/ticket' element = {<AdminTicketManagement />} />
 
 
       </Route>

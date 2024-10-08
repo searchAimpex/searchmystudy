@@ -382,7 +382,37 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'PUT',
                 body:data.raw
             }),
+        }),
+        FetchAllTicket: builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/ticket`,
+                method: 'GET'
+            }),
+        }),
+        RemoveOneTicket:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/ticket/${data}`,
+                method: 'DELETE',
+            
+            }),
+        }),
+        UpdateOneTicket:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/ticket/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            
+            }),
+        }),
+        CreateResponseTicket:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/ticket/reply/${data.id}`,
+                method: 'POST',
+                body:data.raw
+            
+            }),
         })
+
 
     })
 })
@@ -403,5 +433,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,
     useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation,
     useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation,
-    useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation
+    useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation,
+    useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation
 } = userApiSlice

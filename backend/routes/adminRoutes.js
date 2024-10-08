@@ -30,7 +30,13 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       UpdateStudentStatus,
       GetOneStudent,
       GetOneStudentByTracking,
-      updateStudentdetails
+      updateStudentdetails,
+      replyToTicket,
+      getTicket,
+      createTicket,
+      getAllTicket,
+      deleteOneTicket,
+      updateTicketStatus
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -209,5 +215,13 @@ router.get('/student/track/:id',GetOneStudentByTracking)
 /******************************************************************/
 
 
+/********************* ticket Routes  ***********************/
+router.post('/ticket', createTicket);
+router.post('/ticket/reply/:id',replyToTicket)
+router.get('/ticket/:id',getTicket)
+router.get('/ticket',getAllTicket)
+router.delete('/ticket/:id',deleteOneTicket)
+router.put('/ticket/:id',updateTicketStatus)
 
+/******************************************************************/
 export default router;

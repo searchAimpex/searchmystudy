@@ -17,6 +17,7 @@ import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 import Notification from '../models/notificationModel.js';
 import Student from '../models/studentModel.js';
+import { Ticket, TicketResponse } from '../models/ticketModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1541,6 +1542,116 @@ const GetOneStudentByTracking = async (req, res) => {
 }
 
 
+
+// POST /api/tickets
+const createTicket = async (req, res) => {
+  const { title, description, priority, category, attachments,userId } = req.body;
+
+  try {
+    const newTicket = new Ticket({
+      title,
+      description,
+      priority,
+      category,
+      attachments,
+      createdBy: userId,
+    });
+
+    const savedTicket = await newTicket.save();
+    res.status(201).json(savedTicket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// POST /tickets/reply:id/reply
+const replyToTicket = async (req, res) => {
+  const { id } = req.params;
+  const { content,userId } = req.body;
+
+  try {
+    const ticket = await Ticket.findById(id);
+
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    const newResponse = new TicketResponse({
+      ticket: id,
+      content,
+      respondedBy: userId,
+    });
+
+    const savedResponse = await newResponse.save();
+
+    // Push the response to the ticket's responses array
+    ticket.responses.push(savedResponse._id);
+    await ticket.save();
+
+    res.status(201).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// GET /api/tickets/:id
+const getTicket = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const ticket = await Ticket.find({createdBy:id}).populate({ path:'responses', populate: {
+      path: 'respondedBy',
+      select: 'name email',
+    },}).populate('createdBy', 'name email role');
+
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET /api/tickets/:id
+const getAllTicket = async (req, res) => {
+
+  try {
+    const ticket = await Ticket.find().populate({ path:'responses', populate: {
+      path: 'respondedBy',
+      select: 'name email',
+    },}).populate('createdBy', 'name email role');
+
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteOneTicket = async (req,res) =>{
+  try {
+    const ticket = await Ticket.findByIdAndDelete(req.params.id);
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+} 
+
+const updateTicketStatus = async (req,res) =>{
+  try {
+    console.log("status",req.body)
+    const ticket = await Ticket.findByIdAndUpdate(req.params.id,{status:req.body.status}).populate({ path:'responses', populate: {
+      path: 'respondedBy',
+      select: 'name email',
+    },}).populate('createdBy', 'name email role');
+    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
+
+    ticket.save()
+    console.log("my ricket",ticket)
+    res.status(200).json(ticket);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1557,5 +1668,6 @@ export {
     createHomeLead, getLeads, deleteHomeLead,
     deleteContactLead,getContactLeads,createContactLead,
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
-    fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails
+    fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails,
+    createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus
   };
