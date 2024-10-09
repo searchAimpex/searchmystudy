@@ -36,7 +36,11 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createTicket,
       getAllTicket,
       deleteOneTicket,
-      updateTicketStatus
+      updateTicketStatus,
+      getStudentMetrics,
+      createPromotional,
+      fetchAllPromotional,
+      deletePromotional
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -224,4 +228,17 @@ router.delete('/ticket/:id',deleteOneTicket)
 router.put('/ticket/:id',updateTicketStatus)
 
 /******************************************************************/
+
+
+/*************************** Matrix  *****************************/
+router.get('/matrix/:id',getStudentMetrics)
+/*********************************** ****************************/
+
+
+
+/***********Promotional ROUTES *********/
+router.post('/createPromotional', createPromotional);
+router.get('/FetchAllPromotional',fetchAllPromotional)
+router.delete('/DeletePromotional/:id',deletePromotional)
+/***********Promotional ROUTES *********/
 export default router;

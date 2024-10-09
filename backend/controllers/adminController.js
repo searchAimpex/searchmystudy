@@ -18,6 +18,7 @@ import generateToken from '../utils/generateToken.js';
 import Notification from '../models/notificationModel.js';
 import Student from '../models/studentModel.js';
 import { Ticket, TicketResponse } from '../models/ticketModel.js';
+import Promotional from '../models/promotional.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1652,6 +1653,92 @@ const updateTicketStatus = async (req,res) =>{
     res.status(500).json({ message: error.message });
   }
 }
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Controller function to get student metrics based on userId
+const getStudentMetrics = async (req, res) => {
+  try {
+    const  userId  = req.params.id; // Get the userId from the request params
+
+    // Count all students related to the given userId (assuming there's a field like `User` in Student schema)
+    const totalStudents = await Student.countDocuments({ User: userId });
+
+    // Count students with specific statuses
+    const totalAssessments = await Student.countDocuments({ User: userId, status: 'Assessment' });
+    const totalOffers = await Student.countDocuments({ User: userId, status: 'Offer Letter' });
+    const totalFeesPaid = await Student.countDocuments({ User: userId, status: 'Fees Paid' });
+    const totalAcceptanceLetters = await Student.countDocuments({ User: userId, status: 'Acceptance Letter' });
+    const totalVisaApproved = await Student.countDocuments({ User: userId, status: 'Visa Approved' });
+
+    // Combine all metrics into a response object
+    const metrics = {
+      totalStudents,
+      totalAssessments,
+      totalOffers,
+      totalFeesPaid,
+      totalAcceptanceLetters,
+      totalVisaApproved,
+    };
+
+    // Send the metrics as a JSON response
+    res.status(200).json(metrics);
+  } catch (error) {
+    // Handle any errors
+    console.error("Error fetching student metrics:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+//////////////////////////////////////////////////////////////////////////////////////////// 
+
+//////////////////////////////////////////Promotional Images /////////////////////////////////////////////////
+// @desc    Admin Get All Banner & 
+// @route   POST /api/admin/CreatePromotional
+// @access  Admin 
+const createPromotional = asyncHandler(async (req, res) => {
+  try {
+    const { title, imageURL, altName } = req.body;
+    // Create new banner
+    const banner = new Promotional({ title, imageURL, altName });
+    // Save to database
+    await banner.save();
+    res.json(banner);
+  } catch (error) {
+    res.status(401);
+    throw new Error('Please enter all required fields' );
+  }
+});
+// @desc    Admin Get All Banner & 
+// @route   POST /api/admin/FetchAllPromotional
+// @access  Admin 
+const fetchAllPromotional  =asyncHandler(async (req,res,next)=>{
+    try {
+        const banner = await Promotional.find({});
+        res.json(banner);
+
+    }catch(error){
+        res.status(400);
+        throw new Error('Not Able to fetch give refresh' );
+    }
+})
+
+// @desc    Admin Get All Banner & 
+// @route   DELETE /api/admin/DeletePromotional/:id
+// @access  Admin 
+const deletePromotional =asyncHandler(async (req,res,next)=>{
+    try {
+        const  bannerId  = req.params.id;
+        console.log("params",req.params)
+        const banner = await Promotional.findOneAndDelete({_id:bannerId})
+        res.json(banner);
+
+    }catch(error){
+        res.status(400);
+        throw new Error('Not Able to delete' );
+    }
+})
+///////////////////////////////////////////////////
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1669,5 +1756,6 @@ export {
     deleteContactLead,getContactLeads,createContactLead,
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
     fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails,
-    createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus
+    createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
+    createPromotional,fetchAllPromotional,deletePromotional
   };

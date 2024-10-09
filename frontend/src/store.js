@@ -19,6 +19,7 @@ import notificationReducer from './slices/notificationSlice'
 import secondCountryReducer from './slices/secondCountrySlice'
 import studentReducer from './slices/studentSlice'
 import ticketReducer from './slices/ticketSlice'
+import promotionalReducer from './slices/promotionalSlice'
 
 const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ const store = configureStore({
     testimonial:testimonialReducer,
     counsellor:counsellorReducer,
     blog:blogReducer,
+    promotional:promotionalReducer,
 
     country:countryReducer,
     province:provinceReducer,

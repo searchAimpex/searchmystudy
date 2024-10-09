@@ -411,7 +411,31 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body:data.raw
             
             }),
-        })
+        }),
+        CreatePromotional: builder.mutation({
+            query: (data) => {
+                const url = `${USERS_URL}/createPromotional`;
+                console.log('URL: ========>', url); // Log the URL
+                return {
+                    url,
+                    method: 'POST',
+                    body: data,
+                };
+            },
+        }),
+        GetAllPromotional: builder.mutation({
+            query: () => ({
+              url: `${USERS_URL}/FetchAllPromotional`,
+              method: 'GET',
+
+            }),
+          }),
+        DeletePromotional:builder.mutation({
+            query: (id) => ({
+                url: `${USERS_URL}/DeletePromotional/${id}`,
+                method: 'DELETE',
+            }),
+        }),
 
 
     })
@@ -434,5 +458,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateContactLeadMutation,useGetContactLeadMutation,useDeleteContactLeadMutation,
     useFetchNotifcationMutation,useCreateNotifcationMutation,useFetchAllNotifcationMutation,
     useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation,
-    useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation
+    useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation,
+    useCreatePromotionalMutation,useGetAllPromotionalMutation,useDeletePromotionalMutation,
 } = userApiSlice
