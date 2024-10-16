@@ -40,7 +40,9 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getStudentMetrics,
       createPromotional,
       fetchAllPromotional,
-      deletePromotional
+      deletePromotional,
+      createProfile,
+      fetchByUserProfile
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -241,4 +243,13 @@ router.post('/createPromotional', createPromotional);
 router.get('/FetchAllPromotional',fetchAllPromotional)
 router.delete('/DeletePromotional/:id',deletePromotional)
 /***********Promotional ROUTES *********/
+
+
+/************************* Profile Assisment  **********************/
+router.post('/profile',createProfile)
+router.get('/profile/:id',fetchByUserProfile)
+
+
+/*****************************  ********************8*/
+
 export default router;

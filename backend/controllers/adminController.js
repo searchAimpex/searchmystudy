@@ -19,6 +19,7 @@ import Notification from '../models/notificationModel.js';
 import Student from '../models/studentModel.js';
 import { Ticket, TicketResponse } from '../models/ticketModel.js';
 import Promotional from '../models/promotional.js';
+import Profile from '../models/profileModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1738,6 +1739,74 @@ const deletePromotional =asyncHandler(async (req,res,next)=>{
         throw new Error('Not Able to delete' );
     }
 })
+
+
+// @desc    Create a new profile
+// @route   POST /api/profiles
+// @access  Private
+const createProfile = async (req, res) => {
+  try {
+    const profile = new Profile(req.body); // Assuming the body contains the profile data
+    const createdProfile = await profile.save();
+    res.status(201).json(createdProfile);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create profile', error: error.message });
+  }
+};
+
+// @desc    Get all profiles
+// @route   GET /api/profiles
+// @access  Private
+const getAllProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('Country Course User'); // Populating references
+    res.status(200).json(profiles);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch profiles', error: error.message });
+  }
+};
+
+// @desc    Delete profile by ID
+// @route   DELETE /api/profiles/:id
+// @access  Private
+const deleteProfile = async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    await profile.remove(); // or use `findByIdAndDelete(req.params.id)`
+    res.status(200).json({ message: 'Profile deleted successfully', deletedProfile: profile });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete profile', error: error.message });
+  }
+};
+
+ const fetchByUserProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Fetch all sub-users recursively
+    const subUsers = await getAllSubUsers(userId);
+
+    // Include the main user ID and all sub-user IDs in the query
+    const userIds = [userId, ...subUsers.map(user => user._id)];
+
+    // Fetch students created by the main user and their sub-user hierarchy
+    const students = await Profile.find({ User: { $in: userIds } }).populate('User', 'name'); // Populate with 'name' for easier identification
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({ message: 'No students found for this user and sub-users.' });
+    }
+
+    res.json(students);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.', error });
+  }
+};
 ///////////////////////////////////////////////////
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
@@ -1757,5 +1826,6 @@ export {
     extraUser,extraUserFetch,sendNotificationToRole,getNotifications,getAllNotifications,
     fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails,
     createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
-    createPromotional,fetchAllPromotional,deletePromotional
+    createPromotional,fetchAllPromotional,deletePromotional,
+    createProfile, getAllProfiles, deleteProfile,fetchByUserProfile
   };
