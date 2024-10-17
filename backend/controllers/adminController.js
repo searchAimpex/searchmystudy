@@ -1444,7 +1444,7 @@ export const fetchByUserStudent = async (req, res) => {
     const userIds = [userId, ...subUsers.map(user => user._id)];
 
     // Fetch students created by the main user and their sub-user hierarchy
-    const students = await Student.find({ User: { $in: userIds } }).populate('User', 'name'); // Populate with 'name' for easier identification
+    const students = await Student.find({ User: { $in: userIds } }).populate('User'); // Populate with 'name' for easier identification
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });
@@ -1759,7 +1759,13 @@ const createProfile = async (req, res) => {
 // @access  Private
 const getAllProfiles = async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('Country User'); // Populating references
+    const profiles = await Profile.find().populate({
+      path: 'User',
+      populate: {
+        path: 'createdBy', // Populate 'createdBy' from User
+        model: 'User', // Make sure it refers to the correct model
+      }
+    }).populate('Country'); // Populating references
     res.status(200).json(profiles);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch profiles', error: error.message });
@@ -1794,7 +1800,7 @@ const deleteProfile = async (req, res) => {
     const userIds = [userId, ...subUsers.map(user => user._id)];
 
     // Fetch students created by the main user and their sub-user hierarchy
-    const students = await Profile.find({ User: { $in: userIds } }).populate('User', 'name').populate('Country'); // Populate with 'name' for easier identification
+    const students = await Profile.find({ User: { $in: userIds } }).populate('User').populate('Country'); // Populate with 'name' for easier identification
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });

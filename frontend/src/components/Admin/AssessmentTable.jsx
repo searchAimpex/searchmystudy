@@ -174,7 +174,7 @@ const handleDownload = async (data) => {
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.firstName} {row.lastName}</td>
                 
 
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.email}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}> {row?.User?.role === 'partner' || 'frenchise' ?    row?.User?.CenterCode  :  row?.User?.createdBy?.CenterCode}</td>
                
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Country?.name}</td>
              
