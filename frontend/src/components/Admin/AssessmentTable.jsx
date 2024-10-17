@@ -38,6 +38,7 @@ function AssessmentTable() {
 
   useEffect(() => {
     const fetchData = async () => {
+      
       try {
         const result = await FetchAllProfile().unwrap();
         dispatch(fetchAssessment(result));

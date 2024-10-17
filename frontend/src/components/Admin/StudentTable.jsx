@@ -26,6 +26,7 @@ function StudentTable() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const { student } = useSelector((state) => state.student);
+  console.log("====>,",student)
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
   const [GetAllStudent, { isSuccess }] = useGetAllStudentMutation();
@@ -109,12 +110,7 @@ function StudentTable() {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Created By</th>
               <th>Partner/Frenchise Code</th>
-
-              <th>Punched By</th>
-              <th>Counsellor Code</th>
-              <th>Role</th>
               <th>Country</th>
               <th>Province</th>
               <th>University</th>
@@ -133,14 +129,7 @@ function StudentTable() {
               .map((row) => (
                 <tr key={row._id}>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.firstName} {row.lastName}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.createdBy?.email}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.createdBy?.CenterCode}</td>
-
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.email}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.CounsellorCOde}</td>
-
-
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.role?.toUpperCase()}</td>
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? row?.User?.CenterCode : row?.User?.createdBy?.CenterCode}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Country?.name}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Province?.name}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.University?.name}</td>
@@ -196,7 +185,7 @@ function StudentTable() {
       >
         <Box
           sx={{
-            padding: '3rem',
+            padding: '1rem',
             backgroundColor: 'white',
             borderRadius: '20px',
             minWidth: '300px',
