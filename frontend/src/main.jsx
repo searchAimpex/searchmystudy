@@ -46,6 +46,7 @@ import AdminUserManagement from './screens/Admin/AdminUserManagement.jsx';
 import AdminStudentManagement from './screens/Admin/AdminStudentManagement.jsx';
 import StudentUpdate from './screens/Admin/StudentUpdate.jsx';
 import AdminTicketManagement from './screens/Admin/AdminTicketManagement.jsx';
+import AdminAssessmentManagement from './screens/Admin/AdminAssessmentManagement.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -88,6 +89,7 @@ const router = createBrowserRouter(
         <Route path = '/admin/student' element= { <AdminStudentManagement />} />
         <Route path = '/admin/student/update' element= { <StudentUpdate />} />
         <Route path = '/admin/ticket' element = {<AdminTicketManagement />} />
+        <Route path = '/admin/assessment' element ={ < AdminAssessmentManagement/>} />
 
 
       </Route>

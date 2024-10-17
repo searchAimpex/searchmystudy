@@ -20,6 +20,7 @@ import secondCountryReducer from './slices/secondCountrySlice'
 import studentReducer from './slices/studentSlice'
 import ticketReducer from './slices/ticketSlice'
 import promotionalReducer from './slices/promotionalSlice'
+import assessmentReducer from './slices/assessmentSlice'
 
 const store = configureStore({
   reducer: {
@@ -44,7 +45,8 @@ const store = configureStore({
     notification: notificationReducer,
     secondCountry:secondCountryReducer,
     student:studentReducer,
-    ticket:ticketReducer
+    ticket:ticketReducer,
+    assessment: assessmentReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

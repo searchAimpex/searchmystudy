@@ -436,6 +436,27 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+        FetchAllProfile :builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/profile`,
+                method: 'GET'
+            }),
+        }),
+        
+        ChangeStatusProfile:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/profile/status/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            }),
+        }),
+        ProfileDelete:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/profile/${data}`,
+                method: 'DELETE',
+            
+            }),
+        }),
 
 
     })
@@ -460,4 +481,5 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation,
     useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation,
     useCreatePromotionalMutation,useGetAllPromotionalMutation,useDeletePromotionalMutation,
+    useFetchAllProfileMutation,useChangeStatusProfileMutation,useProfileDeleteMutation
 } = userApiSlice

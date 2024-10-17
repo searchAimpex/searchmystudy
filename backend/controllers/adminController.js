@@ -1759,7 +1759,7 @@ const createProfile = async (req, res) => {
 // @access  Private
 const getAllProfiles = async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('Country Course User'); // Populating references
+    const profiles = await Profile.find().populate('Country User'); // Populating references
     res.status(200).json(profiles);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch profiles', error: error.message });
@@ -1771,13 +1771,12 @@ const getAllProfiles = async (req, res) => {
 // @access  Private
 const deleteProfile = async (req, res) => {
   try {
-    const profile = await Profile.findById(req.params.id);
+    const profile = await Profile.findByIdAndDelete(req.params.id);
 
     if (!profile) {
       return res.status(404).json({ message: 'Profile not found' });
     }
-
-    await profile.remove(); // or use `findByIdAndDelete(req.params.id)`
+ // or use `findByIdAndDelete(req.params.id)`
     res.status(200).json({ message: 'Profile deleted successfully', deletedProfile: profile });
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete profile', error: error.message });
@@ -1795,7 +1794,7 @@ const deleteProfile = async (req, res) => {
     const userIds = [userId, ...subUsers.map(user => user._id)];
 
     // Fetch students created by the main user and their sub-user hierarchy
-    const students = await Profile.find({ User: { $in: userIds } }).populate('User', 'name'); // Populate with 'name' for easier identification
+    const students = await Profile.find({ User: { $in: userIds } }).populate('User', 'name').populate('Country'); // Populate with 'name' for easier identification
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });
@@ -1807,6 +1806,23 @@ const deleteProfile = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
+
+// @desc    Create a new student
+// @route   PUT /api/profile/status
+// @access  Public (or Private, depending on your setup)
+const UpdateProfileStatus = async (req, res) => { 
+  try {
+    console.log("fix",req.body,req.params.id)
+    const student = await Profile.findOneAndUpdate({_id:req.params.id},{status:req.body.status});
+    if (!student) {
+      return res.status(404).json({ message: 'Profile not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
 ///////////////////////////////////////////////////
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
@@ -1827,5 +1843,5 @@ export {
     fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails,
     createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
     createPromotional,fetchAllPromotional,deletePromotional,
-    createProfile, getAllProfiles, deleteProfile,fetchByUserProfile
+    createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus
   };

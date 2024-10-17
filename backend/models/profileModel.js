@@ -97,7 +97,7 @@ const profileSchema = new mongoose.Schema({
     status: { 
         type: String, 
         default: "pending" ,
-        enum: ['pending','open','eligible'],
+        enum: ['pending','shared','eligible','ineligible'],
 
     }
 }, 
