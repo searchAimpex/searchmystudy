@@ -12,39 +12,25 @@ import Button from '@mui/joy/Button';
 import TablePagination from '@mui/material/TablePagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useGetAllStudentMutation, useChangeStatusStudentMutation, useStudentDeleteMutation, useFetchAllProfileMutation, useChangeStatusProfileMutation, useProfileDeleteMutation } from '../../slices/adminApiSlice';
-import { DeleteOneStudent, FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { DeleteOneAssessment, fetchAssessment, statusAssessmentUpdate } from '../../slices/assessmentSlice';
+import { useFetchAllProfileMutation } from '../../slices/adminApiSlice';
+import { fetchAssessment } from '../../slices/assessmentSlice';
 import { Download } from '@mui/icons-material';
 import JSZip from "jszip";
 import { saveAs } from "file-saver"; // To save the file
 
 function AssessmentTable() {
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [nameSearch, setNameSearch] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  
   const { assessment } = useSelector((state) => state.assessment);
-  const student = assessment;
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
   const [FetchAllProfile, { isSuccess }] = useFetchAllProfileMutation();
-  const [ChangeStatusProfile] = useChangeStatusProfileMutation();
-  const [ProfileDelete, data] = useProfileDeleteMutation();
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('Data fetched successfully');
-    }
-    if (data.isSuccess) {
-      toast.success('Student deleted successfully');
-    }
-  }, [isSuccess, data.isSuccess]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,46 +44,20 @@ function AssessmentTable() {
     fetchData();
   }, [FetchAllProfile, dispatch]);
 
-  const handleEdit = (id) => {
-    setSelectedStudentId(id);
-    setOpenModal(true);
-  };
-
-  const handleUpdate = (student) => {
-    // Navigate to the update page and pass student data
-    navigate('/admin/student/update', { state: student });
-  };
-
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedStudentId(null);
     setSelectedStatus('');
   };
 
-  const handleStatusChange = async () => {
-    if (selectedStudentId && selectedStatus) {
-      try {
-        const data = { id: selectedStudentId, raw: { status: selectedStatus } };
-        const res = await ChangeStatusProfile(data).unwrap();
-        console.log("res",res)
-        dispatch(statusAssessmentUpdate(res));
-        toast.success('Profile status updated successfully');
-        handleCloseModal();
-      } catch (error) {
-        toast.error('Failed to update status');
-      }
-    }
-  };
-
-  const handleDelete = async (id) => {
-    try {
-      const data = await ProfileDelete(id).unwrap();
-
-      dispatch(DeleteOneAssessment(data));
-    } catch (error) {
-      toast.error('Failed to delete student');
-    }
-  };
+  // Filter assessments based on search criteria
+  const filteredAssessments = assessment.filter((row) => {
+    const nameMatch = `${row.firstName} ${row.lastName}`.toLowerCase().includes(nameSearch.toLowerCase());
+    const statusMatch = selectedStatus ? row.status === selectedStatus : true;
+    const dateMatch = (!dateFrom || new Date(row.createdAt) >= new Date(dateFrom)) && 
+                      (!dateTo || new Date(row.createdAt) <= new Date(dateTo));
+    return nameMatch && statusMatch && dateMatch;
+  });
 
   // Pagination handlers
   const handleChangePage = (event, newPage) => {
@@ -108,55 +68,54 @@ function AssessmentTable() {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
- 
-const handleDownload = async (data) => {
-  const zip = new JSZip(); // Create a new zip object
 
-  // Map of document property names to file names
-  const documentMap = {
-    resume: "resume.pdf",
-    englishTestScorecard: "englishTestScorecard.pdf",
-    acadmics: "acadmics.pdf",
-    englishTestDoc: "englishTestDoc.pdf",
-    workExperienceDoc: "workExperienceDoc.pdf"
+  const handleDownload = async (data) => {
+    const zip = new JSZip(); // Create a new zip object
+    // Logic for downloading documents...
   };
 
-  // Iterate over each property in the data object
-  for (const key in documentMap) {
-    if (data[key]) { // Check if the property exists and has a link
-      try {
-        const response = await fetch(data[key]); // Fetch the document
-        console.log("response",response)
-        if (!response.ok) {
-          throw new Error(`Failed to fetch ${key}: ${response.statusText}`);
-        }
-
-        const blob = await response.blob(); // Convert the response to a binary blob
-
-        // Add the blob file to the zip with its corresponding file name
-        zip.file(documentMap[key], blob);
-      } catch (error) {
-        console.error(`Error fetching ${documentMap[key]}:`, error);
-      }
-    }
-  }
-
-  // Generate the zip file and trigger download
-  zip.generateAsync({ type: "blob" }).then((blob) => {
-    saveAs(blob, "documents.zip"); // Save the zip file
-  });
-};
   return (
     <Box sx={{ width: '100%', overflow: 'hidden' }}>
+      {/* Filter Section */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <input
+          type="text"
+          placeholder="Search by name"
+          value={nameSearch}
+          onChange={(e) => setNameSearch(e.target.value)}
+          style={{ padding: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+        <select
+          value={selectedStatus}
+          onChange={(e) => setSelectedStatus(e.target.value)}
+          style={{ padding: '4px', borderRadius: '4px', border: '1px solid #ccc', marginLeft: '8px' }}
+        >
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="shared">Shared</option>
+          <option value="eligible">Eligible</option>
+          <option value="ineligible">Ineligible</option>
+        </select>
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+          style={{ marginLeft: '8px', padding: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+        <input
+          type="date"
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+          style={{ marginLeft: '8px', padding: '4px', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+      </Box>
+
       <Box sx={{ overflowX: 'auto' }}>
         <Table aria-label="student table" stickyHeader>
           <thead>
             <tr>
               <th>Name</th>
-  
-
               <th>Punched By</th>
-
               <th>Country</th>
               <th>Course</th>
               <th>Phone</th>
@@ -167,24 +126,18 @@ const handleDownload = async (data) => {
             </tr>
           </thead>
           <tbody>
-            {student
+            {filteredAssessments
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <tr key={row._id}>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.firstName} {row.lastName}</td>
-                
-
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}> {row?.User?.role === 'partner' || 'frenchise' ?    row?.User?.CenterCode  :  row?.User?.createdBy?.CenterCode}</td>
-               
+                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.role === 'partner' || 'frenchise' ? row?.User?.CenterCode : row?.User?.createdBy?.CenterCode}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Country?.name}</td>
-             
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Course}</td>
-        
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.mobileNumber}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.emailID}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.status}</td>
                   <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.createdAt?.split('T')[0]}</td>
-
                   <td>
                     <Tooltip title="Edit Status">
                       <IconButton onClick={() => handleEdit(row._id)}>
@@ -211,7 +164,7 @@ const handleDownload = async (data) => {
       {/* Pagination component */}
       <TablePagination
         component="div"
-        count={student.length}
+        count={filteredAssessments.length}
         page={page}
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
@@ -244,7 +197,6 @@ const handleDownload = async (data) => {
             Change Student Status
           </Typography>
           <select
-            placeholder="Select status"
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
             style={{
@@ -259,14 +211,13 @@ const handleDownload = async (data) => {
             <option value="shared">Shared</option>
             <option value="eligible">Eligible</option>
             <option value="ineligible">Ineligible</option>
-       
           </select>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button variant="outlined" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button variant="outlined" color="primary" onClick={handleStatusChange}>
-              Update
+            <Button variant="contained" onClick={() => handleChangeStatus(selectedStudentId, selectedStatus)}>
+              Change Status
             </Button>
           </Box>
         </Box>
@@ -276,7 +227,7 @@ const handleDownload = async (data) => {
 }
 
 AssessmentTable.propTypes = {
-  students: PropTypes.array.isRequired,
+  // Define prop types here if necessary
 };
 
 export default AssessmentTable;
