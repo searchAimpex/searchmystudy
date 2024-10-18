@@ -457,6 +457,21 @@ export const userApiSlice = apiSlice.injectEndpoints({
             
             }),
         }),
+        CreateMyPopup:builder.mutation ( {
+            query: (data)=> ({
+                url:`${USERS_URL}/popup`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchMyPopup:builder.mutation ( {
+            query: (data)=> ({
+                url:`${USERS_URL}/popup`,
+                method: 'GET',
+            }),
+        }),
+
+
 
 
     })
@@ -481,5 +496,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useGetAllStudentMutation,useChangeStatusStudentMutation,useStudentDeleteMutation,useUpdateStudentMutation,
     useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation,
     useCreatePromotionalMutation,useGetAllPromotionalMutation,useDeletePromotionalMutation,
-    useFetchAllProfileMutation,useChangeStatusProfileMutation,useProfileDeleteMutation
+    useFetchAllProfileMutation,useChangeStatusProfileMutation,useProfileDeleteMutation,
+    useCreateMyPopupMutation,useFetchMyPopupMutation
 } = userApiSlice

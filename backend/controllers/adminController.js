@@ -20,6 +20,7 @@ import Student from '../models/studentModel.js';
 import { Ticket, TicketResponse } from '../models/ticketModel.js';
 import Promotional from '../models/promotional.js';
 import Profile from '../models/profileModel.js';
+import Popup from '../models/popupModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1830,6 +1831,53 @@ const UpdateProfileStatus = async (req, res) => {
   }
 }
 ///////////////////////////////////////////////////
+
+// @desc    Create a new popup
+// @route   POST /api/popups
+// @access  Private
+const createPopup = async (req, res) => {
+  const { title, details } = req.body;
+
+  try {
+    const newPopup = new Popup({ title, details });
+    await newPopup.save();
+    res.status(201).json(newPopup);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create popup', error: error.message });
+  }
+};
+
+// @desc    Get all popups
+// @route   GET /api/popups
+// @access  Private
+const getAllPopups = async (req, res) => {
+  try {
+    const popups = await Popup.find();
+    res.status(200).json(popups);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch popups', error: error.message });
+  }
+};
+
+// @desc    Delete a popup
+// @route   DELETE /api/popups/:id
+// @access  Private
+const deletePopup = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const popup = await Popup.findByIdAndDelete(id);
+    
+    if (!popup) {
+      return res.status(404).json({ message: 'Popup not found' });
+    }
+    
+    res.status(200).json({ message: 'Popup deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete popup', error: error.message });
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1849,5 +1897,6 @@ export {
     fetchStudent,UpdateStudentStatus,DeleteStudent,GetOneStudent,GetOneStudentByTracking,updateStudentdetails,
     createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
     createPromotional,fetchAllPromotional,deletePromotional,
-    createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus
+    createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus,
+    createPopup,getAllPopups,deletePopup
   };

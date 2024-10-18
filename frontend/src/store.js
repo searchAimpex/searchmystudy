@@ -21,6 +21,7 @@ import studentReducer from './slices/studentSlice'
 import ticketReducer from './slices/ticketSlice'
 import promotionalReducer from './slices/promotionalSlice'
 import assessmentReducer from './slices/assessmentSlice'
+import popupReducer from './slices/popUpSlice'
 
 const store = configureStore({
   reducer: {
@@ -32,7 +33,6 @@ const store = configureStore({
     counsellor:counsellorReducer,
     blog:blogReducer,
     promotional:promotionalReducer,
-
     country:countryReducer,
     province:provinceReducer,
     university:universityReducer,
@@ -47,6 +47,7 @@ const store = configureStore({
     student:studentReducer,
     ticket:ticketReducer,
     assessment: assessmentReducer,
+    popup:popupReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

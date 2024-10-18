@@ -10,6 +10,7 @@ import {ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material';
 import TicketTable from "./TicketTable";
 import AssessmentTable from "./AssessmentTable";
+import PopUpTable from "./PopUpTable";
 
 const theme = createTheme({
     palette: {
@@ -81,6 +82,8 @@ export default function AssessmentTab() {
           aria-label="full width tabs example"
         >
           <Tab label="Assessment" {...a11yProps(0)} />
+
+          <Tab label="PopUp" {...a11yProps(1)} />
           
         </Tabs>
       </AppBar>
@@ -92,6 +95,9 @@ export default function AssessmentTab() {
       >
         <TabPanel value={value} index={0} dir={theme.direction}>
             <AssessmentTable />
+        </TabPanel>
+        <TabPanel value={value} index={1} dir={theme.direction}>
+            <PopUpTable />
         </TabPanel>
       
       </SwipeableViews>
