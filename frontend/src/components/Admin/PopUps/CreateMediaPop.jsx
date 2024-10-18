@@ -23,24 +23,41 @@ function CreateMediaPop({ open, handleClose }) {
     articalURL: '',
     description: '',
   });
+  const [errors, setErrors] = useState({});
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [CreateMedia, { isSuccess }] = useCreateMediaMutation();
   const dispatch = useDispatch();
 
+  const validateForm = (values) => {
+    const newErrors = {};
+
+    if (!values.title) newErrors.title = 'Title is required';
+    if (!values.articalURL || !/^https?:\/\/\S+$/.test(values.articalURL)) {
+      newErrors.articalURL = 'Valid article URL is required';
+    }
+    if (!values.description) newErrors.description = 'Description is required';
+    if (!values.imageFile) newErrors.imageFile = 'Image is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
+    const newFormValues = { ...formValues };
 
     if (type === 'file') {
       const file = files[0];
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        imageFile: file,
-      }));
+      newFormValues.imageFile = file;
     } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
+      newFormValues[name] = value;
     }
+
+    setFormValues(newFormValues);
+
+    // Validate the form whenever a field changes
+    const isValid = validateForm(newFormValues);
+    setIsSubmitEnabled(isValid);
   };
 
   const uploadImage = async (file) => {
@@ -51,6 +68,8 @@ function CreateMediaPop({ open, handleClose }) {
   };
 
   const onSubmit = async () => {
+    if (!isSubmitEnabled) return;
+
     try {
       if (formValues.imageFile) {
         const imageURL = await uploadImage(formValues.imageFile);
@@ -103,6 +122,8 @@ function CreateMediaPop({ open, handleClose }) {
               variant="standard"
               value={formValues.title}
               onChange={handleChange}
+              error={!!errors.title}
+              helperText={errors.title}
             />
             <TextField
               id="articalURL"
@@ -111,6 +132,8 @@ function CreateMediaPop({ open, handleClose }) {
               variant="standard"
               value={formValues.articalURL}
               onChange={handleChange}
+              error={!!errors.articalURL}
+              helperText={errors.articalURL}
             />
             <TextField
               id="description"
@@ -119,6 +142,8 @@ function CreateMediaPop({ open, handleClose }) {
               variant="standard"
               value={formValues.description}
               onChange={handleChange}
+              error={!!errors.description}
+              helperText={errors.description}
             />
             <TextField
               id="imageFile"
@@ -128,12 +153,15 @@ function CreateMediaPop({ open, handleClose }) {
               variant="standard"
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              error={!!errors.imageFile}
+              helperText={errors.imageFile}
             />
+            <p className="text-red-300">Image should be 320*250px</p>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={onSubmit}>Submit</Button>
+          <Button onClick={onSubmit} disabled={!isSubmitEnabled}>Submit</Button>
         </DialogActions>
       </Dialog>
     </div>

@@ -34,9 +34,25 @@ function CreateCountryPop({ open, handleClose }) {
     eligiblity: ['', '', '', '', '', '', ''],
     faq: [{ question: '', answer: '' }],
   });
+  const [formErrors, setFormErrors] = useState({});
+  const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
 
   const [createCountry, { isSuccess }] = useCreateCountryMutation();
   const dispatch = useDispatch();
+
+  const validateImage = async (file, requiredWidth, requiredHeight) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        if (img.width === requiredWidth && img.height === requiredHeight) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
+      };
+    });
+  };
 
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
@@ -45,21 +61,31 @@ function CreateCountryPop({ open, handleClose }) {
     if (type === 'file') {
       const file = files[0];
       if (file) {
-        const imageURL = await uploadImage(file);
-        if (field) {
-          setFormValues((prevValues) => ({
-            ...prevValues,
-            [section]: [
-              ...prevValues[section].slice(0, index),
-              { ...prevValues[section][index], [field]: imageURL },
-              ...prevValues[section].slice(Number(index) + 1),
-            ],
+        const fileType = name === 'bannerURL' ? { width: 1500, height: 500 } : { width: 200, height: 200 };
+        const isValid = await validateImage(file, fileType.width, fileType.height);
+        if (!isValid) {
+          setFormErrors((prev) => ({
+            ...prev,
+            [name]: `Image must be ${fileType.width}x${fileType.height} pixels`,
           }));
         } else {
-          setFormValues((prevValues) => ({
-            ...prevValues,
-            [name]: imageURL,
-          }));
+          setFormErrors((prev) => ({ ...prev, [name]: '' }));
+          const imageURL = await uploadImage(file);
+          if (field) {
+            setFormValues((prevValues) => ({
+              ...prevValues,
+              [section]: [
+                ...prevValues[section].slice(0, index),
+                { ...prevValues[section][index], [field]: imageURL },
+                ...prevValues[section].slice(Number(index) + 1),
+              ],
+            }));
+          } else {
+            setFormValues((prevValues) => ({
+              ...prevValues,
+              [name]: imageURL,
+            }));
+          }
         }
       }
     } else {
@@ -79,6 +105,7 @@ function CreateCountryPop({ open, handleClose }) {
         }));
       }
     }
+    checkFormValidity();
   };
 
   const uploadImage = async (file) => {
@@ -86,6 +113,11 @@ function CreateCountryPop({ open, handleClose }) {
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     return url;
+  };
+
+  const checkFormValidity = () => {
+    const isValid = formValues.name && formValues.description && !formErrors.bannerURL && !formErrors.flagURL;
+    setIsSubmitEnabled(isValid);
   };
 
   const onSubmit = async () => {
@@ -155,6 +187,8 @@ function CreateCountryPop({ open, handleClose }) {
             value={formValues.name}
             onChange={handleChange}
             className="mb-2"
+            error={Boolean(formErrors.name)}
+            helperText={formErrors.name || ''}
           />
           <TextField
             id="bannerURL"
@@ -165,6 +199,8 @@ function CreateCountryPop({ open, handleClose }) {
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Banner Image"
+            error={Boolean(formErrors.bannerURL)}
+            helperText={formErrors.bannerURL || ''}
           />
           <TextField
             id="flagURL"
@@ -175,6 +211,8 @@ function CreateCountryPop({ open, handleClose }) {
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Flag Image"
+            error={Boolean(formErrors.flagURL)}
+            helperText={formErrors.flagURL || ''}
           />
           <TextField
             id="bullet"
@@ -193,6 +231,8 @@ function CreateCountryPop({ open, handleClose }) {
             value={formValues.description}
             onChange={handleChange}
             className="mb-2"
+            error={Boolean(formErrors.description)}
+            helperText={formErrors.description || ''}
           />
 
           {/* Sections */}
@@ -246,63 +286,62 @@ function CreateCountryPop({ open, handleClose }) {
               <Typography>Eligibility</Typography>
             </AccordionSummary>
             <AccordionDetails className='flex flex-col gap-6'>
-              {formValues.eligiblity.map((pointer, index) => (
+              {formValues.eligiblity.map((value, index) => (
                 <TextField
-                  key={`pointer${index}`}
-                  id={`pointer${index}`}
+                  key={index}
+                  id={`eligibility${index}`}
                   name={`eligiblity.${index}`}
-                  label={`Pointer ${index + 1}`}
                   variant="standard"
-                  value={pointer}
                   onChange={handleChange}
+                  InputLabelProps={{ shrink: true }}
                   className="mb-2"
+                  label={`Eligibility ${index + 1}`}
                 />
               ))}
             </AccordionDetails>
           </Accordion>
 
-          {/* FAQ Section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>FAQ</Typography>
-            </AccordionSummary>
-            <AccordionDetails className='flex flex-col gap-6'>
-              {formValues.faq.map((item, index) => (
-                <div key={index} className="flex flex-col gap-4">
-                  <TextField
-                    id={`faqQuestion${index}`}
-                    name={`faq.${index}.question`}
-                    label="Question"
-                    variant="standard"
-                    value={item.question}
-                    onChange={handleChange}
-                    className="mb-2"
-                  />
-                  <TextField
-                    id={`faqAnswer${index}`}
-                    name={`faq.${index}.answer`}
-                    label="Answer"
-                    variant="standard"
-                    value={item.answer}
-                    onChange={handleChange}
-                    className="mb-2"
-                  />
-                  <Button variant="contained" color="error" onClick={() => removeFaq(index)}>
-                    Remove FAQ
-                  </Button>
-                </div>
-              ))}
-              <Button variant="contained" color="primary" onClick={addFaq}>
-                Add FAQ
-              </Button>
-            </AccordionDetails>
-          </Accordion>
-
+          {/* FAQs */}
+          {formValues.faq.map((faq, index) => (
+            <Accordion key={index}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>FAQ {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails className='flex flex-col gap-6'>
+                <TextField
+                  id={`question${index}`}
+                  name={`faq.${index}.question`}
+                  label="Question"
+                  variant="standard"
+                  value={faq.question}
+                  onChange={handleChange}
+                  className="mb-2"
+                />
+                <TextField
+                  id={`answer${index}`}
+                  name={`faq.${index}.answer`}
+                  label="Answer"
+                  variant="standard"
+                  value={faq.answer}
+                  onChange={handleChange}
+                  className="mb-2"
+                />
+                <Button variant="contained" color="error" onClick={() => removeFaq(index)}>
+                  Remove FAQ
+                </Button>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+          <Button variant="contained" color="primary" onClick={addFaq}>
+            Add FAQ
+          </Button>
         </Box>
       </DialogContent>
       <DialogActions>
+        <Button variant="contained" onClick={onSubmit} disabled={!isSubmitEnabled}>
+          Submit
+        </Button>
         <Button onClick={handleClose}>Close</Button>
-        <Button onClick={onSubmit}>Submit</Button>
       </DialogActions>
     </Dialog>
   );

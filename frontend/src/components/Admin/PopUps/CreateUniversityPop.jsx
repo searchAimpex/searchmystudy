@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    Accordion,
+    AccordionSummary,
+    AccordionDetails,
+    Typography,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
@@ -30,8 +30,37 @@ const storage = getStorage(app);
 
 export default function CreateUniversityPop({ open, handleClose }) {
     const dispatch = useDispatch();
-    const { province } = useSelector(state => state.province);
+    const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
+
+    // State for form values and image validation
+    const [formValues, setFormValues] = useState({
+        name: '',
+        bannerURL: '',
+        heroURL: '',
+        description: '',
+        grade: 'A',
+        rating: '5',
+        sections: [{ title: '', description: '', url: '' }],
+        eligiblity: '',
+        logo: '',
+        Province: '',
+        campusLife: '',
+        hostel: '',
+        type: 'Public',
+        rank: 0,
+        UniLink: '',
+        Course: [],
+    });
+
+    const [imageValidations, setImageValidations] = useState({
+        bannerURL: false,
+        heroURL: false,
+        logo: false,
+    });
+
+    const [isFormValid, setIsFormValid] = useState(false);
+    const [createUniversity, { isSuccess }] = useCreateUniversityMutation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,36 +74,60 @@ export default function CreateUniversityPop({ open, handleClose }) {
         fetchData();
     }, [FetchProvince, dispatch]);
 
-    const [formValues, setFormValues] = useState({
-        name: '',
-        bannerURL: '',
-        heroURL: '',
-        description: '',
-        grade: 'A',
-        rating: '5',
-        sections: [
-            { title: '', description: '', url: '' }
-        ],
-        eligiblity: '',
-        logo: '',
-        Province: '',
-        campusLife: '',
-        hostel: '',
-        type: 'Public',
-        rank: 0,
-        UniLink: '',
-        Course: []
-    });
-
-    const [createUniversity, { isSuccess }] = useCreateUniversityMutation();
+    const validateImage = (file, requiredWidth, requiredHeight) => {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = () => {
+                resolve(img.width === requiredWidth && img.height === requiredHeight);
+            };
+        });
+    };
 
     const handleChange = async (event) => {
         const { name, value, type, files } = event.target;
         const [section, index, field] = name.split('.');
-
+    
         if (type === 'file') {
             const file = files[0];
             if (file) {
+                let isValid = false;
+    
+                // Validate based on the file type
+                switch (name) {
+                    case 'bannerURL':
+                        isValid = await validateImage(file, 1200, 500);
+                        break;
+                    case 'heroURL':
+                        isValid = await validateImage(file, 400, 300);
+                        break;
+                    case 'logo':
+                        isValid = await validateImage(file, 150, 150);
+                        break;
+                    default:
+                        break;
+                }
+    
+                if (!isValid) {
+                    toast.error(`${name} must be of the correct dimensions.`);
+                    setImageValidations((prev) => ({
+                        ...prev,
+                        [name]: false,
+                    }));
+                    
+                    // Reset the corresponding form value if the image is invalid
+                    setFormValues((prevValues) => ({
+                        ...prevValues,
+                        [name]: '',
+                    }));
+                    return; // Exit if the image is invalid
+                }
+    
+                setImageValidations((prev) => ({
+                    ...prev,
+                    [name]: true,
+                }));
+    
                 const imageURL = await uploadImage(file);
                 if (field) {
                     setFormValues((prevValues) => ({
@@ -82,13 +135,13 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         [section]: [
                             ...prevValues[section].slice(0, index),
                             { ...prevValues[section][index], [field]: imageURL },
-                            ...prevValues[section].slice(Number(index) + 1)
-                        ]
+                            ...prevValues[section].slice(Number(index) + 1),
+                        ],
                     }));
                 } else {
                     setFormValues((prevValues) => ({
                         ...prevValues,
-                        [name]: imageURL
+                        [name]: imageURL,
                     }));
                 }
             }
@@ -99,13 +152,13 @@ export default function CreateUniversityPop({ open, handleClose }) {
                     [section]: [
                         ...prevValues[section].slice(0, index),
                         { ...prevValues[section][index], [field]: value },
-                        ...prevValues[section].slice(Number(index) + 1)
-                    ]
+                        ...prevValues[section].slice(Number(index) + 1),
+                    ],
                 }));
             } else {
                 setFormValues((prevValues) => ({
                     ...prevValues,
-                    [name]: value
+                    [name]: value,
                 }));
             }
         }
@@ -121,22 +174,25 @@ export default function CreateUniversityPop({ open, handleClose }) {
     const addSection = () => {
         setFormValues((prevValues) => ({
             ...prevValues,
-            sections: [...prevValues.sections, { title: '', description: '', url: '' }]
+            sections: [...prevValues.sections, { title: '', description: '', url: '' }],
         }));
     };
 
     const removeSection = (index) => {
         setFormValues((prevValues) => ({
             ...prevValues,
-            sections: prevValues.sections.filter((_, i) => i !== index)
+            sections: prevValues.sections.filter((_, i) => i !== index),
         }));
     };
 
     const onSubmit = async () => {
-      console.log("On submit",formValues)
-        const res = await createUniversity(formValues).unwrap();
-        dispatch(AddUniversity({ ...res }));
-        handleClose();
+        try {
+            const res = await createUniversity(formValues).unwrap();
+            dispatch(AddUniversity({ ...res }));
+            handleClose();
+        } catch (error) {
+            console.error('Failed to create university:', error);
+        }
     };
 
     useEffect(() => {
@@ -144,6 +200,12 @@ export default function CreateUniversityPop({ open, handleClose }) {
             toast.success('University Added Successfully');
         }
     }, [isSuccess]);
+
+    useEffect(() => {
+        // Check if all required images are valid
+        const allImagesValid = Object.values(imageValidations).every(Boolean);
+        setIsFormValid(allImagesValid && formValues.name && formValues.eligiblity);
+    }, [imageValidations, formValues]);
 
     return (
         <Dialog fullWidth='xl' open={open} onClose={handleClose}>
@@ -153,14 +215,8 @@ export default function CreateUniversityPop({ open, handleClose }) {
                     <DialogContentText>You can add a university.</DialogContentText>
                 </div>
                 <Box
-                    noValidate
                     component="form"
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        m: 'auto',
-                        width: 'fit-content',
-                    }}
+                    sx={{ display: 'flex', flexDirection: 'column', m: 'auto', width: 'fit-content' }}
                     className="space-y-6 my-2"
                 >
                     <TextField
@@ -247,48 +303,36 @@ export default function CreateUniversityPop({ open, handleClose }) {
                                     className="mb-2"
                                     label="Image"
                                 />
-                                <Button onClick={() => removeSection(index)} variant="contained" color="secondary">
-                                    Remove Section
-                                </Button>
+                                <Button onClick={() => removeSection(index)}>Remove Section</Button>
                             </AccordionDetails>
                         </Accordion>
                     ))}
+                    <Button onClick={addSection}>Add Section</Button>
 
-                    <Button onClick={addSection} variant="contained" color="primary">
-                        Add Section
-                    </Button>
-
-                    {/* Eligiblity */}
+                    {/* Additional Fields */}
+                    <FormControl variant="standard" fullWidth className="mb-2">
+                        <InputLabel id="province-label">Province</InputLabel>
+                        <Select
+                            labelId="province-label"
+                            id="province"
+                            name="Province"
+                            value={formValues.Province}
+                            onChange={handleChange}
+                        >
+                            {province.map((prov) => (
+                                <MenuItem key={prov.id} value={prov.name}>{prov.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         id="eligiblity"
                         name="eligiblity"
-                        label="Eligiblity"
+                        label="Eligibility"
                         variant="standard"
                         value={formValues.eligiblity}
                         onChange={handleChange}
                         className="mb-2"
                     />
-
-                    {/* Province */}
-                    <FormControl variant="standard" className="mb-2">
-                        <InputLabel id="province-label">Province</InputLabel>
-                        <Select
-                            labelId="province-label"
-                            id="Province"
-                            name="Province"
-                            value={formValues.Province}
-                            onChange={handleChange}
-                            label="Province"
-                        >
-                            {province?.map((province) => (
-                                <MenuItem key={province} value={province?._id}>
-                                    {province?.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-
-                    {/* Campus Life */}
                     <TextField
                         id="campusLife"
                         name="campusLife"
@@ -298,8 +342,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-
-                    {/* Hostel */}
                     <TextField
                         id="hostel"
                         name="hostel"
@@ -309,24 +351,15 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-
-                    {/* University Type */}
-                    <FormControl variant="standard" className="mb-2">
-                        <InputLabel id="type-label">University Type</InputLabel>
-                        <Select
-                            labelId="type-label"
-                            id="type"
-                            name="type"
-                            value={formValues.type}
-                            onChange={handleChange}
-                            label="Type"
-                        >
-                            <MenuItem value="Public">Public</MenuItem>
-                            <MenuItem value="Private">Private</MenuItem>
-                        </Select>
-                    </FormControl>
-
-                    {/* Rank */}
+                    <TextField
+                        id="type"
+                        name="type"
+                        label="University Type"
+                        variant="standard"
+                        value={formValues.type}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
                     <TextField
                         id="rank"
                         name="rank"
@@ -337,8 +370,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-
-                    {/* University Link */}
                     <TextField
                         id="UniLink"
                         name="UniLink"
@@ -348,14 +379,13 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-
-                    <Button onClick={onSubmit} variant="contained" color="primary">
-                        Submit
-                    </Button>
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">Close</Button>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={onSubmit} disabled={!isFormValid}>
+                    Submit
+                </Button>
             </DialogActions>
         </Dialog>
     );

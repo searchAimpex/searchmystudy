@@ -10,8 +10,8 @@ import TextField from '@mui/material/TextField';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { addCounsellor } from '../../../slices/counsellorSlice'; // Update this import path
-import {  useCreateCounsellorMutation } from '../../../slices/adminApiSlice'; // Update this import path
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { useCreateCounsellorMutation } from '../../../slices/adminApiSlice'; // Update this import path
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
 
 const storage = getStorage(app);
@@ -23,23 +23,49 @@ function CreateCounsellorPop({ open, handleClose }) {
     experience: '',
     course: '',
   });
+  
+  const [errors, setErrors] = useState({
+    name: false,
+    experience: false,
+    course: false,
+    imageFile: false,
+  });
+  
+  const [imageValid, setImageValid] = useState(false); // Image validation state
   const [counsellorCreate, { isSuccess }] = useCreateCounsellorMutation();
   const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
 
-    if (type === 'file') {
-      const file = files[0];
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        imageFile: file,
-      }));
-    } else {
+    // Validate text inputs
+    if (type === 'text') {
       setFormValues((prevValues) => ({
         ...prevValues,
         [name]: value,
       }));
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: !value.trim(), // Set error to true if value is empty
+      }));
+    }
+
+    // Handle file input and image validation
+    if (type === 'file') {
+      const file = files[0];
+      if (file) {
+        validateImage(file); // Validate image on upload
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          imageFile: file,
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          imageFile: true,
+        }));
+      }
     }
   };
 
@@ -50,9 +76,48 @@ function CreateCounsellorPop({ open, handleClose }) {
     return url;
   };
 
+  // Validate image dimensions (300x250)
+  const validateImage = (file) => {
+    const img = new Image();
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      img.src = e.target.result;
+    };
+
+    img.onload = () => {
+      if (img.width >= 300 && img.height >= 250) {
+        setImageValid(true); // Image is valid
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          imageFile: false,
+        }));
+        toast.success('Valid image uploaded!');
+      } else {
+        setImageValid(false); // Invalid image dimensions
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          imageFile: true,
+        }));
+        toast.error('Image dimensions must be 300x250 pixels.');
+      }
+    };
+
+    img.onerror = () => {
+      setImageValid(false);
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        imageFile: true,
+      }));
+      toast.error('Invalid image file.');
+    };
+
+    reader.readAsDataURL(file);
+  };
+
   const onSubmit = async () => {
     try {
-      if (formValues.imageFile) {
+      if (formValues.imageFile && imageValid) {
         const imageURL = await uploadImage(formValues.imageFile);
         const counsellorData = {
           name: formValues.name,
@@ -60,18 +125,27 @@ function CreateCounsellorPop({ open, handleClose }) {
           course: formValues.course,
           imageURL,
         };
-        console.log("data",counsellorData)
         const res = await counsellorCreate(counsellorData).unwrap();
         dispatch(addCounsellor({ ...res }));
-        handleClose(); // Close the dialog after submission
+        handleClose(); // Close dialog after submission
         toast.success('Counsellor Added Successfully');
       } else {
-        toast.error('Please upload an image');
+        toast.error('Please upload a valid image');
       }
     } catch (error) {
       console.error('Error adding counsellor:', error);
-      toast.error('Failed to add counsellor');
+      toast.error(error.message || 'Failed to add counsellor');
     }
+  };
+
+  // Check if the form is valid (all fields filled and image is valid)
+  const isFormValid = () => {
+    return (
+      formValues.name.trim() &&
+      formValues.experience.trim() &&
+      formValues.course.trim() &&
+      imageValid
+    );
   };
 
   useEffect(() => {
@@ -83,9 +157,9 @@ function CreateCounsellorPop({ open, handleClose }) {
   return (
     <div>
       <Dialog fullWidth={true} open={open} onClose={handleClose}>
-        <DialogTitle>Add Testimonial</DialogTitle>
+        <DialogTitle>Add Counsellor</DialogTitle>
         <DialogContent>
-          <DialogContentText>You can add a Testimonial.</DialogContentText>
+          <DialogContentText>You can add a counsellor.</DialogContentText>
           <Box
             noValidate
             component="form"
@@ -103,6 +177,8 @@ function CreateCounsellorPop({ open, handleClose }) {
               variant="standard"
               value={formValues.name}
               onChange={handleChange}
+              error={errors.name}
+              helperText={errors.name ? 'Name is required' : ''}
             />
             <TextField
               id="experience"
@@ -111,6 +187,8 @@ function CreateCounsellorPop({ open, handleClose }) {
               variant="standard"
               value={formValues.experience}
               onChange={handleChange}
+              error={errors.experience}
+              helperText={errors.experience ? 'Experience is required' : ''}
             />
             <TextField
               id="course"
@@ -119,6 +197,8 @@ function CreateCounsellorPop({ open, handleClose }) {
               variant="standard"
               value={formValues.course}
               onChange={handleChange}
+              error={errors.course}
+              helperText={errors.course ? 'Course is required' : ''}
             />
             <TextField
               id="imageFile"
@@ -128,12 +208,18 @@ function CreateCounsellorPop({ open, handleClose }) {
               variant="standard"
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              error={errors.imageFile}
+              helperText={
+                errors.imageFile ? 'Image must be 300x250 pixels' : 'Make sure your image size is 300x250 px'
+              }
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={onSubmit}>Submit</Button>
+          <Button onClick={onSubmit} disabled={!isFormValid()}>
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

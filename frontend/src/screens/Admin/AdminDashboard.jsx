@@ -6,9 +6,9 @@ function AdminDashboard() {
   const navigate= useNavigate()
   return (
     <div className='mx-[100px] mt-10'>
-        <div className='grid grid-cols-4 gap-24'>
+        <div className='grid grid-cols-4 gap-10'>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/webManager')}>
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -16,7 +16,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer'  onClick={()=>navigate('/admin/blog')}>
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -24,7 +24,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/course')}>
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -32,7 +32,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/leads')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -40,7 +40,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/leads')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -48,7 +48,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/user')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -56,7 +56,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/student')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -64,7 +64,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/ticket')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
@@ -72,7 +72,7 @@ function AdminDashboard() {
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/assessment')}> 
-              <div className='border border-custom-color border-solid flex justify-center items-center p-10 rounded-lg'>
+              <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>

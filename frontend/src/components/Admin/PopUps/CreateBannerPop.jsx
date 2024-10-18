@@ -2,17 +2,17 @@ import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { useCreateBannerMutation } from '../../../slices/adminApiSlice';
 import { AddBanner } from '../../../slices/bannerSlice';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useDispatch } from 'react-redux';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
 import { toast } from 'react-toastify';
+import { DialogActions } from '@mui/material';
 
 const storage = getStorage(app);
 
@@ -22,26 +22,53 @@ function CreateBannerPop({ open, handleClose }) {
     altName: '',
     imageURL: '',
   });
+
+  const [errors, setErrors] = useState({
+    title: false,
+    altName: false,
+    image: false,
+  });
+
+  const [imageValid, setImageValid] = useState(false); // For image validation status
+  const [imageErrorMessage, setImageErrorMessage] = useState('');
   const [CreateBanner, { isSuccess }] = useCreateBannerMutation();
   const dispatch = useDispatch();
 
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
 
-    if (type === 'file') {
-      const file = files[0];
-      if (file) {
-        const imageURL = await uploadImage(file);
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          imageURL,
-        }));
-      }
-    } else {
+    // Text field validation
+    if (type === 'text') {
       setFormValues((prevValues) => ({
         ...prevValues,
         [name]: value,
       }));
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: !value.trim(), // Set error to true if value is empty
+      }));
+    }
+
+    // File validation (Image)
+    if (type === 'file') {
+      const file = files[0];
+      if (file) {
+        // Validate image size
+        const imageValid = await validateImageDimensions(file);
+        if (imageValid) {
+          const imageURL = await uploadImage(file);
+          setFormValues((prevValues) => ({
+            ...prevValues,
+            imageURL,
+          }));
+          setImageValid(true);
+          setImageErrorMessage('');
+        } else {
+          setImageValid(false);
+          setImageErrorMessage('Image must be at least 1520x500 pixels.');
+        }
+      }
     }
   };
 
@@ -52,17 +79,35 @@ function CreateBannerPop({ open, handleClose }) {
     return url;
   };
 
-  const onSubmit = async () => {
-    const res = await CreateBanner(formValues).unwrap();
-    console.log("response", res);
-    dispatch(AddBanner({ ...res }));
-    handleClose(); // Close the dialog after submission
+  const validateImageDimensions = (file) => {
+    return new Promise((resolve) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.src = objectUrl;
+
+      img.onload = () => {
+        const { width, height } = img;
+        URL.revokeObjectURL(objectUrl);
+        resolve(width >= 1520 && height >= 500);
+      };
+    });
   };
-  useEffect(()=>{
-    if(isSuccess){
+
+  const onSubmit = async () => {
+    if (!errors.title && !errors.altName && imageValid) {
+      const res = await CreateBanner(formValues).unwrap();
+      dispatch(AddBanner({ ...res }));
+      handleClose();
+    } else {
+      toast.error('Please fix the form errors.');
+    }
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
       toast.success('Banner Added Successfully');
     }
-  },[isSuccess])
+  }, [isSuccess]);
 
   return (
     <div>
@@ -87,6 +132,8 @@ function CreateBannerPop({ open, handleClose }) {
               variant="standard"
               value={formValues.title}
               onChange={handleChange}
+              error={errors.title}
+              helperText={errors.title ? 'Title is required' : ''}
             />
             <TextField
               id="altName"
@@ -95,21 +142,30 @@ function CreateBannerPop({ open, handleClose }) {
               variant="standard"
               value={formValues.altName}
               onChange={handleChange}
+              error={errors.altName}
+              helperText={errors.altName ? 'Alternate name is required' : ''}
             />
             <TextField
-              id="imageURL"
+              id="imageFile"
               name="imageFile"
               type="file"
               label="Banner"
               variant="standard"
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
+              error={!!imageErrorMessage}
+              helperText={imageErrorMessage || 'Image must be at least 1520x500 pixels'}
             />
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Close</Button>
-          <Button onClick={onSubmit}>Submit</Button>
+          <Button
+            onClick={onSubmit}
+            disabled={errors.title || errors.altName || !imageValid} // Disable until validation passes
+          >
+            Submit
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
