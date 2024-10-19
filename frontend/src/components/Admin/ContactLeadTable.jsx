@@ -28,10 +28,12 @@ import { FetchContactLead } from '../../slices/contactLeadSlice.js';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
-    { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
-    { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
+    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
+    { id: 'phone', numeric: false, disablePadding: false, label: 'Phone' },
+    { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
+    { id: 'occupation', numeric: false, disablePadding: false, label: 'Occupation' },
+    { id: 'comment', numeric: false, disablePadding: false, label: 'Comment' },
+
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -125,7 +127,7 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
+function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete,downloadfile }) {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
 
@@ -191,10 +193,10 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </Tooltip>
                 </div>
             ) : (
-                <Tooltip title="Create Services">
+                <Tooltip title="Download Lead">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
-                        <AddIcon />
-                        <CreateServicePop open={open} handleClose={handleClose} />
+                        <AddIcon onClick={()=>downloadfile()} />
+                        
                     </IconButton>
                 </Tooltip>
             )}
@@ -302,10 +304,30 @@ function ContactLeadTable() {
             toast.error('Error deleting banner');
         }
     };
-
+    const handleDownload = () => {
+        const headers = ['ID', 'Name', 'Phone', 'Email', 'Interested Country'];
+        const csvContent = [
+          headers.join(','),
+          ...counsellerLead.map(lead => 
+            [lead._id, lead.name, lead.phone, lead.email, lead.interestedCountry].join(',')
+          )
+        ].join('\n');
+    
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        if (link.download !== undefined) {
+          const url = URL.createObjectURL(blob);
+          link.setAttribute('href', url);
+          link.setAttribute('download', 'counseller_leads.csv');
+          link.style.visibility = 'hidden';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      };
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
+            <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} downloadfile= {handleDownload} />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -340,10 +362,12 @@ function ContactLeadTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.title}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
+                                    <td>{row?.name}</td>
+                                    <td>{row?.phone}</td>
+                                    <td>{row?.email}</td>
+                                    <td>{row?.occupation}</td>
+                                    <td>{row?.comment}</td>
+
                                 </tr>
                             );
                         })}
