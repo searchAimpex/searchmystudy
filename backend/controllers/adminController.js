@@ -1836,10 +1836,10 @@ const UpdateProfileStatus = async (req, res) => {
 // @route   POST /api/popups
 // @access  Private
 const createPopup = async (req, res) => {
-  const { title, details } = req.body;
+  const { title,target , imageURL  } = req.body;
 
   try {
-    const newPopup = new Popup({ title, details });
+    const newPopup = new Popup({ title, imageURL,target });
     await newPopup.save();
     res.status(201).json(newPopup);
   } catch (error) {
@@ -1872,7 +1872,7 @@ const deletePopup = async (req, res) => {
       return res.status(404).json({ message: 'Popup not found' });
     }
     
-    res.status(200).json({ message: 'Popup deleted successfully' });
+    res.status(200).json(popup);
   } catch (error) {
     res.status(500).json({ message: 'Failed to delete popup', error: error.message });
   }

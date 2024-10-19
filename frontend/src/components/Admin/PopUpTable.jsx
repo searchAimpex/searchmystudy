@@ -22,14 +22,14 @@ import { visuallyHidden } from '@mui/utils';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import CreateBannerPop from './PopUps/CreateBannerPop.jsx';
-import { useGetAllBannerMutation,useDeleteBannerMutation, useFetchMyPopupMutation } from '../../slices/adminApiSlice';
+import { useGetAllBannerMutation,useDeleteBannerMutation, useFetchMyPopupMutation, useDeleteMyPopupMutation } from '../../slices/adminApiSlice';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteBannerState, FetchBanner } from '../../slices/bannerSlice';
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
 import CreatePopUp from './PopUps/CreatePopUp.jsx';
-import { FetchPopup } from '../../slices/popUpSlice.js';
+import { DeletePopupState, FetchPopup } from '../../slices/popUpSlice.js';
 
 function createData(id, title, altName, createdAt) {
     return {
@@ -279,7 +279,7 @@ function PopUpTable() {
     const banner = popup
   
     const [FetchMyPopup, { isSuccess }] = useFetchMyPopupMutation();
-    const [DeleteBanner,DeleteState] = useDeleteBannerMutation(); // Hook for deleting banner
+    const [DeleteMyPopup,DeleteState] = useDeleteMyPopupMutation(); // Hook for deleting banner
     const dispatch = useDispatch();
   
     useEffect(() => {
@@ -287,7 +287,7 @@ function PopUpTable() {
         toast.success('Data fetched successfully');
       }
       if(DeleteState.isSuccess){
-        toast.success('Banner deleted successfully');
+        toast.success('PopUp deleted successfully');
        
       }
     }, [isSuccess,DeleteState.isSuccess]);
@@ -356,17 +356,14 @@ function PopUpTable() {
   
     const isSelected = (id) => selected.indexOf(id) !== -1;
   
-    const deleteSelectedBanners = async () => {
+    const deleteSelectedBanners = async (id) => {
       try {
-        const res = await Promise.all(selected.map(async (id) => {
-          await DeleteBanner(id);
-          return id; 
-        }));
-        console.log("Delete res",res);
-        dispatch(DeleteBannerState(res))
+        console.log("response");
+        const res = await DeleteMyPopup(id);
+        dispatch(DeletePopupState(res));
         setSelected([]);
       } catch (error) {
-        toast.error('Failed to delete banners');
+        toast.error('Failed to delete Pop-Up');
       }
     };
   

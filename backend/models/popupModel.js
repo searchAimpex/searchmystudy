@@ -6,10 +6,16 @@ const popupSchema = mongoose.Schema(
             type:String,
             required:true
         },
-        details:{
+        imageURL:{
             type:String,
-            default:""
+            default:"",
+            required :true
         },
+        target: {
+            type: String,
+            default:"partner"
+        }
+
     },
     {
       timestamps: true,

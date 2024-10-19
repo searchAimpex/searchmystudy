@@ -18,7 +18,7 @@ const initialState = {
         },
         DeletePopupState:(state,action)=>{
             console.log("action payload",action.payload)
-            state.popup = state.popup.filter(item => item._id!== action.payload[0])
+            state.popup = state.popup.filter(item => item._id !== action.payload._id)
         }
 
     }
