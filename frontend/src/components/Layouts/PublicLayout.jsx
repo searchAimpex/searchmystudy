@@ -41,9 +41,9 @@ function PublicLayout() {
       {/* Tailwind CSS Popup Dialog */}
       {isPopupOpen && popups.length > 0 && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl w-[600px] mx-4">
+          <div className="bg-white rounded-lg shadow-xl w-[500px] mx-4">
             <div className="p-4">
-              <img className="text-gray-600 h-[500px] w-[600px] object-contained mb-6" src={popups[currentPopupIndex]?.imageURL}></img>
+              <img className="text-gray-600 h-[400px] w-[500px] object-contained mb-6" src={popups[currentPopupIndex]?.imageURL}></img>
               <div className="flex justify-end">
                 <button
                   onClick={handleClosePopup}

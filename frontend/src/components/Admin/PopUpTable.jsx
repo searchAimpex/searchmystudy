@@ -92,10 +92,10 @@ const headCells = [
       label: 'TITLE',
     },
     {
-      id: 'altName',
+      id: 'target',
       numeric: false,
       disablePadding: false,
-      label: 'ALTERNATE NAME',
+      label: 'Target',
     },
     {
       id: 'createdAt',
@@ -468,7 +468,7 @@ function PopUpTable() {
                       {row._id}
                     </td>
                     <td>{row.title}</td>
-                    <td>{row.altName}</td>
+                    <td>{row.target}</td>
                     <td>{new Date(row.createdAt).toLocaleString()}</td>
                     <td>{new Date(row.updatedAt).toLocaleString()}</td>
                   </tr>
