@@ -476,6 +476,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+        FetchMainPopup:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/popup/main`,
+                method: 'GET',
+            }),
+        })
 
 
 
@@ -503,5 +509,5 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useFetchAllTicketMutation,useRemoveOneTicketMutation,useUpdateOneTicketMutation,useCreateResponseTicketMutation,
     useCreatePromotionalMutation,useGetAllPromotionalMutation,useDeletePromotionalMutation,
     useFetchAllProfileMutation,useChangeStatusProfileMutation,useProfileDeleteMutation,
-    useCreateMyPopupMutation,useFetchMyPopupMutation,useDeleteMyPopupMutation
+    useCreateMyPopupMutation,useFetchMyPopupMutation,useDeleteMyPopupMutation,useFetchMainPopupMutation
 } = userApiSlice

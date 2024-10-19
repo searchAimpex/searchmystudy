@@ -1858,6 +1858,19 @@ const getAllPopups = async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch popups', error: error.message });
   }
 };
+// @desc    Get all popups
+// @route   GET /api/popups/main
+// @access  Private
+const getAllMainPopups = async (req, res) => {
+  try {
+    console.log(" this was triggered")
+    const popups = await Popup.find({target:'main'});
+    console.log(popups)
+    res.status(200).json(popups);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch popups', error: error.message });
+  }
+};
 
 // @desc    Delete a popup
 // @route   DELETE /api/popups/:id
@@ -1898,5 +1911,5 @@ export {
     createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
     createPromotional,fetchAllPromotional,deletePromotional,
     createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus,
-    createPopup,getAllPopups,deletePopup
+    createPopup,getAllPopups,deletePopup,getAllMainPopups
   };

@@ -48,7 +48,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       deleteProfile,
       createPopup,
       getAllPopups,
-      deletePopup
+      deletePopup,
+      getAllMainPopups
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -264,6 +265,7 @@ router.delete('/profile/:id',deleteProfile)
 router.post('/popup',createPopup)
 router.get('/popup',getAllPopups)
 router.delete('/popup/:id',deletePopup)
+router.get('/popup/main',getAllMainPopups)
 ///////////////////////////////////////////////
 
 export default router;
