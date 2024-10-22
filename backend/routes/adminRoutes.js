@@ -50,7 +50,17 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getAllPopups,
       deletePopup,
       getAllMainPopups,
-      getAllPartnerPopups
+      getAllPartnerPopups,
+      deleteUpload,
+      getAllUploads,
+      createUpload,
+      getPartnerUploads,
+      getFrenchiseUploads,
+      createCommission,
+      getAllCommission,
+      deleteCommission,
+      getPartnerCommission,
+      getFrenchiseCommission
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -259,9 +269,7 @@ router.get('/profile/:id',fetchByUserProfile)
 router.get('/profile',getAllProfiles)
 router.put('/profile/status/:id',UpdateProfileStatus)
 router.delete('/profile/:id',deleteProfile)
-
-
-/*****************************  ********************8*/
+/**************************************************/
 //////////////// PopUP Route ****************/
 router.post('/popup',createPopup)
 router.get('/popup',getAllPopups)
@@ -269,5 +277,24 @@ router.delete('/popup/:id',deletePopup)
 router.get('/popup/main',getAllMainPopups)
 router.get('/popup/partner',getAllPartnerPopups)
 ///////////////////////////////////////////////
+
+
+//////////////// UPLOAD ROUTE ****************/
+router.post('/upload',createUpload)
+router.get('/upload',getAllUploads)
+router.delete('/upload/:id',deleteUpload)
+router.get('/upload/partner',getPartnerUploads)
+router.get('/upload/frenchise',getFrenchiseUploads)
+///////////////////////////////////////////////
+
+
+//////////////// COMMISSION ROUTE ****************/
+router.post('/commission',createCommission)
+router.get('/commission',getAllCommission)
+router.delete('/commission/:id',deleteCommission)
+router.get('/commission/partner',getPartnerCommission)
+router.get('/commission/frenchise',getFrenchiseCommission)
+///////////////////////////////////////////////
+
 
 export default router;

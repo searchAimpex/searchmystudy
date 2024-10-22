@@ -21,6 +21,8 @@ import { Ticket, TicketResponse } from '../models/ticketModel.js';
 import Promotional from '../models/promotional.js';
 import Profile from '../models/profileModel.js';
 import Popup from '../models/popupModel.js';
+import Upload from '../models/uploadModel.js';
+import Commission from '../models/commissionModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1904,6 +1906,157 @@ const deletePopup = async (req, res) => {
   }
 };
 
+
+// @desc    Create a new upload
+// @route   POST /api/uploads
+// @access  Public
+ const createUpload = async (req, res) => {
+  try {
+    console.log("Creating a new upload...");
+    const { title, imageURL, iconURL ,target} = req.body;
+
+    const newUpload = new Upload({
+      title,
+      imageURL,
+      iconURL: iconURL || '',
+      target // Use default if not provided
+    });
+
+    const savedUpload = await newUpload.save();
+    console.log("Upload created:", savedUpload);
+    res.status(201).json(savedUpload);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create upload', error: error.message });
+  }
+};
+
+// @desc    Get all uploads
+// @route   GET /api/uploads
+// @access  Public
+ const getAllUploads = async (req, res) => {
+  try {
+    const uploads = await Upload.find({});
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+  }
+};
+// @desc    Get all uploads
+// @route   GET /api/uploads/partner
+// @access  Public
+const getPartnerUploads = async (req, res) => {
+  try {
+    const uploads = await Upload.find({target:'partner'});
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+  }
+};
+// @desc    Get all uploads
+// @route   GET /api/uploads/frenchise
+// @access  Public
+const getFrenchiseUploads = async (req, res) => {
+  try {
+    const uploads = await Upload.find({target:'frenchise'});
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+  }
+};
+// @desc    Delete an upload
+// @route   DELETE /api/uploads/:id
+// @access  Public
+const deleteUpload = async (req, res) => {
+  try {
+    console.log(`Deleting upload with ID: ${req.params.id}`);
+    const upload = await Upload.findByIdAndDelete(req.params.id);
+
+    if (!upload) {
+      return res.status(404).json({ message: 'Upload not found' });
+    }
+
+    console.log("Upload deleted:", upload);
+    res.status(200).json({ message: 'Upload deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete upload', error: error.message });
+  }
+};
+
+
+// @desc    Create a new upload
+// @route   POST /api/commission
+// @access  Public
+const createCommission = async (req, res) => {
+  try {
+    console.log("Creating a new upload...");
+    const { SecondCountry, fileURL, target,title } = req.body;
+
+    const newUpload = new Commission({
+      SecondCountry,
+      fileURL,
+      target,
+      title // Use default if not provided
+    });
+
+    const savedUpload = await newUpload.save();
+    console.log("Upload created:", savedUpload);
+    res.status(201).json(savedUpload);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to create upload', error: error.message });
+  }
+};
+
+// @desc    Get all uploads
+// @route   GET /api/commission
+// @access  Public
+ const getAllCommission = async (req, res) => {
+  try {
+    const uploads = await Commission.find({}).populate('SecondCountry');
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+  }
+};
+// @desc    Get all uploads
+// @route   GET /api/commission/partner
+// @access  Public
+const getPartnerCommission = async (req, res) => {
+  try {
+    const uploads = await Commission.find({target:'partner'}).populate('SecondCountry');
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message })
+  }
+};
+// @desc    Get all uploads
+// @route   GET /api/commission/frenchise
+// @access  Public
+const getFrenchiseCommission = async (req, res) => {
+  try {
+    const uploads = await Commission.find({target:'frenchise'});
+    res.status(200).json(uploads);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+  }
+};
+// @desc    Delete an upload
+// @route   DELETE /api/commission/:id
+// @access  Public
+const deleteCommission = async (req, res) => {
+  try {
+    console.log(`Deleting upload with ID: ${req.params.id}`);
+    const upload = await Commission.findByIdAndDelete(req.params.id);
+
+    if (!upload) {
+      return res.status(404).json({ message: 'Upload not found' });
+    }
+
+    console.log("Upload deleted:", upload);
+    res.status(200).json({ message: 'Upload deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to delete upload', error: error.message });
+  }
+};
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -1924,5 +2077,8 @@ export {
     createTicket,replyToTicket,getTicket,getAllTicket,deleteOneTicket,updateTicketStatus,getStudentMetrics,
     createPromotional,fetchAllPromotional,deletePromotional,
     createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus,
-    createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups
+    createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups,
+    createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
+    createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission
+
   };
