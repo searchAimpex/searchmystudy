@@ -76,7 +76,7 @@ function AdminDashboard() {
                 <img src={WebManagement} alt="web" />
               </div>
               <div className='flex items-center justify-center'>
-                <span>Assessment MANAGER</span>
+                <span>ASSESSMENT MANAGER</span>
               </div>
             </div>
             <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/upload')}> 

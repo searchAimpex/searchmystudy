@@ -483,7 +483,7 @@ const updateCountry = asyncHandler(async (req, res) => {
     country.description = description || country.description;
     country.sections = sections || country.sections;
     country.provinces = provinces || country.provinces;
-    country.mbbsAbroad = status || mbbsAbroad;
+    country.mbbsAbroad = status || false;
 
     const updatedCountry = await country.save();
     res.json(updatedCountry);
@@ -550,7 +550,9 @@ const getProvinceById = asyncHandler(async (req, res) => {
 // @route   PUT /provinces/:id
 // @access  Public
 const updateProvince = asyncHandler(async (req, res) => {
+
   const province = await Province.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  console.log("----->",req.body)
   if (province) {
     res.status(200).json(province);
   } else {
@@ -631,7 +633,7 @@ const createUniversity = asyncHandler(async (req, res) => {
 // @route   PUT /universities/:id
 // @access  Private/Admin
 const updateUniversity = asyncHandler(async (req, res) => {
-  const { name, bannerURL, heroURL, description, sections, eligiblity, Province ,logo,campusLife ,hostel,rank,UniLink} = req.body;
+  const { name, bannerURL, heroURL, description, sections, eligiblity, Province ,logo,campusLife ,hostel,rank,UniLink,type} = req.body;
 
   const university = await University.findById(req.params.id);
 
@@ -867,6 +869,17 @@ const getCourses = asyncHandler(async (req, res) => {
   }
 });
 
+const updateOnCourse = asyncHandler(async (req, res) => {
+
+  const province = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  console.log("----->",req.body)
+  if (province) {
+    res.status(200).json(province);
+  } else {
+    res.status(404).json({ message: 'Province not found' });
+  }
+});
+
 
 const getCoursesForIndiaMedical = async (req, res) => {
   try {
@@ -906,6 +919,9 @@ const createWebinar = asyncHandler(async (req, res) => {
   const createdWebinar = await webinar.save();
   res.status(201).json(createdWebinar);
 });
+
+
+
 
 // @desc    Get a single webinar by ID
 // @route   GET /api/webinars/:id
@@ -1664,10 +1680,8 @@ const updateTicketStatus = async (req,res) =>{
 const getStudentMetrics = async (req, res) => {
   try {
     const  userId  = req.params.id; // Get the userId from the request params
-
     // Count all students related to the given userId (assuming there's a field like `User` in Student schema)
     const totalStudents = await Student.countDocuments({ User: userId });
-
     // Count students with specific statuses
     const totalAssessments = await Student.countDocuments({ User: userId, status: 'Assessment' });
     const totalOffers = await Student.countDocuments({ User: userId, status: 'Offer Letter' });
@@ -1675,6 +1689,10 @@ const getStudentMetrics = async (req, res) => {
     const totalAcceptanceLetters = await Student.countDocuments({ User: userId, status: 'Acceptance Letter' });
     const totalVisaApproved = await Student.countDocuments({ User: userId, status: 'Visa Approved' });
 
+    const totalAssessmentsProfile = await Profile.countDocuments({ User: userId, status: 'pending' });
+    const totalOffersProfile = await Profile.countDocuments({ User: userId, status: 'shared' });
+    const totalFeesPaidProfile= await Profile.countDocuments({ User: userId, status: 'eligible' });
+    const totalAcceptanceLettersProfile = await Profile.countDocuments({ User: userId, status: 'ineligible' });
     // Combine all metrics into a response object
     const metrics = {
       totalStudents,
@@ -1683,8 +1701,11 @@ const getStudentMetrics = async (req, res) => {
       totalFeesPaid,
       totalAcceptanceLetters,
       totalVisaApproved,
+      totalAssessmentsProfile,
+      totalOffersProfile,
+      totalFeesPaidProfile,
+      totalAcceptanceLettersProfile,
     };
-
     // Send the metrics as a JSON response
     res.status(200).json(metrics);
   } catch (error) {
@@ -1696,7 +1717,8 @@ const getStudentMetrics = async (req, res) => {
 
 //////////////////////////////////////////////////////////////////////////////////////////// 
 
-//////////////////////////////////////////Promotional Images /////////////////////////////////////////////////
+///
+///////////////////////////////////////Promotional Images /////////////////////////////////////////////////
 // @desc    Admin Get All Banner & 
 // @route   POST /api/admin/CreatePromotional
 // @access  Admin 
@@ -2050,7 +2072,6 @@ const deleteCommission = async (req, res) => {
     if (!upload) {
       return res.status(404).json({ message: 'Upload not found' });
     }
-
     console.log("Upload deleted:", upload);
     res.status(200).json({ message: 'Upload deleted successfully' });
   } catch (error) {
@@ -2080,5 +2101,4 @@ export {
     createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups,
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission
-
   };

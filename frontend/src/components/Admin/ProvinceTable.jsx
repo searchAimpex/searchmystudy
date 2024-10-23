@@ -26,6 +26,7 @@ import { useState } from 'react';
 import CreateProvincePop from './PopUps/CreateProvincePop';
 import { useDeleteProvinceMutation, useFetchProvinceMutation } from '../../slices/adminApiSlice.js';
 import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
+import UpdateProvincePop from './PopUps/UpdateProvincePop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -129,10 +130,15 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
+    const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
+
 
     const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
+
+    const handleViewUpdateOpen = () => setViewUpdateOpen(true);
+    const handleViewUpdateClose = () => setViewUpdateOpen(false);
     const handleClose = () => {
         setOpen(false);
     }
@@ -178,7 +184,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </Tooltip>
                     <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon />
+                            <EditIcon  onClick= {()=> {handleViewUpdateOpen()}}/>
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="View Hero Image">
@@ -200,6 +206,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
+             <UpdateProvincePop open={viewUpdateOpen} handleClose={handleViewUpdateClose}  provinceData = {selectedRow}/>
         </Box>
     );
 }

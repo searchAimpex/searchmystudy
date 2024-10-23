@@ -140,7 +140,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 
                 url: `${USERS_URL}/countries/${data.id}`,
                 method: 'PUT',
-                body:data,
+                body:data.form,
             }),
         }),
         CountryFetchOne:builder.mutation({
@@ -174,7 +174,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
-        
+        UpdateProvince:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/province/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            }),
+        }),
         CreateUniversity:builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/university`,
@@ -198,6 +204,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
             query:(id)=>({
                 url: `${USERS_URL}/university/${id}`,
                 method: 'DELETE',
+            }),
+        }),
+        UpdateUniversity:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/university/${data.id}`,
+                method: 'PUT',
+                body:data.raw
             }),
         }),
        
@@ -226,6 +239,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
                 params: filter
             }),
+        }),
+        UpdateCourseOne:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/course/${data.id}`,
+                method: 'PUT',
+                body: data.raw
+            }),
+
         }),
         LinkFetch: builder.mutation({
             query:()=> ({
@@ -508,7 +529,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body:data
             }),
         }),
-        FetchMyCommission:builder.mutation ( {
+        FetchMyCommission:builder.mutation({
             query: ()=> ({
                 url:`${USERS_URL}/commission`,
                 method: 'GET',
@@ -528,9 +549,9 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateCounsellorMutation,useAllCounsellorMutation,useCounsellorDeleteMutation,
     useCreateBlogMutation,useFetchBlogMutation,useGetOneBlogMutation,useDeleteBlogMutation,
     useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,useCountryStatusUpdateMutation,
-    useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,
-    useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,
-    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,
+    useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,useUpdateProvinceMutation,
+    useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,useUpdateUniversityMutation,
+    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,useUpdateCourseOneMutation,
     usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
     useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation,
     useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,

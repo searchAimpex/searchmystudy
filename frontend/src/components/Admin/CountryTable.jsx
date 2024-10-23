@@ -23,6 +23,7 @@ import { RemoveRedEye } from '@mui/icons-material';
 import CreateCountryPop from './PopUps/CreateCountryPop.jsx';
 import { DeleteCountry, FetchCountry } from '../../slices/countrySlice.js';
 import StatusUpdatePop from './StatusUpdatePop.jsx';
+import UpdateCountryPop from './PopUps/UpdateCountryPop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -127,6 +128,8 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = useState(false);
+    const [viewOpen, setViewOpen] = useState(false);
+
 
 
     const handleClickOpen = () => setOpen(true);
@@ -136,6 +139,10 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const handleClose = () => setOpen(false);
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
+
+    const handleViewOpen = () => setViewOpen(true);
+    const handleViewClose = () => setViewOpen(false);
+
 
     return (
         <Box
@@ -176,7 +183,10 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </Tooltip>
                     <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon />
+                            <EditIcon
+                            onClick =  {()=> {
+                                handleViewOpen()
+                            }} />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Status Country">
@@ -206,7 +216,9 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            < StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
+            <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
+            <UpdateCountryPop open ={viewOpen} handleClose= {handleViewClose} countryData={selectedRow} />
+
         </Box>
     );
 }

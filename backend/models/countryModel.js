@@ -15,7 +15,7 @@ const countrySchema = mongoose.Schema(
         },
         mbbsAbroad:{
             type: Boolean,
-            default: false
+            default: false 
 
         },
         flagURL : {

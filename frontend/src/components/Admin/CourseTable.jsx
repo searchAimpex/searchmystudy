@@ -30,6 +30,7 @@ import { DeleteOneUniversity, FetchUniversitys } from '../../slices/universitySl
 import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import CreateCoursePop from './PopUps/CreateCoursePop.jsx';
 import { FetchCourses } from '../../slices/courseSlice.js';
+import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -133,6 +134,10 @@ EnhancedTableHead.propTypes = {
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
+    const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
+    const handleViewUpdateOpen = () => setViewUpdateOpen(true);
+    const handleViewUpdateClose = () => setViewUpdateOpen(false);
+    
 
     const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
@@ -182,7 +187,9 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </Tooltip>
                     <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon />
+                            <EditIcon onClick = {()=>{
+                                handleViewUpdateOpen()
+                            }} />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="View Hero Image">
@@ -204,6 +211,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
+            <UpdateCoursePop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} courseData = {selectedRow} />
         </Box>
     );
 }

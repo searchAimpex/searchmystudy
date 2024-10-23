@@ -484,7 +484,7 @@ function CreateUserPop({ open, handleClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary">Cancel</Button>
+        <Button onClick={onclose} color="secondary">Cancel</Button>
         <Button onClick={onSubmit} color="primary">Create User</Button>
       </DialogActions>
     </Dialog>
