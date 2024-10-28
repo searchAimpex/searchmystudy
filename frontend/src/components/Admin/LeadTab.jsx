@@ -9,17 +9,10 @@ import Typography from "@mui/material/Typography";
 import {Box}from "@mui/material"// theme.js
 import {ThemeProvider } from '@mui/material/styles';
 import { createTheme } from '@mui/material';
-import BannerTable from "./BannerTable";
-import ServiceTable from "./ServiceTable";
-import TestimonialTable from "./TestimonialTable";
-import CounsellorTable from "./CounsellorTable";
-import CountryTable from "./CountryTable";
-import ProvinceTable from "./ProvinceTable";
-import UniversityTable from "./UniversityTable";
-import CourseTable from "./CourseTable";
 import CounsellerLeadTable from "./CounsellerLeadTable";
 import HomeLeadTable from "./HomeLeadTable";
 import ContactLeadTable from "./ContactLeadTable";
+import LoanTable from "./LoanTable";
 
 const theme = createTheme({
     palette: {
@@ -93,7 +86,7 @@ export default function LeadTab() {
           <Tab label="COUNSELLER LEAD" {...a11yProps(0)} />
           <Tab label="HOME PAGE LEAD" {...a11yProps(1)} />
           <Tab label="CONTACT US LEAD" {...a11yProps(2)} />
-          <Tab label="" {...a11yProps(3)} />
+          <Tab label="LOAN LEADS" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       </ThemeProvider>
@@ -112,8 +105,9 @@ export default function LeadTab() {
              <ContactLeadTable />
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
-              <CourseTable />
+              <LoanTable />
         </TabPanel>
+     
       </SwipeableViews>
     </Box>
    

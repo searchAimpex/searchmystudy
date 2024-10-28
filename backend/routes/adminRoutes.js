@@ -60,7 +60,11 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getAllCommission,
       deleteCommission,
       getPartnerCommission,
-      getFrenchiseCommission
+      getFrenchiseCommission,
+      createLoan,
+      getLoansByUser,
+      getLoans,
+      UpdateLoanStatus
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -294,6 +298,15 @@ router.get('/commission',getAllCommission)
 router.delete('/commission/:id',deleteCommission)
 router.get('/commission/partner',getPartnerCommission)
 router.get('/commission/frenchise',getFrenchiseCommission)
+///////////////////////////////////////////////
+
+
+//////////////// LOAN ROUTE ****************/
+router.post('/loan',createLoan)
+router.get('/loan/:id',getLoansByUser)
+router.get('/loan',getLoans)
+router.put('/loan/status/:id',UpdateLoanStatus)
+
 ///////////////////////////////////////////////
 
 

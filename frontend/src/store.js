@@ -24,6 +24,7 @@ import assessmentReducer from './slices/assessmentSlice'
 import popupReducer from './slices/popUpSlice'
 import uploadReducer from './slices/uploadSlice'
 import commissionReducer from './slices/commissionSlice'
+import loanReducer from './slices/loanSlice'
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -50,7 +51,8 @@ const store = configureStore({
     assessment: assessmentReducer,
     popup:popupReducer,
     upload: uploadReducer,
-    commission:commissionReducer
+    commission:commissionReducer,
+    loan:loanReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

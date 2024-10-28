@@ -535,6 +535,19 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        FetchLoan:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/loan`,
+                method: 'GET',
+            }),
+        }),
+        UpdateLoan:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/loan/status/${data.id}`,
+                method: 'PUT',
+                body:data.raw
+            }),
+        }),
 
 
 
@@ -564,5 +577,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useFetchAllProfileMutation,useChangeStatusProfileMutation,useProfileDeleteMutation,
     useCreateMyPopupMutation,useFetchMyPopupMutation,useDeleteMyPopupMutation,useFetchMainPopupMutation,
     useCreateMyUploadMutation,useFetchMyUploadMutation,useDeleteMyUploadMutation,
-    useCreateMyCommissionMutation,useFetchMyCommissionMutation
+    useCreateMyCommissionMutation,useFetchMyCommissionMutation,
+    useFetchLoanMutation,useUpdateLoanMutation
 } = userApiSlice

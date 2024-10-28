@@ -23,6 +23,7 @@ import Profile from '../models/profileModel.js';
 import Popup from '../models/popupModel.js';
 import Upload from '../models/uploadModel.js';
 import Commission from '../models/commissionModel.js';
+import Loan from '../models/loanModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1567,7 +1568,6 @@ const GetOneStudentByTracking = async (req, res) => {
 // POST /api/tickets
 const createTicket = async (req, res) => {
   const { title, description, priority, category, attachments,userId } = req.body;
-
   try {
     const newTicket = new Ticket({
       title,
@@ -1577,7 +1577,6 @@ const createTicket = async (req, res) => {
       attachments,
       createdBy: userId,
     });
-
     const savedTicket = await newTicket.save();
     res.status(201).json(savedTicket);
   } catch (error) {
@@ -1659,13 +1658,11 @@ const deleteOneTicket = async (req,res) =>{
 
 const updateTicketStatus = async (req,res) =>{
   try {
-    console.log("status",req.body)
     const ticket = await Ticket.findByIdAndUpdate(req.params.id,{status:req.body.status}).populate({ path:'responses', populate: {
       path: 'respondedBy',
       select: 'name email',
     },}).populate('createdBy', 'name email role');
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
-
     ticket.save()
     console.log("my ricket",ticket)
     res.status(200).json(ticket);
@@ -1854,7 +1851,7 @@ const UpdateProfileStatus = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.',error });
   }
 }
-///////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @desc    Create a new popup
 // @route   POST /api/popups
@@ -1992,7 +1989,6 @@ const deleteUpload = async (req, res) => {
   try {
     console.log(`Deleting upload with ID: ${req.params.id}`);
     const upload = await Upload.findByIdAndDelete(req.params.id);
-
     if (!upload) {
       return res.status(404).json({ message: 'Upload not found' });
     }
@@ -2019,7 +2015,7 @@ const createCommission = async (req, res) => {
       target,
       title // Use default if not provided
     });
-
+6
     const savedUpload = await newUpload.save();
     console.log("Upload created:", savedUpload);
     res.status(201).json(savedUpload);
@@ -2068,7 +2064,6 @@ const deleteCommission = async (req, res) => {
   try {
     console.log(`Deleting upload with ID: ${req.params.id}`);
     const upload = await Commission.findByIdAndDelete(req.params.id);
-
     if (!upload) {
       return res.status(404).json({ message: 'Upload not found' });
     }
@@ -2078,6 +2073,64 @@ const deleteCommission = async (req, res) => {
     res.status(500).json({ message: 'Failed to delete upload', error: error.message });
   }
 };
+// @desc    Create Loan Lead
+// @route   POST /api/loan
+// @access  Public
+
+const createLoan = async (req, res) => {
+  try {
+    const newLoan = new Loan(req.body); // Create a new loan from request body
+    const savedLoan = await newLoan.save(); // Save the loan to the database
+    res.status(201).json(savedLoan); // Return the saved loan with a 201 status
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Return 500 for server errors
+  }
+};
+// @desc    Create Loan Lead
+// @route   POST /api/loan/id
+// @access  Public
+const getLoansByUser = async (req, res) => {
+  try {
+    const loans = await Loan.find({ User: req.params.id }); // Find loans by User ID
+    if (!loans.length) return res.status(404).json({ message: 'No loans found for this user' }); // If no loans are found
+
+    res.status(200).json(loans); // Return loans with a 200 status
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Return 500 for server errors
+  }
+};
+
+// @desc    Create Loan Lead
+// @route   GET /api/loan
+// @access  Public
+const getLoans = async (req, res) => {
+  try {
+    const loans = await Loan.find({}); // Find loans by User ID
+    if (!loans.length) return res.status(404).json({ message: 'No loans found for this user' }); // If no loans are found
+
+    res.status(200).json(loans); // Return loans with a 200 status
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Return 500 for server errors
+  }
+};
+// @desc    Create a new student
+// @route   PUT /api/loan/status
+// @access  Public (or Private, depending on your setup)
+const UpdateLoanStatus = async (req, res) => { 
+  try {
+    console.log("fix",req.body,req.params.id)
+    const student = await Loan.findOneAndUpdate({_id:req.params.id},{status:req.body.status});
+    if (!student) {
+      return res.status(404).json({ message: 'Profile not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2100,5 +2153,6 @@ export {
     createProfile, getAllProfiles, deleteProfile,fetchByUserProfile,UpdateProfileStatus,
     createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups,
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
-    createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission
+    createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
+    createLoan,getLoansByUser,getLoans,UpdateLoanStatus
   };
