@@ -64,7 +64,10 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createLoan,
       getLoansByUser,
       getLoans,
-      UpdateLoanStatus
+      UpdateLoanStatus,
+      createTransaction,
+      getAllTransactions,
+      getTransactionsByCenterCode
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -308,6 +311,13 @@ router.get('/loan',getLoans)
 router.put('/loan/status/:id',UpdateLoanStatus)
 
 ///////////////////////////////////////////////
+
+
+
+////////////////////TRANSACTION //////////////////
+router.post('/transaction',createTransaction)
+router.get('/transaction',getAllTransactions)
+router.get('/transaction/:centerCode',getTransactionsByCenterCode)
 
 
 export default router;

@@ -24,6 +24,7 @@ import Popup from '../models/popupModel.js';
 import Upload from '../models/uploadModel.js';
 import Commission from '../models/commissionModel.js';
 import Loan from '../models/loanModel.js';
+import Transaction from '../models/transactionModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -2131,6 +2132,38 @@ const UpdateLoanStatus = async (req, res) => {
 }
 
 
+
+//////////////Tranasction z///////////////////
+const createTransaction = async (req, res) => {
+  try {
+    const newTransaction = new Transaction(req.body); // Create a new transaction from request body
+    const savedTransaction = await newTransaction.save(); // Save to database
+    res.status(201).json(savedTransaction); // Return the saved transaction with a 201 status
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+};
+
+const getAllTransactions = async (req, res) => {
+  try {
+    const transactions = await Transaction.find(); // Fetch all transactions from the database
+    res.status(200).json(transactions); // Return transactions with a 200 status
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+};
+
+const getTransactionsByCenterCode = async (req, res) => {
+  try {
+    const transactions = await Transaction.find({ centerCode: req.params.centerCode }); // Find by centerCode
+    if (!transactions.length) return res.status(404).json({ message: 'No transactions found for this center code' }); // If none found
+
+    res.status(200).json(transactions); // Return transactions
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2154,5 +2187,6 @@ export {
     createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups,
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
-    createLoan,getLoansByUser,getLoans,UpdateLoanStatus
+    createLoan,getLoansByUser,getLoans,UpdateLoanStatus,
+    createTransaction,getAllTransactions,getTransactionsByCenterCode
   };

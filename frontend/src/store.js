@@ -25,6 +25,7 @@ import popupReducer from './slices/popUpSlice'
 import uploadReducer from './slices/uploadSlice'
 import commissionReducer from './slices/commissionSlice'
 import loanReducer from './slices/loanSlice'
+import transactionReducer from './slices/transactionSlice'
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -53,6 +54,7 @@ const store = configureStore({
     upload: uploadReducer,
     commission:commissionReducer,
     loan:loanReducer,
+    transaction:transactionReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),
