@@ -17,7 +17,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation, useCounsellerFetchLeadMutation, useGetLeadMutation, useHomeLeadDeleteMutation, useFetchLoanMutation } from '../../slices/adminApiSlice';
+import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation, useCounsellerFetchLeadMutation, useGetLeadMutation, useHomeLeadDeleteMutation, useFetchLoanMutation, useDeleteLoansMutation } from '../../slices/adminApiSlice';
 import { DeleteService, FetchAllServices } from '../../slices/serviceSlice.js';
 import CreateServicePop from './PopUps/CreateServicePop.jsx';
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
@@ -25,8 +25,9 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
 import { DeleteHomeLead, FetchHomeLead } from '../../slices/leadSlice.js';
-import { FetchLoans } from '../../slices/loanSlice.js';
+import { DeleteLoan, FetchLoans } from '../../slices/loanSlice.js';
 import UpdateLoanStatus from './PopUps/UpdateLoanStatusPop.jsx';
+import DetailedLoanPop from './PopUps/DetailedLoanPop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -206,7 +207,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     </IconButton>
                 </Tooltip>
             )}
-            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.banner || ''} />
+            <DetailedLoanPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow || {}} />
             <UpdateLoanStatus ticketId= {selectedRow?._id}  open={openStatus}  handleClose={handleViewStatusClose} />
         </Box>
     );
@@ -229,7 +230,7 @@ function LoanTable() {
 
     const  counsellerLead  =loan
     const [FetchLoan, { isSuccess }] = useFetchLoanMutation();
-    const [HomeLeadDelete, DeleteState] = useHomeLeadDeleteMutation();
+    const [DeleteLoans, DeleteState] = useDeleteLoansMutation();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -307,8 +308,8 @@ function LoanTable() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await HomeLeadDelete(id).unwrap();
-            dispatch(DeleteHomeLead(res))
+            const res = await DeleteLoans(id).unwrap();
+            dispatch(DeleteLoan(res))
         } catch (error) {
             toast.error('Error deleting banner');
         }

@@ -68,7 +68,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createTransaction,
       getAllTransactions,
       getTransactionsByCenterCode,
-      deleteTransactions
+      deleteTransactions,
+      DeleteLoan
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -310,7 +311,7 @@ router.post('/loan',createLoan)
 router.get('/loan/:id',getLoansByUser)
 router.get('/loan',getLoans)
 router.put('/loan/status/:id',UpdateLoanStatus)
-
+router.delete('/loan/:id',DeleteLoan)
 ///////////////////////////////////////////////
 
 

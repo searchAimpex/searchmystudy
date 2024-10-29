@@ -548,6 +548,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body:data.raw
             }),
         }),
+        DeleteLoans:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/loan/${data}`,
+                method: 'DELETE',
+            
+            }),
+        }),
         CreateTransaction:builder.mutation({
             query: (data)=> ({
                 url:`${USERS_URL}/transaction`,
@@ -597,6 +604,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateMyPopupMutation,useFetchMyPopupMutation,useDeleteMyPopupMutation,useFetchMainPopupMutation,
     useCreateMyUploadMutation,useFetchMyUploadMutation,useDeleteMyUploadMutation,
     useCreateMyCommissionMutation,useFetchMyCommissionMutation,
-    useFetchLoanMutation,useUpdateLoanMutation,
+    useFetchLoanMutation,useUpdateLoanMutation,useDeleteLoansMutation,
     useCreateTransactionMutation,useFetchTransactionMutation,useDeleteMyTransactionMutation
 } = userApiSlice

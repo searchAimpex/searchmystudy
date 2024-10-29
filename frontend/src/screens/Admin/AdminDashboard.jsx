@@ -39,7 +39,7 @@ function AdminDashboard() {
                 <span>LEAD MANAGER</span>
               </div>
             </div>
-            <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/leads')}> 
+            <div className='flex flex-col cursor-pointer' onClick={()=>navigate('/admin/notification')}> 
               <div className='border border-custom-color border-solid flex justify-center items-center p-1 rounded-lg'>
                 <img src={WebManagement} alt="web" />
               </div>

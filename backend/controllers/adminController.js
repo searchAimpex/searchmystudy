@@ -2131,6 +2131,23 @@ const UpdateLoanStatus = async (req, res) => {
   }
 }
 
+// @desc    Create a new student
+// @route   PUT /api/loan/:id
+// @access  Public (or Private, depending on your setup)
+const DeleteLoan = async (req, res) => { 
+  try {
+    console.log("fix",req.body,req.params.id)
+    const student = await Loan.findOneAndDelete({_id:req.params.id});
+    if (!student) {
+      return res.status(404).json({ message: 'Profile not found.' });
+    }
+    res.json(student);
+
+  }catch(error){
+    res.status(500).json({ message: 'Server error, please try again later.',error });
+  }
+}
+
 
 
 //////////////Tranasction z///////////////////
@@ -2199,6 +2216,6 @@ export {
     createPopup,getAllPopups,deletePopup,getAllMainPopups,getAllPartnerPopups,
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
-    createLoan,getLoansByUser,getLoans,UpdateLoanStatus,
+    createLoan,getLoansByUser,getLoans,UpdateLoanStatus,DeleteLoan,
     createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions
   };

@@ -4,7 +4,8 @@ import { IoArrowBackCircle } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import CourseTab from '../../components/Admin/CourseTab';
 import LeadTab from '../../components/Admin/LeadTab';
-export default function AdminLeadManagement() {
+import NotificationTab from '../../components/Admin/NotificationTab';
+export default function AdminNotificationManagement() {
 const navigate = useNavigate()
 
   return (
@@ -30,7 +31,7 @@ const navigate = useNavigate()
                 </IconButton>
             </div>
             <div>
-                <LeadTab />
+                <NotificationTab />
             </div>
         </div>
     </div>
