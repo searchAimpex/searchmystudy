@@ -10,6 +10,10 @@ const transactionSchema = mongoose.Schema(
     transactionDate : {
         type: String,
     },
+    transactionID : {
+        type: String,
+        default:""
+    },
     transactionMode : {
         type: String,
         required: true,

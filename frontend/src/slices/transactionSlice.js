@@ -27,6 +27,6 @@ const initialState = {
 
 
   
-export const { AddTransaction,FetchAllTransactionss,DeleteTransaction} = transactionSlice.actions;
+export const { AddTransaction,FetchAllTransactionss,DeleteTransactionSlice} = transactionSlice.actions;
 
 export default transactionSlice.reducer;

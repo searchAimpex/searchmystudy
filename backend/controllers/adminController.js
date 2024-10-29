@@ -2164,6 +2164,18 @@ const getTransactionsByCenterCode = async (req, res) => {
   }
 };
 
+
+const deleteTransactions= async (req, res) => {
+  try {
+    const transactions = await Transaction.findOneAndDelete({ _id: req.params.id }); // Find by centerCode
+    if (!transactions.length) return res.status(404).json({ message: 'No transactions found for this center code' }); // If none found
+
+    res.status(200).json(transactions); // Return transactions
+  } catch (error) {
+    res.status(500).json({ message: error.message }); // Handle server errors
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2188,5 +2200,5 @@ export {
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
     createLoan,getLoansByUser,getLoans,UpdateLoanStatus,
-    createTransaction,getAllTransactions,getTransactionsByCenterCode
+    createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions
   };

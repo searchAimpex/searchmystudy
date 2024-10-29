@@ -193,7 +193,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                         <IconButton  size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {
                              onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
+                                handleViewBannerOpen();
                             }}/>
                             
                         </IconButton>
@@ -451,5 +451,4 @@ function LoanTable() {
         </Box>
     );
 }
-
 export default LoanTable;
