@@ -14,6 +14,7 @@ import UserTable from "./UserTable";
 import FrenchiseTable from "./FrenchiseTable";
 import SecondCountryTable from "./SecondCountryTable";
 import PromotionalTable from "./PromotionalTable";
+import ExtraLinkTable from "./ExtraLinkTable";
 
 const theme = createTheme({
     palette: {
@@ -88,6 +89,9 @@ export default function UserTabs() {
           <Tab label="FRECHISE MANAGEMENT" {...a11yProps(1)} />
           <Tab label="COUNTRY MANAGEMENT" {...a11yProps(2)} />
           <Tab label="PROMOTIONAL MANAGEMENT" {...a11yProps(3)} />
+          <Tab label="EXTRA NAV" {...a11yProps(4)} />
+
+
 
 
         </Tabs>
@@ -109,6 +113,9 @@ export default function UserTabs() {
         </TabPanel>
         <TabPanel value={value} index={3} dir={theme.direction}>
            <PromotionalTable />
+        </TabPanel>
+        <TabPanel value={value} index={4} dir={theme.direction}>
+           <ExtraLinkTable />
         </TabPanel>
       
       

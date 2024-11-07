@@ -69,7 +69,11 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getAllTransactions,
       getTransactionsByCenterCode,
       deleteTransactions,
-      DeleteLoan
+      DeleteLoan,
+      getAllNavItems,
+      createNavItem,
+      deleteNavItem,
+      checkUser
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -321,6 +325,15 @@ router.post('/transaction',createTransaction)
 router.get('/transaction',getAllTransactions)
 router.get('/transaction/:centerCode',getTransactionsByCenterCode)
 router.delete('/transaction/:id',deleteTransactions)
+////////////////////////////////////////////////////////
 
+
+///////////////////////NAVLINKS ///////////////////
+router.get('/nav',getAllNavItems)
+router.post('/nav',createNavItem)
+router.delete('/nav/:id',deleteNavItem)
+//////////////////////////////////////////////////
+
+router.get('/CenterCheck/:id',checkUser)
 
 export default router;

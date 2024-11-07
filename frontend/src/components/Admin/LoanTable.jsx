@@ -18,13 +18,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation, useCounsellerFetchLeadMutation, useGetLeadMutation, useHomeLeadDeleteMutation, useFetchLoanMutation, useDeleteLoansMutation } from '../../slices/adminApiSlice';
-import { DeleteService, FetchAllServices } from '../../slices/serviceSlice.js';
-import CreateServicePop from './PopUps/CreateServicePop.jsx';
-import ImageViewPop from './PopUps/ImageViewPop.jsx';
-import { RemoveRedEye } from '@mui/icons-material';
+
+import { DownloadDone, RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
-import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
-import { DeleteHomeLead, FetchHomeLead } from '../../slices/leadSlice.js';
 import { DeleteLoan, FetchLoans } from '../../slices/loanSlice.js';
 import UpdateLoanStatus from './PopUps/UpdateLoanStatusPop.jsx';
 import DetailedLoanPop from './PopUps/DetailedLoanPop.jsx';
@@ -199,13 +195,14 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                             
                         </IconButton>
                     </Tooltip>
+                  
                 </div>
             ) : (
                 <Tooltip title="Download File">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={()=>downloadfile()}>
-                        <AddIcon />
-                    </IconButton>
-                </Tooltip>
+                <DownloadDone size="sm" variant="outlined" color="danger" onClick={()=>downloadfile()}>
+                    <AddIcon />
+                </DownloadDone>
+            </Tooltip>
             )}
             <DetailedLoanPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow || {}} />
             <UpdateLoanStatus ticketId= {selectedRow?._id}  open={openStatus}  handleClose={handleViewStatusClose} />

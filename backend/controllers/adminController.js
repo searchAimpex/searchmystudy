@@ -25,6 +25,7 @@ import Upload from '../models/uploadModel.js';
 import Commission from '../models/commissionModel.js';
 import Loan from '../models/loanModel.js';
 import Transaction from '../models/transactionModel.js';
+import Nav from '../models/navModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1326,6 +1327,7 @@ const getNotifications = async (req, res) => {
 const getAllNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find().sort({ createdAt: -1 });
+    console.log("Notifcation",notif)
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
@@ -2193,6 +2195,68 @@ const deleteTransactions= async (req, res) => {
   }
 };
 
+
+
+
+// Create a new navigation item
+const createNavItem = async (req, res) => {
+  try {
+    const { name, url } = req.body;
+
+    const newNavItem = new Nav({ name, url });
+    await newNavItem.save();
+
+    res.status(201).json({ message: 'Navigation item created successfully', navItem: newNavItem });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Get all navigation items
+ const getAllNavItems = async (req, res) => {
+  try {
+    const navItems = await Nav.find();
+
+    if (navItems.length === 0) {
+      return res.status(404).json({ message: 'No navigation items found' });
+    }
+
+    res.status(200).json({ navItems });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete a navigation item by ID
+ const deleteNavItem = async (req, res) => {
+  try {
+    const navItem = await Nav.findByIdAndDelete(req.params.id);
+
+    if (!navItem) {
+      return res.status(404).json({ message: 'Navigation item not found' });
+    }
+
+    res.status(200).json({ message: 'Navigation item deleted successfully', navItem });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const checkUser = async (req, res) => {
+  try {
+    console.log("req", req.params.id);
+    const user = await User.findOne({ CenterCode: req.params.id });
+    
+    if (!user) {
+      return res.status(200).json({ message: 'Center not found.' });
+    }
+    
+    res.status(200).json({ message:  `Center found ${user.OwnerName}.` });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2217,5 +2281,6 @@ export {
     createUpload,getAllUploads,deleteUpload,getFrenchiseUploads,getPartnerUploads,
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
     createLoan,getLoansByUser,getLoans,UpdateLoanStatus,DeleteLoan,
-    createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions
+    createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions,
+    createNavItem, getAllNavItems, deleteNavItem,checkUser
   };

@@ -44,6 +44,7 @@ const loanSchema = new mongoose.Schema({
 
     offerLetter : { type: String },
     amount : {type: Number, required: true},
+    passportDoc: {type: String, default:""},
     // Additional fields
     status: { 
         type: String, 

@@ -366,7 +366,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         }),
         fetchAllNotifcation:builder.mutation({
             query: ()=> ({
-                url:`${USERS_URL}/notify-all`,
+                url:`${USERS_URL}/notfiy-all`,
                 method: 'GET'
             }),
         }),
@@ -573,6 +573,31 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${USERS_URL}/transaction/${data}`,
                 method: 'DELETE',
             }),
+        }),
+        CreateNav:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/nav`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchNav:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/nav`,
+                method: 'GET',
+            }),
+        }),
+        DeleteMyNav:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/nav/${data}`,
+                method: 'DELETE',
+            }),
+        }),
+        CheckCenter:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/CenterCheck/${data}`,
+                method: 'GET',
+            }),
         })
 
 
@@ -605,5 +630,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateMyUploadMutation,useFetchMyUploadMutation,useDeleteMyUploadMutation,
     useCreateMyCommissionMutation,useFetchMyCommissionMutation,
     useFetchLoanMutation,useUpdateLoanMutation,useDeleteLoansMutation,
-    useCreateTransactionMutation,useFetchTransactionMutation,useDeleteMyTransactionMutation
+    useCreateTransactionMutation,useFetchTransactionMutation,useDeleteMyTransactionMutation,
+    useCreateNavMutation,useFetchNavMutation,useDeleteMyNavMutation,useCheckCenterMutation
 } = userApiSlice

@@ -210,8 +210,8 @@ function NotificationTable() {
     const [fetchAllNotifcation, { isSuccess }] = useFetchAllNotifcationMutation()
     const [DeleteMedia, DeleteState] = useDeleteMediaMutation()
 
-    const dispatch = useDispatch();
-
+        const dispatch = useDispatch();
+    console.log("serviece",services)
     useEffect(() => {
         if (isSuccess) {
             toast.success('Webinar fetched successfully');
@@ -335,8 +335,7 @@ function NotificationTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.title}</td>
-                                    <td>{row?.description}</td>
+                                    <td>{row?.message}</td>
                                     <td>{row?.rating}</td>
 
                                     <td>{row?.createdAt}</td>
