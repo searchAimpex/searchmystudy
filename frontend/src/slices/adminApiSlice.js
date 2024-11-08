@@ -598,7 +598,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${USERS_URL}/CenterCheck/${data}`,
                 method: 'GET',
             }),
-        })
+        }),
+        CreateFile:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/file`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        FetchFile:builder.mutation({
+            query: ()=> ({
+                url:`${USERS_URL}/file`,
+                method: 'GET',
+            }),
+        }),
+        DeleteMyFile:builder.mutation({
+            query: (data)=> ({
+                url:`${USERS_URL}/file/${data}`,
+                method: 'DELETE',
+            }),
+        }),
 
 
 
@@ -631,5 +650,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateMyCommissionMutation,useFetchMyCommissionMutation,
     useFetchLoanMutation,useUpdateLoanMutation,useDeleteLoansMutation,
     useCreateTransactionMutation,useFetchTransactionMutation,useDeleteMyTransactionMutation,
-    useCreateNavMutation,useFetchNavMutation,useDeleteMyNavMutation,useCheckCenterMutation
+    useCreateNavMutation,useFetchNavMutation,useDeleteMyNavMutation,useCheckCenterMutation,
+    useCreateFileMutation,useFetchFileMutation,useDeleteMyFileMutation
 } = userApiSlice

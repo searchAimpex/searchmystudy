@@ -73,7 +73,11 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getAllNavItems,
       createNavItem,
       deleteNavItem,
-      checkUser
+      checkUser,
+      createFile,
+      getAllFiles,
+      deleteFile,
+      findOneFile
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -335,5 +339,12 @@ router.delete('/nav/:id',deleteNavItem)
 //////////////////////////////////////////////////
 
 router.get('/CenterCheck/:id',checkUser)
+
+////////////////// FILE ////////////////////
+router.post('/file',createFile)
+router.get('/file', getAllFiles)
+router.get('/file/:id',findOneFile)
+router.delete('/file',deleteFile)
+////////////////////////////////////////////
 
 export default router;

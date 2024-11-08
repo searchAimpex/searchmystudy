@@ -26,6 +26,7 @@ import Commission from '../models/commissionModel.js';
 import Loan from '../models/loanModel.js';
 import Transaction from '../models/transactionModel.js';
 import Nav from '../models/navModel.js';
+import Files from '../models/fileModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -2257,6 +2258,72 @@ const checkUser = async (req, res) => {
   }
 };
 
+
+const createFile = async (req, res) => {
+  try {
+    const { SecondCountry, name, template, broucher, type } = req.body;
+
+    // Check if all required fields are provided
+    if (!SecondCountry || !type || (!template && !broucher)) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newFile = new Files({
+      SecondCountry,
+      name,
+      template,
+      broucher,
+      type,
+    });
+
+    await newFile.save();
+    res.status(201).json(newFile);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+// Get all files
+ const getAllFiles = async (req, res) => {
+  try {
+    const files = await Files.find().populate('SecondCountry');
+    res.status(200).json(files);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// Delete a file by ID
+ const deleteFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = await File.findByIdAndDelete(id);
+
+    if (!file) {
+      return res.status(404).json({ message: 'File not found.' });
+    }
+
+    res.status(200).json(file);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// Delete a file by ID
+const findOneFile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const file = await Files.find({SecondCountry:id});
+
+    if (!file) {
+      return res.status(404).json({ message: 'File not found.' });
+    }
+
+    res.status(200).json(file);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2282,5 +2349,6 @@ export {
     createCommission,getAllCommission,deleteCommission,getFrenchiseCommission,getPartnerCommission,
     createLoan,getLoansByUser,getLoans,UpdateLoanStatus,DeleteLoan,
     createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions,
-    createNavItem, getAllNavItems, deleteNavItem,checkUser
+    createNavItem, getAllNavItems, deleteNavItem,checkUser,
+    createFile,getAllFiles,deleteFile,findOneFile
   };

@@ -15,6 +15,7 @@ import FrenchiseTable from "./FrenchiseTable";
 import SecondCountryTable from "./SecondCountryTable";
 import PromotionalTable from "./PromotionalTable";
 import ExtraLinkTable from "./ExtraLinkTable";
+import FileTable from "./FileTable";
 
 const theme = createTheme({
     palette: {
@@ -90,6 +91,8 @@ export default function UserTabs() {
           <Tab label="COUNTRY MANAGEMENT" {...a11yProps(2)} />
           <Tab label="PROMOTIONAL MANAGEMENT" {...a11yProps(3)} />
           <Tab label="EXTRA NAV" {...a11yProps(4)} />
+          <Tab label="FILE/TEMPLATE" {...a11yProps(5)} />
+
 
 
 
@@ -116,6 +119,9 @@ export default function UserTabs() {
         </TabPanel>
         <TabPanel value={value} index={4} dir={theme.direction}>
            <ExtraLinkTable />
+        </TabPanel>
+        <TabPanel value={value} index={5} dir={theme.direction}>
+           <FileTable />
         </TabPanel>
       
       
