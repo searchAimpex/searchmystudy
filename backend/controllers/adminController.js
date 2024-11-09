@@ -2296,7 +2296,7 @@ const createFile = async (req, res) => {
  const deleteFile = async (req, res) => {
   try {
     const { id } = req.params;
-    const file = await File.findByIdAndDelete(id);
+    const file = await Files.findByIdAndDelete(id);
 
     if (!file) {
       return res.status(404).json({ message: 'File not found.' });

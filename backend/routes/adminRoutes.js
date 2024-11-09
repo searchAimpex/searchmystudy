@@ -344,7 +344,7 @@ router.get('/CenterCheck/:id',checkUser)
 router.post('/file',createFile)
 router.get('/file', getAllFiles)
 router.get('/file/:id',findOneFile)
-router.delete('/file',deleteFile)
+router.delete('/file/:id',deleteFile)
 ////////////////////////////////////////////
 
 export default router;
