@@ -50,6 +50,7 @@ import AdminAssessmentManagement from './screens/Admin/AdminAssessmentManagement
 import AdminUploadManagement from './screens/Admin/AdminUploadManagement.jsx';
 import AdminTransactionLedgerManagement from './screens/Admin/AdminTransactionLedgerManagement.jsx';
 import AdminNotificationManagement from './screens/Admin/AdminNotificationManagement.jsx';
+import Videos from './screens/Public/Videos.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -78,6 +79,7 @@ const router = createBrowserRouter(
         <Route path = '/nursingindia' element= {< NursingIndia/> }/>
         <Route path = '/pharmacyindia' element =  {<PharmacyIndia />} />
         <Route path = '/bvScindia' element= {< BvScIndia/>}/>
+        <Route path = '/videos' element = {<Videos />}/>
       </Route>     
       {/* <Route path='/register' element={<RegisterScreen />} /> */}
       <Route path='' element={<PrivateRoute />}>

@@ -6,13 +6,14 @@ import { getVideo } from '../../slices/videoSlice';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import { useNavigate } from 'react-router-dom';
 
 export default function VideoCards() {
   const [AllVideo] = useAllVideoMutation();
   const dispatch = useDispatch();
   const { video } = useSelector((state) => state.video);
   const [selectedVideo, setSelectedVideo] = useState(null);
-
+const navigate = useNavigate()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +28,7 @@ export default function VideoCards() {
 
   const settings = {
     infinite: true,
-    slidesToShow: 4,
+    slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
     speed: 3000,
@@ -52,10 +53,16 @@ export default function VideoCards() {
   };
 
   return (
-    <div className="relative overflow-hidden p-6 sm:px-12 lg:px-32 xl:px-[100px] bg-gray-100">
-      <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-main">
-        Featured Videos
-      </h2>
+    <div className="relative overflow-hidden p-6 sm:px-12 lg:px-32 xl:px-[100px]">
+      <div className="flex justify-between items-center mb-10">
+        <h2 className="text-4xl font-extrabold text-blue-main">Featured Videos</h2>
+        <button 
+          className="bg-gold-main text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
+          onClick={() => navigate('/videos')} // Adjust this to your "View All" link
+        >
+          View All
+        </button>
+      </div>
 
       {/* React Slick Carousel */}
       <Slider className='m-2' {...settings}>
@@ -63,7 +70,7 @@ export default function VideoCards() {
           <div
             key={item._id}
             onClick={() => setSelectedVideo(item.videoURL)} // Open modal on click
-            className="relative w-[350px] h-[400px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            className="relative w-[350px] h-[380px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="relative h-[350px] rounded-lg overflow-hidden">
               <img
