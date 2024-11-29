@@ -18,6 +18,7 @@ import WebinarTable from "./WebinarTable";
 import MediaTable from "./MediaTable";
 import NotificationTable from "./NotificationTable";
 import UserTable from "./UserTable";
+import VideoTable from "./VideoTable";
 
 const theme = createTheme({
     palette: {
@@ -94,7 +95,7 @@ export default function WebTabs() {
           <Tab label="TESTIMONIAL MANAGMENT" {...a11yProps(3)} />
           <Tab label="WEBINAR MANAGMENT" {...a11yProps(4)} />
           <Tab label="MEDIA MANAGMENT" {...a11yProps(5)} />
-          <Tab label="NOTIFICATION MANAGMENT" {...a11yProps(6)} />
+          <Tab label="VIDEO MANAGMENT" {...a11yProps(6)} />
 
 
 
@@ -126,7 +127,7 @@ export default function WebTabs() {
             <MediaTable />
         </TabPanel>
         <TabPanel value={value} index={6} dir={theme.direction}>
-            <NotificationTable />
+            <VideoTable />
         </TabPanel>
       
       

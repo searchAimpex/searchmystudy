@@ -27,6 +27,7 @@ import Loan from '../models/loanModel.js';
 import Transaction from '../models/transactionModel.js';
 import Nav from '../models/navModel.js';
 import Files from '../models/fileModel.js';
+import Video from '../models/videoModel.js';
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -2324,6 +2325,63 @@ const findOneFile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// @desc    Create a new counsellor
+// @route   POST /VideoCounsellor
+// @access  Public
+const createVideo = async (req, res) => {
+  const { name, videoURL } = req.body;
+
+  if (!name || !videoURL) {
+    res.status(400).json({ message: 'Please all required fields' });
+    return;
+  }
+
+  const counsellor = new Video({
+    name,
+    videoURL
+  });
+
+  try {
+    const createdCounsellor = await counsellor.save();
+    res.status(201).json(createdCounsellor);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// @desc    Get all counsellors
+// @route   GET /GetVideo/all
+// @access  Public
+const  getVideo = async (req, res) => {
+  try {
+
+    const counsellors = await Video.find({});
+    res.json(counsellors);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+// @desc    Delete a counsellor
+// @route   DELETE /DeleteCounsellors/:id
+// @access  Public
+const deleteVideo = async (req, res) => {
+  try {
+    const counsellor = await Video.findOneAndDelete({_id:req.params.id});
+
+    if (counsellor) {
+      res.json(counsellor);
+    } else {
+      res.status(404).json({ message: 'Counsellor not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
     createBanner,test,fetchAllBanner,deleteBanner,
     deleteService,updateService,getService,getServices,createService,
@@ -2350,5 +2408,6 @@ export {
     createLoan,getLoansByUser,getLoans,UpdateLoanStatus,DeleteLoan,
     createTransaction,getAllTransactions,getTransactionsByCenterCode,deleteTransactions,
     createNavItem, getAllNavItems, deleteNavItem,checkUser,
-    createFile,getAllFiles,deleteFile,findOneFile
+    createFile,getAllFiles,deleteFile,findOneFile,
+    createVideo,getVideo,deleteVideo
   };

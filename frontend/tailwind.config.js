@@ -9,27 +9,41 @@ export default {
       animation: {
         rotate: "rotate 10s linear infinite",
         border: 'border 4s ease infinite',
+        marquee: "marquee 20s linear infinite", // Marquee animation
+        loop: "loop-horizontal 8s linear infinite", // New animation for looping the first card
       },
       keyframes: {
         border: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
         },
+        marquee: { 
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' }
+        },
+       "loop-horizontal": { // Custom horizontal loop animation
+            "0%": {
+              transform: "translateX(-100%)", // Start off-screen to the left
+            },
+            "100%": {
+              transform: "translateX(100vw)", // Move fully out of screen to the right
+            }
+          }
       },
       boxShadow: {
         'custom-shadow': '0 10px 20px -5px #9C2949',
       },
       lineHeight: {
         '1': '1rem',
-        'small':'0.5rem' // Example of a custom line height
+        'small': '0.5rem', // Example of a custom line height
       },
       colors: {
         'custom-color': '#9C2949',
         'gradient-start': '#9C2949',
         'gradient-end': '#FF69B4',
-        'text-color':'#3A3742',
-        'blue-main':'#264790',
-        'gold-main':'#DB7E19'
+        'text-color': '#3A3742',
+        'blue-main': '#264790',
+        'gold-main': '#DB7E19',
       },
       backgroundImage: {
         'custom-primary': 'linear-gradient(270deg, #E13B68 0%, #7B2039 100%)',
@@ -46,8 +60,6 @@ export default {
         },
       });
     },
-    require('tailwind-scrollbar-hide') // Add this line
-
+    require('tailwind-scrollbar-hide') // Add this plugin
   ],
 }
-

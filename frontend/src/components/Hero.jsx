@@ -12,6 +12,7 @@ import CourseFinder from './Public/CourseFinder';
 import WhyChoseUs from './Public/WhyChoseUs';
 import WebinarSection from './Public/WebinarSection';
 import MediaSection from './Public/MediaSection';
+import VideoCards from './Public/VideoCards';
 const Hero = () => {
   return (
     <div>
@@ -24,6 +25,7 @@ const Hero = () => {
         <TestmonialSection />
         <AboutUsSection />
         <CourseSection />
+        <VideoCards />
         <ContactSection />
         <WebinarSection />
         <MediaSection />

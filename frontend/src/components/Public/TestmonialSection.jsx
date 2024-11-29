@@ -18,7 +18,7 @@ import VerticalCardSlider from './VerticalCardsSlider'
             <div className='my-2'>
                <p className='text-xl font-bold  text-gray-500'>Discover dedicated professionals ready to support you on your journey</p>
             </div>
-            <div className='mt-10 bg-gradient-to-r from-[#3C6EDD] to-[#264790] px-[200px]'>
+            <div className='mt-10 w-full  px-[200px]'>
             <VerticalCardSlider />
             </div>
         </div>

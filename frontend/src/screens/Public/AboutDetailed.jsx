@@ -7,10 +7,13 @@ import About from '../../assets/About1.png';
 import Excellence from '../../assets/excellence.png';
 import Intregity from '../../assets/integrity.png';
 import Innovation from '../../assets/innovation.png';
+import ScrollToTop from '../../components/Public/ScrollToTop';
 
 export default function AboutDetailed() {
+  
   return (
     <div>
+      <ScrollToTop />
       <div className="flex flex-col">
         {/* About Us Hero Section */}
         <div className="bg-[#C4C4C4]">

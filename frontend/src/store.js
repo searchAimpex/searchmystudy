@@ -28,6 +28,7 @@ import loanReducer from './slices/loanSlice'
 import transactionReducer from './slices/transactionSlice'
 import navReducer from './slices/navSlice'
 import fileReducer from './slices/fileSlice'
+import videoReducer from './slices/videoSlice'
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -59,6 +60,7 @@ const store = configureStore({
     transaction:transactionReducer,
     nav:navReducer,
     file:fileReducer,
+    video:videoReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

@@ -77,7 +77,10 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createFile,
       getAllFiles,
       deleteFile,
-      findOneFile
+      findOneFile,
+      createVideo,
+      getVideo,
+      deleteVideo
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -346,5 +349,12 @@ router.get('/file', getAllFiles)
 router.get('/file/:id',findOneFile)
 router.delete('/file/:id',deleteFile)
 ////////////////////////////////////////////
+
+
+/****************VIDEO ROUTES *****************/
+router.post('/CreateVideo',createVideo)
+router.get('/Video/all',getVideo)
+router.delete('/DeleteVideo/:id',deleteVideo)
+/****************VIDEO ROUTES *****************/
 
 export default router;

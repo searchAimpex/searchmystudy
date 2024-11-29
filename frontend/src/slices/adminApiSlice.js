@@ -618,6 +618,25 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
             }),
         }),
+        CreateVideo:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/CreateVideo`,
+                method: 'POST',
+                body:data
+            }),
+        }),
+        AllVideo:builder.mutation({
+            query: ()=> ({
+                url: `${USERS_URL}/Video/all`,
+                method: 'GET',
+            }),
+        }),
+        VideoDelete:builder.mutation({
+            query:(id)=>({
+                url: `${USERS_URL}/DeleteVideo/${id}`,
+                method: 'DELETE',
+            }),
+        }),
 
 
 
@@ -651,5 +670,6 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useFetchLoanMutation,useUpdateLoanMutation,useDeleteLoansMutation,
     useCreateTransactionMutation,useFetchTransactionMutation,useDeleteMyTransactionMutation,
     useCreateNavMutation,useFetchNavMutation,useDeleteMyNavMutation,useCheckCenterMutation,
-    useCreateFileMutation,useFetchFileMutation,useDeleteMyFileMutation
+    useCreateFileMutation,useFetchFileMutation,useDeleteMyFileMutation,
+    useCreateVideoMutation,useAllVideoMutation,useVideoDeleteMutation
 } = userApiSlice
