@@ -30,8 +30,8 @@ export default function VideoCards() {
     slidesToShow: 4,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 2000,
-    autoplaySpeed: 2000,
+    speed: 3000,
+    autoplaySpeed: 3000,
     cssEase: "linear",
     responsive: [
       {
@@ -52,8 +52,8 @@ export default function VideoCards() {
   };
 
   return (
-    <div className="relative overflow-hidden p-6 sm:px-12 lg:px-32 xl:px-[200px] bg-gray-100">
-      <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-main  ">
+    <div className="relative overflow-hidden p-6 sm:px-12 lg:px-32 xl:px-[100px] bg-gray-100">
+      <h2 className="text-4xl font-extrabold text-center mb-10 text-blue-main">
         Featured Videos
       </h2>
 
@@ -63,17 +63,25 @@ export default function VideoCards() {
           <div
             key={item._id}
             onClick={() => setSelectedVideo(item.videoURL)} // Open modal on click
-            className="relative w-full h-64 p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            className="relative w-[350px] h-[400px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
           >
-            <div>
-                <img
+            <div className="relative h-[350px] rounded-lg overflow-hidden">
+              <img
                 src={`https://img.youtube.com/vi/${item.videoURL.split('v=')[1]}/0.jpg`} // YouTube thumbnail
                 alt={item.name}
                 className="w-full h-full object-cover rounded-lg"
-                />
-            </div>
-            <div className="flex items-center justify-center   p-4 rounded-b-lg">
-              <h3 className="text-lg font-semibold text-black">{item.name} sffs</h3>
+              />
+              {/* Play Icon Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-16 h-16 text-white opacity-90"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
             </div>
           </div>
         ))}
@@ -81,11 +89,12 @@ export default function VideoCards() {
 
       {/* Video Modal */}
       {selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4 transition-opacity duration-300 opacity-0 animate-fadeIn">
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
           <div className="relative w-full max-w-4xl bg-white rounded-lg overflow-hidden">
             <button 
               onClick={() => setSelectedVideo(null)} 
-              className="absolute top-2 right-2 text-white text-4xl cursor-pointer z-10">&times;</button>
+              className="absolute top-2 right-2 text-black text-4xl cursor-pointer z-10">&times;
+            </button>
             <iframe
               className="w-full h-[70vh] rounded-lg"
               src={`https://www.youtube.com/embed/${selectedVideo.split('v=')[1]}`} // Embed YouTube video
