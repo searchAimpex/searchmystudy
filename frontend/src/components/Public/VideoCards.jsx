@@ -13,7 +13,8 @@ export default function VideoCards() {
   const dispatch = useDispatch();
   const { video } = useSelector((state) => state.video);
   const [selectedVideo, setSelectedVideo] = useState(null);
-const navigate = useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -58,7 +59,7 @@ const navigate = useNavigate()
         <h2 className="text-4xl font-extrabold text-blue-main">Featured Videos</h2>
         <button 
           className="bg-gold-main text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-          onClick={() => navigate('/videos')} // Adjust this to your "View All" link
+          onClick={() => navigate('/videos')}
         >
           View All
         </button>
@@ -69,12 +70,12 @@ const navigate = useNavigate()
         {video.map((item) => (
           <div
             key={item._id}
-            onClick={() => setSelectedVideo(item.videoURL)} // Open modal on click
-            className="relative w-[350px] h-[380px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            onClick={() => setSelectedVideo(item.videoURL)}
+            className="relative w-[350px] h-[400px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <div className="relative h-[350px] rounded-lg overflow-hidden">
               <img
-                src={`https://img.youtube.com/vi/${item.videoURL.split('v=')[1]}/0.jpg`} // YouTube thumbnail
+                src={`https://img.youtube.com/vi/${item.videoURL.split('v=')[1]}/0.jpg`}
                 alt={item.name}
                 className="w-full h-full object-cover rounded-lg"
               />
@@ -90,6 +91,10 @@ const navigate = useNavigate()
                 </svg>
               </div>
             </div>
+            {/* Video Name */}
+            <h3 className="mt-1 text-blue-main text-lg font-semibold text-center">
+              {item.name}
+            </h3>
           </div>
         ))}
       </Slider>
@@ -100,11 +105,13 @@ const navigate = useNavigate()
           <div className="relative w-full max-w-4xl bg-white rounded-lg overflow-hidden">
             <button 
               onClick={() => setSelectedVideo(null)} 
-              className="absolute top-2 right-2 text-black text-4xl cursor-pointer z-10">&times;
+              className="absolute top-2 right-2 text-black text-4xl cursor-pointer z-10"
+            >
+              &times;
             </button>
             <iframe
               className="w-full h-[70vh] rounded-lg"
-              src={`https://www.youtube.com/embed/${selectedVideo.split('v=')[1]}`} // Embed YouTube video
+              src={`https://www.youtube.com/embed/${selectedVideo.split('v=')[1]}`}
               title="Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

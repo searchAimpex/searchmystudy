@@ -34,10 +34,9 @@ export default function Videos() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         />
-       
       </div>
-      <div className='flex  items-center justify-center'>
-      <h2 className="absolute bottom-10 left-10 text-blue-main text-4xl font-bold">
+      <div className='flex items-center justify-center'>
+        <h2 className="absolute bottom-10 left-10 text-blue-main text-4xl font-bold">
           Our Videos
         </h2>
       </div>
@@ -68,7 +67,12 @@ export default function Videos() {
                 </svg>
               </div>
             </div>
-          
+            {/* Display video name */}
+            <div className="p-4">
+              <h3 className="text-blue-main text-lg font-semibold text-center">
+                {item.name}
+              </h3>
+            </div>
           </motion.div>
         ))}
       </div>
