@@ -2330,16 +2330,17 @@ const findOneFile = async (req, res) => {
 // @route   POST /VideoCounsellor
 // @access  Public
 const createVideo = async (req, res) => {
-  const { name, videoURL } = req.body;
+  const { name, videoURL,thumbnailURL } = req.body;
 
-  if (!name || !videoURL) {
+  if (!name || !videoURL || !thumbnailURL) {
     res.status(400).json({ message: 'Please all required fields' });
     return;
   }
 
   const counsellor = new Video({
     name,
-    videoURL
+    videoURL,
+    thumbnailURL
   });
 
   try {

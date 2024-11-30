@@ -75,7 +75,7 @@ export default function VideoCards() {
           >
             <div className="relative h-[370px] border border-b-black rounded-lg  overflow-hidden">
               <img
-                src={`https://img.youtube.com/vi/${item.videoURL.split('v=')[1]}/0.jpg`}
+                src={item.thumbnailURL}
                 alt={item.name}
                 className="w-full h-full object-contained rounded-lg"
               />

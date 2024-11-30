@@ -28,9 +28,9 @@ import { getVideo } from '../../slices/videoSlice';
 import CreateVideoPop from './PopUps/CreateVideoPop';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
     { id: 'videoURL', numeric: false, disablePadding: false, label: 'Video URL' },
+
   
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' }
@@ -333,10 +333,9 @@ function VideoTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
                                     <td>{row?.name}</td>
                                     <td>{row?.videoURL}</td>
-                            
+
                                     <td>{row?.createdAt}</td>
                                     <td>{row?.updatedAt}</td>
 
