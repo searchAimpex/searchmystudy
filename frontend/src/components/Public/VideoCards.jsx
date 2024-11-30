@@ -71,13 +71,13 @@ export default function VideoCards() {
           <div
             key={item._id}
             onClick={() => setSelectedVideo(item.videoURL)}
-            className="relative w-[350px] h-[400px] p-4 m-4 bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
+            className="relative w-[370px] h-[420px] p-4 m-4 shadow-md bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
           >
-            <div className="relative h-[350px] rounded-lg overflow-hidden">
+            <div className="relative h-[370px] border border-b-black rounded-lg  overflow-hidden">
               <img
                 src={`https://img.youtube.com/vi/${item.videoURL.split('v=')[1]}/0.jpg`}
                 alt={item.name}
-                className="w-full h-full object-cover rounded-lg"
+                className="w-full h-full object-contained rounded-lg"
               />
               {/* Play Icon Overlay */}
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
@@ -92,7 +92,7 @@ export default function VideoCards() {
               </div>
             </div>
             {/* Video Name */}
-            <h3 className="mt-1 text-blue-main text-lg font-semibold text-center">
+            <h3 className="mt-1 text-blue-main text-lg font-bold text-center">
               {item.name}
             </h3>
           </div>

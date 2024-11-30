@@ -95,7 +95,7 @@ const VerticalCardsSlider = () => {
             className="absolute w-full h-full"
           >
             <div className="w-full h-full p-6 rounded-xl bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-              <div className="flex flex-col items-center justify-start h-full space-y-6">
+              <div className="flex flex-col items-center justify-start h-full space-y-2">
                 {/* Profile Image Section */}
                 <motion.div 
                   initial={{ scale: 0.8, opacity: 0 }}
@@ -115,29 +115,21 @@ const VerticalCardsSlider = () => {
                 <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
                   {counsellors[currentIndex]?.name}
                 </h3>
+                <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+                  {counsellors[currentIndex]?.course}
+                </h3>
                 <div className="flex items-center justify-center space-x-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className={`w-4 h-4 ${i < (counsellors[currentIndex]?.rating || 4) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
                   ))}
                 </div>
                 
-                {/* Tab Navigation */}
-                <div className="flex space-x-4 w-full justify-center">
-                  {['about', 'experience', 'contact'].map((tab) => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`px-4 py-2 capitalize ${activeTab === tab ? 'font-bold text-white' : 'bg-white text-indigo-400 hover:text-indigo-600'}`}
-                    >
-                      {tab}
-                    </button>
-                  ))}
-                </div>
+          
                 
                 {/* Content Sections */}
                 <div className="w-full flex-grow overflow-y-auto">
                   {/* Content based on activeTab */}
-                  {activeTab === 'about' && <p>{counsellors[currentIndex]?.bio || 'No bio available'}</p>}
+                  {activeTab === 'about' && <p>{counsellors[currentIndex]?.experience || 'No bio available'}</p>}
                   {/* Add similar blocks for 'experience' and 'contact' */}
                 </div>
               </div>
