@@ -24,6 +24,8 @@ import { toast } from 'react-toastify';
 const storage = getStorage(app);
 
 function CreateCountryPop({ open, handleClose }) {
+  console.log("open",open)
+  console.log("close",typeof handleClose)
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',
@@ -37,6 +39,9 @@ function CreateCountryPop({ open, handleClose }) {
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
 
+  const [bannerPreview, setBannerPreview] = useState(null);
+  const [flagPreview, setFlagPreview] = useState(null);
+
   const [createCountry, { isSuccess }] = useCreateCountryMutation();
   const dispatch = useDispatch();
 
@@ -45,7 +50,7 @@ function CreateCountryPop({ open, handleClose }) {
       const img = new Image();
       img.src = URL.createObjectURL(file);
       img.onload = () => {
-        if (img.width === requiredWidth && img.height === requiredHeight) {
+        if (img.width >= requiredWidth && img.height >= requiredHeight) {
           resolve(true);
         } else {
           resolve(false);
@@ -54,9 +59,9 @@ function CreateCountryPop({ open, handleClose }) {
     });
   };
 
+
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-    const [section, index, field] = name.split('.');
 
     if (type === 'file') {
       const file = files[0];
@@ -71,39 +76,24 @@ function CreateCountryPop({ open, handleClose }) {
         } else {
           setFormErrors((prev) => ({ ...prev, [name]: '' }));
           const imageURL = await uploadImage(file);
-          if (field) {
-            setFormValues((prevValues) => ({
-              ...prevValues,
-              [section]: [
-                ...prevValues[section].slice(0, index),
-                { ...prevValues[section][index], [field]: imageURL },
-                ...prevValues[section].slice(Number(index) + 1),
-              ],
-            }));
-          } else {
-            setFormValues((prevValues) => ({
-              ...prevValues,
-              [name]: imageURL,
-            }));
+          setFormValues((prevValues) => ({
+            ...prevValues,
+            [name]: imageURL,
+          }));
+
+          // Set image preview
+          if (name === 'bannerURL') {
+            setBannerPreview(URL.createObjectURL(file));
+          } else if (name === 'flagURL') {
+            setFlagPreview(URL.createObjectURL(file));
           }
         }
       }
     } else {
-      if (field) {
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          [section]: [
-            ...prevValues[section].slice(0, index),
-            { ...prevValues[section][index], [field]: value },
-            ...prevValues[section].slice(Number(index) + 1),
-          ],
-        }));
-      } else {
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          [name]: value,
-        }));
-      }
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
     }
     checkFormValidity();
   };
@@ -159,9 +149,9 @@ function CreateCountryPop({ open, handleClose }) {
       toast.success('Country Added Successfully');
     }
   }, [isSuccess]);
-
+  
   return (
-    <Dialog fullWidth='xl' open={open} onClose={handleClose}>
+    <Dialog fullWidth='5xl' open={open} onClose={handleClose}>
       <DialogTitle className='text-white bg-custom-primary font-bold'>Add Country</DialogTitle>
       <DialogContent>
         <div className='py-2'>
@@ -202,6 +192,7 @@ function CreateCountryPop({ open, handleClose }) {
             error={Boolean(formErrors.bannerURL)}
             helperText={formErrors.bannerURL || ''}
           />
+           {bannerPreview && <img src={bannerPreview} alt="Banner Preview" className="mt-2 w-full h-40 object-cover rounded" />}
           <TextField
             id="flagURL"
             name="flagURL"
@@ -214,6 +205,7 @@ function CreateCountryPop({ open, handleClose }) {
             error={Boolean(formErrors.flagURL)}
             helperText={formErrors.flagURL || ''}
           />
+             {flagPreview && <img src={flagPreview} alt="Flag Preview" className="mt-2 w-32 h-32 object-cover rounded-full" />}
           <TextField
             id="bullet"
             name="bullet"
@@ -337,12 +329,12 @@ function CreateCountryPop({ open, handleClose }) {
           </Button>
         </Box>
       </DialogContent>
-      <DialogActions>
+      <div>
         <Button variant="contained" onClick={onSubmit} disabled={!isSubmitEnabled}>
           Submit
         </Button>
-        <Button onClick={handleClose}>Close</Button>
-      </DialogActions>
+        <Button onClick={()=> handleClose()}>Close</Button>
+      </div>
     </Dialog>
   );
 }

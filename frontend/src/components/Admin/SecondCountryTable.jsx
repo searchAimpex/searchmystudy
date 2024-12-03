@@ -19,7 +19,7 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import ImageViewPop from './PopUps/ImageViewPop';
 import { AppBlockingRounded, BlockRounded, RemoveRedEye, RemoveRedEyeOutlined } from '@mui/icons-material';
-import { useCountryDeleteMutation, useCountryGetMutation, useDeleteUserMutation, useGetAllUserMutation, useUserBlockMutation } from '../../slices/usersApiSlice';
+import {  useCountryDeletesMutation, useCountryGetMutation, useDeleteUserMutation } from '../../slices/usersApiSlice';
 import { deleteUser, fetchUser } from '../../slices/authSlice';
 import CreateUserPop from './PopUps/CreateUserPop';
 import UpdateUserPop from './PopUps/UpdateUserPop';
@@ -226,7 +226,7 @@ function SecondCountryTable() {
     const services = SecondCountries || []; 
     console.log("service",services)// Assuming `testimonial` state holds the array of testimonials
     const [CountryGet, { isSuccess }] = useCountryGetMutation()
-    const [CountryDelete, DeleteState] = useCountryDeleteMutation()
+    const [CountryDelete, DeleteState] = useCountryDeletesMutation()
     const dispatch = useDispatch();
 
 

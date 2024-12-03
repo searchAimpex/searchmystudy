@@ -473,7 +473,7 @@ const updateCountry = async (req, res) => {
 // @desc    Delete country by ID
 // @route   DELETE /api/secondCountries/:id
 // @access  Private
-const deleteCountry = async (req, res) => {
+const deleteCountrys = async (req, res) => {
   try {
     console.log("fix",req.params.id)
     const country = await SecondCountry.findByIdAndDelete(req.params.id);
@@ -505,6 +505,6 @@ export {
   getCountryById,
   createCountry,
   updateCountry,
-  deleteCountry
+  deleteCountrys
 };
 

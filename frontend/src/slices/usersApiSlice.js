@@ -88,7 +88,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
         body: data.formValues
       }),
     }),
-    CountryDelete: builder.mutation({
+    CountryDeletes: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/secondcountry/${data}`,
         method: 'DELETE'
@@ -110,5 +110,5 @@ export const {
   useCountryGetMutation,
   useCountryGetOneMutation,
   useCountryUpdateMutation,
-  useCountryDeleteMutation
+  useCountryDeletesMutation
 } = userApiSlice;

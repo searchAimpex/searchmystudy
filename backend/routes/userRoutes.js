@@ -14,7 +14,7 @@ import {
   getAllCountries,
   getCountryById,
   updateCountry,
-  deleteCountry,
+  deleteCountrys,
   createCountry,
   updateUserOneProfile,
 } from '../controllers/userController.js';
@@ -42,7 +42,7 @@ router.post('/secondcountry', createCountry);
 router.get('/secondcountry/:id',getCountryById);
 router.get('/secondcountry',getAllCountries);
 router.put('/secondcountry/:id',updateCountry);
-router.delete('/secondcountry/:id',deleteCountry);
+router.delete('/secondcountry/:id',deleteCountrys);
 /**********************************************************************/
 
 export default router;

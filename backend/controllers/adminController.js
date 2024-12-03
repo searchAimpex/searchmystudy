@@ -503,7 +503,8 @@ const updateCountry = asyncHandler(async (req, res) => {
 // @route   DELETE /countries/:id
 // @access  Public
 const deleteCountry = asyncHandler(async (req, res) => {
-  const country = await Country.findByIdAndDelete(req.params.id);
+  console.log("fix-->",req.params.id)
+  const country = await Country.findByIdAndDelete({_id:req.params.id});
 
   if (country) {
     res.json(country);

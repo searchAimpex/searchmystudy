@@ -19,7 +19,7 @@ const initialState = {
         },
         DeleteCountry:(state,action)=>{
             console.log("action payload",action.payload)
-            state.countries = state.countries.filter(item => item._id!== action.payload._id)
+            state.countries = state.countries.filter(item => item._id!== action.payload)
         },
         FetchOneCountry:(state,action)=>{
             state.singleCountry = action.payload

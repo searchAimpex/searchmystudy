@@ -136,7 +136,12 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
 
-    const handleClose = () => setOpen(false);
+  
+    const handleClose = () => {
+        console.log("Closing dialog",open);  // Verify if this logs
+        setOpen(false);  // Ensure this updates `open`
+      };
+    console.log("fix",open)
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
 
@@ -211,7 +216,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
                         <AddIcon />
-                        <CreateCountryPop open={open} handleClose={handleClose} />
+                        <CreateCountryPop open={open} handleClose={()=>setOpen(false)} />
                     </IconButton>
                 </Tooltip>
             )}
