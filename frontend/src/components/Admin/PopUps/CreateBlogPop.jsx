@@ -45,6 +45,11 @@ const CreateBlogPop = ({ open, handleClose }) => {
     const { name, value } = e.target;
     setFormValues(prev => ({ ...prev, [name]: value }));
   };
+  useEffect(()=>{
+    if(isSuccess){
+      toast.success("Blog has been created")
+    }
+  },[])
 
   const handleFileChange = async (event, type) => {
     const file = event.target.files[0];
@@ -97,8 +102,17 @@ const CreateBlogPop = ({ open, handleClose }) => {
     try {
       const res = await CreateBlog(formValues).unwrap();
       dispatch(AddBlog(res));
-      onClose();
-      toast.success('Blog created successfully');
+      handleClose();
+      setFormValues({
+        title: '',
+        content: '',
+        bannerURL: '',
+        thumbnailURL: '',
+      })
+      setUploads({
+        banner: { progress: 0, preview: null, name: '', loading: false },
+        thumbnail: { progress: 0, preview: null, name: '', loading: false },
+      })
     } catch (error) {
       toast.error('Failed to create blog');
     }
