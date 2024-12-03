@@ -55,6 +55,7 @@ import Videos from './screens/Public/Videos.jsx';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
+
       <Route path='/login' element={<LoginScreen />} />
       <Route  element={<PublicRoutes />} >
         <Route index={true} path='/' element={<HomeScreen />} />

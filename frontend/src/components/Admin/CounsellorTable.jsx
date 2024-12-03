@@ -159,7 +159,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     id="tableTitle"
                     component="div"
                 >
-                    TESTIMONIALS
+                    Counsellor
                 </Typography>
             )}
 
@@ -219,7 +219,7 @@ function CounsellorTable() {
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('Testimonials fetched successfully');
+            toast.success('Testimonial fetched successfully');
         }
         if (DeleteState.isSuccess) {
             toast.success('Testimonial deleted successfully');

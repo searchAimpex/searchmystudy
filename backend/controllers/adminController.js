@@ -241,7 +241,8 @@ const updateTestimonial = asyncHandler(async (req, res) => {
 // @route   DELETE /api/testimonials/delete/:id
 // @access  Admin
 const deleteTestimonial = asyncHandler(async (req, res) => {
-  const testimonial = await Testimonial.findOneAndDelete(req.params.id);
+  console.log("backend id recived",req.params.id)
+  const testimonial = await Testimonial.findOneAndDelete({_id:req.params.id});
 
   if (testimonial) {
     res.json(testimonial);

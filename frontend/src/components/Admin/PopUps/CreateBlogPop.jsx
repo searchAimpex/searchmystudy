@@ -1,128 +1,268 @@
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
+import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Upload, Image as ImageIcon, X } from 'lucide-react';
+import {
+  Box,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
+  Grid,
+  TextField,
+  FormLabel,
+  Input,
+  Button,
+  Card,
+  CardContent
+} from '@mui/material';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { app } from '../../../firebase';
 import { useCreateBlogMutation } from '../../../slices/adminApiSlice';
 import { AddBlog } from '../../../slices/blogSlice';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { useDispatch } from 'react-redux';
-import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { toast } from 'react-toastify';
-
+import CircularProgress from '@mui/material/CircularProgress';
 import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
-function CreateBlogPop({ open, handleClose }) {
+const CreateBlogPop = ({ open, handleClose }) => {
   const [formValues, setFormValues] = useState({
     title: '',
     content: '',
     bannerURL: '',
     thumbnailURL: '',
   });
+
+  const [uploads, setUploads] = useState({
+    banner: { progress: 0, preview: null, name: '', loading: false },
+    thumbnail: { progress: 0, preview: null, name: '', loading: false }
+  });
+
   const [CreateBlog, { isSuccess }] = useCreateBlogMutation();
   const dispatch = useDispatch();
 
-  const handleChange = async (event) => {
-    const { name, value, type, files } = event.target;
+  const handleTextChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues(prev => ({ ...prev, [name]: value }));
+  };
 
-    if (type === 'file') {
-      const file = files[0];
-      if (file) {
-        const imageURL = await uploadImage(file, name);
-        setFormValues((prevValues) => ({
-          ...prevValues,
-          [name]: imageURL,
+  const handleFileChange = async (event, type) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    setUploads(prev => ({
+      ...prev,
+      [type]: { ...prev[type], loading: true, name: file.name }
+    }));
+
+    try {
+      const previewURL = URL.createObjectURL(file);
+      
+      const progressInterval = setInterval(() => {
+        setUploads(prev => ({
+          ...prev,
+          [type]: { ...prev[type], progress: Math.min(prev[type].progress + 10, 90) }
         }));
-      }
-    } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: value,
+      }, 200);
+
+      const storageRef = ref(storage, `${type}/${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+
+      clearInterval(progressInterval);
+
+      setFormValues(prev => ({ ...prev, [`${type}URL`]: url }));
+      setUploads(prev => ({
+        ...prev,
+        [type]: { progress: 100, preview: previewURL, name: file.name, loading: false }
+      }));
+    } catch (error) {
+      toast.error(`Failed to upload ${type}`);
+      setUploads(prev => ({
+        ...prev,
+        [type]: { progress: 0, preview: null, name: '', loading: false }
       }));
     }
   };
 
-  const uploadImage = async (file, fieldName) => {
-    const storageRef = ref(storage, `${fieldName}/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return url;
+  const removeFile = (type) => {
+    setFormValues(prev => ({ ...prev, [`${type}URL`]: '' }));
+    setUploads(prev => ({
+      ...prev,
+      [type]: { progress: 0, preview: null, name: '', loading: false }
+    }));
   };
 
   const onSubmit = async () => {
-    const res = await CreateBlog(formValues).unwrap();
-    console.log("response", res);
-    dispatch(AddBlog(res))
-    handleClose();
-  };
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('Blog Added Successfully');
+    try {
+      const res = await CreateBlog(formValues).unwrap();
+      dispatch(AddBlog(res));
+      onClose();
+      toast.success('Blog created successfully');
+    } catch (error) {
+      toast.error('Failed to create blog');
     }
-  }, [isSuccess]);
-
-  return (
-    <div>
-      <Dialog fullWidth={true} maxWidth='xl' open={open} onClose={handleClose}>
-        <DialogTitle>Write a Blog</DialogTitle>
-        <DialogContent>
-          <DialogContentText>Add a new blog post.</DialogContentText>
-          <Box className="flex flex-col m-auto w-full max-w-4xl p-4">
-            <div className="flex flex-wrap space-x-4">
-              <TextField
-                margin="dense"
-                id="title"
-                label="Title"
-                type="text"
-                fullWidth
-                variant="standard"
-                name="title"
-                value={formValues.title}
-                onChange={handleChange}
-                className="w-full md:w-1/2"
-              />
-              <TextField
-                margin="dense"
-                id="bannerURL"
-                label="Banner"
-                type="file"
-                fullWidth
-                variant="standard"
-                name="bannerURL"
-                onChange={handleChange}
-                className="w-full md:w-1/2"
-              />
-              <TextField
-                margin="dense"
-                id="thumbnailURL"
-                label="Thumnail"
-                type="file"
-                fullWidth
-                variant="standard"
-                name="thumbnailURL"
-                onChange={handleChange}
-                className="w-full md:w-1/2"
-              />
-            </div>
-            <div className='border'>
-              <TextEditor popupData={formValues.content} setPopUpData={setFormValues} />
-            </div>
+  };
+  const FileUploadCard = ({ type, label }) => (
+    <Card>
+      <CardContent>
+        <FormLabel htmlFor={type} sx={{ display: 'block', mb: 1 }}>
+          {label}
+        </FormLabel>
+        <Box sx={{ width: '100%' }}>
+          <Input
+            id={type}
+            type="file"
+            accept="image/*"
+            onChange={(e) => handleFileChange(e, type)}
+            sx={{
+              display: uploads[type].preview ? 'none' : 'block',
+              width: '100%',
+              cursor: 'pointer',
+              padding: '10px 0', // Adjust padding for better visibility of the input
+            }}
+          />
+        </Box>
+  
+        {/* Upload Icon and Instructions below Input */}
+        {!uploads[type].preview && (
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              mt: 2, // Add margin to push it below the input field
+            }}
+          >
+            <Upload sx={{ mr: 1 }} />
+            <span>{uploads[type].loading ? 'Uploading...' : 'Choose file or drag and drop'}</span>
           </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} className="text-gray-500">Cancel</Button>
-          <Button onClick={onSubmit} className="bg-blue-500 text-white">Submit</Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        )}
+  
+        {(uploads[type].progress > 0 || uploads[type].preview) && (
+          <Box sx={{ mt: 2 }}>
+            {uploads[type].preview ? (
+              <Box sx={{ position: 'relative' }}>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '200px',
+                    borderRadius: 1,
+                    overflow: 'hidden',
+                    position: 'relative',
+                  }}
+                >
+                  <img
+                    src={uploads[type].preview}
+                    alt={`${type} preview`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                  <Button
+                    variant="contained"
+                    color="error"
+                    size="small"
+                    onClick={() => removeFile(type)}
+                    sx={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 8,
+                      minWidth: 'unset',
+                      width: 32,
+                      height: 32,
+                      p: 0,
+                    }}
+                  >
+                    <X />
+                  </Button>
+                </Box>
+                <Box sx={{ mt: 1, fontSize: '0.875rem', color: 'text.secondary' }}>
+                  {uploads[type].name}
+                </Box>
+              </Box>
+            ) : (
+              <CircularProgress variant="determinate" value={uploads[type].progress} size={24} />
+            )}
+          </Box>
+        )}
+      </CardContent>
+    </Card>
   );
-}
+  
+  return (
+    <Dialog 
+      open={open} 
+      onClose={handleClose}
+      maxWidth="lg"
+      fullWidth
+      PaperProps={{
+        sx: {
+          height: '90vh',
+          maxHeight: '90vh',
+          m: 2
+        }
+      }}
+    >
+      <DialogTitle sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 1,
+        borderBottom: 1,
+        borderColor: 'divider',
+        pb: 2
+      }}>
+        <ImageIcon />
+        Create New Blog Post
+      </DialogTitle>
+      <DialogContent sx={{ p: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <TextField
+            label="Blog Title"
+            name="title"
+            value={formValues.title}
+            onChange={handleTextChange}
+            fullWidth
+            variant="outlined"
+          />
+
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <FileUploadCard type="banner" label="Upload Banner Image" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FileUploadCard type="thumbnail" label="Upload Thumbnail Image" />
+            </Grid>
+          </Grid>
+
+          <Box sx={{ flex: 1, minHeight: '400px' }}>
+            <FormLabel sx={{ display: 'block', mb: 1 }}>Content</FormLabel>
+            <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, height: '100%' }}>
+              <TextEditor 
+                popupData={formValues.content} 
+                setPopUpData={setFormValues}
+              />
+            </Box>
+          </Box>
+        </Box>
+      </DialogContent>
+      <DialogActions sx={{ 
+        borderTop: 1, 
+        borderColor: 'divider',
+        p: 2,
+        gap: 1 
+      }}>
+        <Button variant="outlined" onClick={()=>handleClose()}>
+          Cancel
+        </Button>
+        <Button variant="contained" onClick={onSubmit}>
+          Create Blog
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 export default CreateBlogPop;

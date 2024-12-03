@@ -157,7 +157,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     id="tableTitle"
                     component="div"
                 >
-                    TESTIMONIALS
+                    COUNSELLOR
                 </Typography>
             )}
 
@@ -217,10 +217,10 @@ function TestimonialTable() {
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('Testimonials fetched successfully');
+            toast.success('Counsellor fetched successfully');
         }
         if (DeleteState.isSuccess) {
-            toast.success('Testimonial deleted successfully');
+            toast.success('Counsellor deleted successfully');
         }
     }, [isSuccess, DeleteState.isSuccess]);
 
@@ -230,7 +230,7 @@ function TestimonialTable() {
                 const result = await TestimonialFetchAll().unwrap();
                 dispatch(FetchAllTestimonial(result));
             } catch (error) {
-                console.error('Failed to fetch testimonials:', error);
+                console.error('Failed to fetch Counsellor:', error);
             }
         };
         fetchData();
@@ -287,7 +287,9 @@ function TestimonialTable() {
 
     const handleDelete = async (id) => {
         try {
+            console.log("ID i am sending",id)
             const res = await TestimonialDelete(id).unwrap();
+            console.log("data i recived",res)
             dispatch(DeleteTestimonial(res));
         } catch (error) {
             toast.error('Error deleting testimonial');
