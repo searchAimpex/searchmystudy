@@ -113,7 +113,7 @@ export default function CountryDetailed() {
                 animate={inViewProvinces ? { opacity: 1 } : {}}
                 transition={{ duration: 1 }}
             >
-                <span className='text-blue-main text-4xl font-bold'>PROVINCE</span>
+                <span className='text-blue-main text-4xl font-bold'>PROVINCE (state) wise Universitiy/College in {singleCountry?.name}</span>
             </motion.div>
 
             {/* Section 3: Province Cards */}

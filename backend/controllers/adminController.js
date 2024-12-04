@@ -478,7 +478,7 @@ const getCountryById = asyncHandler(async (req, res) => {
 // @route   PUT /countries/:id
 // @access  Public
 const updateCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, provinces,status } = req.body;
+  const { name, bannerURL, description, sections, provinces,status,faq } = req.body;
 
   const country = await Country.findById(req.params.id);
   console.log("req.body===>",req.body)
@@ -490,6 +490,7 @@ const updateCountry = asyncHandler(async (req, res) => {
     country.sections = sections || country.sections;
     country.provinces = provinces || country.provinces;
     country.mbbsAbroad = status || false;
+    country.faq = faq || country.faq;
 
     const updatedCountry = await country.save();
     res.json(updatedCountry);
