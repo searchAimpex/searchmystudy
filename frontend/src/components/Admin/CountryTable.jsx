@@ -216,7 +216,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
                         <AddIcon />
-                        <CreateCountryPop open={open} handleClose={()=>setOpen(false)} />
+                        <CreateCountryPop open={open} onClose={()=>setOpen((preValue)=>(preValue ? false: preValue))} />
                     </IconButton>
                 </Tooltip>
             )}
