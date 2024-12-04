@@ -17,7 +17,6 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { updateSecondCountry } from '../../../slices/secondCountrySlice'; // Assuming you have this action
 import { toast } from 'react-toastify';
 import { useCountryStatusUpdateMutation } from '../../../slices/adminApiSlice';
 
@@ -36,9 +35,13 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   });
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+  const [previewImages, setPreviewImages] = useState({
+    banner: '',
+    flag: '',
+    sectionImages: [],
+  });
 
   const [updateCountry, { isSuccess }] = useCountryStatusUpdateMutation();
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (countryData) {
@@ -52,6 +55,11 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
         sections: countryData.sections || [{ title: '', description: '', url: '' }],
         eligiblity: countryData.eligiblity || ['', '', '', '', '', '', ''],
         faq: countryData.faq || [{ question: '', answer: '' }],
+      });
+      setPreviewImages({
+        banner: countryData.bannerURL || '',
+        flag: countryData.flagURL || '',
+        sectionImages: countryData.sections.map((sec) => sec.url),
       });
     }
   }, [countryData]);
@@ -87,6 +95,10 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
               ...prevValues,
               [name]: imageURL,
             }));
+            setPreviewImages((prevImages) => ({
+              ...prevImages,
+              [name]: URL.createObjectURL(file),
+            }));
           }
         }
       }
@@ -118,7 +130,8 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   };
 
   const checkFormValidity = () => {
-    const isValid = formValues.name && formValues.description && !formErrors.bannerURL && !formErrors.flagURL;
+    const isValid =
+      formValues.name && formValues.description && !formErrors.bannerURL && !formErrors.flagURL;
     setIsSubmitEnabled(isValid);
   };
 
@@ -139,19 +152,9 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
       ...prevValues,
       sections: prevValues.sections.filter((_, i) => i !== index),
     }));
-  };
-
-  const addFaq = () => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      faq: [...prevValues.faq, { question: '', answer: '' }],
-    }));
-  };
-
-  const removeFaq = (index) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      faq: prevValues.faq.filter((_, i) => i !== index),
+    setPreviewImages((prev) => ({
+      ...prev,
+      sectionImages: prev.sectionImages.filter((_, i) => i !== index),
     }));
   };
 
@@ -188,8 +191,6 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             value={formValues.name}
             onChange={handleChange}
             className="mb-2"
-            error={Boolean(formErrors.name)}
-            helperText={formErrors.name || ''}
           />
           <TextField
             id="bannerURL"
@@ -200,9 +201,11 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Banner Image"
-            error={Boolean(formErrors.bannerURL)}
-            helperText={formErrors.bannerURL || ''}
           />
+          <span className='text-red-300 font-bold text-sm'>Image width should be w-1500px h-500px</span>
+          {previewImages.banner && (
+            <img src={previewImages.banner} alt="Banner Preview" className="w-full h-auto mt-2" />
+          )}
           <TextField
             id="flagURL"
             name="flagURL"
@@ -212,29 +215,12 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Flag Image"
-            error={Boolean(formErrors.flagURL)}
-            helperText={formErrors.flagURL || ''}
           />
-          <TextField
-            id="bullet"
-            name="bullet"
-            variant="standard"
-            onChange={handleChange}
-            InputLabelProps={{ shrink: true }}
-            className="mb-2"
-            label="Bullet Point"
-          />
-          <TextField
-            id="description"
-            name="description"
-            label="Description"
-            variant="standard"
-            value={formValues.description}
-            onChange={handleChange}
-            className="mb-2"
-            error={Boolean(formErrors.description)}
-            helperText={formErrors.description || ''}
-          />
+                    <span className='text-red-300 font-bold text-sm'>Image width should be w-200px h-200px</span>
+
+          {previewImages.flag && (
+            <img src={previewImages.flag} alt="Flag Preview" className="w-32 h-32 mt-2" />
+          )}
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (
@@ -271,27 +257,36 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
                   className="mb-2"
                   label="Image"
                 />
-                <Button variant="contained" color="secondary" onClick={() => removeSection(index)}>
+                {previewImages.sectionImages[index] && (
+                  <img
+                    src={previewImages.sectionImages[index]}
+                    alt={`Section ${index + 1} Preview`}
+                    className="w-32 h-32 mt-2"
+                  />
+                )}
+                <Button variant="contained" color="error" onClick={() => removeSection(index)}>
                   Remove Section
                 </Button>
               </AccordionDetails>
             </Accordion>
           ))}
-          <Button variant="contained" color="primary" onClick={addSection}>
+          <Button variant="outlined" onClick={addSection} className="mt-2">
             Add Section
           </Button>
-
-          {/* Submit Button */}
-          <DialogActions>
-            <Button variant="contained" color="primary" disabled={!isSubmitEnabled} onClick={onSubmit}>
-              Update Country
-            </Button>
-            <Button variant="outlined" color="secondary" onClick={handleClose}>
-              Cancel
-            </Button>
-          </DialogActions>
         </Box>
       </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Cancel
+        </Button>
+        <Button
+          onClick={onSubmit}
+          color="primary"
+          disabled={!isSubmitEnabled}
+        >
+          Submit
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 }
