@@ -9,7 +9,7 @@ import Switch from '@mui/material/Switch';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useCountryStatusUpdateMutation } from '../../slices/adminApiSlice';
+import {useCountryStatusUpdateMutation} from '../../slices/adminApiSlice.js';
 // import { UpdateCountryStatus } from '../../slices/countrySlice.js';
 
 function StatusUpdatePop({ open, handleClose, countryId, statuss }) {

@@ -123,7 +123,10 @@ export default function CreateCoursePop({ open, handleClose }) {
       GMAT: { status: false, description: '', minRequirement: '' }
     }
   });
-
+  const handlecancell = (e)=>{
+    e.stopPropagation();
+    handleClose();
+  }
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
     const [section, subSection, field] = name.split('.');
@@ -503,7 +506,7 @@ export default function CreateCoursePop({ open, handleClose }) {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} className='text-custom-primary'>
+        <Button onClick={handlecancell} className='text-custom-primary'>
           Cancel
         </Button>
         <Button onClick={onSubmit} className='text-custom-primary'>

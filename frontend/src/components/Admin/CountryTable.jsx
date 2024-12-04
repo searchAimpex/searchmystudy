@@ -24,6 +24,7 @@ import CreateCountryPop from './PopUps/CreateCountryPop.jsx';
 import { DeleteCountry, FetchCountry } from '../../slices/countrySlice.js';
 import StatusUpdatePop from './StatusUpdatePop.jsx';
 import UpdateCountryPop from './PopUps/UpdateCountryPop.jsx';
+import { Pagination } from '@mui/material';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -235,26 +236,17 @@ EnhancedTableToolbar.propTypes = {
     onDelete: PropTypes.func.isRequired,
 };
 
-function CountryTable() {
+const CountryTable = () => {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {countries} = useSelector(state=>state.country)
-    const services  = countries
+    const { countries } = useSelector((state) => state.country);
+    const services = countries;
     const [CountryFetch, { isSuccess }] = useCountryFetchMutation();
     const [CountryDelete, DeleteState] = useCountryDeleteMutation();
     const dispatch = useDispatch();
-
-    // useEffect(() => {
-    //     if (isSuccess) {
-    //         toast.success('Data fetched successfully');
-    //     }
-    //     if (DeleteState.isSuccess) {
-    //         toast.success('Service deleted successfully');
-    //     }
-    // }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -328,6 +320,10 @@ function CountryTable() {
         // Do something with the banner image, e.g., set state to show it in a modal
     };
 
+    // Pagination logic
+    const currentData = stableSort(services, getComparator(order, orderBy))
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
     return (
         <Box sx={{ width: '100%', mt: 3 }}>
             <EnhancedTableToolbar
@@ -336,65 +332,47 @@ function CountryTable() {
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
             />
-            <Table aria-labelledby="tableTitle" size="small">
+            <Table sx={{ minWidth: 750 }}>
                 <EnhancedTableHead
-                    numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
+                    onSelectAllClick={handleSelectAllClick}
+                    numSelected={selected.length}
                     rowCount={services.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((row, index) => {
-                            const isItemSelected = isSelected(row._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-
-                            return (
-                                <tr
-                                    hover
-                                    onClick={(event) => handleClick(event, row._id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row._id}
-                                    selected={isItemSelected}
-                                >
-                                    <td>
-                                        <Checkbox
-                                            checked={isItemSelected}
-                                            inputProps={{
-                                                'aria-labelledby': labelId,
-                                            }}
-                                        />
-                                    </td>
-                                    <td>{row._id}</td>
-                                    <td>{row.name}</td>
-                                    <td>{row.heading}</td>
-                                    <td>{new Date(row.createdAt).toLocaleDateString()}</td>
-                                    <td>{new Date(row.updatedAt).toLocaleDateString()}</td>
-                                </tr>
-                            );
-                        })}
+                    {currentData.map((service) => (
+                        <tr
+                            key={service._id}
+                            onClick={(event) => handleClick(event, service._id)}
+                            role="checkbox"
+                            aria-checked={isSelected(service._id)}
+                        >
+                            <td>
+                                <Checkbox checked={isSelected(service._id)} />
+                            </td>
+                            <td>{service._id}</td>
+                            <td>{service.name}</td>
+                            <td>{service.heading}</td>
+                            <td>{service.createdAt}</td>
+                            <td>{service.updatedAt}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </Table>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 1 }}>
-                <Select
-                    value={rowsPerPage}
-                    onChange={handleChangeRowsPerPage}
-                    sx={{ width: 100 }}
-                >
-                    {[5, 10, 25].map((rows) => (
-                        <Option key={rows} value={rows}>
-                            {rows}
-                        </Option>
-                    ))}
-                </Select>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                <Pagination
+                    count={Math.ceil(services.length / rowsPerPage)}
+                    page={page + 1}
+                    onChange={handleChangePage}
+                    siblingCount={1}
+                    boundaryCount={1}
+                    color="primary"
+                />
             </Box>
         </Box>
     );
-}
+};
 
 export default CountryTable;

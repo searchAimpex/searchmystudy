@@ -27,6 +27,7 @@ import CreateProvincePop from './PopUps/CreateProvincePop';
 import { useDeleteProvinceMutation, useFetchProvinceMutation } from '../../slices/adminApiSlice.js';
 import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
 import UpdateProvincePop from './PopUps/UpdateProvincePop.jsx';
+import { MenuItem, Pagination } from '@mui/material';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -140,7 +141,8 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
     const handleClose = () => {
-        setOpen(false);
+        console.log("fix",open)
+        setOpen((preValue)=>(preValue ? false: preValue));
     }
     useEffect(() => {
         console.log("Dialog open state:", open);
@@ -219,23 +221,29 @@ EnhancedTableToolbar.propTypes = {
 };
 
 function ProvinceTable() {
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('_id');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {province} = useSelector(state=>state.province)
-    const services  = province
-    // const [CountryFetch, { isSuccess }] = useCountryFetchMutation();
-    const [FetchProvince , { isSuccess }] = useFetchProvinceMutation()
-    const [DeleteProvince] = useDeleteProvinceMutation()
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('_id');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(1); // Changed to start from 1
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const { province } = useSelector(state => state.province);
+    const services = province || [];
+    
+    const [FetchProvince, { isSuccess }] = useFetchProvinceMutation();
+    const [DeleteProvince] = useDeleteProvinceMutation();
     const dispatch = useDispatch();
+    console.log("row per page in compionent",rowsPerPage)
+    // Calculate pagination values
+    const totalPages = Math.ceil(services.length / rowsPerPage);
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const currentPageData = stableSort(services, getComparator(order, orderBy))
+        .slice(startIndex, endIndex);
 
     useEffect(() => {
         if (isSuccess) {
             toast.success('Data fetched successfully');
         }
-    
     }, [isSuccess]);
 
     useEffect(() => {
@@ -245,6 +253,7 @@ function ProvinceTable() {
                 dispatch(FetchProvinces(result));
             } catch (error) {
                 console.error('Failed to fetch services:', error);
+                toast.error('Failed to fetch data');
             }
         };
         fetchData();
@@ -258,7 +267,7 @@ function ProvinceTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services?.map((n) => n._id);
+            const newSelected = services.map((n) => n._id);
             setSelected(newSelected);
             return;
         }
@@ -287,15 +296,17 @@ function ProvinceTable() {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+    const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        const newRowsPerPage = parseInt(event.target.value,10);
+        console.log("event target value")
+        setRowsPerPage(newRowsPerPage);
+        console.log("row per page",newRowsPerPage)
+        setPage(1); 
     };
-
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
+    console.log("row",rowsPerPage)
+    console.log("page",page)
 
     const handleViewBanner = (banner) => {
         console.log('Viewing banner:', banner);
@@ -304,123 +315,99 @@ function ProvinceTable() {
     const handleDelete = async (id) => {
         try {
             const res = await DeleteProvince(id).unwrap();
-            dispatch(DeleteOneProvince(res))
+            dispatch(DeleteOneProvince(res));
+            toast.success('Province deleted successfully');
         } catch (error) {
-            toast.error('Error deleting banner');
+            toast.error('Error deleting province');
         }
     };
 
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={services?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
+            <EnhancedTableToolbar 
+                numSelected={selected.length} 
+                selectedRow={services.find((service) => service._id === selected[0])} 
+                onViewBanner={handleViewBanner} 
+                onDelete={handleDelete} 
+            />
+            <Table 
+                aria-labelledby="tableTitle" 
+                hoverRow 
+                sx={{ '--TableCell-headBackground': 'transparent' }}
+            >
                 <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={services.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
-                        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        ?.map((row, index) => {
-                            const isItemSelected = isSelected(row?._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-                            return (
-                                <tr
-                                    hover
-                                    onClick={(event) => handleClick(event, row?._id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row?._id}
-                                    selected={isItemSelected}
-                                >
-                                    <td>
-                                        <Checkbox
-                                            color={isItemSelected ? 'primary' : 'neutral'}
-                                            checked={isItemSelected}
-                                            slotProps={{ input: { 'aria-labelledby': labelId } }}
-                                            sx={{ verticalAlign: 'sub' }}
-                                        />
-                                    </td>
-                                    <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.name}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
-                                </tr>
-                            );
-                        })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
+                    {currentPageData.map((service, index) => {
+                        const isItemSelected = isSelected(service._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
+                        return (
+                            <tr
+                                key={service._id}
+                                hover
+                                onClick={(event) => handleClick(event, service._id)}
+                                role="checkbox"
+                                aria-checked={isItemSelected}
+                                tabIndex={-1}
+                                selected={isItemSelected}
+                            >
+                                <td>
+                                    <Checkbox
+                                        checked={isItemSelected}
+                                        inputProps={{
+                                            'aria-labelledby': labelId,
+                                        }}
+                                    />
+                                </td>
+                                <td>{service._id}</td>
+                                <td>{service.name}</td>
+                                <td>{service.heading}</td>
+                                <td>{new Date(service.createdAt).toLocaleDateString()}</td>
+                                <td>{new Date(service.updatedAt).toLocaleDateString()}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
-                <Select
-                    variant="outlined"
-                    size="sm"
+
+            <Box sx={{ 
+                flexShrink: 0, 
+                display: 'flex', 
+                justifyContent: 'flex-end', 
+                alignItems: 'center',
+                gap: 2,
+                py: 2,
+                px: 2
+            }}>
+                <Typography level="body-sm">
+                    Rows per page:
+                </Typography>
+                <select
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
+                    size="sm"
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
-                        <Option key={rowsPerPageOption} value={rowsPerPageOption}>
-                            {rowsPerPageOption} rows
-                        </Option>
-                    ))}
-                </Select>
-                <Typography textColor="text.secondary" fontSize="sm">
-                    {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > services?.length
-                        ? services?.length
-                        : page * rowsPerPage + rowsPerPage}{' '}
-                    of {services?.length}
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={25}>25</option>
+                </select>
+                <Typography level="body-sm">
+                    {`${startIndex + 1}-${Math.min(endIndex, services.length)} of ${services.length}`}
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton
+                <Box>
+                    <Pagination
+                        count={totalPages}
+                        page={page}
+                        onChange={handleChangePage}
                         size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(null, page - 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
-                    </IconButton>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
-                        onClick={() => handleChangePage(null, page + 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
-                    </IconButton>
+                    />
                 </Box>
             </Box>
         </Box>

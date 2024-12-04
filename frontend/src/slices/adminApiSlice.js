@@ -140,7 +140,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 
                 url: `${USERS_URL}/countries/${data.id}`,
                 method: 'PUT',
-                body:data.form,
+                body:data.raw,
             }),
         }),
         CountryFetchOne:builder.mutation({

@@ -136,7 +136,12 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   };
 
   const onSubmit = async () => {
-    const res = await updateCountry({ id: countryData._id, ...formValues }).unwrap();
+    console.log("form valie",formValues)
+    const data  = {
+      id:countryData._id,
+      raw :formValues
+    }
+    const res = await updateCountry(data).unwrap();
     handleClose();
   };
 
@@ -157,6 +162,20 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
       sectionImages: prev.sectionImages.filter((_, i) => i !== index),
     }));
   };
+  // Inside the form component:
+const addFAQ = () => {
+  setFormValues((prevValues) => ({
+    ...prevValues,
+    faq: [...prevValues.faq, { question: '', answer: '' }],
+  }));
+};
+
+const removeFAQ = (index) => {
+  setFormValues((prevValues) => ({
+    ...prevValues,
+    faq: prevValues.faq.filter((_, i) => i !== index),
+  }));
+};
 
   useEffect(() => {
     if (isSuccess) {
@@ -270,6 +289,44 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
               </AccordionDetails>
             </Accordion>
           ))}
+
+          {/* FAQ Fields */}
+<Typography variant="h6" className="mt-4">FAQs</Typography>
+{formValues.faq.map((faqItem, index) => (
+  <Accordion key={index}>
+    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography>FAQ {index + 1}</Typography>
+    </AccordionSummary>
+    <AccordionDetails className='flex flex-col gap-4'>
+      <TextField
+        label="Question"
+        name={`faq.${index}.question`}
+        variant="standard"
+        value={faqItem.question}
+        onChange={handleChange}
+        className="mb-2"
+      />
+      <TextField
+        label="Answer"
+        name={`faq.${index}.answer`}
+        variant="standard"
+        value={faqItem.answer}
+        onChange={handleChange}
+        className="mb-2"
+      />
+      <Button
+        variant="contained"
+        color="error"
+        onClick={() => removeFAQ(index)}
+      >
+        Remove FAQ
+      </Button>
+    </AccordionDetails>
+  </Accordion>
+))}
+<Button variant="outlined" onClick={addFAQ} className="mt-2">
+  Add FAQ
+</Button>
           <Button variant="outlined" onClick={addSection} className="mt-2">
             Add Section
           </Button>

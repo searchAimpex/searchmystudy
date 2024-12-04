@@ -236,6 +236,8 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Banner Image"
                     />
+                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
+
                     <TextField
                         id="heroURL"
                         name="heroURL"
@@ -246,6 +248,8 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Hero Image"
                     />
+                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
+
                     <TextField
                         id="logo"
                         name="logo"
@@ -256,6 +260,8 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Logo"
                     />
+                                        <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
+
                     <TextField
                         id="description"
                         name="description"
@@ -335,8 +341,8 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} className="mr-4">Cancel</Button>
-                <Button onClick={onSubmit} className="bg-custom-primary">
-                    Update University
+                <Button onClick={onSubmit} className="text-white">
+                    Update
                 </Button>
             </DialogActions>
         </Dialog>

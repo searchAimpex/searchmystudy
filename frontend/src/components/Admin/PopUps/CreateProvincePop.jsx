@@ -1,29 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
-} from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React, { useState } from 'react';
+import { Button, TextField, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Dialog, DialogActions, DialogContent, DialogTitle, DialogContentText, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase';
-import { useCreateProvinceMutation } from '../../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
 import { AddProvince } from '../../../slices/provinceSlice';
+import { useCreateProvinceMutation } from '../../../slices/adminApiSlice';
+import {  ExpandMoreSharp } from '@mui/icons-material';
 
 const storage = getStorage(app);
 
@@ -36,10 +19,12 @@ export default function CreateProvincePop({ open, handleClose }) {
     sections: [{ title: '', description: '', url: '' }],
     Country: '',
   });
-
-  const [createProvince, { isSuccess }] = useCreateProvinceMutation();
+  const [bannerPreview, setBannerPreview] = useState(null);
+  const [heroPreview, setHeroPreview] = useState(null);
   const dispatch = useDispatch();
   const { countries } = useSelector((state) => state.country);
+
+  const [createProvince, { isSuccess }] = useCreateProvinceMutation();
 
   // Function to validate image dimensions
   const validateImageDimensions = (file, { width, height }) => {
@@ -67,6 +52,7 @@ export default function CreateProvincePop({ open, handleClose }) {
     });
   };
 
+  // Handle input change and file upload
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
 
@@ -74,6 +60,15 @@ export default function CreateProvincePop({ open, handleClose }) {
       const file = files[0];
       if (file) {
         const dimensions = name === 'bannerURL' ? { width: 1500, height: 500 } : { width: 350, height: 400 };
+
+        // Show preview before upload
+        const previewURL = URL.createObjectURL(file);
+        if (name === 'bannerURL') {
+          setBannerPreview(previewURL);
+        } else if (name === 'heroURL') {
+          setHeroPreview(previewURL);
+        }
+
         try {
           await validateImageDimensions(file, dimensions);
           const imageURL = await uploadImage(file);
@@ -87,6 +82,7 @@ export default function CreateProvincePop({ open, handleClose }) {
     }
   };
 
+  // Upload image to Firebase
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `provinces/${file.name}`);
     await uploadBytes(storageRef, file);
@@ -94,6 +90,7 @@ export default function CreateProvincePop({ open, handleClose }) {
     return url;
   };
 
+  // Add section
   const addSection = () => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -101,6 +98,7 @@ export default function CreateProvincePop({ open, handleClose }) {
     }));
   };
 
+  // Remove section
   const removeSection = (index) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -108,6 +106,7 @@ export default function CreateProvincePop({ open, handleClose }) {
     }));
   };
 
+  // Submit form
   const onSubmit = async () => {
     try {
       const res = await createProvince(formValues).unwrap();
@@ -119,49 +118,139 @@ export default function CreateProvincePop({ open, handleClose }) {
       toast.error(error.message || 'Failed to add province');
     }
   };
+  const handlecancell = (e)=>{
+    e.stopPropagation();
+    handleClose();
+  }
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose}>
       <DialogTitle className='text-white bg-custom-primary font-bold'>Add Province</DialogTitle>
       <DialogContent>
         <DialogContentText>You can add a province.</DialogContentText>
-        <Box component="form" sx={{ display: 'flex', flexDirection: 'column', m: 'auto', width: 'fit-content' }} className="space-y-6 my-2">
-          <TextField id="name" name="name" label="Name" variant="standard" value={formValues.name} onChange={handleChange} className="mb-2" />
-          <TextField id="bannerURL" name="bannerURL" type="file" variant="standard" onChange={handleChange} className="mb-2" label="Banner Image" />
-          <TextField id="heroURL" name="heroURL" type="file" variant="standard" onChange={handleChange} className="mb-2" label="Hero Image" />
-          <TextField id="description" name="description" label="Description" variant="standard" value={formValues.description} onChange={handleChange} className="mb-2" />
+        <Grid container spacing={2}>
+          {/* Name */}
+          <Grid item xs={12}>
+            <TextField
+              id="name"
+              name="name"
+              label="Name"
+              variant="standard"
+              value={formValues.name}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
+
+          {/* Banner Image */}
+          <Grid item xs={12}>
+            <TextField
+              id="bannerURL"
+              name="bannerURL"
+              type="file"
+              variant="standard"
+              onChange={handleChange}
+              fullWidth
+              label="Banner Image"
+            />
+            {bannerPreview && (
+              <img src={bannerPreview} alt="Banner Preview" width="200" height="auto" />
+            )}
+            <span className="text-red-300 font-bold">Banner Image should be 1500px x 500px</span>
+          </Grid>
+
+          {/* Hero Image */}
+          <Grid item xs={12}>
+            <TextField
+              id="heroURL"
+              name="heroURL"
+              type="file"
+              variant="standard"
+              onChange={handleChange}
+              fullWidth
+              label="Hero Image"
+            />
+            {heroPreview && (
+              <img src={heroPreview} alt="Hero Preview" width="200" height="auto" />
+            )}
+            <span className="text-red-300 font-bold">Hero Image should be 350px x 400px</span>
+          </Grid>
+
+          {/* Description */}
+          <Grid item xs={12}>
+            <TextField
+              id="description"
+              name="description"
+              label="Description"
+              variant="standard"
+              value={formValues.description}
+              onChange={handleChange}
+              fullWidth
+            />
+          </Grid>
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (
-            <Accordion key={index}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>Section {index + 1}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className='flex flex-col gap-6'>
-                <TextField id={`sectionTitle${index}`} name={`sections.${index}.title`} label="Title" variant="standard" value={section.title} onChange={handleChange} className="mb-2" />
-                <TextField id={`sectionDescription${index}`} name={`sections.${index}.description`} label="Description" variant="standard" value={section.description} onChange={handleChange} className="mb-2" />
-                <TextField id={`sectionURL${index}`} name={`sections.${index}.url`} label="Image URL" variant="standard" type="file" onChange={handleChange} className="mb-2" />
-                <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
-              </AccordionDetails>
-            </Accordion>
+            <Grid item xs={12} key={index}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreSharp />}>
+                  <Typography>Section {index + 1}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    id={`sectionTitle${index}`}
+                    name={`sections.${index}.title`}
+                    label="Title"
+                    variant="standard"
+                    value={section.title}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    id={`sectionDescription${index}`}
+                    name={`sections.${index}.description`}
+                    label="Description"
+                    variant="standard"
+                    value={section.description}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    id={`sectionURL${index}`}
+                    name={`sections.${index}.url`}
+                    label="Image URL"
+                    variant="standard"
+                    type="file"
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
           ))}
-          <Button onClick={addSection} variant="contained">Add Section</Button>
+          <Grid item xs={12}>
+            <Button onClick={addSection} variant="contained">Add Section</Button>
+          </Grid>
 
-          <FormControl fullWidth variant="standard">
-            <InputLabel>Country</InputLabel>
-            <Select name="Country" value={formValues.Country} onChange={handleChange}>
-              {countries.map((country) => (
-                <MenuItem key={country.id} value={country.name}>
-                  {country.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
+          {/* Country Select */}
+          <Grid item xs={12}>
+            <FormControl fullWidth variant="standard">
+              <InputLabel>Country</InputLabel>
+              <Select name="Country" value={formValues.Country} onChange={handleChange} fullWidth>
+                {countries.map((country) => (
+                  <MenuItem key={country.id} value={country.name}>
+                    {country.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={onSubmit}>Submit</Button>
+        <Button onClick={handlecancell}>Cancel</Button>
+        <Button onClick={onSubmit} disabled={!formValues.name || !formValues.Country || !formValues.bannerURL || !formValues.heroURL}>Submit</Button>
       </DialogActions>
     </Dialog>
   );

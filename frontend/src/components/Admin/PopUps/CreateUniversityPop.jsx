@@ -200,7 +200,10 @@ export default function CreateUniversityPop({ open, handleClose }) {
             toast.success('University Added Successfully');
         }
     }, [isSuccess]);
-
+    const handlecancell = (e)=>{
+        e.stopPropagation();
+        handleClose();
+      }
     useEffect(() => {
         // Check if all required images are valid
         const allImagesValid = Object.values(imageValidations).every(Boolean);
@@ -238,6 +241,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         className="mb-2"
                         label="Banner Image"
                     />
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
                     <TextField
                         id="heroURL"
                         name="heroURL"
@@ -248,6 +252,8 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         className="mb-2"
                         label="Hero Image"
                     />
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-400px h-300px</span>
+
                     <TextField
                         id="logo"
                         name="logo"
@@ -258,6 +264,8 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         className="mb-2"
                         label="Logo"
                     />
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
+
                     <TextField
                         id="description"
                         name="description"
@@ -382,7 +390,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                 </Box>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handlecancell}>Cancel</Button>
                 <Button onClick={onSubmit} disabled={!isFormValid}>
                     Submit
                 </Button>
