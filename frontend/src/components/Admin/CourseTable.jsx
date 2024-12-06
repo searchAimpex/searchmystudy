@@ -35,9 +35,9 @@ import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
-    { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
+    { id: 'university', numeric: false, disablePadding: false, label: 'University' },
+    { id: 'category', numeric: false, disablePadding: false, label: 'Category' },
+    { id: 'location', numeric: false, disablePadding: false, label: 'Location' },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -352,10 +352,10 @@ function CourseTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.name}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
+                                    <td>{row?.ProgramName}</td>
+                                    <td>{row?.University?.name}</td>
+                                    <td>{row?.Category}</td>
+                                    <td>{row?.Location}</td>
                                 </tr>
                             );
                         })}
