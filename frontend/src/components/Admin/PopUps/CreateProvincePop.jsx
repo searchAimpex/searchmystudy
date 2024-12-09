@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { AddProvince } from '../../../slices/provinceSlice';
 import { useCreateProvinceMutation } from '../../../slices/adminApiSlice';
-import {  ExpandMoreSharp } from '@mui/icons-material';
+import { ExpandMoreSharp } from '@mui/icons-material';
 
 const storage = getStorage(app);
 
@@ -21,12 +21,12 @@ export default function CreateProvincePop({ open, handleClose }) {
   });
   const [bannerPreview, setBannerPreview] = useState(null);
   const [heroPreview, setHeroPreview] = useState(null);
+  const [sectionPreviews, setSectionPreviews] = useState([null]);
+  
   const dispatch = useDispatch();
   const { countries } = useSelector((state) => state.country);
+  const [createProvince] = useCreateProvinceMutation();
 
-  const [createProvince, { isSuccess }] = useCreateProvinceMutation();
-
-  // Function to validate image dimensions
   const validateImageDimensions = (file, { width, height }) => {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -52,77 +52,87 @@ export default function CreateProvincePop({ open, handleClose }) {
     });
   };
 
-  // Handle input change and file upload
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-  
+
     if (type === 'file') {
       const file = files[0];
       if (file) {
-        const dimensions = name === 'bannerURL' ? { width: 1500, height: 500 } : { width: 350, height: 400 };
-  
-        // Show preview before upload
-        const previewURL = URL.createObjectURL(file);
-        if (name === 'bannerURL') {
-          setBannerPreview(previewURL);
-        } else if (name === 'heroURL') {
-          setHeroPreview(previewURL);
-        }
-  
         try {
-          await validateImageDimensions(file, dimensions);
-          const imageURL = await uploadImage(file);
-          setFormValues((prevValues) => ({ ...prevValues, [name]: imageURL }));
+          if (name === 'bannerURL') {
+            await validateImageDimensions(file, { width: 1500, height: 500 });
+            const previewURL = URL.createObjectURL(file);
+            setBannerPreview(previewURL);
+            const imageURL = await uploadImage(file);
+            setFormValues(prev => ({ ...prev, bannerURL: imageURL }));
+          } 
+          else if (name === 'heroURL') {
+            await validateImageDimensions(file, { width: 350, height: 400 });
+            const previewURL = URL.createObjectURL(file);
+            setHeroPreview(previewURL);
+            const imageURL = await uploadImage(file);
+            setFormValues(prev => ({ ...prev, heroURL: imageURL }));
+          }
+          else if (name.startsWith('sectionImage')) {
+            const sectionIndex = parseInt(name.split('-')[1]);
+            const previewURL = URL.createObjectURL(file);
+            setSectionPreviews(prev => {
+              const newPreviews = [...prev];
+              newPreviews[sectionIndex] = previewURL;
+              return newPreviews;
+            });
+            const imageURL = await uploadImage(file);
+            setFormValues(prev => {
+              const newSections = [...prev.sections];
+              newSections[sectionIndex] = {
+                ...newSections[sectionIndex],
+                url: imageURL
+              };
+              return { ...prev, sections: newSections };
+            });
+          }
         } catch (error) {
           toast.error(error.message);
         }
       }
-    } else if (name.includes('sections')) {
-      const sectionIndex = name.split('.')[1]; // Get section index from the name
-      const fieldName = name.split('.')[2]; // Get the field name (title, description, etc.)
-  
-      // Update the specific section field dynamically
-      setFormValues((prevValues) => {
-        const updatedSections = [...prevValues.sections];
-        updatedSections[sectionIndex] = {
-          ...updatedSections[sectionIndex],
-          [fieldName]: value,
+    } else if (name.startsWith('section-')) {
+      const [, index, field] = name.split('-');
+      setFormValues(prev => {
+        const newSections = [...prev.sections];
+        newSections[parseInt(index)] = {
+          ...newSections[parseInt(index)],
+          [field]: value
         };
-        return {
-          ...prevValues,
-          sections: updatedSections,
-        };
+        return { ...prev, sections: newSections };
       });
     } else {
-      setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
+      setFormValues(prev => ({ ...prev, [name]: value }));
     }
   };
-  
-  // Upload image to Firebase
+
   const uploadImage = async (file) => {
-    const storageRef = ref(storage, `provinces/${file.name}`);
+    const storageRef = ref(storage, `provinces/${Date.now()}-${file.name}`);
     await uploadBytes(storageRef, file);
     const url = await getDownloadURL(storageRef);
     return url;
   };
 
-  // Add section
   const addSection = () => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      sections: [...prevValues.sections, { title: '', description: '', url: '' }],
+    setFormValues(prev => ({
+      ...prev,
+      sections: [...prev.sections, { title: '', description: '', url: '' }]
     }));
+    setSectionPreviews(prev => [...prev, null]);
   };
 
-  // Remove section
   const removeSection = (index) => {
-    setFormValues((prevValues) => ({
-      ...prevValues,
-      sections: prevValues.sections.filter((_, i) => i !== index),
+    setFormValues(prev => ({
+      ...prev,
+      sections: prev.sections.filter((_, i) => i !== index)
     }));
+    setSectionPreviews(prev => prev.filter((_, i) => i !== index));
   };
 
-  // Submit form
   const onSubmit = async () => {
     try {
       const res = await createProvince(formValues).unwrap();
@@ -134,10 +144,6 @@ export default function CreateProvincePop({ open, handleClose }) {
       toast.error(error.message || 'Failed to add province');
     }
   };
-  const handlecancell = (e)=>{
-    e.stopPropagation();
-    handleClose();
-  }
 
   return (
     <Dialog fullWidth open={open} onClose={handleClose}>
@@ -145,10 +151,8 @@ export default function CreateProvincePop({ open, handleClose }) {
       <DialogContent>
         <DialogContentText>You can add a province.</DialogContentText>
         <Grid container spacing={2}>
-          {/* Name */}
           <Grid item xs={12}>
             <TextField
-              id="name"
               name="name"
               label="Name"
               variant="standard"
@@ -158,10 +162,8 @@ export default function CreateProvincePop({ open, handleClose }) {
             />
           </Grid>
 
-          {/* Banner Image */}
           <Grid item xs={12}>
             <TextField
-              id="bannerURL"
               name="bannerURL"
               type="file"
               variant="standard"
@@ -169,16 +171,12 @@ export default function CreateProvincePop({ open, handleClose }) {
               fullWidth
               label="Banner Image"
             />
-            {bannerPreview && (
-              <img src={bannerPreview} alt="Banner Preview" width="200" height="auto" />
-            )}
+            {bannerPreview && <img src={bannerPreview} alt="Banner Preview" width="200" height="auto" />}
             <span className="text-red-300 font-bold">Banner Image should be 1500px x 500px</span>
           </Grid>
 
-          {/* Hero Image */}
           <Grid item xs={12}>
             <TextField
-              id="heroURL"
               name="heroURL"
               type="file"
               variant="standard"
@@ -186,16 +184,12 @@ export default function CreateProvincePop({ open, handleClose }) {
               fullWidth
               label="Hero Image"
             />
-            {heroPreview && (
-              <img src={heroPreview} alt="Hero Preview" width="200" height="auto" />
-            )}
+            {heroPreview && <img src={heroPreview} alt="Hero Preview" width="200" height="auto" />}
             <span className="text-red-300 font-bold">Hero Image should be 350px x 400px</span>
           </Grid>
 
-          {/* Description */}
           <Grid item xs={12}>
             <TextField
-              id="description"
               name="description"
               label="Description"
               variant="standard"
@@ -206,56 +200,55 @@ export default function CreateProvincePop({ open, handleClose }) {
           </Grid>
 
           {formValues.sections.map((section, index) => (
-          <Grid item xs={12} key={index}>
-            <Accordion>
-              <AccordionSummary expandIcon={<ExpandMoreSharp />}>
-                <Typography>Section {index + 1}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <TextField
-                  id={`sectionTitle${index}`}
-                  name={`sections.${index}.title`}  // Corrected name
-                  label="Title"
-                  variant="standard"
-                  value={section.title}
-                  onChange={handleChange}
-                  fullWidth
-                />
-                <TextField
-                  id={`sectionDescription${index}`}
-                  name={`sections.${index}.description`}  // Corrected name
-                  label="Description"
-                  variant="standard"
-                  value={section.description}
-                  onChange={handleChange}
-                  fullWidth
-                />
-                <TextField
-                  id={`sectionURL${index}`}
-                  name={`sections.${index}.url`}  // Corrected name
-                  label="Image URL"
-                  variant="standard"
-                  type="file"
-                  onChange={handleChange}
-                  fullWidth
-                />
-                <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
-              </AccordionDetails>
-            </Accordion>
-          </Grid>
-        ))}
+            <Grid item xs={12} key={index}>
+              <Accordion>
+                <AccordionSummary expandIcon={<ExpandMoreSharp />}>
+                  <Typography>Section {index + 1}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <TextField
+                    name={`section-${index}-title`}
+                    label="Title"
+                    variant="standard"
+                    value={section.title}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name={`section-${index}-description`}
+                    label="Description"
+                    variant="standard"
+                    value={section.description}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    name={`sectionImage-${index}`}
+                    label="Image URL"
+                    variant="standard"
+                    type="file"
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  {sectionPreviews[index] && (
+                    <img src={sectionPreviews[index]} alt={`Section ${index + 1}`} width="200" height="auto" />
+                  )}
+                  <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+          ))}
 
           <Grid item xs={12}>
             <Button onClick={addSection} variant="contained">Add Section</Button>
           </Grid>
 
-          {/* Country Select */}
           <Grid item xs={12}>
             <FormControl fullWidth variant="standard">
               <InputLabel>Country</InputLabel>
-              <Select name="Country" value={formValues.Country} onChange={handleChange} fullWidth>
+              <Select name="Country" value={formValues.Country} onChange={handleChange}>
                 {countries.map((country) => (
-                  <MenuItem key={country.id} value={country.name}>
+                  <MenuItem key={country.id} value={country._id}>
                     {country.name}
                   </MenuItem>
                 ))}
@@ -265,7 +258,7 @@ export default function CreateProvincePop({ open, handleClose }) {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handlecancell}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button onClick={onSubmit} disabled={!formValues.name || !formValues.Country || !formValues.bannerURL || !formValues.heroURL}>Submit</Button>
       </DialogActions>
     </Dialog>

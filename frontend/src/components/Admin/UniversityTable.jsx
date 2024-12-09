@@ -24,18 +24,21 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 
 import CreateProvincePop from './PopUps/CreateProvincePop';
-import { useDeleteProvinceMutation, useDeleteUniversityMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
-import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
+import { useCountryFetchMutation, useDeleteUniversityMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
+import {   FetchProvinces } from '../../slices/provinceSlice.js';
 import { DeleteOneUniversity, FetchUniversitys } from '../../slices/universitySlice.js';
 import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import UpdateUniversityPop from './PopUps/UpdateUniversityPop.jsx';
+import { FetchCountry } from '../../slices/countrySlice.js';
+import { MenuItem } from '@mui/material';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
+    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
+    { id: 'province', numeric: false, disablePadding: false, label: 'Province' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
+
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -220,38 +223,50 @@ EnhancedTableToolbar.propTypes = {
     onViewBanner: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };
-
 function UniversityTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {university} = useSelector(state=>state.university)
-    const services  = university
-    // const [CountryFetch, { isSuccess }] = useCountryFetchMutation();
-    const [FetchUniversity , { isSuccess }] = useFetchUniversityMutation()
-    const [DeleteUniversity] = useDeleteUniversityMutation()
+    const { university } = useSelector(state => state.university);
+    const services = university;
+    
+    const [FetchUniversity, { isSuccess }] = useFetchUniversityMutation();
+    const [DeleteUniversity] = useDeleteUniversityMutation();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Data fetched successfully');
-        }
+    const [CountryFetch] = useCountryFetchMutation();
+    const [FetchProvince] = useFetchProvinceMutation();
     
-    }, [isSuccess]);
+    const { province } = useSelector(state => state.province);
+    const { countries } = useSelector(state => state.country);
+    
+    const [selectedCountry, setSelectedCountry] = useState('all');
+    const [selectedProvince, setSelectedProvince] = useState('all');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await FetchUniversity().unwrap();
                 dispatch(FetchUniversitys(result));
+                const result2 = await FetchProvince().unwrap();
+                const result3 = await CountryFetch().unwrap();
+                dispatch(FetchCountry(result3));
+                dispatch(FetchProvinces(result2));
             } catch (error) {
                 console.error('Failed to fetch services:', error);
             }
         };
         fetchData();
     }, [FetchUniversity, dispatch]);
+
+    // Filter universities based on selected country and province
+    const filteredServices = services.filter((service) => {
+        const matchesCountry = selectedCountry === 'all' || service?.Province?.Country === selectedCountry;
+        const matchesProvince = selectedProvince === 'all' || service?.Province?._id === selectedProvince;
+        return matchesCountry && matchesProvince;
+    });
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -298,7 +313,7 @@ function UniversityTable() {
 
     const isSelected = (name) => selected.indexOf(name) !== -1;
 
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
+    const emptyRows = rowsPerPage - Math.min(rowsPerPage, filteredServices?.length - page * rowsPerPage);
 
     const handleViewBanner = (banner) => {
         console.log('Viewing banner:', banner);
@@ -313,9 +328,52 @@ function UniversityTable() {
         }
     };
 
+  
+    const handleCountryChange = (event) => {
+        setSelectedCountry(event.target.value);
+        setSelectedProvince('all'); // Reset province when country changes
+    };
+
+    const handleProvinceChange = (event) => {
+        setSelectedProvince(event.target.value);
+    };
+    console.log("country ===>",selectedCountry)
+    console.log("provincve",selectedProvince)
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={services?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
+      <Box sx={{ p: 2, display: 'flex', gap: 2 }}>
+                <select
+                    variant="outlined"
+                    size="sm"
+                    value={selectedCountry}
+                    onChange={handleCountryChange}
+                >
+                    <option value="all">All Countries</option>
+                    {countries?.map((country) => (
+                        <option key={country._id} value={country._id}>
+                            {country.name}
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    variant="outlined"
+                    size="sm"
+                    value={selectedProvince}
+                    onChange={handleProvinceChange}
+                >
+                    <option value="all">All Provinces</option>
+                    {province
+                        ?.filter((prov) => prov.Country._id === selectedCountry)
+                        .map((prov) => (
+                            <option key={prov._id} value={prov._id}>
+                                {prov.name}
+                            </option>
+                        ))}
+                </select>
+            </Box>
+
+            <EnhancedTableToolbar numSelected={selected.length} selectedRow={filteredServices?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -323,10 +381,10 @@ function UniversityTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={filteredServices?.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
+                    {stableSort(filteredServices, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -349,9 +407,9 @@ function UniversityTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
+                                    <td id={labelId}>{row?.name}</td>
                                     <td>{row?.name}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
+                                    <td>"xis'</td>
                                     <td>{row?.createdAt}</td>
                                     <td>{row?.updatedAt}</td>
                                 </tr>
@@ -392,10 +450,10 @@ function UniversityTable() {
                 </Select>
                 <Typography textColor="text.secondary" fontSize="sm">
                     {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > services?.length
-                        ? services?.length
+                    {page * rowsPerPage + rowsPerPage > filteredServices?.length
+                        ? filteredServices?.length
                         : page * rowsPerPage + rowsPerPage}{' '}
-                    of {services?.length}
+                    of {filteredServices?.length}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
@@ -415,7 +473,7 @@ function UniversityTable() {
                         size="sm"
                         color="neutral"
                         variant="outlined"
-                        disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
+                        disabled={page >= Math.ceil(filteredServices?.length / rowsPerPage) - 1}
                         onClick={() => handleChangePage(null, page + 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
@@ -429,5 +487,4 @@ function UniversityTable() {
         </Box>
     );
 }
-
 export default UniversityTable;

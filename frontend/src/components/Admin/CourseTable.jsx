@@ -24,18 +24,23 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 
 import CreateProvincePop from './PopUps/CreateProvincePop';
-import { useDeleteProvinceMutation, useDeleteUniversityMutation, useFetchCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
+import { useCountryFetchMutation, useDeleteProvinceMutation, useDeleteUniversityMutation, useFetchCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
 import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
 import { DeleteOneUniversity, FetchUniversitys } from '../../slices/universitySlice.js';
 import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import CreateCoursePop from './PopUps/CreateCoursePop.jsx';
 import { FetchCourses } from '../../slices/courseSlice.js';
 import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
+import { FetchCountry } from '../../slices/countrySlice.js';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
     { id: 'university', numeric: false, disablePadding: false, label: 'University' },
+
+    { id: 'pronvice', numeric: false, disablePadding: false, label: 'Pronvice' },
+
+    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
+
     { id: 'category', numeric: false, disablePadding: false, label: 'Category' },
     { id: 'location', numeric: false, disablePadding: false, label: 'Location' },
 ];
@@ -222,32 +227,39 @@ EnhancedTableToolbar.propTypes = {
     onViewBanner: PropTypes.func.isRequired,
     onDelete: PropTypes.func.isRequired,
 };
-
 function CourseTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const {courses} = useSelector(state=>state.course)
-    const services  = courses
-    // const [CountryFetch, { isSuccess }] = useCountryFetchMutation();
-    const [FetchCourse , { isSuccess }] = useFetchCourseMutation()
-    const [DeleteUniversity] = useDeleteUniversityMutation()
+    const { courses } = useSelector(state => state.course);
+    const services = courses;
+    const [FetchCourse, { isSuccess }] = useFetchCourseMutation();
+    const [DeleteUniversity] = useDeleteUniversityMutation();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Data fetched successfully');
-        }
-    
-    }, [isSuccess]);
+    const [CountryFetch] = useCountryFetchMutation();
+    const [FetchProvince] = useFetchProvinceMutation();
+    const [FetchUniversity] = useFetchUniversityMutation();
+    const { province } = useSelector(state => state.province);
+    const { countries } = useSelector(state => state.country);
+    const { university } = useSelector(state => state.university);
+    const [selectedCountry, setSelectedCountry] = useState('all');
+    const [selectedProvince, setSelectedProvince] = useState('all');
+    const [selectedUniversity, setSelectedUniversity] = useState('all');
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await FetchCourse().unwrap();
                 dispatch(FetchCourses(result));
+                const resul2 = await FetchUniversity().unwrap();
+                dispatch(FetchUniversitys(resul2));
+                const result3 = await FetchProvince().unwrap();
+                const result4 = await CountryFetch().unwrap();
+                dispatch(FetchCountry(result4));
+                dispatch(FetchProvinces(result3));
             } catch (error) {
                 console.error('Failed to fetch services:', error);
             }
@@ -302,22 +314,71 @@ function CourseTable() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
 
-    const handleViewBanner = (banner) => {
-        console.log('Viewing banner:', banner);
-    };
-
     const handleDelete = async (id) => {
         try {
             const res = await DeleteUniversity(id).unwrap();
-            dispatch(DeleteOneUniversity(res))
+            dispatch(DeleteOneUniversity(res));
         } catch (error) {
             toast.error('Error deleting banner');
         }
     };
 
+    // Filtered Services
+    const filteredServices = services?.filter(service => {
+        const matchesProvince = selectedProvince === 'all' || service?.University.Province === selectedProvince;
+        const matchesUniversity = selectedUniversity === 'all' || service?.University?._id === selectedUniversity;
+        return  matchesProvince && matchesUniversity;
+    });
+    console.log("course",selectedCountry)
+    console.log("Country",selectedProvince)
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={services?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
+            <EnhancedTableToolbar
+                numSelected={selected.length}
+                selectedRow={services?.find((service) => service._id === selected[0])}
+                onDelete={handleDelete}
+            />
+            
+            {/* Filters Section */}
+            <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+                <select
+                    variant="outlined"
+                    size="sm"
+                    value={selectedCountry}
+                    onChange={(e) => setSelectedCountry(e.target.value)}
+                >
+                    <option value="all">All Countries</option>
+                    {countries?.map(country => (
+                        <option key={country._id} value={country._id}>{country.name}</option>
+                    ))}
+                </select>
+
+                <select
+                    variant="outlined"
+                    size="sm"
+                    value={selectedProvince}
+                    onChange={(e) => setSelectedProvince(e.target.value)}
+                >
+                    <option value="all">All Provinces</option>
+                    {province?.filter(p => p?.Country._id === selectedCountry)?.map(p => (
+                        <option key={p._id} value={p._id}>{p.name}</option>
+                    ))}
+                </select>
+
+                <select
+                    variant="outlined"
+                    size="sm"
+                    value={selectedUniversity}
+                    onChange={(e) => setSelectedUniversity(e.target.value)}
+                >
+                    <option value="all">All Universities</option>
+                    {university?.filter(u => u?.Province?._id === selectedProvince)?.map(u => (
+                        <option key={u._id} value={u._id}>{u.name}</option>
+                    ))}
+                </select>
+            </Box>
+            
+            {/* Table Section */}
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -325,10 +386,10 @@ function CourseTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
+                    rowCount={filteredServices?.length}
                 />
                 <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
+                    {stableSort(filteredServices, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -366,20 +427,9 @@ function CourseTable() {
                     )}
                 </tbody>
             </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
+
+            {/* Pagination Section */}
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 2, p: 2 }}>
                 <Select
                     variant="outlined"
                     size="sm"
@@ -394,10 +444,10 @@ function CourseTable() {
                 </Select>
                 <Typography textColor="text.secondary" fontSize="sm">
                     {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > services?.length
-                        ? services?.length
+                    {page * rowsPerPage + rowsPerPage > filteredServices?.length
+                        ? filteredServices?.length
                         : page * rowsPerPage + rowsPerPage}{' '}
-                    of {services?.length}
+                    of {filteredServices?.length}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
@@ -408,23 +458,17 @@ function CourseTable() {
                         onClick={() => handleChangePage(null, page - 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(90deg)' }} />
                     </IconButton>
                     <IconButton
                         size="sm"
                         color="neutral"
                         variant="outlined"
-                        disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
+                        disabled={page >= Math.ceil(filteredServices?.length / rowsPerPage) - 1}
                         onClick={() => handleChangePage(null, page + 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(-90deg)' }} />
                     </IconButton>
                 </Box>
             </Box>
