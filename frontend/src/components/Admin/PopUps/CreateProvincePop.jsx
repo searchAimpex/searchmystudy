@@ -37,7 +37,7 @@ export default function CreateProvincePop({ open, handleClose }) {
       };
 
       img.onload = () => {
-        if (img.width === width && img.height === height) {
+        if (img.width >= width && img.height >= height) {
           resolve(true);
         } else {
           reject(new Error(`Image dimensions must be ${width}x${height} pixels.`));
@@ -55,12 +55,12 @@ export default function CreateProvincePop({ open, handleClose }) {
   // Handle input change and file upload
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-
+  
     if (type === 'file') {
       const file = files[0];
       if (file) {
         const dimensions = name === 'bannerURL' ? { width: 1500, height: 500 } : { width: 350, height: 400 };
-
+  
         // Show preview before upload
         const previewURL = URL.createObjectURL(file);
         if (name === 'bannerURL') {
@@ -68,7 +68,7 @@ export default function CreateProvincePop({ open, handleClose }) {
         } else if (name === 'heroURL') {
           setHeroPreview(previewURL);
         }
-
+  
         try {
           await validateImageDimensions(file, dimensions);
           const imageURL = await uploadImage(file);
@@ -77,11 +77,27 @@ export default function CreateProvincePop({ open, handleClose }) {
           toast.error(error.message);
         }
       }
+    } else if (name.includes('sections')) {
+      const sectionIndex = name.split('.')[1]; // Get section index from the name
+      const fieldName = name.split('.')[2]; // Get the field name (title, description, etc.)
+  
+      // Update the specific section field dynamically
+      setFormValues((prevValues) => {
+        const updatedSections = [...prevValues.sections];
+        updatedSections[sectionIndex] = {
+          ...updatedSections[sectionIndex],
+          [fieldName]: value,
+        };
+        return {
+          ...prevValues,
+          sections: updatedSections,
+        };
+      });
     } else {
       setFormValues((prevValues) => ({ ...prevValues, [name]: value }));
     }
   };
-
+  
   // Upload image to Firebase
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `provinces/${file.name}`);
@@ -189,46 +205,46 @@ export default function CreateProvincePop({ open, handleClose }) {
             />
           </Grid>
 
-          {/* Sections */}
           {formValues.sections.map((section, index) => (
-            <Grid item xs={12} key={index}>
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreSharp />}>
-                  <Typography>Section {index + 1}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <TextField
-                    id={`sectionTitle${index}`}
-                    name={`sections.${index}.title`}
-                    label="Title"
-                    variant="standard"
-                    value={section.title}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    id={`sectionDescription${index}`}
-                    name={`sections.${index}.description`}
-                    label="Description"
-                    variant="standard"
-                    value={section.description}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <TextField
-                    id={`sectionURL${index}`}
-                    name={`sections.${index}.url`}
-                    label="Image URL"
-                    variant="standard"
-                    type="file"
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
-                </AccordionDetails>
-              </Accordion>
-            </Grid>
-          ))}
+          <Grid item xs={12} key={index}>
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreSharp />}>
+                <Typography>Section {index + 1}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <TextField
+                  id={`sectionTitle${index}`}
+                  name={`sections.${index}.title`}  // Corrected name
+                  label="Title"
+                  variant="standard"
+                  value={section.title}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id={`sectionDescription${index}`}
+                  name={`sections.${index}.description`}  // Corrected name
+                  label="Description"
+                  variant="standard"
+                  value={section.description}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id={`sectionURL${index}`}
+                  name={`sections.${index}.url`}  // Corrected name
+                  label="Image URL"
+                  variant="standard"
+                  type="file"
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <Button onClick={() => removeSection(index)} color="error">Remove Section</Button>
+              </AccordionDetails>
+            </Accordion>
+          </Grid>
+        ))}
+
           <Grid item xs={12}>
             <Button onClick={addSection} variant="contained">Add Section</Button>
           </Grid>

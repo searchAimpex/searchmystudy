@@ -1,45 +1,36 @@
-import * as React from 'react';
-import PropTypes from 'prop-types';
-import Box from '@mui/joy/Box';
-import Table from '@mui/joy/Table';
-import Typography from '@mui/joy/Typography';
-import Checkbox from '@mui/joy/Checkbox';
-import Link from '@mui/joy/Link';
-import Tooltip from '@mui/joy/Tooltip';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import IconButton from '@mui/joy/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import { visuallyHidden } from '@mui/utils';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    Box,
+    Typography,
+    Table,
+    Checkbox,
+    Select,
+    MenuItem,
+    Pagination,
+    InputLabel,
+    FormControl
+} from '@mui/material';
+import { Card, CardContent } from '@mui/joy';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
-// import {  useCountryFetchMutation, useCountryDeleteMutation } from '../../slices/adminApiSlice';
-
-import ImageViewPop from './PopUps/ImageViewPop.jsx';
-import { RemoveRedEye } from '@mui/icons-material';
-import { useState } from 'react';
-
+import {
+    useFetchProvinceMutation,
+    useDeleteProvinceMutation,
+    useCountryFetchMutation
+} from '../../slices/adminApiSlice';
+import { FetchProvinces, DeleteOneProvince } from '../../slices/provinceSlice';
+import { FetchCountry } from '../../slices/countrySlice';
 import CreateProvincePop from './PopUps/CreateProvincePop';
-import { useDeleteProvinceMutation, useFetchProvinceMutation } from '../../slices/adminApiSlice.js';
-import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
-import UpdateProvincePop from './PopUps/UpdateProvincePop.jsx';
-import { MenuItem, Pagination } from '@mui/material';
+import UpdateProvincePop from './PopUps/UpdateProvincePop';
 
-const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
-    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
-    { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
-    { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
-];
-
+// Utility functions for sorting
 function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) return -1;
-    if (b[orderBy] > a[orderBy]) return 1;
+    if (b[orderBy] < a[orderBy]) {
+        return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+        return 1;
+    }
     return 0;
 }
 
@@ -50,85 +41,61 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-    const stabilizedThis = array?.map((el, index) => [el, index]);
-    stabilizedThis?.sort((a, b) => {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
         return a[1] - b[1];
     });
-    return stabilizedThis?.map((el) => el[0]);
+    return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-    const createSortHandler = (property) => (event) => onRequestSort(event, property);
+// Table header component
+const EnhancedTableHead = ({ onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort }) => {
+    const headCells = [
+        { id: 'name', label: 'Name' },
+        { id: 'country', label: 'Country' },
+        { id: 'createdAt', label: 'Created Date' },
+        { id: 'updatedAt', label: 'Updated Date' },
+    ];
+
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
 
     return (
         <thead>
             <tr>
-                <th>
+                <th style={{ width: '100%' }}>
                     <Checkbox
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
-                        slotProps={{ input: { 'aria-label': 'select all services' } }}
-                        sx={{ verticalAlign: 'sub' }}
                     />
                 </th>
-                {headCells?.map((headCell) => (
+                {headCells.map((headCell) => (
                     <th
                         key={headCell.id}
-                        aria-sort={orderBy === headCell.id ? order : undefined}
+                        onClick={createSortHandler(headCell.id)}
+                        style={{
+                            cursor: 'pointer',
+                            width: '300px', // Add a width style to header cells
+                            padding: '2px',
+                        }}
                     >
-                        <Link
-                            underline="none"
-                            color="neutral"
-                            textColor={orderBy === headCell.id ? 'primary.plainColor' : undefined}
-                            component="button"
-                            onClick={createSortHandler(headCell.id)}
-                            fontWeight="lg"
-                            startDecorator={
-                                headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
-                            endDecorator={
-                                !headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
-                            sx={{
-                                '& svg': {
-                                    transition: '0.2s',
-                                    transform: orderBy === headCell.id && order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                                },
-                                '&:hover': { '& svg': { opacity: 1 } },
-                            }}
-                        >
-                            {headCell.label}
-                            {orderBy === headCell.id && (
-                                <Box component="span" sx={visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                </Box>
-                            )}
-                        </Link>
+                        {headCell.label}
+                        {orderBy === headCell.id ? (
+                            <span>{order === 'desc' ? ' ▼' : ' ▲'}</span>
+                        ) : null}
                     </th>
                 ))}
             </tr>
         </thead>
     );
-}
-
-EnhancedTableHead.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    onRequestSort: PropTypes.func.isRequired,
-    onSelectAllClick: PropTypes.func.isRequired,
-    order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-    orderBy: PropTypes.string.isRequired,
-    rowCount: PropTypes.number.isRequired,
 };
 
-function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
+// Table toolbar component
+const EnhancedTableToolbar = ({ numSelected, selectedRow, onDelete }) => {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
@@ -144,100 +111,79 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
         console.log("fix",open)
         setOpen((preValue)=>(preValue ? false: preValue));
     }
-    useEffect(() => {
-        console.log("Dialog open state:", open);
-      }, [open]);
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                py: 1,
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(numSelected > 0 && {
-                    bgcolor: 'background.level1',
-                }),
-                borderTopLeftRadius: 'var(--unstable_actionRadius)',
-                borderTopRightRadius: 'var(--unstable_actionRadius)',
-            }}
-        >
-            {numSelected > 0 ? (
-                <Typography sx={{ flex: '1 1 100%' }} component="div">
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography
-                    level="body-lg"
-                    sx={{ flex: '1 1 100%' }}
-                    id="tableTitle"
-                    component="div"
-                >
-                    PROVINCE
-                </Typography>
-            )}
+        <Box sx={{ 
+            px: 2, 
+            py: 1, 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center' 
+        }}>
+            <Typography level="h6" component="div">
+                {numSelected > 0 ? `${numSelected} selected` : 'Provinces'}
+            </Typography>
 
-            {numSelected > 0 ? (
-                <div className='flex flex-row justify-between w-[150px]'>
-                    <Tooltip title="Delete Country">
-                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Country">
-                        <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon  onClick= {()=> {handleViewUpdateOpen()}}/>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
-                            <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
-                            }}/>
-                            
-                        </IconButton>
-                    </Tooltip>
+            {numSelected === 1  ? 
+                <div className='flex space-x-5'>
+                    <button
+                        onClick={() => onDelete(selectedRow._id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Delete
+                    </button>
+                    <button
+                        onClick= {()=> {handleViewUpdateOpen()}}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Update
+                    </button>
                 </div>
-            ) : (
-                <Tooltip title="Create Country">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
-                        <AddIcon />
-                        <CreateProvincePop open={open} handleClose={handleClose} />
-                    </IconButton>
-                </Tooltip>
-            )}
-            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-             <UpdateProvincePop open={viewUpdateOpen} handleClose={handleViewUpdateClose}  provinceData = {selectedRow}/>
+                  
+            : 
+        
+        <div>
+             <button
+                 onClick={handleClickOpen}
+                 className="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600"
+             >
+                 Create
+             </button>
+             <CreateProvincePop open={open} handleClose={handleClose} />
+         </div>
+            }
+                <UpdateProvincePop open={viewUpdateOpen} handleClose={handleViewUpdateClose}  provinceData = {selectedRow}/>
         </Box>
     );
-}
-
-EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    selectedRow: PropTypes.object,
-    onViewBanner: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
 };
 
+// Main component
 function ProvinceTable() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('_id');
     const [selected, setSelected] = useState([]);
-    const [page, setPage] = useState(1); // Changed to start from 1
+    const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [selectedCountry, setSelectedCountry] = useState('all');
+
     const { province } = useSelector(state => state.province);
+    const { countries } = useSelector(state => state.country);
     const services = province || [];
-    
+
     const [FetchProvince, { isSuccess }] = useFetchProvinceMutation();
     const [DeleteProvince] = useDeleteProvinceMutation();
+    const [CountryFetch] = useCountryFetchMutation();
     const dispatch = useDispatch();
-    console.log("row per page in compionent",rowsPerPage)
+
+    // Filter provinces based on selected country
+    const filteredServices = selectedCountry === 'all'
+        ? services
+        : services.filter(service => service?.Country?._id === selectedCountry);
+
     // Calculate pagination values
-    const totalPages = Math.ceil(services.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredServices.length / rowsPerPage);
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
-    const currentPageData = stableSort(services, getComparator(order, orderBy))
+    const currentPageData = stableSort(filteredServices, getComparator(order, orderBy))
         .slice(startIndex, endIndex);
 
     useEffect(() => {
@@ -250,6 +196,8 @@ function ProvinceTable() {
         const fetchData = async () => {
             try {
                 const result = await FetchProvince().unwrap();
+                const result1 = await CountryFetch().unwrap();
+                dispatch(FetchCountry(result1));
                 dispatch(FetchProvinces(result));
             } catch (error) {
                 console.error('Failed to fetch services:', error);
@@ -257,7 +205,7 @@ function ProvinceTable() {
             }
         };
         fetchData();
-    }, [FetchProvince, dispatch]);
+    }, [FetchProvince, CountryFetch, dispatch]);
 
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -274,12 +222,12 @@ function ProvinceTable() {
         setSelected([]);
     };
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
+    const handleClick = (event, id) => {
+        const selectedIndex = selected.indexOf(id);
         let newSelected = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
+            newSelected = newSelected.concat(selected, id);
         } else if (selectedIndex === 0) {
             newSelected = newSelected.concat(selected.slice(1));
         } else if (selectedIndex === selected.length - 1) {
@@ -296,121 +244,142 @@ function ProvinceTable() {
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
-    const isSelected = (_id) => selected.indexOf(_id) !== -1;
 
     const handleChangeRowsPerPage = (event) => {
-        const newRowsPerPage = parseInt(event.target.value,10);
-        console.log("event target value")
+        const newRowsPerPage = parseInt(event.target.value, 10);
         setRowsPerPage(newRowsPerPage);
-        console.log("row per page",newRowsPerPage)
-        setPage(1); 
+        setPage(1);
     };
-    console.log("row",rowsPerPage)
-    console.log("page",page)
 
-    const handleViewBanner = (banner) => {
-        console.log('Viewing banner:', banner);
+    const handleCountryChange = (value) => {
+        setSelectedCountry(value);
+        setPage(1);
     };
 
     const handleDelete = async (id) => {
         try {
             const res = await DeleteProvince(id).unwrap();
             dispatch(DeleteOneProvince(res));
+            setSelected([]);
             toast.success('Province deleted successfully');
         } catch (error) {
             toast.error('Error deleting province');
         }
     };
 
+    const isSelected = (id) => selected.indexOf(id) !== -1;
+
     return (
-        <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar 
-                numSelected={selected.length} 
-                selectedRow={services.find((service) => service._id === selected[0])} 
-                onViewBanner={handleViewBanner} 
-                onDelete={handleDelete} 
-            />
-            <Table 
-                aria-labelledby="tableTitle" 
-                hoverRow 
-                sx={{ '--TableCell-headBackground': 'transparent' }}
-            >
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={services.length}
-                />
-                <tbody>
-                    {currentPageData.map((service, index) => {
-                        const isItemSelected = isSelected(service._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-
-                        return (
-                            <tr
-                                key={service._id}
-                                hover
-                                onClick={(event) => handleClick(event, service._id)}
-                                role="checkbox"
-                                aria-checked={isItemSelected}
-                                tabIndex={-1}
-                                selected={isItemSelected}
-                            >
-                                <td>
-                                    <Checkbox
-                                        checked={isItemSelected}
-                                        inputProps={{
-                                            'aria-labelledby': labelId,
-                                        }}
-                                    />
-                                </td>
-                                <td>{service._id}</td>
-                                <td>{service.name}</td>
-                                <td>{service.heading}</td>
-                                <td>{new Date(service.createdAt).toLocaleDateString()}</td>
-                                <td>{new Date(service.updatedAt).toLocaleDateString()}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </Table>
-
-            <Box sx={{ 
-                flexShrink: 0, 
-                display: 'flex', 
-                justifyContent: 'flex-end', 
-                alignItems: 'center',
-                gap: 2,
-                py: 2,
-                px: 2
-            }}>
-                <Typography level="body-sm">
-                    Rows per page:
+<Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
+    <Card className="mb-4" sx={{ p: 2 }}>
+        <CardContent>
+            <div className="flex items-center gap-4">
+                <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                    Filter by Country:
                 </Typography>
-                <select
-                    value={rowsPerPage}
-                    onChange={handleChangeRowsPerPage}
-                    size="sm"
+                <Select
+                    value={selectedCountry}
+                    onChange={(e) => handleCountryChange(e.target.value)}
+                    displayEmpty
+                    style={{ width: '200px', marginBottom: '16px' }}
+                    sx={{
+                        backgroundColor: 'white',
+                        borderRadius: '4px',
+                        boxShadow: 2,
+                        '& .MuiSelect-icon': {
+                            color: 'primary.main',
+                        },
+                    }}
                 >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={25}>25</option>
-                </select>
-                <Typography level="body-sm">
-                    {`${startIndex + 1}-${Math.min(endIndex, services.length)} of ${services.length}`}
-                </Typography>
-                <Box>
-                    <Pagination
-                        count={totalPages}
-                        page={page}
-                        onChange={handleChangePage}
-                        size="sm"
-                    />
-                </Box>
-            </Box>
-        </Box>
+                    <MenuItem value="all">All Countries</MenuItem>
+                    {countries.map((country) => (
+                        <MenuItem key={country._id} value={country._id}>
+                            {country.name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </div>
+        </CardContent>
+    </Card>
+
+    <EnhancedTableToolbar
+        numSelected={selected.length}
+        selectedRow={filteredServices.find((service) => service._id === selected[0])}
+        onDelete={handleDelete}
+    />
+
+<Table
+    aria-labelledby="tableTitle"
+    hover
+    style={{ tableLayout: 'fixed', width: '100%' }}
+    sx={{
+        borderCollapse: 'collapse',  // Ensures no gap between cells
+        borderSpacing: 0,
+    }}
+>
+    <EnhancedTableHead
+        numSelected={selected.length}
+        order={order}
+        orderBy={orderBy}
+        onSelectAllClick={handleSelectAllClick}
+        onRequestSort={handleRequestSort}
+        rowCount={filteredServices.length}
+        sx={{
+            // Align header text and provide padding consistency
+            th: {
+                padding: '12px 16px',  // Adjust padding as needed
+                textAlign: 'left',  // Or 'center', depending on the content
+            },
+        }}
+    />
+    <tbody>
+        {currentPageData.map((service, index) => {
+            const isItemSelected = isSelected(service._id);
+            const labelId = `checkbox-${index}`;
+
+            return (
+                <tr
+                    key={service._id}
+                    hover
+                    onClick={(event) => handleClick(event, service._id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    selected={isItemSelected}
+                    sx={{
+                        '&:hover': { backgroundColor: '#f5f5f5' },
+                        cursor: 'pointer',
+                    }}
+                >
+                    <td style={{ padding: '12px 16px', textAlign: 'left', width: '50px' }}>
+                        <Checkbox
+                            checked={isItemSelected}
+                            inputProps={{
+                                'aria-labelledby': labelId,
+                            }}
+                        />
+                    </td>
+                    <td style={{ padding: '14px 18px', textAlign: 'center' }}>{service.name}</td>
+                     <td style={{ padding: '14px 18px', textAlign: 'center' }}> {countries.find((c) => c._id === service?.Country._id)?.name} </td>
+                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>{service.updatedAt?.split('T')[0]}</td>
+                    <td style={{ padding: '12px 16px', textAlign: 'center' }}>{service.createdAt?.split('T')[0]}</td>
+
+                    {/* Add more columns as necessary */}
+                </tr>
+            );
+        })}
+    </tbody>
+</Table>
+
+    <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+        <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handleChangePage}
+            color="primary"
+        />
+    </Box>
+</Box>
     );
 }
 
