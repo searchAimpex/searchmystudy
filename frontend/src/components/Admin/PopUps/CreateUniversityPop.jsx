@@ -79,7 +79,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
             const img = new Image();
             img.src = URL.createObjectURL(file);
             img.onload = () => {
-                resolve(img.width === requiredWidth && img.height === requiredHeight);
+                resolve(img.width >= requiredWidth && img.height >= requiredHeight);
             };
         });
     };
@@ -103,6 +103,9 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         break;
                     case 'logo':
                         isValid = await validateImage(file, 150, 150);
+                        break;
+                    case name.includes('sections'):
+                        isValid = true;
                         break;
                     default:
                         break;
@@ -328,7 +331,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                             onChange={handleChange}
                         >
                             {province.map((prov) => (
-                                <MenuItem key={prov.id} value={prov.name}>{prov.name}</MenuItem>
+                                <MenuItem key={prov.id} value={prov._id}>{prov.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -391,7 +394,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
             </DialogContent>
             <DialogActions>
                 <Button onClick={handlecancell}>Cancel</Button>
-                <Button onClick={onSubmit} disabled={!isFormValid}>
+                <Button onClick={onSubmit} >
                     Submit
                 </Button>
             </DialogActions>

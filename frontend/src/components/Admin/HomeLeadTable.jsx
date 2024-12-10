@@ -12,6 +12,7 @@ import IconButton from '@mui/joy/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import AddIcon from '@mui/icons-material/Add';
+import { DownloadDoneRounded } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +26,7 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
 import { DeleteHomeLead, FetchHomeLead } from '../../slices/leadSlice.js';
+import { Input } from '@mui/material';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -164,7 +166,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     id="tableTitle"
                     component="div"
                 >
-                    SERVICES
+                    HOME LEADS
                 </Typography>
             )}
 
@@ -193,7 +195,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             ) : (
                 <Tooltip title="Download File">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={()=>downloadfile()}>
-                        <AddIcon />
+                        <DownloadDoneRounded />
                     </IconButton>
                 </Tooltip>
             )}
@@ -210,17 +212,19 @@ EnhancedTableToolbar.propTypes = {
 };
 
 function HomeLeadTable() {
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('_id');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('_id');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const { homeLead } = useSelector((state) => state.homeLead);
-
-    const  counsellerLead  =homeLead
+    const counsellerLead = homeLead;
     const [GetLead, { isSuccess }] = useGetLeadMutation();
     const [HomeLeadDelete, DeleteState] = useHomeLeadDeleteMutation();
     const dispatch = useDispatch();
+
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
@@ -235,7 +239,6 @@ function HomeLeadTable() {
         const fetchData = async () => {
             try {
                 const result = await GetLead().unwrap();
-                console.log("result",result)
                 dispatch(FetchHomeLead(result));
             } catch (error) {
                 console.error('Failed to fetch services:', error);
@@ -298,36 +301,67 @@ function HomeLeadTable() {
     const handleDelete = async (id) => {
         try {
             const res = await HomeLeadDelete(id).unwrap();
-            dispatch(DeleteHomeLead(res))
+            dispatch(DeleteHomeLead(res));
         } catch (error) {
             toast.error('Error deleting banner');
         }
     };
+
     const handleDownload = () => {
         const headers = ['ID', 'Name', 'Phone', 'Email', 'Interested Country'];
         const csvContent = [
-          headers.join(','),
-          ...counsellerLead.map(lead => 
-            [lead._id, lead.name, lead.phone, lead.email, lead.interestedCountry].join(',')
-          )
+            headers.join(','),
+            ...counsellerLead.map((lead) =>
+                [lead._id, lead.name, lead.phone, lead.email, lead.interestedCountry].join(',')
+            ),
         ].join('\n');
-    
+
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute('href', url);
-          link.setAttribute('download', 'counseller_leads.csv');
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'counseller_leads.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
-      };
+    };
+
+    // Filter the data based on date range
+    const filteredLeads = counsellerLead.filter((lead) => {
+        const createdAt = new Date(lead.createdAt);
+        const start = startDate ? new Date(startDate) : new Date('2000-01-01');
+        const end = endDate ? new Date(endDate) : new Date();
+        return createdAt >= start && createdAt <= end;
+    });
 
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} downloadfile={handleDownload} />
+            <EnhancedTableToolbar
+                numSelected={selected.length}
+                selectedRow={counsellerLead?.find((service) => service._id === selected[0])}
+                onViewBanner={handleViewBanner}
+                onDelete={handleDelete}
+                downloadfile={handleDownload}
+            />
+            <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+                <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    label="Start Date"
+                    sx={{ width: '150px' }}
+                />
+                <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    label="End Date"
+                    sx={{ width: '150px' }}
+                />
+            </Box>
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
@@ -335,10 +369,10 @@ function HomeLeadTable() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={counsellerLead?.length}
+                    rowCount={filteredLeads?.length}
                 />
                 <tbody>
-                    {stableSort(counsellerLead, getComparator(order, orderBy))
+                    {stableSort(filteredLeads, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -369,11 +403,7 @@ function HomeLeadTable() {
                                 </tr>
                             );
                         })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
+                 
                 </tbody>
             </Table>
             <Box
@@ -396,7 +426,7 @@ function HomeLeadTable() {
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
+                    {[5]?.map((rowsPerPageOption) => (
                         <Option key={rowsPerPageOption} value={rowsPerPageOption}>
                             {rowsPerPageOption} rows
                         </Option>
@@ -404,10 +434,10 @@ function HomeLeadTable() {
                 </Select>
                 <Typography textColor="text.secondary" fontSize="sm">
                     {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > counsellerLead?.length
-                        ? counsellerLead?.length
+                    {page * rowsPerPage + rowsPerPage > filteredLeads?.length
+                        ? filteredLeads?.length
                         : page * rowsPerPage + rowsPerPage}{' '}
-                    of {counsellerLead?.length}
+                    of {filteredLeads?.length}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
@@ -418,23 +448,17 @@ function HomeLeadTable() {
                         onClick={() => handleChangePage(null, page - 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(90deg)' }} />
                     </IconButton>
                     <IconButton
                         size="sm"
                         color="neutral"
                         variant="outlined"
-                        disabled={page >= Math.ceil(counsellerLead?.length / rowsPerPage) - 1}
+                        disabled={page >= Math.ceil(filteredLeads?.length / rowsPerPage) - 1}
                         onClick={() => handleChangePage(null, page + 1)}
                         sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(-90deg)' }} />
                     </IconButton>
                 </Box>
             </Box>

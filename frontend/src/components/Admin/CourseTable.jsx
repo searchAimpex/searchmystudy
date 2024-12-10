@@ -32,6 +32,7 @@ import CreateCoursePop from './PopUps/CreateCoursePop.jsx';
 import { FetchCourses } from '../../slices/courseSlice.js';
 import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
+import { Card, CardContent } from '@mui/material';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -184,36 +185,33 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             )}
 
             {numSelected > 0 ? (
-                <div className='flex flex-row justify-between w-[150px]'>
-                    <Tooltip title="Delete Country">
-                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Country">
-                        <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon onClick = {()=>{
-                                handleViewUpdateOpen()
-                            }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
-                            <RemoveRedEye onClick={() => {
-                                onViewBanner(selectedRow?.banner);
-                                handleViewBannerOpen();
-                            }}/>
-                            
-                        </IconButton>
-                    </Tooltip>
-                </div>
+                  <div className='flex flex-row justify-between space-x-4 w-[200px]'>
+                  <button
+                     onClick={() => onDelete(selectedRow._id)}
+                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                 >
+                     Delete
+                 </button>
+                 <button
+                     onClick= {()=> {handleViewUpdateOpen()}}
+                     className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                 >
+                     Update
+                 </button>
+            
+             </div>
             ) : (
-                <Tooltip title="Create Country">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
-                        <AddIcon />
+                <div>
+                    <button
+                        onClick={handleClickOpen}
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Create
+                    </button>
                         <CreateCoursePop open={open} handleClose={handleClose} />
-                    </IconButton>
-                </Tooltip>
+
+                </div>
+                
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
             <UpdateCoursePop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} courseData = {selectedRow} />
@@ -333,50 +331,69 @@ function CourseTable() {
     console.log("Country",selectedProvince)
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
+            <Card>
+            <CardContent>
+            
+            {/* Filters Section */}
+            <Box sx={{ display: 'flex justify-between', gap: 2, p: 2 }}>
+                <div className="flex items-center gap-4">
+                    <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                        Filter by Country:
+                    </Typography>
+                    <select
+                        variant="outlined"
+                        size="sm"
+                        value={selectedCountry}
+                        onChange={(e) => setSelectedCountry(e.target.value)}
+                    >
+                        <option value="all">All Countries</option>
+                        {countries?.map(country => (
+                            <option key={country._id} value={country._id}>{country.name}</option>
+                        ))}
+                    </select>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                        Filter by Province:
+                    </Typography>
+
+                    <select
+                        variant="outlined"
+                        size="sm"
+                        value={selectedProvince}
+                        onChange={(e) => setSelectedProvince(e.target.value)}
+                    >
+                        <option value="all">All Provinces</option>
+                        {province?.filter(p => p?.Country._id === selectedCountry)?.map(p => (
+                            <option key={p._id} value={p._id}>{p.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="flex items-center gap-4">
+                    <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                        Filter by University:
+                    </Typography>            
+                    <select
+                        variant="outlined"
+                        size="sm"
+                        value={selectedUniversity}
+                        onChange={(e) => setSelectedUniversity(e.target.value)}
+                    >
+                        <option value="all">All Universities</option>
+                        {university?.filter(u => u?.Province?._id === selectedProvince)?.map(u => (
+                            <option key={u._id} value={u._id}>{u.name}</option>
+                        ))}
+                    </select>
+                </div>
+                </Box>
+               </CardContent>
+                </Card>
             <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedRow={services?.find((service) => service._id === selected[0])}
                 onDelete={handleDelete}
             />
-            
-            {/* Filters Section */}
-            <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
-                <select
-                    variant="outlined"
-                    size="sm"
-                    value={selectedCountry}
-                    onChange={(e) => setSelectedCountry(e.target.value)}
-                >
-                    <option value="all">All Countries</option>
-                    {countries?.map(country => (
-                        <option key={country._id} value={country._id}>{country.name}</option>
-                    ))}
-                </select>
-
-                <select
-                    variant="outlined"
-                    size="sm"
-                    value={selectedProvince}
-                    onChange={(e) => setSelectedProvince(e.target.value)}
-                >
-                    <option value="all">All Provinces</option>
-                    {province?.filter(p => p?.Country._id === selectedCountry)?.map(p => (
-                        <option key={p._id} value={p._id}>{p.name}</option>
-                    ))}
-                </select>
-
-                <select
-                    variant="outlined"
-                    size="sm"
-                    value={selectedUniversity}
-                    onChange={(e) => setSelectedUniversity(e.target.value)}
-                >
-                    <option value="all">All Universities</option>
-                    {university?.filter(u => u?.Province?._id === selectedProvince)?.map(u => (
-                        <option key={u._id} value={u._id}>{u.name}</option>
-                    ))}
-                </select>
-            </Box>
             
             {/* Table Section */}
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
@@ -412,9 +429,11 @@ function CourseTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
                                     <td>{row?.ProgramName}</td>
                                     <td>{row?.University?.name}</td>
+                                    <td> {province?.find((c) => c?._id === row?.University.Province)?.name} </td>
+                                    <td> {countries?.find((c) => c?._id === row?.Country)?.name} </td>
+
                                     <td>{row?.Category}</td>
                                     <td>{row?.Location}</td>
                                 </tr>

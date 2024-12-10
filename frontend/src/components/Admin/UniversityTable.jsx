@@ -30,12 +30,12 @@ import { DeleteOneUniversity, FetchUniversitys } from '../../slices/universitySl
 import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import UpdateUniversityPop from './PopUps/UpdateUniversityPop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
-import { MenuItem } from '@mui/material';
+import { Card, CardContent, MenuItem, Pagination } from '@mui/material';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
     { id: 'province', numeric: false, disablePadding: false, label: 'Province' },
+    { id: 'country', numeric: false, disablePadding: false, label: 'Country' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
 
@@ -179,36 +179,32 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             )}
 
             {numSelected > 0 ? (
-                <div className='flex flex-row justify-between w-[150px]'>
-                    <Tooltip title="Delete Country">
-                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Country">
-                        <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon onClick = { ()=>{
-                                handleViewUpdateOpen()
-                            }} />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
-                            <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
-                            }}/>
-                            
-                        </IconButton>
-                    </Tooltip>
+                <div className='flex flex-row justify-between space-x-4 w-[200px]'>
+                     <button
+                        onClick={() => onDelete(selectedRow._id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Delete
+                    </button>
+                    <button
+                        onClick= {()=> {handleViewUpdateOpen()}}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Update
+                    </button>
+               
                 </div>
             ) : (
-                <Tooltip title="Create Country">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
-                        <AddIcon />
-                        <CreateUniversityPop open={open} handleClose={handleClose} />
-                    </IconButton>
-                </Tooltip>
+                <div>
+                     <button
+                        onClick={handleClickOpen}
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                    >
+                        Create
+                    </button>
+                    <CreateUniversityPop open={open} handleClose={handleClose} />
+                    
+               </div>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
             <UpdateUniversityPop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} initialData = {selectedRow}/>
@@ -227,9 +223,10 @@ function UniversityTable() {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
+    const [page, setPage] = React.useState(1);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { university } = useSelector(state => state.university);
+      
     const services = university;
     
     const [FetchUniversity, { isSuccess }] = useFetchUniversityMutation();
@@ -339,14 +336,31 @@ function UniversityTable() {
     };
     console.log("country ===>",selectedCountry)
     console.log("provincve",selectedProvince)
+
+      // Calculate pagination values
+      const totalPages = Math.ceil(filteredServices.length / rowsPerPage);
+      const startIndex = (page - 1) * rowsPerPage;
+      const endIndex = startIndex + rowsPerPage;
+      const currentPageData = stableSort(filteredServices, getComparator(order, orderBy))
+          .slice(startIndex, endIndex);
+  
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-      <Box sx={{ p: 2, display: 'flex', gap: 2 }}>
+             <Card>
+             <CardContent>
+
+      <Box sx={{ p: 2, display: 'flex justify-between', gap: 2 }}>
+            <div className="flex items-center gap-4">
+                <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                    Filter by Country:
+                </Typography>
                 <select
                     variant="outlined"
                     size="sm"
                     value={selectedCountry}
                     onChange={handleCountryChange}
+                    className='border p-2 rounded-sm'
+
                 >
                     <option value="all">All Countries</option>
                     {countries?.map((country) => (
@@ -355,23 +369,32 @@ function UniversityTable() {
                         </option>
                     ))}
                 </select>
+            </div>
+                <div className="flex items-center gap-4">
+                        <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                            Filter by Province:
+                        </Typography>
 
-                <select
-                    variant="outlined"
-                    size="sm"
-                    value={selectedProvince}
-                    onChange={handleProvinceChange}
-                >
-                    <option value="all">All Provinces</option>
-                    {province
-                        ?.filter((prov) => prov.Country._id === selectedCountry)
-                        .map((prov) => (
-                            <option key={prov._id} value={prov._id}>
-                                {prov.name}
-                            </option>
-                        ))}
-                </select>
+                        <select
+                            variant="outlined"
+                            size="sm"
+                            className='border p-2 rounded-sm'
+                            value={selectedProvince}
+                            onChange={handleProvinceChange}
+                        >
+                            <option value="all">All Provinces</option>
+                            {province
+                                ?.filter((prov) => prov.Country._id === selectedCountry)
+                                .map((prov) => (
+                                    <option key={prov._id} value={prov._id}>
+                                        {prov.name}
+                                    </option>
+                                ))}
+                        </select>
+                </div>
             </Box>
+            </CardContent>
+            </Card>
 
             <EnhancedTableToolbar numSelected={selected.length} selectedRow={filteredServices?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
@@ -384,9 +407,7 @@ function UniversityTable() {
                     rowCount={filteredServices?.length}
                 />
                 <tbody>
-                    {stableSort(filteredServices, getComparator(order, orderBy))
-                        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        ?.map((row, index) => {
+                    {currentPageData?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
                             const labelId = `enhanced-table-checkbox-${index}`;
                             return (
@@ -408,82 +429,26 @@ function UniversityTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?.name}</td>
-                                    <td>{row?.name}</td>
-                                    <td>"xis'</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
+                                    <td> {province?.find((c) => c?._id === row?.Province?._id)?.name} </td>
+                                    <td> {countries?.find((c) => c?._id === row?.Country)?.name} </td>
+
+                                    <td>{row?.createdAt?.split('T')[0]}</td>
+                                    <td>{row?.updatedAt?.split('T')[0]}</td>
                                 </tr>
                             );
                         })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
+                 
                 </tbody>
             </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
-                <Select
-                    variant="outlined"
-                    size="sm"
-                    value={rowsPerPage}
-                    onChange={handleChangeRowsPerPage}
-                >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
-                        <Option key={rowsPerPageOption} value={rowsPerPageOption}>
-                            {rowsPerPageOption} rows
-                        </Option>
-                    ))}
-                </Select>
-                <Typography textColor="text.secondary" fontSize="sm">
-                    {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > filteredServices?.length
-                        ? filteredServices?.length
-                        : page * rowsPerPage + rowsPerPage}{' '}
-                    of {filteredServices?.length}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(null, page - 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
-                    </IconButton>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page >= Math.ceil(filteredServices?.length / rowsPerPage) - 1}
-                        onClick={() => handleChangePage(null, page + 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
-                    </IconButton>
-                </Box>
-            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+        <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handleChangePage}
+            color="primary"
+        />
+    </Box>
+          
         </Box>
     );
 }

@@ -25,9 +25,9 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
 import { FetchContactLead } from '../../slices/contactLeadSlice.js';
+import { Input } from '@mui/material';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
     { id: 'phone', numeric: false, disablePadding: false, label: 'Phone' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
@@ -166,7 +166,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     id="tableTitle"
                     component="div"
                 >
-                    SERVICES
+                    CONTACT LEAD
                 </Typography>
             )}
 
@@ -223,6 +223,9 @@ function ContactLeadTable() {
     const [GetContactLead, { isSuccess }] = useGetContactLeadMutation();
     const [ServiceDelete, DeleteState] = useServiceDeleteMutation();
     const dispatch = useDispatch();
+    
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
         if (isSuccess) {
@@ -325,11 +328,37 @@ function ContactLeadTable() {
           document.body.removeChild(link);
         }
       };
+          // Filter the data based on date range
+    const filteredLeads = counsellerLead.filter((lead) => {
+        const createdAt = new Date(lead.createdAt);
+        const start = startDate ? new Date(startDate) : new Date('2000-01-01');
+        const end = endDate ? new Date(endDate) : new Date();
+        return createdAt >= start && createdAt <= end;
+    });
+
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
             <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} downloadfile= {handleDownload} />
+               
+            <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+                <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    label="Start Date"
+                    sx={{ width: '150px' }}
+                />
+                <Input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    label="End Date"
+                    sx={{ width: '150px' }}
+                />
+            </Box>           
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
-                <EnhancedTableHead
+         
+            <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
@@ -338,7 +367,7 @@ function ContactLeadTable() {
                     rowCount={counsellerLead?.length}
                 />
                 <tbody>
-                    {stableSort(counsellerLead, getComparator(order, orderBy))
+                    {stableSort(filteredLeads, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
                             const isItemSelected = isSelected(row?._id);
@@ -361,7 +390,6 @@ function ContactLeadTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
                                     <td>{row?.name}</td>
                                     <td>{row?.phone}</td>
                                     <td>{row?.email}</td>
@@ -371,11 +399,7 @@ function ContactLeadTable() {
                                 </tr>
                             );
                         })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
+                 
                 </tbody>
             </Table>
             <Box
@@ -398,7 +422,7 @@ function ContactLeadTable() {
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
+                    {[5]?.map((rowsPerPageOption) => (
                         <Option key={rowsPerPageOption} value={rowsPerPageOption}>
                             {rowsPerPageOption} rows
                         </Option>

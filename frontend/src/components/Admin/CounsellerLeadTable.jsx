@@ -5,58 +5,32 @@ import Table from '@mui/joy/Table';
 import Typography from '@mui/joy/Typography';
 import Checkbox from '@mui/joy/Checkbox';
 import Link from '@mui/joy/Link';
-import Tooltip from '@mui/joy/Tooltip';
-import Select from '@mui/joy/Select';
-import Option from '@mui/joy/Option';
-import IconButton from '@mui/joy/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import Pagination from '@mui/material/Pagination';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Button from '@mui/material/Button';
 import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { useEffect } from 'react';
-import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation, useCounsellerFetchLeadMutation } from '../../slices/adminApiSlice';
-import { DeleteService, FetchAllServices } from '../../slices/serviceSlice.js';
-import CreateServicePop from './PopUps/CreateServicePop.jsx';
-import ImageViewPop from './PopUps/ImageViewPop.jsx';
-import { RemoveRedEye } from '@mui/icons-material';
-import { useState } from 'react';
-import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice.js';
+import { useEffect, useState } from 'react';
+import {
+    useCounsellerFetchLeadMutation,
+} from '../../slices/adminApiSlice';
+import { FetchCounsellerLead } from '../../slices/counsellerLeadSlice';
 
+// Head cells for the table
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
-    { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'phone', numeric: false, disablePadding: false, label: 'Phone' },
-    { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-    { id: 'intersetedCountry', numeric: false, disablePadding: false, label: 'Interseted Country' },
+    { id: 'name', label: 'Name' },
+    { id: 'phone', label: 'Phone' },
+    { id: 'email', label: 'Email' },
+    { id: 'type', label: 'Type' },
+    { id: 'interestedCountry', label: 'Interested Country' },
+    { id: 'interestedCourse', label: 'Interested Course' },
+
 ];
 
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) return -1;
-    if (b[orderBy] > a[orderBy]) return 1;
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array?.map((el, index) => [el, index]);
-    stabilizedThis?.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis?.map((el) => el[0]);
-}
-
 function EnhancedTableHead(props) {
-    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort ,downloadfile} = props;
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
     const createSortHandler = (property) => (event) => onRequestSort(event, property);
 
     return (
@@ -67,46 +41,18 @@ function EnhancedTableHead(props) {
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
-                        slotProps={{ input: { 'aria-label': 'select all services' } }}
-                        sx={{ verticalAlign: 'sub' }}
                     />
                 </th>
-                {headCells?.map((headCell) => (
-                    <th
-                        key={headCell.id}
-                        aria-sort={orderBy === headCell.id ? order : undefined}
-                    >
+                {headCells.map((headCell) => (
+                    <th key={headCell.id}>
                         <Link
                             underline="none"
                             color="neutral"
-                            textColor={orderBy === headCell.id ? 'primary.plainColor' : undefined}
-                            component="button"
                             onClick={createSortHandler(headCell.id)}
                             fontWeight="lg"
-                            startDecorator={
-                                headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
-                            endDecorator={
-                                !headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
-                            sx={{
-                                '& svg': {
-                                    transition: '0.2s',
-                                    transform: orderBy === headCell.id && order === 'desc' ? 'rotate(0deg)' : 'rotate(180deg)',
-                                },
-                                '&:hover': { '& svg': { opacity: 1 } },
-                            }}
+                            sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
                         >
                             {headCell.label}
-                            {orderBy === headCell.id && (
-                                <Box component="span" sx={visuallyHidden}>
-                                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                                </Box>
-                            )}
                         </Link>
                     </th>
                 ))}
@@ -122,125 +68,32 @@ EnhancedTableHead.propTypes = {
     order: PropTypes.oneOf(['asc', 'desc']).isRequired,
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
-    downloadfile:PropTypes.func.isRequired
 };
 
-function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete,downloadfile }) {
-    const [open, setOpen] = useState(false);
-    const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
+export default function CounsellerLeadTable() {
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('name');
+    const [selected, setSelected] = useState([]);
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
-    const handleClickOpen = () => setOpen(true);
-    const handleViewBannerOpen = () => setViewBannerOpen(true);
-    const handleViewBannerClose = () => setViewBannerOpen(false);
-    const handleClose = () => {
-        setOpen(false);
-    }
-    useEffect(() => {
-        console.log("Dialog open state:", open);
-      }, [open]);
-    return (
-        <Box
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                py: 1,
-                pl: { sm: 2 },
-                pr: { xs: 1, sm: 1 },
-                ...(numSelected > 0 && {
-                    bgcolor: 'background.level1',
-                }),
-                borderTopLeftRadius: 'var(--unstable_actionRadius)',
-                borderTopRightRadius: 'var(--unstable_actionRadius)',
-            }}
-        >
-            {numSelected > 0 ? (
-                <Typography sx={{ flex: '1 1 100%' }} component="div">
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography
-                    level="body-lg"
-                    sx={{ flex: '1 1 100%' }}
-                    id="tableTitle"
-                    component="div"
-                >
-                    SERVICES
-                </Typography>
-            )}
-
-            {numSelected > 0 ? (
-                <div className='flex flex-row justify-between w-[150px]'>
-                    <Tooltip title="Delete Banner">
-                        <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Service">
-                        <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
-                            <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
-                            }}/>
-                            
-                        </IconButton>
-                    </Tooltip>
-                </div>
-            ) : (
-                <Tooltip title="Download Leads">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={()=>downloadfile()}>
-                        <AddIcon />
-                        
-                    </IconButton>
-                </Tooltip>
-            )}
-            <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.banner || ''} />
-        </Box>
-    );
-}
-
-EnhancedTableToolbar.propTypes = {
-    numSelected: PropTypes.number.isRequired,
-    selectedRow: PropTypes.object,
-    onViewBanner: PropTypes.func.isRequired,
-    onDelete: PropTypes.func.isRequired,
-    downloadfile: PropTypes.func
-};
-
-function CounsellerLeadTable() {
-    const [order, setOrder] = React.useState('asc');
-    const [orderBy, setOrderBy] = React.useState('_id');
-    const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    const { counsellerLead } = useSelector((state) => state.counsellerLead);
-    const [CounsellerFetchLead, { isSuccess }] = useCounsellerFetchLeadMutation();
-    const [ServiceDelete, DeleteState] = useServiceDeleteMutation();
     const dispatch = useDispatch();
+    const [CounsellerFetchLead] = useCounsellerFetchLeadMutation();
+    const { counsellerLead } = useSelector((state) => state.counsellerLead);
 
     useEffect(() => {
-        if (isSuccess) {
-            toast.success('Data fetched successfully');
-        }
-        if (DeleteState.isSuccess) {
-            toast.success('Service deleted successfully');
-        }
-    }, [isSuccess, DeleteState.isSuccess]);
-
-    useEffect(() => {
-        const fetchData = async () => {
+        const fetchLeads = async () => {
             try {
                 const result = await CounsellerFetchLead().unwrap();
                 dispatch(FetchCounsellerLead(result));
+                toast.success('Leads fetched successfully');
             } catch (error) {
-                console.error('Failed to fetch services:', error);
+                toast.error('Failed to fetch leads');
             }
         };
-        fetchData();
+        fetchLeads();
     }, [CounsellerFetchLead, dispatch]);
 
     const handleRequestSort = (event, property) => {
@@ -249,196 +102,130 @@ function CounsellerLeadTable() {
         setOrderBy(property);
     };
 
-    const handleSelectAllClick = (event) => {
-        if (event.target.checked) {
-            const newSelected = counsellerLead?.map((n) => n._id);
-            setSelected(newSelected);
-            return;
-        }
-        setSelected([]);
-    };
+    const handlePageChange = (event, value) => setPage(value);
+    const handleRowsPerPageChange = (event) => setRowsPerPage(parseInt(event.target.value, 10));
 
-    const handleClick = (event, name) => {
-        const selectedIndex = selected.indexOf(name);
-        let newSelected = [];
+    // Date Filter Logic
+    const filteredLeads = counsellerLead.filter((lead) => {
+        const leadDate = new Date(lead.createdAt); // Assuming each lead has a `date` field
+        const start = startDate ? new Date(startDate) : null;
+        const end = endDate ? new Date(endDate) : null;
 
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1)
-            );
-        }
-        setSelected(newSelected);
-    };
+        if (start && leadDate < start) return false;
+        if (end && leadDate > end) return false;
+        return true;
+    });
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    const paginatedLeads = filteredLeads.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
-    };
+    // Download CSV logic
+    const downloadCSV = () => {
+        const headers = ['Name', 'Phone', 'Email', 'Interested Country'];
+        const rows = filteredLeads.map((lead) => [
+            lead.name,
+            lead.phone,
+            lead.email,
+            lead.interestedCountry,
+        ]);
 
-    const isSelected = (name) => selected.indexOf(name) !== -1;
-
-    const emptyRows = rowsPerPage - Math.min(rowsPerPage, counsellerLead?.length - page * rowsPerPage);
-
-    const handleViewBanner = (banner) => {
-        console.log('Viewing banner:', banner);
-    };
-
-    const handleDelete = async (id) => {
-        try {
-            const res = await ServiceDelete(id).unwrap();
-            dispatch(DeleteService(res))
-        } catch (error) {
-            toast.error('Error deleting banner');
-        }
-    };
-    const handleDownload = () => {
-        const headers = ['ID', 'Name', 'Phone', 'Email', 'Interested Country'];
         const csvContent = [
-          headers.join(','),
-          ...counsellerLead.map(lead => 
-            [lead._id, lead.name, lead.phone, lead.email, lead.interestedCountry].join(',')
-          )
+            headers.join(','),
+            ...rows.map((row) => row.join(',')),
         ].join('\n');
-    
+
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
-        if (link.download !== undefined) {
-          const url = URL.createObjectURL(blob);
-          link.setAttribute('href', url);
-          link.setAttribute('download', 'counseller_leads.csv');
-          link.style.visibility = 'hidden';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      };
+        link.href = URL.createObjectURL(blob);
+        link.download = 'leads.csv';
+        link.click();
+    };
+
     return (
-        <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={counsellerLead?.find((service) => service._id === selected[0])}      downloadfile= {handleDownload}      onViewBanner={handleViewBanner} onDelete={handleDelete} />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
+        <Box sx={{ width: '100%', p: 2, boxShadow: 3, borderRadius: 2, bgcolor: '#fff' }}>
+            {/* Filters */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    gap: 2,
+                    mb: 2,
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}
+            >
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                    />
+                    <input
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                    />
+                    <Select
+                        value={rowsPerPage}
+                        onChange={handleRowsPerPageChange}
+                        size="small"
+                        sx={{ width: 100 }}
+                    >
+                        {[5, 10, 25].map((rows) => (
+                            <MenuItem key={rows} value={rows}>
+                                {rows} Rows
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Box>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={downloadCSV}
+                    sx={{ textTransform: 'none' }}
+                >
+                    Download CSV
+                </Button>
+            </Box>
+
+            {/* Table */}
+            <Table hoverRow>
                 <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
                     orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
+                    onSelectAllClick={() => {}}
                     onRequestSort={handleRequestSort}
-                    rowCount={counsellerLead?.length}
-                    downloadfile= {handleDownload}
+                    rowCount={filteredLeads.length}
                 />
                 <tbody>
-                    {stableSort(counsellerLead, getComparator(order, orderBy))
-                        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        ?.map((row, index) => {
-                            const isItemSelected = isSelected(row?._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-                            return (
-                                <tr
-                                    hover
-                                    onClick={(event) => handleClick(event, row?._id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row?._id}
-                                    selected={isItemSelected}
-                                >
-                                    <td>
-                                        <Checkbox
-                                            color={isItemSelected ? 'primary' : 'neutral'}
-                                            checked={isItemSelected}
-                                            slotProps={{ input: { 'aria-labelledby': labelId } }}
-                                            sx={{ verticalAlign: 'sub' }}
-                                        />
-                                    </td>
-                                    <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.name}</td>
-                                    <td>{row?.phone}</td>
-                                    <td>{row?.email}</td>
-                                    <td>{row?.intersetedCountry}</td>
-                                </tr>
-                            );
-                        })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
+                    {paginatedLeads.map((row) => (
+                        <tr key={row._id} style={{ cursor: 'pointer', '&:hover': { background: '#f7f9fc' } }}>
+                            <td>
+                                <Checkbox />
+                            </td>
+                            <td>{row.name}</td>
+                            <td>{row.phone}</td>
+                            <td>{row.email}</td>
+                            <td>{row.type}</td>
+
+                            <td>{row.intersetedCountry}</td>
+                            <td>{row.intersetedCourse}</td>
                         </tr>
-                    )}
+                    ))}
                 </tbody>
             </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
-                <Select
-                    variant="outlined"
-                    size="sm"
-                    value={rowsPerPage}
-                    onChange={handleChangeRowsPerPage}
-                >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
-                        <Option key={rowsPerPageOption} value={rowsPerPageOption}>
-                            {rowsPerPageOption} rows
-                        </Option>
-                    ))}
-                </Select>
-                <Typography textColor="text.secondary" fontSize="sm">
-                    {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > counsellerLead?.length
-                        ? counsellerLead?.length
-                        : page * rowsPerPage + rowsPerPage}{' '}
-                    of {counsellerLead?.length}
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1 }}>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page === 0}
-                        onClick={() => handleChangePage(null, page - 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
-                    </IconButton>
-                    <IconButton
-                        size="sm"
-                        color="neutral"
-                        variant="outlined"
-                        disabled={page >= Math.ceil(counsellerLead?.length / rowsPerPage) - 1}
-                        onClick={() => handleChangePage(null, page + 1)}
-                        sx={{ bgcolor: 'background.surface' }}
-                    >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
-                    </IconButton>
-                </Box>
+
+            {/* Pagination */}
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Typography>Total Leads: {filteredLeads.length}</Typography>
+                <Pagination
+                    count={Math.ceil(filteredLeads.length / rowsPerPage)}
+                    page={page}
+                    onChange={handlePageChange}
+                    color="primary"
+                />
             </Box>
         </Box>
     );
 }
-
-export default CounsellerLeadTable;
