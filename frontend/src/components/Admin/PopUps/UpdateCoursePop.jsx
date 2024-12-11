@@ -82,7 +82,7 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
     Duration: courseData?.Duration || '',
     Category: courseData?.Category || '',
     Fees: courseData?.Fees || 0,
-    Intake: courseData?.Intake || [{ status: true, date: '' }],
+    Intake: courseData?.Intake || [{ status: true, date: '',expiresAt:'' }],
     Scholarships: courseData?.Scholarships || false,
     ProgramLevel: courseData?.ProgramLevel || '',
     LanguageRequirements: courseData?.LanguageRequirements || {
@@ -97,8 +97,9 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
       GRE: { status: false, description: '', minRequirement: '' },
       GMAT: { status: false, description: '', minRequirement: '' },
     },
+    broucherURL:""
   }));
-
+  console.log("fix",formValues)
   // Update form values when courseData changes
   useEffect(() => {
     setFormValues(prev => ({
@@ -276,6 +277,16 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
               onChange={handleChange}
               sx={{ flex: '1 1 30%' }}
             />
+            <TextField
+              id="broucherURL"
+              type='file'
+              name="broucherURL"
+              label="Broucher URL"
+              variant="standard"
+              onChange={handleChange}
+              className="mb-2"
+              sx={{ flex: '1 1 30%' }}
+            />
             <FormControlLabel
               control={
                 <Switch
@@ -299,10 +310,20 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
                   <TextField
                     id={`intake-date-${index}`}
                     label="Intake Date"
-                    type="date"
                     variant="standard"
                     value={intake.date}
                     onChange={(e) => handleIntakeChange(index, 'date', e.target.value)}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                    <TextField
+                    id={`intake-expiresAt-${index}`}
+                    label="Expire Date"
+                    variant="standard"
+                    type = 'date'
+                    value={intake?.expiresAt?.split('T')[0]}
+                    onChange={(e) => handleIntakeChange(index, 'expiresAt', e.target.value)}
                     InputLabelProps={{
                       shrink: true,
                     }}

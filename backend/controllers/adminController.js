@@ -719,6 +719,7 @@ const createCourse = asyncHandler(async (req, res) => {
     StandardizeRequirement:req.body.StandardizeRequirement,
     Category:req.body.Category,
     Fees:req.body.Fees,
+    broucherURL:req.body.broucherURL
   });
 
   const createdCourse = await course.save();
@@ -733,7 +734,7 @@ const createCourse = asyncHandler(async (req, res) => {
 // @route   PUT /courses/:id
 // @access  Public
 const updateCourse = asyncHandler(async (req, res) => {
-  const { ProgramName, University, WebsiteURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
+  const { ProgramName, University, WebsiteURL, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
 
   const course = await Course.findById(req.params.id);
 
@@ -749,6 +750,7 @@ const updateCourse = asyncHandler(async (req, res) => {
     course.LanguageRequirements = LanguageRequirements;
     course.StandardizeRequirement = StandardizeRequirement;
     course.Category = Category;
+    course.broucherURL = broucherURL;
 
     const updatedCourse = await course.save();
     res.status(200).json(updatedCourse);

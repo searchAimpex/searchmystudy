@@ -24,6 +24,10 @@ const courseSchema = mongoose.Schema(
             type: String,
             required: true
         },
+        broucherURL: {
+            type: String,
+            default:""
+        },
         Category: {
             type: String,
             required: true,
@@ -66,7 +70,12 @@ const courseSchema = mongoose.Schema(
                 date: {
                     type: String,
                     required: true
-                }
+                },
+                expiresAt: {
+                    type: Date, // Add this field for TTL
+                    required: true,
+                    index: { expires: 0 }, // TTL index to expire the document at this date
+                },
             }
         ],
         Scholarships: {

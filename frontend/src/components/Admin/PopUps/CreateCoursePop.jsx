@@ -107,7 +107,7 @@ export default function CreateCoursePop({ open, handleClose }) {
     Duration: '',
     Category: '',
     Fees: 0 ,
-    Intake: [{ status: true, date: '' }],
+    Intake: [{ status: true, date: '',expiresAt: new Date() }],
     Scholarships: false,
     ProgramLevel: '',
     LanguageRequirements: {
@@ -121,7 +121,8 @@ export default function CreateCoursePop({ open, handleClose }) {
       ACT: { status: false, description: '', minRequirement: '' },
       GRE: { status: false, description: '', minRequirement: '' },
       GMAT: { status: false, description: '', minRequirement: '' }
-    }
+    },
+    broucherURL: ""
   });
   const handlecancell = (e)=>{
     e.stopPropagation();
@@ -129,6 +130,7 @@ export default function CreateCoursePop({ open, handleClose }) {
   }
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
+    console.log("value",value,name,type,files)
     const [section, subSection, field] = name.split('.');
 
     if (type === 'file') {
@@ -307,6 +309,16 @@ export default function CreateCoursePop({ open, handleClose }) {
               className="mb-2"
               sx={{ flex: '1 1 30%' }}
             />
+                <TextField
+              id="broucherURL"
+              type='file'
+              name="broucherURL"
+              label="Broucher URL"
+              variant="standard"
+              onChange={handleChange}
+              className="mb-2"
+              sx={{ flex: '1 1 30%' }}
+            />
             <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="Category-label">Category</InputLabel>
               <Select
@@ -354,6 +366,22 @@ export default function CreateCoursePop({ open, handleClose }) {
                 onChange={(e) => {
                   const updatedIntake = [...formValues.Intake];
                   updatedIntake[index].date = e.target.value;
+                  setFormValues((prevValues) => ({
+                    ...prevValues,
+                    Intake: updatedIntake
+                  }));
+                }}
+                sx={{ flex: '1 1 30%' }}
+              />
+                <TextField
+                id={`Intake-${index}-expiresAt`}
+                label="Expire Date"
+                type = 'date'
+                variant="standard"
+                value={intake.expiresAt}
+                onChange={(e) => {
+                  const updatedIntake = [...formValues.Intake];
+                  updatedIntake[index].expiresAt = e.target.value;
                   setFormValues((prevValues) => ({
                     ...prevValues,
                     Intake: updatedIntake
