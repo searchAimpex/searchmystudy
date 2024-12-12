@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import userRoutes from './routes/userRoutes.js';
 import adminRoutes from './routes/adminRoutes.js'
+import cron from 'node-cron';
+
 
 const port = process.env.PORT || 5000;
 connectDB();
@@ -23,6 +25,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+cron.schedule('0 * * * *', () => { // Runs every hour
+  console.log('Running cleanup for expired intakes...');
+  cleanupExpiredIntakes();
+});
 app.use('/api/users', userRoutes);
 app.use('/api/admin',adminRoutes);
 app.use('/test',(req,res)=>{

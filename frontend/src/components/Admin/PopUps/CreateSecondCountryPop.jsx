@@ -17,7 +17,7 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { AddSecondCountry } from '../../../slices/secondCountrySlice'; // Assuming you have this slice
+import { AddSecondCountry } from '../../../slices/secondCountrySlice';
 import { toast } from 'react-toastify';
 import { useCountryCreateMutation } from '../../../slices/usersApiSlice';
 
@@ -35,9 +35,11 @@ function CreateSecondCountryPop({ open, handleClose }) {
     faq: '',
   });
 
+  const [errors, setErrors] = useState({}); // State for form validation errors
   const [CountryCreate, { isSuccess }] = useCountryCreateMutation();
   const dispatch = useDispatch();
 
+  // Handle form value change
   const handleChange = async (event) => {
     const { name, type, files, value } = event.target;
 
@@ -58,6 +60,7 @@ function CreateSecondCountryPop({ open, handleClose }) {
     }
   };
 
+  // File upload logic
   const uploadFile = async (file, fieldName) => {
     const storageRef = ref(storage, `second-countries/${file.name}`);
     await uploadBytes(storageRef, file);
@@ -65,15 +68,55 @@ function CreateSecondCountryPop({ open, handleClose }) {
     return url;
   };
 
-  const onSubmit = async () => {
-    const res = await CountryCreate(formValues).unwrap();
-    dispatch(AddSecondCountry({ ...res }));
-    handleClose();
+  // Form validation logic
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formValues.name.trim()) newErrors.name = 'Country name is required';
+    if (!formValues.flagURL.trim()) newErrors.flagURL = 'Flag image is required';
+    if (!formValues.currency.trim()) newErrors.currency = 'Currency is required';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
+  // Handle form submission
+  const onSubmit = async () => {
+    if (!validateForm()) {
+      toast.error('Please fill all required fields.');
+      return;
+    }
+
+    try {
+      const res = await CountryCreate(formValues).unwrap();
+      dispatch(AddSecondCountry({ ...res }));
+      toast.success('Second Country Added Successfully');
+      resetForm();
+      handleClose();
+    } catch (error) {
+      toast.error('Error submitting form. Please try again.');
+    }
+  };
+
+  // Reset form values
+  const resetForm = () => {
+    setFormValues({
+      name: '',
+      flagURL: '',
+      currency: '',
+      code: '',
+      vfs: '',
+      step: '',
+      whyThisCountry: '',
+      faq: '',
+    });
+    setErrors({});
+  };
+
+  // Success effect
   useEffect(() => {
     if (isSuccess) {
       toast.success('Second Country Added Successfully');
+      resetForm();
     }
   }, [isSuccess]);
 
@@ -96,6 +139,8 @@ function CreateSecondCountryPop({ open, handleClose }) {
             variant="standard"
             value={formValues.name}
             onChange={handleChange}
+            error={!!errors.name}
+            helperText={errors.name}
             className="mb-2"
           />
 
@@ -107,6 +152,8 @@ function CreateSecondCountryPop({ open, handleClose }) {
             variant="standard"
             onChange={handleChange}
             InputLabelProps={{ shrink: true }}
+            error={!!errors.flagURL}
+            helperText={errors.flagURL}
             className="mb-2"
             label="Flag Image"
           />
@@ -119,6 +166,8 @@ function CreateSecondCountryPop({ open, handleClose }) {
             variant="standard"
             value={formValues.currency}
             onChange={handleChange}
+            error={!!errors.currency}
+            helperText={errors.currency}
             className="mb-2"
           />
 
@@ -188,7 +237,7 @@ function CreateSecondCountryPop({ open, handleClose }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
-        <Button onClick={onSubmit}>Submit</Button>
+        <Button onClick={onSubmit} variant="contained" color="primary">Submit</Button>
       </DialogActions>
     </Dialog>
   );

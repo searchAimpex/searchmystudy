@@ -327,6 +327,7 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+             <span className='h-[60px]'> <img src={formValues?.FrontAadhar} /></span>
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -348,6 +349,9 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+
+          <span className='h-[60px]'> <img src={formValues?.BackAadhar} /></span>
+
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -368,6 +372,8 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+            <span className='h-[60px]'> <img src={formValues?.PanCard} /></span>
+
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -388,6 +394,8 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+              <span className='h-[60px]'> <img src={formValues?.ProfilePhoto} /></span>
+
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -408,6 +416,9 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+            <span className='h-[60px]'> <img src={formValues?.CancelledCheck} /></span>
+
+            
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -428,6 +439,8 @@ function UpdateUserPop({ open, handleClose, userData }) {
                 },
               }}
             />
+                  <span className='h-[60px]'> <img src={formValues?.Logo} /></span>
+
           </Grid>   
           <Grid item xs={12} sm={6}>
             <TextField

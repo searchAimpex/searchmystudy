@@ -4,7 +4,35 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import Map from  '../../assets/Map.png';
+import { useCreateContactLeadMutation } from "../../slices/adminApiSlice";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 export default function ContactUsForm() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [comment, setComment] = useState('');
+  
+  const [createContactLead, { isLoading, isError, isSuccess }] = useCreateContactLeadMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Thank you we will get back to you sortly!');
+    }
+  }, [isSuccess]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await createContactLead({ name, email, comment }).unwrap();
+      setName('');
+      setEmail('');
+      setComment('');
+    } catch (error) {
+      console.error('Failed to submit form:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col bg-white w-full p-32 rounded-md">
       <div className="flex flex-col items-center">
@@ -24,18 +52,25 @@ export default function ContactUsForm() {
               className="w-full p-3 rounded-md border-2 border-blue-main border-solid"
               type="text"
               placeholder="Your Name..."
+              value = {name}
+              onChange={(e)=>setName(e.target.value)}
             />
             <input
               className="w-full p-3 rounded-md border-2 border-blue-main border-solid"
               type="email"
               placeholder="Your Email..."
+              value = {email}
+              onChange={(e)=>setEmail(e.target.value)}
             />
             <textarea
               className="w-full p-3 rounded-md border-2 border-blue-main border-solid"
               placeholder="Write your message here..."
+              value = {comment}
+              onChange={(e)=>setComment(e.target.value)}
             /> 
             <button               
               className="w-full p-3 text-white bg-blue-main font-bold rounded-md shadow-xl border-solid"
+              onClick = {(e)=>handleSubmit(e)}
               >SEND</button>
         </div>
         <div className="w-1/2 flex flex-col p-5 items-center justify-start space-y-10">

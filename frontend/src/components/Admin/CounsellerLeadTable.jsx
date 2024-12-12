@@ -26,6 +26,9 @@ const headCells = [
     { id: 'type', label: 'Type' },
     { id: 'interestedCountry', label: 'Interested Country' },
     { id: 'interestedCourse', label: 'Interested Course' },
+    { id: 'test', label: 'Test' },
+    { id: 'score', label: 'Score' },
+    
 
 ];
 
@@ -211,6 +214,10 @@ export default function CounsellerLeadTable() {
 
                             <td>{row.intersetedCountry}</td>
                             <td>{row.intersetedCourse}</td>
+                            <td>{row.Test}</td>
+
+                            <td>{row.Score}</td>
+
                         </tr>
                     ))}
                 </tbody>

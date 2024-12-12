@@ -8,7 +8,6 @@ const contactLeadSchema = mongoose.Schema(
         },
         phoneNo:{
             type:String,
-            required:true
         },
         email:{
             type:String,

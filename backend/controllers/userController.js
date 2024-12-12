@@ -364,8 +364,8 @@ const getAllUserProfile = asyncHandler(async (req, res) => {
   }
 });
 const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
-  const user = await User.find({role:'frenchise'});
-
+  const user = await User.find({role:'franchise'});
+  console.log("user ",user)
   if (user) {
     res.json(user);
   } else {

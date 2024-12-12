@@ -10,16 +10,18 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Grid from '@mui/material/Grid';
 import { toast } from 'react-toastify';
-import { useCreateUserMutation } from '../../../slices/usersApiSlice'; 
+import { useCreateUserMutation } from '../../../slices/usersApiSlice';
 import { useDispatch } from 'react-redux';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '../../../firebase'; // Ensure correct path for firebase config
+import { app } from '../../../firebase';
 
 const storage = getStorage(app);
 
 function CreateUserPop({ open, handleClose }) {
   const [createUser, { isSuccess }] = useCreateUserMutation();
   const dispatch = useDispatch();
+  const [formErrors, setFormErrors] = useState({});
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const [formValues, setFormValues] = useState({
     email: '',
@@ -44,44 +46,126 @@ function CreateUserPop({ open, handleClose }) {
     VisitOffice: '',
     CancelledCheck: null,
     Logo: null,
-    accountedDetails:'',
-    IFSC:'',
-    bankName:''
+    accountedDetails: '',
+    IFSC: '',
+    bankName: ''
   });
 
-  const roles = ['partner', 'franchise', ]; 
+  const roles = ['partner', 'franchise'];
 
-  const handleChange = (event) => {
-    const { name, value, type, files } = event.target;
-    if (type === 'file') {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: files[0], // File upload
-      }));
-    } else {
-      setFormValues((prevValues) => ({
-        ...prevValues,
-        [name]: value,
-      }));
+  // Validation rules
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'email':
+        return !value ? 'Email is required' :
+          !/\S+@\S+\.\S+/.test(value) ? 'Email is invalid' : '';
+      case 'password':
+        return !value ? 'Password is required' :
+          value.length < 6 ? 'Password must be at least 6 characters' : '';
+      case 'role':
+        return !value ? 'Role is required' : '';
+      case 'name':
+        return !value ? 'Name is required' : '';
+      case 'ContactNumber':
+        return !value ? 'Contact number is required' :
+          !/^\d{10}$/.test(value) ? 'Invalid contact number' : '';
+      case 'WhatsAppNumber':
+        return !value ? 'WhatsApp number is required' :
+          !/^\d{10}$/.test(value) ? 'Invalid WhatsApp number' : '';
+      case 'accountedDetails':
+        return !value ? 'Account number is required' :
+          !/^\d{9,18}$/.test(value) ? 'Invalid account number' : '';
+      case 'IFSC':
+        return !value ? 'IFSC code is required' :
+          !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(value) ? 'Invalid IFSC code' : '';
+      case 'zipCode':
+        return !value ? 'Zip code is required' :
+          !/^\d{6}$/.test(value) ? 'Invalid zip code' : '';
+      default:
+        return !value ? `${name} is required` : '';
     }
   };
 
+  // Validate all fields
+  const validateForm = () => {
+    const errors = {};
+    const requiredFields = [
+      'email', 'password', 'role', 'name', 'OwnerName', 'ContactNumber',
+      'WhatsAppNumber', 'CenterCode', 'DateOfBirth', 'city', 'state',
+      'zipCode', 'address', 'accountedDetails', 'IFSC', 'bankName'
+    ];
+
+    requiredFields.forEach(field => {
+      const error = validateField(field, formValues[field]);
+      if (error) {
+        errors[field] = error;
+      }
+    });
+
+    // Validate required files
+    const requiredFiles = ['FrontAadhar', 'BackAadhar', 'PanCard', 'ProfilePhoto'];
+    requiredFiles.forEach(field => {
+      if (!formValues[field]) {
+        errors[field] = `${field.replace(/([A-Z])/g, ' $1').trim()} is required`;
+      }
+    });
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleChange = (event) => {
+    const { name, value, type, files } = event.target;
+    const newValue = type === 'file' ? files[0] : value;
+
+    setFormValues(prevValues => ({
+      ...prevValues,
+      [name]: newValue
+    }));
+
+    // Clear error when field is modified
+    if (formErrors[name]) {
+      setFormErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+
+    // Validate the changed field
+    const error = validateField(name, newValue);
+    setFormErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+  };
+
+  // Check form validity whenever values or errors change
+  useEffect(() => {
+    const isValid = validateForm();
+    setIsFormValid(isValid);
+  }, [formValues]);
+
   const uploadFile = async (file) => {
+    if (!file) return null;
     const storageRef = ref(storage, `users/${file.name}`);
     await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return url;
+    return await getDownloadURL(storageRef);
   };
 
   const onSubmit = async () => {
+    if (!validateForm()) {
+      toast.error('Please fill all required fields correctly');
+      return;
+    }
+
     try {
       const fileUploads = await Promise.all([
-        formValues.FrontAadhar ? uploadFile(formValues.FrontAadhar) : null,
-        formValues.BackAadhar ? uploadFile(formValues.BackAadhar) : null,
-        formValues.PanCard ? uploadFile(formValues.PanCard) : null,
-        formValues.ProfilePhoto ? uploadFile(formValues.ProfilePhoto) : null,
-        formValues.CancelledCheck ? uploadFile(formValues.CancelledCheck) : null,
-        formValues.Logo ? uploadFile(formValues.Logo) : null,
+        uploadFile(formValues.FrontAadhar),
+        uploadFile(formValues.BackAadhar),
+        uploadFile(formValues.PanCard),
+        uploadFile(formValues.ProfilePhoto),
+        uploadFile(formValues.CancelledCheck),
+        uploadFile(formValues.Logo)
       ]);
 
       const mediaData = {
@@ -94,8 +178,7 @@ function CreateUserPop({ open, handleClose }) {
         Logo: fileUploads[5],
       };
 
-      const res = await createUser(mediaData).unwrap();
-      dispatch({ type: 'user/addUser', payload: res }); // Dispatch action
+      await createUser(mediaData).unwrap();
       handleClose();
       toast.success('User Created Successfully');
     } catch (error) {
@@ -104,31 +187,27 @@ function CreateUserPop({ open, handleClose }) {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success('User Created Successfully');
-    }
-  }, [isSuccess]);
-
   return (
     <Dialog fullWidth={true} open={open} onClose={handleClose}>
       <DialogTitle sx={{ backgroundColor: '#f5f5f5', fontWeight: 'bold' }}>Create New User</DialogTitle>
       <DialogContent sx={{ padding: '2rem' }}>
         <DialogContentText sx={{ mb: 3, fontSize: '1rem', color: '#6b6b6b' }}>
-          Fill in the form to create a new user. Please ensure all required fields are completed.
+          Fill in the form to create a new user. All fields marked with * are required.
         </DialogContentText>
         
-        {/* Form fields */}
         <Grid container spacing={2}>
+          {/* Existing Grid items with error handling */}
           <Grid item xs={12} sm={6}>
             <TextField
               id="email"
               name="email"
-              label="Email"
+              label="Email *"
               fullWidth
               variant="outlined"
               value={formValues.email}
               onChange={handleChange}
+              error={!!formErrors.email}
+              helperText={formErrors.email}
               required
               sx={{ mb: 2 }}
             />
@@ -137,11 +216,13 @@ function CreateUserPop({ open, handleClose }) {
             <TextField
               id="name"
               name="name"
-              label="Name"
+              label="Email *"
               fullWidth
               variant="outlined"
               value={formValues.name}
               onChange={handleChange}
+              error={!!formErrors.name}
+              helperText={formErrors.name}
               required
               sx={{ mb: 2 }}
             />
@@ -437,7 +518,7 @@ function CreateUserPop({ open, handleClose }) {
             <TextField
               id="VisitOffice"
               name="VisitOffice"
-              label="Visit Office"
+              label="Account Holder Name"
               fullWidth
               variant="outlined"
               value={formValues.VisitOffice}
@@ -476,16 +557,23 @@ function CreateUserPop({ open, handleClose }) {
               label="Bank Name"
               fullWidth
               variant="outlined"
-              value={formValues.VisitOffice}
+              value={formValues.bankName}
               onChange={handleChange}
               sx={{ mb: 2 }}
             />
           </Grid>
+          {/* ... Rest of the form fields following the same pattern ... */}
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onclose} color="secondary">Cancel</Button>
-        <Button onClick={onSubmit} color="primary">Create User</Button>
+        <Button onClick={handleClose} color="secondary">Cancel</Button>
+        <Button 
+          onClick={onSubmit} 
+          color="primary" 
+          disabled={!isFormValid}
+        >
+          Create User
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -232,7 +232,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
           id="tableTitle"
           component="div"
         >
-          Live Banner
+          Pop Up
         </Typography>
       )}
 
@@ -247,6 +247,15 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             <DeleteIcon />
           </IconButton>
         </Tooltip>
+        <Tooltip title="View Banner">
+          <IconButton size="sm" color="danger" variant="solid"      onClick={() => {
+                onViewBanner(selectedRow?.imageURL);
+                handleViewBannerOpen();
+              }}>
+            <RemoveRedEyeIcon />
+          </IconButton>
+        </Tooltip>
+      
         
       
         </div>
@@ -258,6 +267,8 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
           </IconButton>
         </Tooltip>
       )}
+      <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.imageURL || ''} />
+
     </Box>
   );
 }

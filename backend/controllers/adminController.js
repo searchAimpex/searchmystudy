@@ -1148,7 +1148,7 @@ const deleteHomeLead = asyncHandler(async (req, res) => {
 const createContactLead = asyncHandler(async (req, res) => {
   const { name, phoneNo, email, occupation, comment } = req.body;
 
-  if (!name || !phoneNo) {
+  if (!name) {
     res.status(400);
     throw new Error('Name and phone number are required');
   }
@@ -1334,7 +1334,7 @@ const getNotifications = async (req, res) => {
 const getAllNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find().sort({ createdAt: -1 });
-    console.log("Notifcation",notif)
+    console.log("Notifcation",notifications)
     res.status(200).json(notifications);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching notifications', error });
