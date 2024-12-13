@@ -18,7 +18,8 @@ import { toast } from 'react-toastify';
 import { useGetAllStudentMutation, useChangeStatusStudentMutation, useStudentDeleteMutation } from '../../slices/adminApiSlice';
 import { DeleteOneStudent, FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
 import { useNavigate } from 'react-router-dom';
-
+import * as XLSX from 'xlsx';
+import { DownloadCloud, DownloadCloudIcon } from 'lucide-react';
 function StudentTable() {
   // Existing state
   const [order, setOrder] = useState('asc');
@@ -140,6 +141,47 @@ function StudentTable() {
     });
   };
 
+  const handleExcelDownload = () => {
+    try {
+      // Transform the data for Excel
+      const excelData = filteredStudents.map(row => ({
+        'Name': `${row.firstName} ${row.lastName}`,
+        'Tracking ID': row.trackingId,
+        'Center Code': row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? 
+          row?.User?.CenterCode : row?.User?.createdBy?.CenterCode,
+        'Center Type': row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? 
+          row?.User?.role : row?.User?.createdBy?.role,
+        'Country': row.Country?.name,
+        'Province': row.Province?.name,
+        'University': row.University?.name,
+        'Course': row.Course?.ProgramName,
+        'City': row.city,
+        'Gender': row.gender,
+        'Phone': row.mobileNumber,
+        'Email': row.emailID,
+        'Status': row.status,
+        'Created At': row.createdAt.split('T')[0]
+      }));
+
+      // Create worksheet
+      const ws = XLSX.utils.json_to_sheet(excelData);
+
+      // Create workbook
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Students');
+
+      // Generate file name with current date
+      const fileName = `students_data_${new Date().toISOString().split('T')[0]}.xlsx`;
+
+      // Save file
+      XLSX.writeFile(wb, fileName);
+      toast.success('Excel file downloaded successfully');
+    } catch (error) {
+      console.error('Export error:', error);
+      toast.error('Failed to download Excel file');
+    }
+  };
+
   return (
     <Box sx={{ width: '100%', overflow: 'hidden', p: 2 }}>
       {/* Filter Section */}
@@ -152,6 +194,14 @@ function StudentTable() {
           >
             {isFiltersVisible ? 'Hide Filters' : 'Show Filters'}
           </Button>
+          <Button
+              startDecorator={<DownloadCloudIcon />}
+              variant="solid"
+              color="primary"
+              onClick={handleExcelDownload}
+            >
+              Download Excel
+            </Button>
         </Box>
 
         {isFiltersVisible && (
@@ -215,21 +265,21 @@ function StudentTable() {
       <Box sx={{ overflowX: 'auto' }}>
         <Table aria-label="student table" stickyHeader>
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Tracking ID</th>
-              <th>Center Code</th>
-              <th>Center Type</th>
-              <th>Country</th>
+            <tr className='mx-4'>
+              <th  className='w-[120px]'>Name</th>
+              <th className='w-[120px]'>Tracking ID</th>
+              <th className='w-[120px]'>Center Code</th>
+              <th  className='w-[120px]'>Center Type</th>
+              <th className='w-[120px]'>Country</th>
               <th className='w-[100px]'>Province</th>
               <th className='w-[100px]'>University</th>
-              <th>Course</th>
-              <th>City</th>
+              <th  className='w-[120px]'>Course</th>
+              <th  className='w-[120px]'>City</th>
               <th>Gender</th>
-              <th className='w-[100px]'>Phone</th>
-              <th className='w-[120px]'>Email</th>
-              <th>Status</th>
-              <th>Created At</th>
+              <th className='w-[150px]'>Phone</th>
+              <th className='w-[150px]'>Email</th>
+              <th  className='w-[120px]'>Status</th>
+              <th className='w-[120px]'>Created At</th>
               <th>Actions</th>
             </tr>
           </thead>

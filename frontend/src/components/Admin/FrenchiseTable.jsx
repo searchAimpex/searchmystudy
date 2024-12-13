@@ -33,6 +33,8 @@ const headCells = [
     { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
     { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
     { id: 'city', numeric: false, disablePadding: false, label: 'City' },
+    { id: 'created At', numeric: false, disablePadding: false, label: 'CreatedAt' },
+
 
 ];
 
@@ -385,14 +387,13 @@ function FrenchiseTable() {
                                         />
                                     </td>
                                     <td id={labelId}>{row?.OwnerName}</td>
-                                    <td>{row?.email}</td>
+                                    <td className='w-[100px]'>{row?.email}</td>
                                     <td>{row?.passwordTracker}</td>
-
-                                 
-                                    
                                     <td>{row?.ContactNumber}</td>
                                     <td>{row?.CenterCode}</td>
                                     <td>{row?.city}</td>
+                                    <td>{row?.createdAt?.split('T')[0]}</td>
+
 
                                 </tr>
                             );

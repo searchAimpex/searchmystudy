@@ -32,6 +32,8 @@ const headCells = [
     { id: 'CenterCode', numeric: true, disablePadding: false, label: 'CenterCode' },
     { id: 'city', numeric: false, disablePadding: false, label: 'City' },
     { id: 'Password', numeric: false, disablePadding: false, label: 'Passowrd' },
+    { id: 'CreatedAt', numeric: false, disablePadding: false, label: 'Created At' },
+
 
 
 ];
@@ -392,6 +394,8 @@ function UserTable() {
                                     <td>{row?.CenterCode}</td>
                                     <td>{row?.city}</td>
                                     <td>{row?.passwordTracker}</td>
+                                    <td>{row?.createdAt?.split('T')[0]}</td>
+
 
 
                                 </tr>
