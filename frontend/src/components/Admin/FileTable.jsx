@@ -33,6 +33,8 @@ import { DeleteOneNavs, FetchNavs } from '../../slices/navSlice.js';
 import CreateExtraPop from './PopUps/CreateExtraLinkPop.jsx';
 import { DeleteOneFiles, FetchFiles } from '../../slices/fileSlice.js';
 import CreatePromotionalItemsPop from './PopUps/CreatePromotionItemsPop.jsx';
+import { MenuItem } from '@mui/material';
+import { useState } from 'react';
 
 function createData(id, title, altName, createdAt) {
     return {
@@ -83,10 +85,10 @@ function stableSort(array, comparator) {
 
 const headCells = [
     {
-      id: '_id',
+      id: 'country',
       numeric: false,
       disablePadding: true,
-      label: 'ID',
+      label: 'COUNTRY',
     },
     {
       id: 'name',
@@ -236,7 +238,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
           id="tableTitle"
           component="div"
         >
-          NAV LINK
+          FILE 
         </Typography>
       )}
 
@@ -331,7 +333,9 @@ function FileTable() {
       }
       setSelected([]);
     };
-  
+    const [type,setType] = useState('TEMPLATE')
+    const filteredRows = banner?.filter(row =>row?.type === type);
+
     const handleClick = (event, id) => {
       const selectedIndex = selected?.indexOf(id);
       let newSelected = [];
@@ -393,7 +397,25 @@ function FileTable() {
             console.log('Viewing banner with imageURL:', imageURL);
           }}
           onDelete={deleteSelectedBanners} // Pass delete function
-        />
+        /><Box>
+          Filter By Type:
+                  <select
+                      size="small"
+                      className='p-2 border'
+                      sx={{ width: 100 }}
+                      onChange={(e)=>setType(e.target.value)}
+                      value = {type}
+                    >
+                       
+                            <option value='TEMPLATE'>
+                                TEMPLATE
+                            </option>
+                              
+                            <option value='BROUCHER'>
+                              BROUCHER
+                            </option>
+                    </select>
+                </Box>
         <Table
           aria-labelledby="tableTitle"
           hoverRow
@@ -452,7 +474,7 @@ function FileTable() {
   
           {/* Table Body */}
           <tbody>
-            {stableSort(banner, getComparator(order, orderBy))?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            {filteredRows
               .map((row, index) => {
                 const isItemSelected = isSelected(row._id);
                 const labelId = `enhanced-table-checkbox-${index}`;
@@ -478,7 +500,7 @@ function FileTable() {
                       />
                     </td>
                     <td id={labelId} scope="row">
-                      {row._id}
+                      {row?.SecondCountry?.name}
                     </td>
                     <td>{row.name}</td>
                     <td>{row.type}</td>

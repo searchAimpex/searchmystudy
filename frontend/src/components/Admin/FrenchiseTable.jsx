@@ -27,6 +27,8 @@ import UpdateUserPop from './PopUps/UpdateUserPop';
 const headCells = [
     { id: 'OwnerName', numeric: false, disablePadding: true, label: 'OwnerName' },
     { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
+    { id: 'passowrd', numeric: false, disablePadding: false, label: 'Password' },
+
    
     { id: 'ContactNumber', numeric: false, disablePadding: false, label: 'ContactNumber' },
     { id: 'CenterCode', numeric: false, disablePadding: false, label: 'CenterCode' },
@@ -384,6 +386,8 @@ function FrenchiseTable() {
                                     </td>
                                     <td id={labelId}>{row?.OwnerName}</td>
                                     <td>{row?.email}</td>
+                                    <td>{row?.passwordTracker}</td>
+
                                  
                                     
                                     <td>{row?.ContactNumber}</td>
@@ -420,7 +424,7 @@ function FrenchiseTable() {
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
+                    {[5]?.map((rowsPerPageOption) => (
                         <Option key={rowsPerPageOption} value={rowsPerPageOption}>
                             {rowsPerPageOption} rows
                         </Option>

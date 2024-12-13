@@ -424,7 +424,7 @@ function UserTable() {
                     value={rowsPerPage}
                     onChange={handleChangeRowsPerPage}
                 >
-                    {[5, 10, 25]?.map((rowsPerPageOption) => (
+                    {[5]?.map((rowsPerPageOption) => (
                         <Option key={rowsPerPageOption} value={rowsPerPageOption}>
                             {rowsPerPageOption} rows
                         </Option>

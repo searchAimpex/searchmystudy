@@ -9,14 +9,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Modal from '@mui/joy/Modal';
 import Button from '@mui/joy/Button';
+import Input from '@mui/joy/Input';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
 import TablePagination from '@mui/material/TablePagination';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useGetAllStudentMutation, useChangeStatusStudentMutation, useStudentDeleteMutation } from '../../slices/adminApiSlice';
 import { DeleteOneStudent, FetchAllStudent, statusUpdate } from '../../slices/studentSlice';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 function StudentTable() {
+  // Existing state
   const [order, setOrder] = useState('asc');
   const [selected, setSelected] = useState([]);
   const [openModal, setOpenModal] = useState(false);
@@ -25,10 +29,19 @@ function StudentTable() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  // New filter states
+  const [filters, setFilters] = useState({
+    centerCode: '',
+    trackingId: '',
+    userType: '',
+    startDate: '',
+    endDate: ''
+  });
+  const [isFiltersVisible, setIsFiltersVisible] = useState(true);
+
   const { student } = useSelector((state) => state.student);
-  console.log("====>,",student)
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [GetAllStudent, { isSuccess }] = useGetAllStudentMutation();
   const [ChangeStatusStudent] = useChangeStatusStudentMutation();
   const [StudentDelete, data] = useStudentDeleteMutation();
@@ -54,13 +67,37 @@ function StudentTable() {
     fetchData();
   }, [GetAllStudent, dispatch]);
 
+  // Filter functions
+  const filteredStudents = React.useMemo(() => {
+    return student.filter(s => {
+      const centerCodeMatch = !filters.centerCode || 
+        (s?.User?.CenterCode || s?.User?.createdBy?.CenterCode || '')
+          .toLowerCase()
+          .includes(filters.centerCode.toLowerCase());
+
+      const trackingIdMatch = !filters.trackingId || 
+        s.trackingId.toLowerCase().includes(filters.trackingId.toLowerCase());
+
+      const userTypeMatch = !filters.userType || 
+        (s?.User?.role === filters.userType || s?.User?.createdBy?.role === filters.userType);
+
+      const createdDate = new Date(s.createdAt);
+      const startDate = filters.startDate ? new Date(filters.startDate) : null;
+      const endDate = filters.endDate ? new Date(filters.endDate) : null;
+
+      const dateMatch = (!startDate || !endDate) ||
+        (createdDate >= startDate && createdDate <= endDate);
+
+      return centerCodeMatch && trackingIdMatch && userTypeMatch && dateMatch;
+    });
+  }, [student, filters]);
+
   const handleEdit = (id) => {
     setSelectedStudentId(id);
     setOpenModal(true);
   };
 
   const handleUpdate = (student) => {
-    // Navigate to the update page and pass student data
     navigate('/admin/student/update', { state: student });
   };
 
@@ -93,68 +130,148 @@ function StudentTable() {
     }
   };
 
-  // Pagination handlers
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const handleResetFilters = () => {
+    setFilters({
+      centerCode: '',
+      trackingId: '',
+      userType: '',
+      startDate: '',
+      endDate: ''
+    });
   };
 
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden' }}>
+    <Box sx={{ width: '100%', overflow: 'hidden', p: 2 }}>
+      {/* Filter Section */}
+      <Box sx={{ mb: 3 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <Typography level="h4">Student Management</Typography>
+          <Button 
+            variant="outlined"
+            onClick={() => setIsFiltersVisible(!isFiltersVisible)}
+          >
+            {isFiltersVisible ? 'Hide Filters' : 'Show Filters'}
+          </Button>
+        </Box>
+
+        {isFiltersVisible && (
+          <Box sx={{ 
+            display: 'grid', 
+            gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: '1fr 1fr 1fr 1fr' },
+            gap: 2,
+            p: 2,
+            bgcolor: 'background.level1',
+            borderRadius: 'sm',
+            mb: 2
+          }}>
+            <Input
+              placeholder="Search by Center Code"
+              value={filters.centerCode}
+              onChange={(e) => setFilters(prev => ({...prev, centerCode: e.target.value}))}
+              fullWidth
+            />
+            <Input
+              placeholder="Search by Tracking ID"
+              value={filters.trackingId}
+              onChange={(e) => setFilters(prev => ({...prev, trackingId: e.target.value}))}
+              fullWidth
+            />
+            <Select
+              placeholder="Select User Type"
+              value={filters.userType}
+              onChange={(_, value) => setFilters(prev => ({...prev, userType: value}))}
+              fullWidth
+            >
+              <Option value="">All</Option>
+              <Option value="partner">Partner</Option>
+              <Option value="franchise">Franchise</Option>
+            </Select>
+            <Input
+              type="date"
+              placeholder="Start Date"
+              value={filters.startDate}
+              onChange={(e) => setFilters(prev => ({...prev, startDate: e.target.value}))}
+              fullWidth
+            />
+            <Input
+              type="date"
+              placeholder="End Date"
+              value={filters.endDate}
+              onChange={(e) => setFilters(prev => ({...prev, endDate: e.target.value}))}
+              fullWidth
+            />
+            <Button 
+              variant="outlined" 
+              onClick={handleResetFilters}
+              fullWidth
+            >
+              Reset Filters
+            </Button>
+          </Box>
+        )}
+      </Box>
+
+      {/* Table Section */}
       <Box sx={{ overflowX: 'auto' }}>
         <Table aria-label="student table" stickyHeader>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Partner/Frenchise Code</th>
+              <th>Tracking ID</th>
+              <th>Center Code</th>
+              <th>Center Type</th>
               <th>Country</th>
-              <th>Province</th>
-              <th>University</th>
+              <th className='w-[100px]'>Province</th>
+              <th className='w-[100px]'>University</th>
               <th>Course</th>
               <th>City</th>
               <th>Gender</th>
-              <th>Phone</th>
-              <th>Email</th>
+              <th className='w-[100px]'>Phone</th>
+              <th className='w-[120px]'>Email</th>
               <th>Status</th>
+              <th>Created At</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {student
+            {filteredStudents
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row) => (
                 <tr key={row._id}>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.firstName} {row.lastName}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? row?.User?.CenterCode : row?.User?.createdBy?.CenterCode}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Country?.name}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Province?.name}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.University?.name}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.Course?.ProgramName}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.city}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.gender}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.mobileNumber}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.emailID}</td>
-                  <td style={{ wordWrap: 'break-word', maxWidth: '100px' }}>{row.status}</td>
+                  <td>{row.firstName} {row.lastName}</td>
+                  <td>{row.trackingId}</td>
+                  <td>{row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? 
+                    row?.User?.CenterCode : row?.User?.createdBy?.CenterCode}</td>
+                  <td>{row?.User?.role === 'partner' || row?.User?.role === 'franchise' ? 
+                    row?.User?.role : row?.User?.createdBy?.role}</td>
+                  <td>{row.Country?.name}</td>
+                  <td className='w-[100px]'>{row.Province?.name}</td>
+                  <td className='w-[100px]'>{row.University?.name}</td>
+                  <td>{row.Course?.ProgramName}</td>
+                  <td>{row.city}</td>
+                  <td>{row.gender}</td>
+                  <td className='w-[100px] '>{row.mobileNumber}</td>
+                  <td className='w-[120px] '>{row.emailID}</td>
+                  <td>{row.status}</td>
+                  <td>{row.createdAt.split('T')[0]}</td>
                   <td>
-                    <Tooltip title="Edit Status">
-                      <IconButton onClick={() => handleEdit(row._id)}>
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton onClick={() => handleDelete(row._id)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit Student">
-                      <IconButton onClick={() => handleUpdate(row)}> {/* Pass the entire row object */}
-                        <EditIcon />
-                      </IconButton>
-                    </Tooltip>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Tooltip title="Edit Status">
+                        <IconButton onClick={() => handleEdit(row._id)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(row._id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit Student">
+                        <IconButton onClick={() => handleUpdate(row)}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </td>
                 </tr>
               ))}
@@ -162,18 +279,21 @@ function StudentTable() {
         </Table>
       </Box>
 
-      {/* Pagination component */}
+      {/* Pagination */}
       <TablePagination
         component="div"
-        count={student.length}
+        count={filteredStudents.length}
         page={page}
-        onPageChange={handleChangePage}
+        onPageChange={(_, newPage) => setPage(newPage)}
         rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        onRowsPerPageChange={(event) => {
+          setRowsPerPage(parseInt(event.target.value, 10));
+          setPage(0);
+        }}
         rowsPerPageOptions={[5, 10, 15]}
       />
 
-      {/* Modal for changing student status */}
+      {/* Status Change Modal */}
       <Modal
         open={openModal}
         onClose={handleCloseModal}
@@ -194,37 +314,31 @@ function StudentTable() {
             boxShadow: '0px 10px 25px rgba(0, 0, 0, 0.1)',
           }}
         >
-          <Typography variant="h6" sx={{ marginBottom: '1rem' }}>
+          <Typography level="h6" sx={{ marginBottom: '1rem' }}>
             Change Student Status
           </Typography>
-          <select
+          <Select
             placeholder="Select status"
             value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            style={{
-              width: '100%',
-              padding: '4px',
-              borderRadius: '4px',
-              border: '1px solid #ccc',
-              marginBottom: '1rem',
-            }}
+            onChange={(_, value) => setSelectedStatus(value)}
+            sx={{ width: '100%', mb: 2 }}
           >
-            <option value="Inquiry">Inquiry</option>
-            <option value="Assessment">Assessment</option>
-            <option value="Offer Letter">Offer Letter</option>
-            <option value="Fees Paid">Fees Paid</option>
-            <option value="Acceptance Letter">Acceptance Letter</option>
-            <option value="VFS date booked">VFS date booked</option>
-            <option value="Visa Granted">Visa Granted</option>
-            <option value="Traveling">Traveling</option>
-            <option value="Traveling">Completed</option>
-            <option value="Canceled">Canceled</option>
-          </select>
+            <Option value="Inquiry">Inquiry</Option>
+            <Option value="Assessment">Assessment</Option>
+            <Option value="Offer Letter">Offer Letter</Option>
+            <Option value="Fees Paid">Fees Paid</Option>
+            <Option value="Acceptance Letter">Acceptance Letter</Option>
+            <Option value="VFS date booked">VFS date booked</Option>
+            <Option value="Visa Granted">Visa Granted</Option>
+            <Option value="Traveling">Traveling</Option>
+            <Option value="Completed">Completed</Option>
+            <Option value="Canceled">Canceled</Option>
+          </Select>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button variant="outlined" onClick={handleCloseModal}>
               Cancel
             </Button>
-            <Button variant="contained" color="primary" onClick={handleStatusChange}>
+            <Button variant="solid" color="primary" onClick={handleStatusChange}>
               Update
             </Button>
           </Box>

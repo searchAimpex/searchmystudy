@@ -136,7 +136,7 @@ export default function StudentUpdate() {
   useEffect(()=>{
     if(isSuccess){
         toast.success("update student")
-        Navigate('/admin/student/')
+        navigate('/admin/student/')
     }
   },[isSuccess])
   const [formErrors, setFormErrors] = useState({});
@@ -249,6 +249,7 @@ const validateFields = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      console.log("I am running")
         const data = { 
             id:studentData._id,
             raw:formData
@@ -270,7 +271,11 @@ console.log("filterd university",universities)
 // console.log("fixx country",countries)
 // console.log("fetch province",provinces)
 // console.log("form data",formData)
-
+const handleViewFile = (fileUrl) => {
+  // Open the file in a new tab (for PDF or image files)
+  window.open(fileUrl, '_blank');
+  setViewingFile(fileUrl); // Optionally store the current file being viewed
+};
   const renderStepContent = (step) => {
     switch (step) {
       case 0:
@@ -570,6 +575,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                       {formData.grade12Marksheet && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.grade12Marksheet)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="grade10Marksheet">Grade 10 Marksheet</label>
@@ -580,6 +594,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                      {formData.grade10Marksheet && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.grade10Marksheet)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="passportFrontBack">Passport Front & Back</label>
@@ -590,6 +613,16 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                     {formData.passportFrontBack && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.passportFrontBack)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
+                    
                 </div>
                 <div className="form-group">
                     <label htmlFor="resume">Resume</label>
@@ -600,6 +633,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.resume && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.resume)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="englishTestScorecard">English Test Scorecard</label>
@@ -610,6 +652,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                          {formData.englishTestScorecard && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.englishTestScorecard)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 {/* Additional/Optional document fields */}
                 <div className="form-group">
@@ -621,6 +672,16 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                    
+                    {formData.grade10PassingCertificate && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.grade10PassingCertificate)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="verificationForm">Verification Form</label>
@@ -631,6 +692,16 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                             
+                             {formData.verificationForm && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.verificationForm)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="applicationFeeReceipt">Application Fee Receipt</label>
@@ -641,6 +712,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.applicationFeeReceipt && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.applicationFeeReceipt)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="statementOfPurpose">Statement of Purpose</label>
@@ -651,6 +731,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.statementOfPurpose && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.statementOfPurpose)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="extracurricularCertificates">Extracurricular Certificates</label>
@@ -661,6 +750,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                      {formData.extracurricularCertificates && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.extracurricularCertificates)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="gapJustification">Gap Justification</label>
@@ -671,6 +769,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                        {formData.gapJustification && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.gapJustification)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="workExperience">Work Experience</label>
@@ -681,6 +788,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                       {formData.workExperience && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.workExperience)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="universityApplicationForm">University Application Form</label>
@@ -691,6 +807,16 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                     {formData.universityApplicationForm && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.universityApplicationForm)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
+                    
                 </div>
                 <div className="form-group">
                     <label htmlFor="letterOfRecommendations">Letter of Recommendations</label>
@@ -701,6 +827,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.letterOfRecommendations && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.letterOfRecommendations)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="masterTranscripts">Master Transcripts</label>
@@ -711,6 +846,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                          {formData.masterTranscripts && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.masterTranscripts)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="masterMarksheet">Master Marksheet</label>
@@ -721,6 +865,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                          {formData.masterMarksheet && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.masterMarksheet)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="masterDegree">Master Degree</label>
@@ -731,6 +884,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.masterDegree && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.masterDegree)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="bachelorTranscripts">Bachelor Transcripts</label>
@@ -741,6 +903,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                             {formData.bachelorTranscripts && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.bachelorTranscripts)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="bachelorMarksheet">Bachelor Marksheet</label>
@@ -751,6 +922,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                         {formData.bachelorMarksheet && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.bachelorMarksheet)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="bachelorDegree">Bachelor Degree</label>
@@ -761,6 +941,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                           {formData.bachelorDegree && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.bachelorDegree)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="grade12PassingCertificate">Grade 12 Passing Certificate</label>
@@ -771,6 +960,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                             {formData.grade12PassingCertificate && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.grade12PassingCertificate)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="powerOfAttorney">Power of Attorney</label>
@@ -781,6 +979,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.powerOfAttorney && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.powerOfAttorney)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="registrationForm">Registration Form</label>
@@ -791,6 +998,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                          {formData.registrationForm && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.registrationForm)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="declarationForm">Declaration Form</label>
@@ -801,6 +1017,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                      {formData.declarationForm && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.declarationForm)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="passportPhoto">Passport Photo</label>
@@ -811,6 +1036,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="image/*"
                     />
+                           {formData.passportPhoto && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.passportPhoto)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="portfolio">Portfolio</label>
@@ -821,6 +1055,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                           {formData.portfolio && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.portfolio)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="visaDocument">Visa Document</label>
@@ -831,6 +1074,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                            {formData.visaDocument && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.visaDocument)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="birthCertificate">Birth Certificate</label>
@@ -841,6 +1093,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                           {formData.birthCertificate && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.birthCertificate)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                 <div className="form-group">
                     <label htmlFor="policeClearanceCertificate">Police Clearance Certificate</label>
@@ -851,6 +1112,15 @@ console.log("filterd university",universities)
                     onChange={handleFileChange}
                     accept="application/pdf"
                     />
+                         {formData.policeClearanceCertificate && (
+                          <button
+                            type="button"
+                            onClick={() => handleViewFile(formData.policeClearanceCertificate)}
+                            className="btn-view"
+                          >
+                            View
+                          </button>
+                        )}
                 </div>
                         
             {/* Add more file input fields as required */}
