@@ -67,7 +67,7 @@ function EnhancedTableHead(props) {
     return (
         <thead>
             <tr>
-                <th>
+                <th className='w-[50px]'>
                     <Checkbox
                         indeterminate={numSelected > 0 && numSelected < rowCount}
                         checked={rowCount > 0 && numSelected === rowCount}
@@ -80,6 +80,7 @@ function EnhancedTableHead(props) {
                     <th
                         key={headCell.id}
                         aria-sort={orderBy === headCell.id ? order : undefined}
+                        className='w-[200px]'
                     >
                         <Link
                             underline="none"
@@ -377,8 +378,9 @@ function UserTable() {
                                     tabIndex={-1}
                                     key={row?._id}
                                     selected={isItemSelected}
-                                >
-                                    <td>
+                                    className="p-2 text-sm" 
+                                                                    >
+                                    <td className="p-2">
                                         <Checkbox
                                             color={isItemSelected ? 'primary' : 'neutral'}
                                             checked={isItemSelected}
@@ -386,15 +388,15 @@ function UserTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?.OwnerName}</td>
-                                    <td>{row?.email}</td>
+                                    <td className="p-2" id={labelId}>{row?.OwnerName}</td>
+                                    <td className="p-2 w-[200px]">{row?.email}</td>
                                  
                                     
-                                    <td>{row?.ContactNumber}</td>
-                                    <td>{row?.CenterCode}</td>
-                                    <td>{row?.city}</td>
-                                    <td>{row?.passwordTracker}</td>
-                                    <td>{row?.createdAt?.split('T')[0]}</td>
+                                    <td className="p-2">{row?.ContactNumber}</td>
+                                    <td className="p-2">{row?.CenterCode}</td>
+                                    <td className="p-2">{row?.city}</td>
+                                    <td className="p-2">{row?.passwordTracker}</td>
+                                    <td className="p-2">{row?.createdAt?.split('T')[0]}</td>
 
 
 

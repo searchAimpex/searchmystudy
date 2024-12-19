@@ -80,6 +80,7 @@ function EnhancedTableHead(props) {
                     <th
                         key={headCell.id}
                         aria-sort={orderBy === headCell.id ? order : undefined}
+                        className="w-[175px]" 
                     >
                         <Link
                             underline="none"
@@ -378,7 +379,7 @@ function FrenchiseTable() {
                                     key={row?._id}
                                     selected={isItemSelected}
                                 >
-                                    <td>
+                                    <td className="p-2">
                                         <Checkbox
                                             color={isItemSelected ? 'primary' : 'neutral'}
                                             checked={isItemSelected}
@@ -386,13 +387,13 @@ function FrenchiseTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?.OwnerName}</td>
-                                    <td className='w-[100px]'>{row?.email}</td>
-                                    <td>{row?.passwordTracker}</td>
-                                    <td>{row?.ContactNumber}</td>
-                                    <td>{row?.CenterCode}</td>
-                                    <td>{row?.city}</td>
-                                    <td>{row?.createdAt?.split('T')[0]}</td>
+                                    <td className="p-2 min-w-[200px]"  id={labelId}>{row?.OwnerName}</td>
+                                    <td className="p-2 w-full" >{row?.email}</td>
+                                    <td className="p-2 min-w-[200px]" >{row?.passwordTracker}</td>
+                                    <td className="p-2 min-w-[200px]" >{row?.ContactNumber}</td>
+                                    <td className="p-2 min-w-[200px]" >{row?.CenterCode}</td>
+                                    <td className="p-2 min-w-[200px]" >{row?.city}</td>
+                                    <td className="p-2 min-w-[200px]" >{row?.createdAt?.split('T')[0]}</td>
 
 
                                 </tr>

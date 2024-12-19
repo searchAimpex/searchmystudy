@@ -28,6 +28,8 @@ const headCells = [
     { id: 'interestedCourse', label: 'Interested Course' },
     { id: 'test', label: 'Test' },
     { id: 'score', label: 'Score' },
+    { id: 'createdAt', label: 'Created At' },
+
     
 
 ];
@@ -207,16 +209,18 @@ export default function CounsellerLeadTable() {
                             <td>
                                 <Checkbox />
                             </td>
-                            <td>{row.name}</td>
-                            <td>{row.phone}</td>
-                            <td>{row.email}</td>
-                            <td>{row.type}</td>
+                            <td>{row?.name}</td>
+                            <td>{row?.phone}</td>
+                            <td>{row?.email}</td>
+                            <td>{row?.type}</td>
 
-                            <td>{row.intersetedCountry}</td>
-                            <td>{row.intersetedCourse}</td>
-                            <td>{row.Test}</td>
+                            <td>{row?.intersetedCountry}</td>
+                            <td>{row?.intersetedCourse}</td>
+                            <td>{row?.Test}</td>
 
-                            <td>{row.Score}</td>
+                            <td>{row?.Score}</td>
+                            <td>{row?.createdAt?.split("T")[0]}</td>
+
 
                         </tr>
                     ))}
