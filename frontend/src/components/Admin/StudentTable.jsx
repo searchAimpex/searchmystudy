@@ -272,11 +272,10 @@ function StudentTable() {
               <th  className='w-[120px]'>Center Type</th>
               <th className='w-[120px]'>Country</th>
               <th className='w-[100px]'>Province</th>
-              <th className='w-[100px]'>University</th>
+              <th className='w-[150px]'>University</th>
               <th  className='w-[120px]'>Course</th>
               <th  className='w-[120px]'>City</th>
-              <th>Gender</th>
-              <th className='w-[150px]'>Phone</th>
+              <th className='w-[250px]'>Phone</th>
               <th className='w-[150px]'>Email</th>
               <th  className='w-[120px]'>Status</th>
               <th className='w-[120px]'>Created At</th>
@@ -296,11 +295,10 @@ function StudentTable() {
                     row?.User?.role : row?.User?.createdBy?.role}</td>
                   <td>{row.Country?.name}</td>
                   <td className='w-[100px]'>{row.Province?.name}</td>
-                  <td className='w-[100px]'>{row.University?.name}</td>
+                  <td className='w-[150px]'>{row.University?.name}</td>
                   <td>{row.Course?.ProgramName}</td>
                   <td>{row.city}</td>
-                  <td>{row.gender}</td>
-                  <td className='w-[100px] '>{row.mobileNumber}</td>
+                  <td >{row.mobileNumber}</td>
                   <td className='w-[120px] '>{row.emailID}</td>
                   <td>{row.status}</td>
                   <td>{row.createdAt.split('T')[0]}</td>

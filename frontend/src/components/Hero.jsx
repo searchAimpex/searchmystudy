@@ -20,15 +20,19 @@ const Hero = () => {
         <CourseFinder />
         <WhyChoseUs />
         <CountriesSection />
+        <CourseSection />
+
         <ServiceSection />
+        <AboutUsSection />
+
         <CounsellorSection />
         <TestmonialSection />
-        <AboutUsSection />
-        <CourseSection />
+
         <VideoCards />
-        <ContactSection />
         <WebinarSection />
         <MediaSection />
+        <ContactSection />
+
     </div>
   );
 };

@@ -24,9 +24,18 @@ const initialLinks = [
      
         path: '/'
     },
+    {
+        name: "RESOURCES",
+        submenu: true,
+        sublinks: [
+            { name: "ABOUT US", link: "/aboutus", path: "/aboutus" },
+            { name: "BLOG", link: "/blog", path: "/blog" },
+            { name: "CONTACT US", link: "/contactus", path: "/contactus" },
+        ]
+    },
   
     {
-        name: "MEDICAL",
+        name: "MEDICAL STUDY",
         submenu: true,
         tabs: [
             { name: "INDIA", sublinks: [
@@ -55,15 +64,7 @@ const initialLinks = [
         sublinks: [],
         path: '/country'
     },
-    {
-        name: "RESOURCES",
-        submenu: true,
-        sublinks: [
-            { name: "ABOUT US", link: "/aboutus", path: "/aboutus" },
-            { name: "BLOG", link: "/blog", path: "/blog" },
-            { name: "CONTACT US", link: "/contactus", path: "/contactus" },
-        ]
-    },
+  
     { name: "SERVICE", link: "/services", path: "/services" },
 
 ];
@@ -228,11 +229,11 @@ export default function PublicNavBar() {
                                             </div>
                                         </div>
                                     )}
-                                    {link.name === "MEDICAL" && (
+                                    {link.name === "MEDICAL STUDY" && (
                                         <div className="absolute top-10 hidden w-[800px] z-[50] bg-white group-hover:md:block hover:md:block">
-                                            <Tabs value={tabValue} onChange={handleTabChange} aria-label="medical tabs" className="p-5">
+                                            <Tabs value={tabValue} onChange={handleTabChange} aria-label="medical tabs" className="p-5 space-between">
                                                 {link.tabs.map((tab, index) => (
-                                                    <Tab key={index} label={tab.name} />
+                                                    <Tab className="font--bold" key={index} label={tab.name} />
                                                 ))}
                                             </Tabs>
                                             <div className="p-5 grid grid-cols-4 gap-4">
@@ -240,7 +241,7 @@ export default function PublicNavBar() {
                                                     <div key={index}>
                                                         <li className="text-sm text-gray-600 my-2.5">
                                                             <Link to={sublink.link} className="hover:text-primary underline flex flex-row">
-                                                                <img className="object-contained h-[20px] w-[20px]" src={sublink?.flagURL} />
+                                                                {/* <img className="object-contained h-[20px] w-[20px]" src={sublink?.flagURL} /> */}
                                                                 <span>{sublink?.name}</span>
                                                             </Link>
                                                         </li>
@@ -253,7 +254,23 @@ export default function PublicNavBar() {
                             ))}
                         </ul>
                     </div>
+                    <div className="flex flex-row space-x-6 items-center">
+                        <div>
+                            <button>LINK1</button>
+                        </div>
+                        <div>
+                            <button>LINK1</button>
+                        </div>
+                        <div>
+                            <button>LINK1</button>
+                        </div>
+                        <div>
+                            <button onClick={()=>navigate('/login')} className="text-white font-bold rounded-lg bg-blue-main">LOGIN</button>
+                        </div>
+
                 </div>
+                </div>
+              
             </div>
 
             {/* Counselling Modal */}
