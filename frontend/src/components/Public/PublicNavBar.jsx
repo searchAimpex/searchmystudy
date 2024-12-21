@@ -267,7 +267,6 @@ export default function PublicNavBar() {
                         <div>
                             <button onClick={()=>navigate('/login')} className="text-white font-bold rounded-lg bg-blue-main">LOGIN</button>
                         </div>
-
                 </div>
                 </div>
               
