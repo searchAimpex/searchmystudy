@@ -82,7 +82,7 @@ export default function CountryDetailed() {
                     animate={inViewSections ? { opacity: 1 } : {}}
                     transition={{ duration: 1 }}
                 >
-                    {singleCountry.sections.map((section, index) => (
+                    {singleCountry?.sections?.map((section, index) => (
                         <motion.div
                             key={section._id}
                             className={`flex flex-col md:flex-row ${index % 2 === 0 ? 'md:flex-row-reverse' : ''} items-center`}
@@ -92,7 +92,7 @@ export default function CountryDetailed() {
                         >
                             <div className="md:w-1/2 text-center md:text-left">
                                 <h3 className="text-2xl font-bold px-10 text-blue-main mb-4">{section.title}</h3>
-                                <div className="text-gray-600 p-10"   dangerouslySetInnerHTML={{ __html: singleCountry?.description }}></div>
+                                <div className="text-gray-600 p-10"   dangerouslySetInnerHTML={{ __html: section?.description }}></div>
                             </div>
                             <div className="md:w-1/2 mt-4 md:mt-0">
                                 <motion.img
