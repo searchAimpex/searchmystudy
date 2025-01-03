@@ -43,6 +43,7 @@ const Section = ({ item, index }) => {
                             dangerouslySetInnerHTML={{ __html: item?.description }}
                         >
                         </motion.div>
+                        
                         <motion.div
                             className='w-1/2 flex items-start'
                             whileHover={{ scale: 1.05 }}
