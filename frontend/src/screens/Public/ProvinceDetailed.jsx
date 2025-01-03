@@ -70,8 +70,8 @@ export default function ProvinceDetailed() {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1 }}
+                        dangerouslySetInnerHTML={ {__html: singleProvince?.description}} 
                     >
-                        <p className='text-md'>{singleProvince?.description}</p>
                     </motion.div>
                 </motion.div>
                 <div>
@@ -106,7 +106,7 @@ export default function ProvinceDetailed() {
 
                                     </div>
                                     <div>
-                                        <span className='text-sm text-gray-500 font-bold'>{items.description.slice(0,50)}</span>
+                                        <span className='text-sm text-gray-500 font-bold' >{items.description}</span>
                                     </div>
                                     <div className='flex flex-col w-full justify-end items-end'>
                                         <button

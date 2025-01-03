@@ -67,7 +67,10 @@ export default function CountryDetailed() {
                 transition={{ duration: 1 }}
             >
                 <span className='text-4xl font-bold text-blue-main'>{singleCountry?.name}</span>
-                <span className='text-md font-bold mt-5 text-gray-600'>{singleCountry?.description}</span>
+                <div
+                        className="text-md font-bold mt-5 text-gray-600"
+                        dangerouslySetInnerHTML={{ __html: singleCountry?.description }}
+                        ></div>
             </motion.div>
 
             {/* Render sections if they exist */}
@@ -89,7 +92,7 @@ export default function CountryDetailed() {
                         >
                             <div className="md:w-1/2 text-center md:text-left">
                                 <h3 className="text-2xl font-bold px-10 text-blue-main mb-4">{section.title}</h3>
-                                <p className="text-gray-600 p-10">{section.description}</p>
+                                <div className="text-gray-600 p-10"   dangerouslySetInnerHTML={{ __html: singleCountry?.description }}></div>
                             </div>
                             <div className="md:w-1/2 mt-4 md:mt-0">
                                 <motion.img

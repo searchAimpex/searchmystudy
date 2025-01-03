@@ -40,8 +40,8 @@ const Section = ({ item, index }) => {
                             className='w-1/2 flex items-start'
                             whileHover={{ scale: 1.05 }}
                             transition={{ duration: 0.3 }}
+                            dangerouslySetInnerHTML={{ __html: item?.description }}
                         >
-                            <p className='text-md'>{item?.description}</p>
                         </motion.div>
                         <motion.div
                             className='w-1/2 flex items-start'

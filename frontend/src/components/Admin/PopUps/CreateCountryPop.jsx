@@ -20,6 +20,7 @@ import { app } from '../../../firebase'; // Adjust the import path accordingly
 import { AddCountry } from '../../../slices/countrySlice'; // Assuming you have this slice
 import { useCreateCountryMutation } from '../../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
+import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
@@ -245,7 +246,7 @@ function CreateCountryPop({ open, onClose }) {
             className="mb-2"
             label="Bullet Point"
           />
-          <TextField
+          <TextEditor
             id="description"
             name="description"
             label="Description"
@@ -271,7 +272,7 @@ function CreateCountryPop({ open, onClose }) {
                   onChange={handleChange}
                   className="mb-2"
                 />
-                <TextField
+                <TextEditor
                   id={`sectionDescription${index}`}
                   name={`sections.${index}.description`}
                   label="Description"

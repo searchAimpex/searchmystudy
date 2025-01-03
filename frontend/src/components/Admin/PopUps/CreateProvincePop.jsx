@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AddProvince } from '../../../slices/provinceSlice';
 import { useCreateProvinceMutation } from '../../../slices/adminApiSlice';
 import { ExpandMoreSharp } from '@mui/icons-material';
+import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
@@ -189,7 +190,7 @@ export default function CreateProvincePop({ open, handleClose }) {
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
+            <TextEditor
               name="description"
               label="Description"
               variant="standard"
@@ -214,7 +215,7 @@ export default function CreateProvincePop({ open, handleClose }) {
                     onChange={handleChange}
                     fullWidth
                   />
-                  <TextField
+                  <TextEditor
                     name={`section-${index}-description`}
                     label="Description"
                     variant="standard"
