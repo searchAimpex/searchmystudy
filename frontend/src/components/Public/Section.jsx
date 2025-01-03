@@ -42,10 +42,12 @@ const Section = ({ item, index }) => {
                             transition={{ duration: 0.3 }}
                             dangerouslySetInnerHTML={{ __html: item?.description }}
                         >
+
+                            
                         </motion.div>
 
 
-                        
+
 
                         <motion.div
                             className='w-1/2 flex items-start'
