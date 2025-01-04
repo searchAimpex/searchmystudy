@@ -3,11 +3,6 @@ import { useDispatch } from 'react-redux';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   TextField,
   Accordion,
   AccordionSummary,
@@ -16,14 +11,15 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '../../../firebase';
-import { useCountryStatusUpdateMutation } from '../../../slices/adminApiSlice';
+import { app } from '../../firebase'; // Adjust the import path accordingly
+import { AddCountry } from '../../slices/countrySlice'; // Assuming you have this slice
+import { useCreateCountryMutation } from '../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
-import TextEditor from '../TextEditor';
+import TextEditor from './TextEditor';
 
 const storage = getStorage(app);
 
-function UpdateCountryPop({ open, handleClose, countryData }) {
+function CountryAdd({ open, onClose }) {
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',
@@ -34,53 +30,27 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
     eligiblity: ['', '', '', '', '', '', ''],
     faq: [{ question: '', answer: '' }],
   });
-
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  const [previewImages, setPreviewImages] = useState({
-    banner: '',
-    flag: '',
-    sectionImages: [],
-  });
+  const [bannerPreview, setBannerPreview] = useState(null);
+  const [flagPreview, setFlagPreview] = useState(null);
+  const [sectionPreviews, setSectionPreviews] = useState([]);
 
-  const [updateCountry, { isSuccess }] = useCountryStatusUpdateMutation();
+  const [createCountry, { isSuccess }] = useCreateCountryMutation();
   const dispatch = useDispatch();
-  console.log("my form values",formValues)
-  useEffect(() => {
-    if (countryData) {
-      setFormValues({
-        name: countryData.name || '',
-        bannerURL: countryData.bannerURL || '',
-        bullet: countryData.bullet || '',
-        flagURL: countryData.flagURL || '',
-        description: countryData.description || '',
-        sections: countryData.sections || [{ title: '', description: '', url: '' }],
-        eligiblity: countryData.eligiblity || ['', '', '', '', '', '', ''],
-        faq: countryData.faq || [{ question: '', answer: '' }],
-      });
-      setPreviewImages({
-        banner: countryData.bannerURL || '',
-        flag: countryData.flagURL || '',
-        sectionImages: countryData.sections?.map(sec => sec.url) || [],
-      });
-    }
-  }, [countryData]);
-  console.log("fix.===>",countryData)
+
   const validateImage = async (file, requiredWidth, requiredHeight) => {
     return new Promise((resolve) => {
       const img = new Image();
       img.src = URL.createObjectURL(file);
       img.onload = () => {
-        resolve(img.width >= requiredWidth && img.height >= requiredHeight);
+        if (img.width >= requiredWidth && img.height >= requiredHeight) {
+          resolve(true);
+        } else {
+          resolve(false);
+        }
       };
     });
-  };
-
-  const uploadImage = async (file) => {
-    const storageRef = ref(storage, `countries/${file.name}`);
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return url;
   };
 
   const handleChange = async (event) => {
@@ -90,87 +60,58 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
       const file = files[0];
       if (file) {
         if (name.includes('sections') && name.includes('url')) {
-          const [section, index] = name.split('.');
-          const isValid = await validateImage(file, 300, 300);
-          
+          // Handling the file for `url` field in sections
+          const isValid = await validateImage(file, 300, 300); // Example image size for section URL image
           if (!isValid) {
-            setFormErrors(prev => ({
+            setFormErrors((prev) => ({
               ...prev,
-              [name]: 'Image must be at least 300x300px'
+              [name]: `Image must be at least 300px x 300px`,
             }));
-            return;
+          } else {
+            setFormErrors((prev) => ({ ...prev, [name]: '' }));
+            const imageURL = await uploadImage(file);
+            const index = parseInt(name.split('.')[1]);
+            const updatedSections = [...formValues.sections];
+            updatedSections[index].url = imageURL;
+
+            setFormValues({ ...formValues, sections: updatedSections });
+
+            // Set image preview
+            const updatedPreviews = [...sectionPreviews];
+            updatedPreviews[index] = URL.createObjectURL(file);
+            setSectionPreviews(updatedPreviews);
           }
-
-          const imageURL = await uploadImage(file);
-          const updatedSections = [...formValues.sections];
-          updatedSections[index] = { ...updatedSections[index], url: imageURL };
-
-          const updatedPreviews = [...previewImages.sectionImages];
-          updatedPreviews[index] = URL.createObjectURL(file);
-
-          setFormValues(prev => ({
-            ...prev,
-            sections: updatedSections
-          }));
-          setPreviewImages(prev => ({
-            ...prev,
-            sectionImages: updatedPreviews
-          }));
         } else {
-          const isValid = name === 'bannerURL' 
-            ? await validateImage(file, 1500, 500)
-            : await validateImage(file, 200, 200);
-
-          if (!isValid) {
-            setFormErrors(prev => ({
-              ...prev,
-              [name]: `Image must be at least ${name === 'bannerURL' ? '1500x500px' : '200x200px'}`
-            }));
-            return;
-          }
-
+          // Handling other file inputs (like banner and flag)
           const imageURL = await uploadImage(file);
-          setFormValues(prev => ({
-            ...prev,
-            [name]: imageURL
-          }));
-          setPreviewImages(prev => ({
-            ...prev,
-            [name === 'bannerURL' ? 'banner' : 'flag']: URL.createObjectURL(file)
-          }));
+          if (name === 'bannerURL') {
+            setBannerPreview(URL.createObjectURL(file));
+            setFormValues((prevValues) => ({ ...prevValues, [name]: imageURL }));
+          } else if (name === 'flagURL') {
+            setFlagPreview(URL.createObjectURL(file));
+            setFormValues((prevValues) => ({ ...prevValues, [name]: imageURL }));
+          }
         }
       }
-    } else if (name.includes('sections')) {
-      const [section, index, field] = name.split('.');
-      const updatedSections = [...formValues.sections];
-      updatedSections[index] = { ...updatedSections[index], [field]: value };
-      setFormValues(prev => ({
-        ...prev,
-        sections: updatedSections
-      }));
-    } else if (name.includes('faq')) {
-      const [type, index, field] = name.split('.');
-      const updatedFaq = [...formValues.faq];
-      updatedFaq[index] = { ...updatedFaq[index], [field]: value };
-      setFormValues(prev => ({
-        ...prev,
-        faq: updatedFaq
-      }));
-    } else if (name.includes('eligiblity')) {
-      const [type, index] = name.split('.');
-      const updatedEligiblity = [...formValues.eligiblity];
-      updatedEligiblity[index] = value;
-      setFormValues(prev => ({
-        ...prev,
-        eligiblity: updatedEligiblity
-      }));
+    } else if (name.includes('sections') || name.includes('faq')) {
+      const [sectionOrFaq, index, field] = name.split('.');
+      const updatedArray = [...formValues[sectionOrFaq]];
+      updatedArray[index][field] = value;
+      setFormValues({ ...formValues, [sectionOrFaq]: updatedArray });
     } else {
-      setFormValues(prev => ({
-        ...prev,
-        [name]: value
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
       }));
     }
     checkFormValidity();
+  };
+
+  const uploadImage = async (file) => {
+    const storageRef = ref(storage, `countries/${file.name}`);
+    await uploadBytes(storageRef, file);
+    const url = await getDownloadURL(storageRef);
+    return url;
   };
 
   const checkFormValidity = () => {
@@ -183,60 +124,58 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   };
 
   const onSubmit = async () => {
-    const data = { id:countryData._id,raw:formValues} 
-    const res = await updateCountry(data).unwrap();
-    handleClose();
+    const res = await createCountry(formValues).unwrap();
+    dispatch(AddCountry({ ...res }));
+    onClose();
+  };
+
+  const handleCancelled = (e) => {
+    e.stopPropagation();
+    onClose();
   };
 
   const addSection = () => {
-    setFormValues(prev => ({
-      ...prev,
-      sections: [...prev.sections, { title: '', description: '', url: '' }],
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      sections: [...prevValues.sections, { title: '', description: '', url: '' }],
     }));
-    setPreviewImages(prev => ({
-      ...prev,
-      sectionImages: [...prev.sectionImages, ''],
-    }));
+    setSectionPreviews([...sectionPreviews, '']);
   };
 
   const removeSection = (index) => {
-    setFormValues(prev => ({
-      ...prev,
-      sections: prev.sections.filter((_, i) => i !== index)
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      sections: prevValues.sections.filter((_, i) => i !== index),
     }));
-    setPreviewImages(prev => ({
-      ...prev,
-      sectionImages: prev.sectionImages.filter((_, i) => i !== index)
+    setSectionPreviews(sectionPreviews.filter((_, i) => i !== index));
+  };
+
+  const addFaq = () => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      faq: [...prevValues.faq, { question: '', answer: '' }],
     }));
   };
 
-  const addFAQ = () => {
-    setFormValues(prev => ({
-      ...prev,
-      faq: [...prev.faq, { question: '', answer: '' }]
-    }));
-  };
-
-  const removeFAQ = (index) => {
-    setFormValues(prev => ({
-      ...prev,
-      faq: prev.faq.filter((_, i) => i !== index)
+  const removeFaq = (index) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      faq: prevValues.faq.filter((_, i) => i !== index),
     }));
   };
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Country Updated Successfully');
-      handleClose();
+      toast.success('Country Added Successfully');
+      navigate("/admin/course");
     }
   }, [isSuccess]);
 
   return (
-    <Dialog fullWidth={true} open={open} onClose={handleClose}>
-      <DialogTitle className="text-white bg-custom-primary font-bold">Update Country</DialogTitle>
-      <DialogContent>
+    <div className='flex items-center m-auto w-full max-w-3xl px-10'>
+      <div>
         <div className="py-2">
-          <DialogContentText>You can update the country details.</DialogContentText>
+          <div>You can add a country.</div>
         </div>
         <Box
           noValidate
@@ -274,8 +213,8 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             helperText={formErrors.bannerURL || ''}
           />
           <span className="text-red-300 text-sm font-bold">Image size should be 1500px x 500px</span>
-          {previewImages.banner && (
-            <img src={previewImages.banner} alt="Banner Preview" className="mt-2 w-full h-40 object-cover rounded" />
+          {bannerPreview && (
+            <img src={bannerPreview} alt="Banner Preview" className="mt-2 w-full h-40 object-cover rounded" />
           )}
           <TextField
             id="flagURL"
@@ -290,20 +229,19 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             helperText={formErrors.flagURL || ''}
           />
           <span className="text-red-300 text-sm font-bold">Image size should be 200px x 200px</span>
-          {previewImages.flag && (
-            <img src={previewImages.flag} alt="Flag Preview" className="mt-2 w-32 h-32 object-cover rounded-full" />
+          {flagPreview && (
+            <img src={flagPreview} alt="Flag Preview" className="mt-2 w-32 h-32 object-cover rounded-full" />
           )}
           <TextField
             id="bullet"
             name="bullet"
             variant="standard"
-            value={formValues.bullet}
             onChange={handleChange}
             InputLabelProps={{ shrink: true }}
             className="mb-2"
             label="Bullet Point"
           />
-          <TextField
+          <TextEditor
             id="description"
             name="description"
             label="Description"
@@ -321,37 +259,47 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
               </AccordionSummary>
               <AccordionDetails className="flex flex-col gap-6">
                 <TextField
+                  id={`sectionTitle${index}`}
                   name={`sections.${index}.title`}
                   label="Title"
+                  variant="standard"
                   value={section.title}
                   onChange={handleChange}
-                  variant="standard"
+                  className="mb-2"
                 />
                 <TextEditor
+                  id={`sectionDescription${index}`}
                   name={`sections.${index}.description`}
                   label="Description"
+                  variant="standard"
                   value={section.description}
                   onChange={handleChange}
-                  variant="standard"
-                  multiline
+                  className="mb-2"
                 />
                 <TextField
+                  id={`sectionURL${index}`}
                   name={`sections.${index}.url`}
                   type="file"
-                  onChange={handleChange}
                   variant="standard"
+                  onChange={handleChange}
+                  label="Section Image URL"
+                  className="mb-2"
+                  accept="image/jpeg"
                   InputLabelProps={{ shrink: true }}
                 />
-                {previewImages.sectionImages[index] && (
+                <span className="text-red-300 text-sm font-bold">Image size should be min 300px x 300px</span>
+
+                {sectionPreviews[index] && (
                   <img
-                    src={previewImages.sectionImages[index]}
-                    alt={`Section ${index + 1}`}
+                    src={sectionPreviews[index]}
+                    alt={`Section ${index + 1} Image Preview`}
                     className="mt-2 w-full h-40 object-cover rounded"
                   />
                 )}
                 <Button
                   onClick={() => removeSection(index)}
                   color="error"
+                  className="mt-2"
                   variant="outlined"
                 >
                   Remove Section
@@ -376,22 +324,27 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
               </AccordionSummary>
               <AccordionDetails className="flex flex-col gap-6">
                 <TextField
+                  id={`faqQuestion${index}`}
                   name={`faq.${index}.question`}
                   label="Question"
+                  variant="standard"
                   value={faq.question}
                   onChange={handleChange}
-                  variant="standard"
+                  className="mb-2"
                 />
                 <TextField
+                  id={`faqAnswer${index}`}
                   name={`faq.${index}.answer`}
                   label="Answer"
+                  variant="standard"
                   value={faq.answer}
                   onChange={handleChange}
-                  variant="standard"
+                  className="mb-2"
                 />
                 <Button
-                  onClick={() => removeFAQ(index)}
+                  onClick={() => removeFaq(index)}
                   color="error"
+                  className="mt-2"
                   variant="outlined"
                 >
                   Remove FAQ
@@ -400,7 +353,7 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             </Accordion>
           ))}
           <Button
-            onClick={addFAQ}
+            onClick={addFaq}
             className="mt-2"
             color="primary"
             variant="outlined"
@@ -408,8 +361,8 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             Add FAQ
           </Button>
 
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">Cancel</Button>
+          <div className='flex justify-between items-center mb-6'>
+            <Button onClick={handleCancelled} color="primary">Cancel</Button>
             <Button
               onClick={onSubmit}
               color="primary"
@@ -418,11 +371,11 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             >
               Submit
             </Button>
-          </DialogActions>
+          </div>
         </Box>
-      </DialogContent>
-    </Dialog>
+      </div>
+    </div>
   );
 }
 
-export default UpdateCountryPop;
+export default CountryAdd;

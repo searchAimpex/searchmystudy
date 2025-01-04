@@ -51,6 +51,10 @@ import AdminUploadManagement from './screens/Admin/AdminUploadManagement.jsx';
 import AdminTransactionLedgerManagement from './screens/Admin/AdminTransactionLedgerManagement.jsx';
 import AdminNotificationManagement from './screens/Admin/AdminNotificationManagement.jsx';
 import Videos from './screens/Public/Videos.jsx';
+import CountryAdd from './components/Admin/CountryAdd.jsx';
+import ProvinceAdd from './components/Admin/ProvinceAdd.jsx';
+import AddUniversity from './components/Admin/AddUniversity.jsx';
+import AddUniversitys from './components/Admin/AddUniversity.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -98,6 +102,10 @@ const router = createBrowserRouter(
         <Route path = '/admin/assessment' element ={ < AdminAssessmentManagement/>} />
         <Route path = '/admin/upload' element ={ < AdminUploadManagement />} />
         <Route path = '/admin/transaction' element ={ < AdminTransactionLedgerManagement />} />
+        <Route path = '/admin/addcountry' element={< CountryAdd />} />
+        <Route path = '/admin/addprovince' element={< ProvinceAdd />} />
+        <Route path = '/admin/adduniversity' element={< AddUniversitys />} />
+
 
 
 

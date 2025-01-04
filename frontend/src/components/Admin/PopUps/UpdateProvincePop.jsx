@@ -23,6 +23,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase';
 import { useUpdateProvinceMutation } from '../../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
+import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
@@ -190,7 +191,7 @@ export default function UpdateProvincePop({ open, handleClose, provinceData }) {
           />
           {formValues.heroURL && <img src={formValues.heroURL} alt="Hero" style={{ width: '100%', maxHeight: '200px' }} />}
           
-          <TextField
+          <TextEditor
             id="description"
             name="description"
             label="Description"
@@ -213,7 +214,7 @@ export default function UpdateProvincePop({ open, handleClose, provinceData }) {
                     value={section.title}
                     onChange={handleChange}
                   />
-                  <TextField
+                  <TextEditor
                     name={`sections.${index}.description`}
                     label="Description"
                     variant="standard"

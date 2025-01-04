@@ -25,6 +25,7 @@ import { useCreateUniversityMutation, useFetchProvinceMutation } from '../../../
 import { toast } from 'react-toastify';
 import { AddUniversity } from '../../../slices/universitySlice'; // Adjust the slice accordingly
 import { FetchProvinces } from '../../../slices/provinceSlice';
+import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
@@ -269,7 +270,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                     />
                     <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
 
-                    <TextField
+                    <TextEditor
                         id="description"
                         name="description"
                         label="Description"
@@ -304,7 +305,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                                     onChange={handleChange}
                                     className="mb-2"
                                 />
-                                <TextField
+                                <TextEditor
                                     id={`sectionUrl${index}`}
                                     name={`sections.${index}.url`}
                                     type="file"

@@ -3,11 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     Box,
     Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+ 
     TextField,
     Accordion,
     AccordionSummary,
@@ -20,21 +16,22 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { useUpdateUniversityMutation, useFetchProvinceMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
+import { app } from '../../firebase'; // Adjust the import path accordingly
+import { useCreateUniversityMutation, useFetchProvinceMutation } from '../../slices/adminApiSlice'; // Adjust the slice accordingly
 import { toast } from 'react-toastify';
-import { FetchProvinces } from '../../../slices/provinceSlice';
-import TextEditor from '../TextEditor';
+import { AddUniversity } from '../../slices/universitySlice'; // Adjust the slice accordingly
+import { FetchProvinces } from '../../slices/provinceSlice';
+import TextEditor from './TextEditor';
 
 const storage = getStorage(app);
 
-export default function UpdateUniversityPop({ open, handleClose, initialData }) {
+export default function AddUniversitys() {
     const dispatch = useDispatch();
     const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
 
     // State for form values and image validation
-    const [formValues, setFormValues] = useState(initialData || {
+    const [formValues, setFormValues] = useState({
         name: '',
         bannerURL: '',
         heroURL: '',
@@ -60,7 +57,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
     });
 
     const [isFormValid, setIsFormValid] = useState(false);
-    const [updateUniversity, { isSuccess }] = useUpdateUniversityMutation();
+    const [createUniversity, { isSuccess }] = useCreateUniversityMutation();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -79,7 +76,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
             const img = new Image();
             img.src = URL.createObjectURL(file);
             img.onload = () => {
-                resolve(img.width === requiredWidth && img.height === requiredHeight);
+                resolve(img.width >= requiredWidth && img.height >= requiredHeight);
             };
         });
     };
@@ -87,44 +84,50 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
     const handleChange = async (event) => {
         const { name, value, type, files } = event.target;
         const [section, index, field] = name.split('.');
-
+    
         if (type === 'file') {
             const file = files[0];
             if (file) {
-                let isValid = true;
-
-                // switch (name) {
-                //     case 'bannerURL':
-                //         isValid = await validateImage(file, 1200, 500);
-                //         break;
-                //     case 'heroURL':
-                //         isValid = await validateImage(file, 400, 300);
-                //         break;
-                //     case 'logo':
-                //         isValid = await validateImage(file, 150, 150);
-                //         break;
-                //     default:
-                //         break;
-                // }
-
+                let isValid = false;
+    
+                // Validate based on the file type
+                switch (name) {
+                    case 'bannerURL':
+                        isValid = await validateImage(file, 1200, 500);
+                        break;
+                    case 'heroURL':
+                        isValid = await validateImage(file, 400, 300);
+                        break;
+                    case 'logo':
+                        isValid = await validateImage(file, 150, 150);
+                        break;
+                    case name.includes('sections'):
+                        isValid = true;
+                        break;
+                    default:
+                        break;
+                }
+    
                 if (!isValid) {
                     toast.error(`${name} must be of the correct dimensions.`);
                     setImageValidations((prev) => ({
                         ...prev,
                         [name]: false,
                     }));
+                    
+                    // Reset the corresponding form value if the image is invalid
                     setFormValues((prevValues) => ({
                         ...prevValues,
                         [name]: '',
                     }));
-                    return;
+                    return; // Exit if the image is invalid
                 }
-
+    
                 setImageValidations((prev) => ({
                     ...prev,
                     [name]: true,
                 }));
-
+    
                 const imageURL = await uploadImage(file);
                 if (field) {
                     setFormValues((prevValues) => ({
@@ -184,34 +187,36 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
 
     const onSubmit = async () => {
         try {
-            const data =  { 
-                id:initialData._id,
-                raw:formValues
-            }
-            const res = await updateUniversity(data).unwrap();
+            const res = await createUniversity(formValues).unwrap();
+            dispatch(AddUniversity({ ...res }));
             handleClose();
         } catch (error) {
-            console.error('Failed to update university:', error);
+            console.error('Failed to create university:', error);
         }
     };
 
     useEffect(() => {
         if (isSuccess) {
-            toast.success('University Updated Successfully');
+            toast.success('University Added Successfully');
+            navigate('/admin/course')
         }
     }, [isSuccess]);
-
+    const handlecancell = (e)=>{
+        e.stopPropagation();
+        handleClose();
+      }
     useEffect(() => {
+        // Check if all required images are valid
         const allImagesValid = Object.values(imageValidations).every(Boolean);
         setIsFormValid(allImagesValid && formValues.name && formValues.eligiblity);
     }, [imageValidations, formValues]);
 
     return (
-        <Dialog fullWidth='xl' open={open} onClose={handleClose}>
-            <DialogTitle className='text-white bg-custom-primary font-bold'>Update University</DialogTitle>
-            <DialogContent>
+        <div className='flex flex-col gap-6 max-w-3xl m-auto'>
+ 
+            <div>
                 <div className='py-2'>
-                    <DialogContentText>You can update the university details.</DialogContentText>
+                    <div>You can add a university.</div>
                 </div>
                 <Box
                     component="form"
@@ -237,8 +242,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Banner Image"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
-
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
                     <TextField
                         id="heroURL"
                         name="heroURL"
@@ -249,7 +253,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Hero Image"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-400px h-300px</span>
 
                     <TextField
                         id="logo"
@@ -261,7 +265,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Logo"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
 
                     <TextEditor
                         id="description"
@@ -298,7 +302,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                                     onChange={handleChange}
                                     className="mb-2"
                                 />
-                                <TextField
+                                <TextEditor
                                     id={`sectionUrl${index}`}
                                     name={`sections.${index}.url`}
                                     type="file"
@@ -313,39 +317,85 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         </Accordion>
                     ))}
                     <Button onClick={addSection}>Add Section</Button>
+
+                    {/* Additional Fields */}
+                    <FormControl variant="standard" fullWidth className="mb-2">
+                        <InputLabel id="province-label">Province</InputLabel>
+                        <Select
+                            labelId="province-label"
+                            id="province"
+                            name="Province"
+                            value={formValues.Province}
+                            onChange={handleChange}
+                        >
+                            {province.map((prov) => (
+                                <MenuItem key={prov.id} value={prov._id}>{prov.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <TextField
                         id="eligiblity"
                         name="eligiblity"
-                        label="Eligiblity"
+                        label="Eligibility"
                         variant="standard"
                         value={formValues.eligiblity}
                         onChange={handleChange}
                         className="mb-2"
                     />
-                    <FormControl variant="standard">
-                        <InputLabel id="province-label">Province</InputLabel>
-                        <Select
-                            labelId="province-label"
-                            id="Province"
-                            name="Province"
-                            value={formValues.Province}
-                            onChange={handleChange}
-                        >
-                            {province.map((prov, index) => (
-                                <MenuItem key={index} value={prov.name}>
-                                    {prov.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        id="campusLife"
+                        name="campusLife"
+                        label="Campus Life"
+                        variant="standard"
+                        value={formValues.campusLife}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    <TextField
+                        id="hostel"
+                        name="hostel"
+                        label="Hostel"
+                        variant="standard"
+                        value={formValues.hostel}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    <TextField
+                        id="type"
+                        name="type"
+                        label="University Type"
+                        variant="standard"
+                        value={formValues.type}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    <TextField
+                        id="rank"
+                        name="rank"
+                        label="Rank"
+                        type="number"
+                        variant="standard"
+                        value={formValues.rank}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    <TextField
+                        id="UniLink"
+                        name="UniLink"
+                        label="University Link"
+                        variant="standard"
+                        value={formValues.UniLink}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
                 </Box>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} className="mr-4">Cancel</Button>
-                <Button onClick={onSubmit} className="text-white">
-                    Update
+            </div>
+            <div>
+                <Button onClick={handlecancell}>Cancel</Button>
+                <Button onClick={onSubmit} >
+                    Submit
                 </Button>
-            </DialogActions>
-        </Dialog>
+            </div>
+        </div>
     );
 }

@@ -31,6 +31,7 @@ import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import UpdateUniversityPop from './PopUps/UpdateUniversityPop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
 import { Card, CardContent, MenuItem, Pagination } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -134,12 +135,13 @@ EnhancedTableHead.propTypes = {
 
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate()
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
 
-    const handleClickOpen = () => setOpen(true);
+    const handleClickOpen = () => navigate('/admin/adduniversity');
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
     const handleClose = () => {

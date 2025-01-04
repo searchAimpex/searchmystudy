@@ -25,6 +25,7 @@ import { DeleteCountry, FetchCountry } from '../../slices/countrySlice.js';
 import StatusUpdatePop from './StatusUpdatePop.jsx';
 import UpdateCountryPop from './PopUps/UpdateCountryPop.jsx';
 import { Pagination } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -130,10 +131,10 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const [viewBannerOpen, setViewBannerOpen] = useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
+    const navigate = useNavigate()
 
 
-
-    const handleClickOpen = () => setOpen(true);
+    const handleClickOpen = () => navigate('/admin/addcountry');
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
 
@@ -217,7 +218,6 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
                         <AddIcon />
-                        <CreateCountryPop open={open} onClose={()=>setOpen((preValue)=>(preValue ? false: preValue))} />
                     </IconButton>
                 </Tooltip>
             )}

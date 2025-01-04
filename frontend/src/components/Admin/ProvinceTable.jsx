@@ -22,6 +22,7 @@ import { FetchProvinces, DeleteOneProvince } from '../../slices/provinceSlice';
 import { FetchCountry } from '../../slices/countrySlice';
 import CreateProvincePop from './PopUps/CreateProvincePop';
 import UpdateProvincePop from './PopUps/UpdateProvincePop';
+import { useNavigate } from 'react-router-dom';
 
 // Utility functions for sorting
 function descendingComparator(a, b, orderBy) {
@@ -99,9 +100,9 @@ const EnhancedTableToolbar = ({ numSelected, selectedRow, onDelete }) => {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
+    const navigate = useNavigate()
 
-
-    const handleClickOpen = () => setOpen(true);
+    const handleClickOpen = () => navigate('/admin/addprovince');
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
 
