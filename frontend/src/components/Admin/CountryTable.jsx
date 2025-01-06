@@ -353,10 +353,10 @@ const CountryTable = () => {
                                 <Checkbox checked={isSelected(service?._id)} />
                             </td>
                             <td>{service?._id}</td>
-                            <td>{service.name}</td>
+                            <td>{service?.name}</td>
                             <td>{service?.mbbsAbroad}</td>
-                            <td>{service.createdAt}</td>
-                            <td>{service.updatedAt}</td>
+                            <td>{service?.createdAt}</td>
+                            <td>{service?.updatedAt}</td>
                         </tr>
                     ))}
                 </tbody>
