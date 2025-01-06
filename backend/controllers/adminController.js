@@ -457,7 +457,7 @@ const createCountry = asyncHandler(async (req, res) => {
 // @route   GET /countries
 // @access  Public
 const getCountries = asyncHandler(async (req, res) => {
-  const countries = await Country.find({})
+  const countries = await Country.find({mbbsAbroad:false})
   res.json(countries);
 });
 

@@ -6,16 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { FetchAllServices } from "../../slices/serviceSlice";
 import { FetchCountry } from "../../slices/countrySlice";
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
-import LiveCounselling from "../Buttons/LiveCounselling";
-import CallUs from "../Buttons/CallUs";
-import WhatappUs from "../Buttons/WhatappUs";
-import DownloadApp from "../Buttons/DownloadApp";
 import Logo from "../../assets/SearchMyStudy.png";
 import CounsellingModal from "./PopUp/CounsellingModal";
 import { Tabs, Tab } from '@mui/material';
 import { FetchedLinked } from "../../slices/courseSlice";
-import Footer from "./Footer";
-import ScrollToTop from "./ScrollToTop";
+
 
 const initialLinks = [
     {
@@ -39,20 +34,20 @@ const initialLinks = [
         submenu: true,
         tabs: [
             { name: "INDIA", sublinks: [
-                {name:"MBBS",link:"/mbbsindia",path:"/mbbsindia"},
-                {name:"MD",link:"/mdindia",path:"/mdindia"},
+                {name:"MBBS",link:"/mbbsindia",path:"/mbbsindia",flagURL:"https://imgur.com/0L7BLOw.png"},
+                {name:"MD",link:"/mdindia",path:"/mdindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"BAMS",link:"/bamsindia",path:"/bamsindia"},
+                {name:"BAMS",link:"/bamsindia",path:"/bamsindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"BHMS",link:"/bhmsindia",path:"/bhmsindia"},
+                {name:"BHMS",link:"/bhmsindia",path:"/bhmsindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"BDS",link:"/bdsindia",path:"/bdsindia"},
+                {name:"BDS",link:"/bdsindia",path:"/bdsindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"NURSING",link:"/nursingindia",path:"/nursingindia"},
+                {name:"NURSING",link:"/nursingindia",path:"/nursingindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"PHARMACY",link:"/pharmacyindia",path:"/pharmacyindia"},
+                {name:"PHARMACY",link:"/pharmacyindia",path:"/pharmacyindia",flagURL:"https://imgur.com/0L7BLOw.png"},
 
-                {name:"Bv Sc",link:"/bvScindia",path:"/bvScindia"}
+                {name:"Bv Sc",link:"/bvScindia",path:"/bvScindia",flagURL:"https://imgur.com/0L7BLOw.png"}
 
             ] },
             { name: "ABROAD", sublinks: [] },
@@ -124,9 +119,9 @@ export default function PublicNavBar() {
                                 return {
                                     ...tab,
                                     sublinks: linkResult.map(item => ({
-                                        name: `MBBS in ${item.name}`,
+                                        name: `${item.name}`,
                                         link: `/country/${item._id}`,
-                                        flagURL: item.flagURL
+                                        flagURL: item.flagURL  ? item?.flagURL :  "https://i.imgur.com/0L7BLOw.png" 
                                     }))
                                 };
                             }
@@ -215,11 +210,11 @@ export default function PublicNavBar() {
                                             <div className="py-3">
                                                 <div className="w-4 h-4 left-3 absolute mt-1 bg-white rotate-45"></div>
                                             </div>
-                                            <div className="bg-white w-[800px] p-5 grid grid-cols-3 gap-10">
+                                            <div className="bg-white w-[700px] p-5 grid grid-cols-3 gap-6">
                                                 {link.sublinks?.map((sublink, index) => (
                                                     <div key={index}>
                                                         <li className="text-sm text-gray-600 my-2.5">
-                                                            <Link to={sublink.link} className="hover:text-primary underline flex flex-row">
+                                                            <Link to={sublink.link} className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row">
                                                                 <img className="object-contained h-[20px] w-[20px]" src={sublink?.flagURL} />
                                                                 <span>{sublink?.name}</span>
                                                             </Link>
@@ -239,9 +234,9 @@ export default function PublicNavBar() {
                                             <div className="p-5 grid grid-cols-4 gap-4">
                                                 {link.tabs[tabValue]?.sublinks.map((sublink, index) => (
                                                     <div key={index}>
-                                                        <li className="text-sm text-gray-600 my-2.5">
-                                                            <Link to={sublink.link} className="hover:text-primary underline flex flex-row">
-                                                                {/* <img className="object-contained h-[20px] w-[20px]" src={sublink?.flagURL} /> */}
+                                                        <li className="text-sm hover:bg-blue-100  p-2 rounded-md text-gray-600 my-2.5">
+                                                            <Link to={sublink.link} className="flex space-x-2 flex-row">
+                                                                <img className="object-contained h-[20px] w-[20px]" src={sublink?.flagURL} />
                                                                 <span>{sublink?.name}</span>
                                                             </Link>
                                                         </li>
