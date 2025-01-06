@@ -324,22 +324,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         onChange={handleChange}
                         className="mb-2"
                     />
-                    <FormControl variant="standard">
-                        <InputLabel id="province-label">Province</InputLabel>
-                        <Select
-                            labelId="province-label"
-                            id="Province"
-                            name="Province"
-                            value={formValues.Province}
-                            onChange={handleChange}
-                        >
-                            {province.map((prov, index) => (
-                                <MenuItem key={index} value={prov.name}>
-                                    {prov.name}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
+                  
                 </Box>
             </DialogContent>
             <DialogActions>

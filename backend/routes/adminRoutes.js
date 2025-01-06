@@ -80,7 +80,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       findOneFile,
       createVideo,
       getVideo,
-      deleteVideo
+      deleteVideo,
+      getAllCountries
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -132,6 +133,8 @@ router.route('/countries/:id')
   .get(getCountryById)
   .put(updateCountry)
   .delete(deleteCountry);
+
+router.route('/allcountries').get(getAllCountries);
 /*************** COUNTRY ROUTES **********************/
 
 /*************** PROVINCE ROUTES **********************/

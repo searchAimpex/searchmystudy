@@ -129,6 +129,12 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'GET',
             }),
         }),
+        CountryAllFetch:builder.mutation({
+            query:()=>({
+                url: `${USERS_URL}/allcountries`,
+                method: 'GET',
+            }),
+        }),
         CountryDelete:builder.mutation({
             query:(id)=>({
                 url: `${USERS_URL}/countries/${id}`,
@@ -650,7 +656,7 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useTestimonialCreateMutation,useTestimonialFetchAllMutation,useTestimonialDeleteMutation,
     useCreateCounsellorMutation,useAllCounsellorMutation,useCounsellorDeleteMutation,
     useCreateBlogMutation,useFetchBlogMutation,useGetOneBlogMutation,useDeleteBlogMutation,
-    useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,useCountryStatusUpdateMutation,
+    useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,useCountryStatusUpdateMutation,useCountryAllFetchMutation,
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,useUpdateProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,useUpdateUniversityMutation,
     useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,useUpdateCourseOneMutation,

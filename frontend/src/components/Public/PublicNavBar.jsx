@@ -13,12 +13,12 @@ import { FetchedLinked } from "../../slices/courseSlice";
 
 
 const initialLinks = [
-    {
-        name: "HOME",
-        submenu:false,
+    // {
+    //     name: "HOME",
+    //     submenu:false,
      
-        path: '/'
-    },
+    //     path: '/'
+    // },
     {
         name: "RESOURCES",
         submenu: true,
@@ -162,8 +162,8 @@ export default function PublicNavBar() {
                 </div>
 
                 {/* Middle section with logo and links */}
-                <div className="flex space-x-10 w-full px-[50px] py-2">
-                    <div className="flex flex-row space-x-20 w-full">
+                <div className="flex space-x-4 w-full px-[50px] py-2">
+                    <div className="flex flex-row space-x-10 w-full">
                         <div className="cursor-pointer" onClick={() => navigate('/')}>
                             <img src={Logo} className="h-[50px] w-[200px]" alt="Logo" />
                         </div>

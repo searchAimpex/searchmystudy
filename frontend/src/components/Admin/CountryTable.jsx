@@ -17,7 +17,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
-import { useCountryFetchMutation, useCountryDeleteMutation } from '../../slices/adminApiSlice';
+import { useCountryFetchMutation, useCountryDeleteMutation, useCountryAllFetchMutation } from '../../slices/adminApiSlice';
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
 import { RemoveRedEye } from '@mui/icons-material';
 import CreateCountryPop from './PopUps/CreateCountryPop.jsx';
@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'MBBS', numeric: false, disablePadding: false, label: 'MBBS' },
+    { id: 'mbbsAbroad', numeric: false, disablePadding: false, label: 'MBBS' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
 ];
@@ -224,11 +224,8 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
             <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
             <UpdateCountryPop open ={viewOpen} handleClose= {handleViewClose} countryData={selectedRow} />
-
         </Box>
-    );
-}
-
+    );}
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
     selectedRow: PropTypes.object,
@@ -240,11 +237,11 @@ const CountryTable = () => {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
-    const [page, setPage] = React.useState(0);
+    const [page, setPage] = React.useState(1); // Changed to 1-based pagination
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { countries } = useSelector((state) => state.country);
     const services = countries;
-    const [CountryFetch, { isSuccess }] = useCountryFetchMutation();
+    const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
     const [CountryDelete, DeleteState] = useCountryDeleteMutation();
     const dispatch = useDispatch();
 
@@ -301,7 +298,7 @@ const CountryTable = () => {
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
-        setPage(0);
+        setPage(1); // Reset to first page when changing rows per page
     };
 
     const isSelected = (_id) => selected.indexOf(_id) !== -1;
@@ -311,6 +308,12 @@ const CountryTable = () => {
             await CountryDelete(id).unwrap();
             dispatch(DeleteCountry(id));
             toast.success('Country deleted successfully');
+            // Reset to first page if current page becomes empty after deletion
+            const remainingItems = services.length - 1;
+            const maxPage = Math.ceil(remainingItems / rowsPerPage);
+            if (page > maxPage) {
+                setPage(maxPage || 1);
+            }
         } catch (error) {
             toast.error('Something went wrong while deleting the country.');
         }
@@ -320,9 +323,14 @@ const CountryTable = () => {
         // Do something with the banner image, e.g., set state to show it in a modal
     };
 
-    // Pagination logic
+    // Calculate the current page's data
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
     const currentData = stableSort(services, getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+        .slice(startIndex, endIndex);
+
+    // Calculate total pages
+    const totalPages = Math.max(1, Math.ceil(services.length / rowsPerPage));
 
     return (
         <Box sx={{ width: '100%', mt: 3 }}>
@@ -342,19 +350,17 @@ const CountryTable = () => {
                     rowCount={services.length}
                 />
                 <tbody>
-                    {currentData.map((service) => (
+                    {currentData?.map((service) => (
                         <tr
                             key={service?._id}
                             onClick={(event) => handleClick(event, service?._id)}
                             role="checkbox"
                             aria-checked={isSelected(service?._id)}
                         >
-                            <td>
-                                <Checkbox checked={isSelected(service?._id)} />
-                            </td>
+                            <td><Checkbox checked={isSelected(service?._id)} /></td>
                             <td>{service?._id}</td>
                             <td>{service?.name}</td>
-                            <td>{service?.mbbsAbroad}</td>
+                            <td>{service?.mbbsAbroad ? "YES" : "NO"}</td>
                             <td>{service?.createdAt}</td>
                             <td>{service?.updatedAt}</td>
                         </tr>
@@ -363,16 +369,17 @@ const CountryTable = () => {
             </Table>
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
                 <Pagination
-                    count={Math.ceil(services.length / rowsPerPage)}
-                    page={page + 1}
+                    count={totalPages}
+                    page={page}
                     onChange={handleChangePage}
                     siblingCount={1}
                     boundaryCount={1}
                     color="primary"
+                    showFirstButton
+                    showLastButton
                 />
             </Box>
         </Box>
     );
-};
-
-export default CountryTable;
+}; 
+export default CountryTable

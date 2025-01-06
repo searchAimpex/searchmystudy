@@ -206,23 +206,7 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
               onChange={handleChange}
               sx={{ flex: '1 1 30%' }}
             />
-            <FormControl variant="standard" sx={{ flex: '1 1 30%' }}>
-              <InputLabel id="University-label">University</InputLabel>
-              <Select
-                labelId="University-label"
-                id="University"
-                name="University"
-                value={formValues.University}
-                onChange={handleChange}
-                label="University"
-              >
-                {university?.map(uni => (
-                  <MenuItem key={uni.id} value={uni._id}>
-                    {uni.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+           
             <TextField
               id="WebsiteURL"
               name="WebsiteURL"

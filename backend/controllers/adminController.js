@@ -461,6 +461,15 @@ const getCountries = asyncHandler(async (req, res) => {
   res.json(countries);
 });
 
+// @desc    Get all countries
+// @route   GET /countries
+// @access  Public
+const getAllCountries = asyncHandler(async (req, res) => {
+  const countries = await Country.find({})
+  res.json(countries);
+});
+
+
 // @desc    Get single country
 // @route   GET /countries/:id
 // @access  Public
@@ -2396,7 +2405,7 @@ export {
     deleteTestimonial,updateTestimonial,getTestimonialById,getTestimonials,createTestimonial,
     deleteCounsellor,updateCounsellor,getCounsellorById,getCounsellors,createCounsellor,
     deleteBlog,updateBlog,getBlogById,getAllBlogs,createBlog,
-    createCountry, getCountries, getCountryById, updateCountry, deleteCountry ,
+    createCountry, getCountries, getCountryById, updateCountry, deleteCountry ,getAllCountries,
     createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince ,
     getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
     getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,

@@ -234,16 +234,7 @@ export default function UpdateProvincePop({ open, handleClose, provinceData }) {
             Add Section
           </Button>
 
-          <FormControl fullWidth variant="standard">
-            <InputLabel>Country</InputLabel>
-            <Select name="Country" value={formValues.Country} onChange={handleChange}>
-              {countries.map((country) => (
-                <MenuItem key={country.id} value={country.name}>
-                  {country.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+      
         </Box>
       </DialogContent>
       <DialogActions>
