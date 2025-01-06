@@ -30,7 +30,7 @@ import { useNavigate } from 'react-router-dom';
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
-    { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
+    { id: 'MBBS', numeric: false, disablePadding: false, label: 'MBBS' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
 ];
@@ -196,7 +196,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                             }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="Status Country">
+                    <Tooltip title="MBBS Status Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon
                                 onClick = {()=>{
@@ -268,7 +268,7 @@ const CountryTable = () => {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services.map((n) => n._id);
+            const newSelected = services.map((n) => n?._id);
             setSelected(newSelected);
             return;
         }
@@ -328,7 +328,7 @@ const CountryTable = () => {
         <Box sx={{ width: '100%', mt: 3 }}>
             <EnhancedTableToolbar
                 numSelected={selected.length}
-                selectedRow={services.find((row) => row._id === selected[0])}
+                selectedRow={services.find((row) => row?._id === selected[0])}
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
             />
@@ -344,17 +344,17 @@ const CountryTable = () => {
                 <tbody>
                     {currentData.map((service) => (
                         <tr
-                            key={service._id}
-                            onClick={(event) => handleClick(event, service._id)}
+                            key={service?._id}
+                            onClick={(event) => handleClick(event, service?._id)}
                             role="checkbox"
-                            aria-checked={isSelected(service._id)}
+                            aria-checked={isSelected(service?._id)}
                         >
                             <td>
-                                <Checkbox checked={isSelected(service._id)} />
+                                <Checkbox checked={isSelected(service?._id)} />
                             </td>
-                            <td>{service._id}</td>
+                            <td>{service?._id}</td>
                             <td>{service.name}</td>
-                            <td>{service.heading}</td>
+                            <td>{service?.mbbsAbroad}</td>
                             <td>{service.createdAt}</td>
                             <td>{service.updatedAt}</td>
                         </tr>

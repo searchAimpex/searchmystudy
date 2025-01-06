@@ -127,7 +127,7 @@ const EnhancedTableToolbar = ({ numSelected, selectedRow, onDelete }) => {
             {numSelected === 1  ? 
                 <div className='flex space-x-5'>
                     <button
-                        onClick={() => onDelete(selectedRow._id)}
+                        onClick={() => onDelete(selectedRow?._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
                         Delete
@@ -216,7 +216,7 @@ function ProvinceTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services.map((n) => n._id);
+            const newSelected = services.map((n) => n?._id);
             setSelected(newSelected);
             return;
         }
@@ -293,8 +293,8 @@ function ProvinceTable() {
                     }}
                 >
                     <MenuItem value="all">All Countries</MenuItem>
-                    {countries.map((country) => (
-                        <MenuItem key={country._id} value={country._id}>
+                    {countries?.map((country) => (
+                        <MenuItem key={country?._id} value={country?._id}>
                             {country.name}
                         </MenuItem>
                     ))}
@@ -305,7 +305,7 @@ function ProvinceTable() {
 
     <EnhancedTableToolbar
         numSelected={selected.length}
-        selectedRow={filteredServices.find((service) => service._id === selected[0])}
+        selectedRow={filteredServices.find((service) => service?._id === selected[0])}
         onDelete={handleDelete}
     />
 
@@ -335,14 +335,14 @@ function ProvinceTable() {
     />
     <tbody>
         {currentPageData.map((service, index) => {
-            const isItemSelected = isSelected(service._id);
+            const isItemSelected = isSelected(service?._id);
             const labelId = `checkbox-${index}`;
 
             return (
                 <tr
-                    key={service._id}
+                    key={service?._id}
                     hover
-                    onClick={(event) => handleClick(event, service._id)}
+                    onClick={(event) => handleClick(event, service?._id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -361,7 +361,7 @@ function ProvinceTable() {
                         />
                     </td>
                     <td style={{ padding: '14px 18px', textAlign: 'center' }}>{service.name}</td>
-                     <td style={{ padding: '14px 18px', textAlign: 'center' }}> {countries.find((c) => c._id === service?.Country._id)?.name} </td>
+                     <td style={{ padding: '14px 18px', textAlign: 'center' }}> {countries.find((c) => c?._id === service?.Country?._id)?.name} </td>
                     <td style={{ padding: '12px 16px', textAlign: 'center' }}>{service.updatedAt?.split('T')[0]}</td>
                     <td style={{ padding: '12px 16px', textAlign: 'center' }}>{service.createdAt?.split('T')[0]}</td>
 

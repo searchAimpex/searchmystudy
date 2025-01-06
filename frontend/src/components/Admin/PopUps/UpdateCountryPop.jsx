@@ -303,7 +303,7 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
             className="mb-2"
             label="Bullet Point"
           />
-          <TextField
+          <TextEditor
             id="description"
             name="description"
             label="Description"

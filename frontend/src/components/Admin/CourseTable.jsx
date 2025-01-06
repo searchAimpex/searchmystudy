@@ -187,7 +187,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             {numSelected > 0 ? (
                   <div className='flex flex-row justify-between space-x-4 w-[200px]'>
                   <button
-                     onClick={() => onDelete(selectedRow._id)}
+                     onClick={() => onDelete(selectedRow?._id)}
                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                  >
                      Delete
@@ -273,7 +273,7 @@ function CourseTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services?.map((n) => n._id);
+            const newSelected = services?.map((n) => n?._id);
             setSelected(newSelected);
             return;
         }
@@ -348,7 +348,7 @@ function CourseTable() {
                     >
                         <option value="all">All Countries</option>
                         {countries?.map(country => (
-                            <option key={country._id} value={country._id}>{country.name}</option>
+                            <option key={country?._id} value={country?._id}>{country.name}</option>
                         ))}
                     </select>
                 </div>
@@ -365,8 +365,8 @@ function CourseTable() {
                         onChange={(e) => setSelectedProvince(e.target.value)}
                     >
                         <option value="all">All Provinces</option>
-                        {province?.filter(p => p?.Country._id === selectedCountry)?.map(p => (
-                            <option key={p._id} value={p._id}>{p.name}</option>
+                        {province?.filter(p => p?.Country?._id === selectedCountry)?.map(p => (
+                            <option key={p?._id} value={p?._id}>{p.name}</option>
                         ))}
                     </select>
                 </div>
@@ -382,7 +382,7 @@ function CourseTable() {
                     >
                         <option value="all">All Universities</option>
                         {university?.filter(u => u?.Province?._id === selectedProvince)?.map(u => (
-                            <option key={u._id} value={u._id}>{u.name}</option>
+                            <option key={u?._id} value={u?._id}>{u.name}</option>
                         ))}
                     </select>
                 </div>
@@ -391,7 +391,7 @@ function CourseTable() {
                 </Card>
             <EnhancedTableToolbar
                 numSelected={selected.length}
-                selectedRow={services?.find((service) => service._id === selected[0])}
+                selectedRow={services?.find((service) => service?._id === selected[0])}
                 onDelete={handleDelete}
             />
             

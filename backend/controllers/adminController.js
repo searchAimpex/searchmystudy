@@ -434,7 +434,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet ,faq} = req.body;
+  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
 
   const country = new Country({
     name,
@@ -444,7 +444,8 @@ const createCountry = asyncHandler(async (req, res) => {
     flagURL,
     elegiblity,
     bullet,
-    faq
+    faq,
+    MbbsSections
     
   });
 
@@ -478,7 +479,7 @@ const getCountryById = asyncHandler(async (req, res) => {
 // @route   PUT /countries/:id
 // @access  Public
 const updateCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, provinces,status,faq } = req.body;
+  const { name, bannerURL, description, sections, provinces,mbbsAbroad,faq ,MbbsSections} = req.body;
 
   const country = await Country.findById(req.params.id);
   console.log("req.body===>",req.body)
@@ -489,8 +490,9 @@ const updateCountry = asyncHandler(async (req, res) => {
     country.description = description || country.description;
     country.sections = sections || country.sections;
     country.provinces = provinces || country.provinces;
-    country.mbbsAbroad = status || false;
+    country.mbbsAbroad = mbbsAbroad || false;
     country.faq = faq || country.faq;
+    country.MbbsSections = MbbsSections || country.MbbsSections;
 
     const updatedCountry = await country.save();
     res.json(updatedCountry);

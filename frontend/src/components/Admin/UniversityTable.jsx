@@ -183,7 +183,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             {numSelected > 0 ? (
                 <div className='flex flex-row justify-between space-x-4 w-[200px]'>
                      <button
-                        onClick={() => onDelete(selectedRow._id)}
+                        onClick={() => onDelete(selectedRow?._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
                     >
                         Delete
@@ -275,7 +275,7 @@ function UniversityTable() {
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const newSelected = services?.map((n) => n._id);
+            const newSelected = services?.map((n) => n?._id);
             setSelected(newSelected);
             return;
         }
@@ -366,7 +366,7 @@ function UniversityTable() {
                 >
                     <option value="all">All Countries</option>
                     {countries?.map((country) => (
-                        <option key={country._id} value={country._id}>
+                        <option key={country?._id} value={country?._id}>
                             {country.name}
                         </option>
                     ))}
@@ -386,9 +386,9 @@ function UniversityTable() {
                         >
                             <option value="all">All Provinces</option>
                             {province
-                                ?.filter((prov) => prov.Country._id === selectedCountry)
+                                ?.filter((prov) => prov.Country?._id === selectedCountry)
                                 .map((prov) => (
-                                    <option key={prov._id} value={prov._id}>
+                                    <option key={prov?._id} value={prov?._id}>
                                         {prov.name}
                                     </option>
                                 ))}
@@ -398,7 +398,7 @@ function UniversityTable() {
             </CardContent>
             </Card>
 
-            <EnhancedTableToolbar numSelected={selected.length} selectedRow={filteredServices?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
+            <EnhancedTableToolbar numSelected={selected.length} selectedRow={filteredServices?.find((service) => service?._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
             <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
                 <EnhancedTableHead
                     numSelected={selected.length}

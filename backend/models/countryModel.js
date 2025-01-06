@@ -26,6 +26,13 @@ const countrySchema = mongoose.Schema(
             type:String,
             default:""
         },
+        MbbsSections: [
+            {
+              title: String,
+              description: String,
+              url: String
+            },
+        ],
         sections: [
         {
           title: String,

@@ -32,6 +32,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
     const dispatch = useDispatch();
     const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
+    console.log("imnital data",initialData)
 
     // State for form values and image validation
     const [formValues, setFormValues] = useState(initialData || {
@@ -52,6 +53,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
         UniLink: '',
         Course: [],
     });
+    console.log("form data",formValues)
 
     const [imageValidations, setImageValidations] = useState({
         bannerURL: false,

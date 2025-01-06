@@ -15,10 +15,13 @@ import {useCountryStatusUpdateMutation} from '../../slices/adminApiSlice.js';
 function StatusUpdatePop({ open, handleClose, countryId, statuss }) {
     const [status, setStatus] = useState(false);
     const dispatch = useDispatch();
-    const [CountryStatusUpdate] = useCountryStatusUpdateMutation();
+    const [CountryStatusUpdate,{isSuccess}] = useCountryStatusUpdateMutation();
 
     useEffect(() => {
         setStatus(statuss);
+        if(isSuccess){
+            toast.success('Country status updated successfully');
+        }
     }, [statuss]);
 
     const handleStatusChange = (event) => {
@@ -28,14 +31,17 @@ function StatusUpdatePop({ open, handleClose, countryId, statuss }) {
     const handleSave = async () => {
         try {
             let data = { 
-                status: status,
+                raw : {
+                    mbbsAbroad: status,
+                },
                 id: countryId
             };
             console.log("sata",data)
             await CountryStatusUpdate(data);
-            // await dispatch(UpdateCountryStatus({ countryId, status }));
-            toast.success('Country status updated successfully');
             handleClose();
+
+            // await dispatch(UpdateCountryStatus({ countryId, status }));
+           
         } catch (error) {
             toast.error('Failed to update country status');
         }

@@ -118,7 +118,7 @@ export default function PublicNavBar() {
                                 flagURL: country.flagURL
                             }))
                         };
-                    } else if (link.name === "MEDICAL") {
+                    } else if (link.name === "MEDICAL STUDY") {
                         const updatedTabs = link.tabs.map(tab => {
                             if (tab.name === "ABROAD") {
                                 return {
