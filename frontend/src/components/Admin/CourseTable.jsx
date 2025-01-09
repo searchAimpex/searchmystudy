@@ -136,7 +136,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
     const [open, setOpen] = useState(false);
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
@@ -246,6 +245,7 @@ function CourseTable() {
     const [selectedCountry, setSelectedCountry] = useState('all');
     const [selectedProvince, setSelectedProvince] = useState('all');
     const [selectedUniversity, setSelectedUniversity] = useState('all');
+    console.log("university",university)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -323,12 +323,13 @@ function CourseTable() {
 
     // Filtered Services
     const filteredServices = services?.filter(service => {
-        const matchesProvince = selectedProvince === 'all' || service?.University.Province === selectedProvince;
+        const matchesProvince = selectedProvince === 'all' || service?.University?.Province === selectedProvince ;
         const matchesUniversity = selectedUniversity === 'all' || service?.University?._id === selectedUniversity;
         return  matchesProvince && matchesUniversity;
     });
     console.log("course",selectedCountry)
     console.log("Country",selectedProvince)
+    console.log("services",services)
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
             <Card>
@@ -382,7 +383,7 @@ function CourseTable() {
                     >
                         <option value="all">All Universities</option>
                         {university?.filter(u => u?.Province?._id === selectedProvince)?.map(u => (
-                            <option key={u?._id} value={u?._id}>{u.name}</option>
+                            <option key={u?._id} value={u?._id}>{u?.name}</option>
                         ))}
                     </select>
                 </div>
@@ -431,7 +432,7 @@ function CourseTable() {
                                     </td>
                                     <td>{row?.ProgramName}</td>
                                     <td>{row?.University?.name}</td>
-                                    <td> {province?.find((c) => c?._id === row?.University.Province)?.name} </td>
+                                    <td> {province?.find((c) => c?._id === row?.University?.Province)?.name} </td>
                                     <td> {countries?.find((c) => c?._id === row?.Country)?.name} </td>
 
                                     <td>{row?.Category}</td>
