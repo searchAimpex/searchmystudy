@@ -31,6 +31,7 @@ import { toast } from 'react-toastify';
 import { FetchProvinces } from '../../../slices/provinceSlice';
 import { FetchUniversitys } from '../../../slices/universitySlice';
 import { AddCourse } from '../../../slices/courseSlice';
+import { NearMe } from '@mui/icons-material';
 
 const storage = getStorage(app);
 const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG','UG+PG(Accelerated)Degree','PhD','Foundation','Short Term Program','Pathway Program','Twiming Program(UG)','Twiming Program(PG)','Online Programe/Distance Learning']
@@ -139,7 +140,7 @@ export default function CreateCoursePop({ open, handleClose }) {
         const imageURL = await uploadImage(file);
         setFormValues((prevValues) => ({
           ...prevValues,
-          [section]: { ...prevValues[section], [field]: imageURL }
+         [name]: imageURL 
         }));
       }
     } else {
