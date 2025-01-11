@@ -253,6 +253,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body: data.raw
             }),
 
+            
+        }),
+        DeleteCourse:builder.mutation({
+            query:(data)=>({
+                url: `${USERS_URL}/course/${data}`,
+                method: 'DELETE',
+            
+            }),
+
         }),
         LinkFetch: builder.mutation({
             query:()=> ({
@@ -659,7 +668,7 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateCountryMutation,useCountryFetchMutation,useCountryDeleteMutation,useCountryFetchOneMutation,useCountryStatusUpdateMutation,useCountryAllFetchMutation,
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,useUpdateProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,useUpdateUniversityMutation,
-    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useLinkFetchMutation,useUpdateCourseOneMutation,
+    useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useDeleteCourseMutation, useLinkFetchMutation,useUpdateCourseOneMutation,
     usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
     useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation,
     useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,

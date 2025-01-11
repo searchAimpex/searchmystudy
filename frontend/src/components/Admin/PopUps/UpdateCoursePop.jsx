@@ -167,6 +167,7 @@ export default function UpdateCoursePop({ open, handleClose, courseData }) {
         raw: formValues
       }
       await updateCourse(data).unwrap();
+    
       handleClose();
     } catch (error) {
       console.error('Failed to update course:', error);

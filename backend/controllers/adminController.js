@@ -745,13 +745,12 @@ const createCourse = asyncHandler(async (req, res) => {
 // @route   PUT /courses/:id
 // @access  Public
 const updateCourse = asyncHandler(async (req, res) => {
-  const { ProgramName, University, WebsiteURL, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
+  const { ProgramName, WebsiteURL, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
 
   const course = await Course.findById(req.params.id);
 
   if (course) {
     course.ProgramName = ProgramName;
-    course.University = University;
     course.WebsiteURL = WebsiteURL;
     course.Location = Location;
     course.Duration = Duration;

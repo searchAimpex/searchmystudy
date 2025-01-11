@@ -24,12 +24,12 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 
 import CreateProvincePop from './PopUps/CreateProvincePop';
-import { useCountryFetchMutation, useDeleteProvinceMutation, useDeleteUniversityMutation, useFetchCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
+import { useCountryFetchMutation, useDeleteCourseMutation, useDeleteProvinceMutation, useDeleteUniversityMutation, useFetchCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice.js';
 import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';
 import { DeleteOneUniversity, FetchUniversitys } from '../../slices/universitySlice.js';
 import CreateUniversityPop from './PopUps/CreateUniversityPop.jsx';
 import CreateCoursePop from './PopUps/CreateCoursePop.jsx';
-import { FetchCourses } from '../../slices/courseSlice.js';
+import { DeleteCourse, FetchCourses } from '../../slices/courseSlice.js';
 import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
 import { Card, CardContent } from '@mui/material';
@@ -232,8 +232,8 @@ function CourseTable() {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { courses } = useSelector(state => state.course);
     const services = courses;
-    const [FetchCourse, { isSuccess }] = useFetchCourseMutation();
-    const [DeleteUniversity] = useDeleteUniversityMutation();
+    const [FetchCourse] = useFetchCourseMutation();
+    const [DeleteUniversity,{isSuccess}] = useDeleteCourseMutation();
     const dispatch = useDispatch();
 
     const [CountryFetch] = useCountryFetchMutation();
@@ -264,7 +264,12 @@ function CourseTable() {
         };
         fetchData();
     }, [FetchCourse, dispatch]);
+    useEffect(()=>{
+        if(isSuccess){
+            toast.success("Deleted Successfully");
+        }
 
+    },[isSuccess])
     const handleRequestSort = (event, property) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -315,7 +320,7 @@ function CourseTable() {
     const handleDelete = async (id) => {
         try {
             const res = await DeleteUniversity(id).unwrap();
-            dispatch(DeleteOneUniversity(res));
+            dispatch(DeleteCourse(res));
         } catch (error) {
             toast.error('Error deleting banner');
         }
@@ -434,7 +439,6 @@ function CourseTable() {
                                     <td>{row?.University?.name}</td>
                                     <td> {province?.find((c) => c?._id === row?.University?.Province)?.name} </td>
                                     <td> {countries?.find((c) => c?._id === row?.Country)?.name} </td>
-
                                     <td>{row?.Category}</td>
                                     <td>{row?.Location}</td>
                                 </tr>
