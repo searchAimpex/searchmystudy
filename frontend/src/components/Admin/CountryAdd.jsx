@@ -16,10 +16,12 @@ import { AddCountry } from '../../slices/countrySlice'; // Assuming you have thi
 import { useCreateCountryMutation } from '../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
 import TextEditor from './TextEditor';
+import { useNavigate } from 'react-router-dom';
 
 const storage = getStorage(app);
 
 function CountryAdd({ open, onClose }) {
+  const navigate = useNavigate()
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',

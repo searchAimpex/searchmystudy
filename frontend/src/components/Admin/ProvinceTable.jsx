@@ -16,7 +16,8 @@ import { toast } from 'react-toastify';
 import {
     useFetchProvinceMutation,
     useDeleteProvinceMutation,
-    useCountryFetchMutation
+    useCountryFetchMutation,
+    useCountryAllFetchMutation
 } from '../../slices/adminApiSlice';
 import { FetchProvinces, DeleteOneProvince } from '../../slices/provinceSlice';
 import { FetchCountry } from '../../slices/countrySlice';
@@ -172,7 +173,7 @@ function ProvinceTable() {
 
     const [FetchProvince, { isSuccess }] = useFetchProvinceMutation();
     const [DeleteProvince] = useDeleteProvinceMutation();
-    const [CountryFetch] = useCountryFetchMutation();
+    const [CountryFetch] = useCountryAllFetchMutation();
     const dispatch = useDispatch();
 
     // Filter provinces based on selected country
