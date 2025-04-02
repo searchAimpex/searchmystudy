@@ -17,7 +17,7 @@ import { visuallyHidden } from '@mui/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
-import { useServiceFetchAllMutation, useDeleteBannerMutation, useServiceDeleteMutation } from '../../slices/adminApiSlice';
+import { useServiceFetchAllMutation, useServiceDeleteMutation } from '../../slices/adminApiSlice';
 import { DeleteService, FetchAllServices } from '../../slices/serviceSlice.js';
 import CreateServicePop from './PopUps/CreateServicePop.jsx';
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
@@ -25,34 +25,11 @@ import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
     { id: 'heading', numeric: false, disablePadding: false, label: 'Heading' },
     { id: 'createdAt', numeric: false, disablePadding: false, label: 'Created At' },
     { id: 'updatedAt', numeric: false, disablePadding: false, label: 'Updated At' },
 ];
-
-function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) return -1;
-    if (b[orderBy] > a[orderBy]) return 1;
-    return 0;
-}
-
-function getComparator(order, orderBy) {
-    return order === 'desc'
-        ? (a, b) => descendingComparator(a, b, orderBy)
-        : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-    const stabilizedThis = array?.map((el, index) => [el, index]);
-    stabilizedThis?.sort((a, b) => {
-        const order = comparator(a[0], b[0]);
-        if (order !== 0) return order;
-        return a[1] - b[1];
-    });
-    return stabilizedThis?.map((el) => el[0]);
-}
 
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
@@ -71,10 +48,7 @@ function EnhancedTableHead(props) {
                     />
                 </th>
                 {headCells?.map((headCell) => (
-                    <th
-                        key={headCell.id}
-                        aria-sort={orderBy === headCell.id ? order : undefined}
-                    >
+                    <th key={headCell.id} aria-sort={orderBy === headCell.id ? order : undefined}>
                         <Link
                             underline="none"
                             color="neutral"
@@ -82,16 +56,12 @@ function EnhancedTableHead(props) {
                             component="button"
                             onClick={createSortHandler(headCell.id)}
                             fontWeight="lg"
-                            startDecorator={
-                                headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
-                            endDecorator={
-                                !headCell.numeric ? (
-                                    <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
-                                ) : null
-                            }
+                            startDecorator={headCell.numeric ? (
+                                <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
+                            ) : null}
+                            endDecorator={!headCell.numeric ? (
+                                <ArrowDownwardIcon sx={{ opacity: orderBy === headCell.id ? 1 : 0 }} />
+                            ) : null}
                             sx={{
                                 '& svg': {
                                     transition: '0.2s',
@@ -133,9 +103,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const handleClose = () => {
         setOpen(false);
     }
-    useEffect(() => {
-        console.log("Dialog open state:", open);
-      }, [open]);
+
     return (
         <Box
             sx={{
@@ -167,7 +135,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
             )}
 
             {numSelected > 0 ? (
-                <div className='flex flex-row justify-between w-[150px]'>
+                <Box sx={{ display: 'flex', gap: 1 }}>
                     <Tooltip title="Delete Banner">
                         <IconButton size="sm" color="danger" variant="solid" onClick={() => onDelete(selectedRow?._id)}>
                             <DeleteIcon />
@@ -179,15 +147,14 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
+                        <IconButton size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {
-                             onViewBanner(selectedRow?.banner);
-                            handleViewBannerOpen();
-                            }}/>
-                            
+                                onViewBanner(selectedRow?.banner);
+                                handleViewBannerOpen();
+                            }} />
                         </IconButton>
                     </Tooltip>
-                </div>
+                </Box>
             ) : (
                 <Tooltip title="Create Services">
                     <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
@@ -219,14 +186,14 @@ function ServiceTable() {
     const [ServiceDelete, DeleteState] = useServiceDeleteMutation();
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Data fetched successfully');
-        }
-        if (DeleteState.isSuccess) {
-            toast.success('Service deleted successfully');
-        }
-    }, [isSuccess, DeleteState.isSuccess]);
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success('Data fetched successfully');
+    //     }
+    //     if (DeleteState.isSuccess) {
+    //         toast.success('Service deleted successfully');
+    //     }
+    // }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -299,72 +266,80 @@ function ServiceTable() {
             toast.error('Error deleting banner');
         }
     };
-
+    function stableSort(array, comparator) {
+        const stabilizedThis = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1]; // Preserve the original order if the items are equal in sorting criteria
+        });
+        return stabilizedThis.map((el) => el[0]);
+    }
+    function descendingComparator(a, b, orderBy) {
+        if (b[orderBy] < a[orderBy]) return -1;
+        if (b[orderBy] > a[orderBy]) return 1;
+        return 0;
+    }
+    
+    function getComparator(order, orderBy) {
+        return order === 'desc'
+            ? (a, b) => descendingComparator(a, b, orderBy)
+            : (a, b) => -descendingComparator(a, b, orderBy);
+    }
+        
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
             <EnhancedTableToolbar numSelected={selected.length} selectedRow={services?.find((service) => service._id === selected[0])} onViewBanner={handleViewBanner} onDelete={handleDelete} />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
-                <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={services?.length}
-                />
-                <tbody>
-                    {stableSort(services, getComparator(order, orderBy))
-                        ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        ?.map((row, index) => {
-                            const isItemSelected = isSelected(row?._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-                            return (
-                                <tr
-                                    hover
-                                    onClick={(event) => handleClick(event, row?._id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row?._id}
-                                    selected={isItemSelected}
-                                >
-                                    <td>
-                                        <Checkbox
-                                            color={isItemSelected ? 'primary' : 'neutral'}
-                                            checked={isItemSelected}
-                                            slotProps={{ input: { 'aria-labelledby': labelId } }}
-                                            sx={{ verticalAlign: 'sub' }}
-                                        />
-                                    </td>
-                                    <td id={labelId}>{row?._id}</td>
-                                    <td>{row?.title}</td>
-                                    <td>{`${row?.heading?.slice(0,20)}...`}</td>
-                                    <td>{row?.createdAt}</td>
-                                    <td>{row?.updatedAt}</td>
-                                </tr>
-                            );
-                        })}
-                    {emptyRows > 0 && (
-                        <tr style={{ height: 53 * emptyRows }}>
-                            <td colSpan={6} />
-                        </tr>
-                    )}
-                </tbody>
-            </Table>
-            <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                    gap: 2,
-                    p: 2,
-                    borderTop: '1px solid',
-                    borderColor: 'divider',
-                    bgcolor: 'background.level1',
-                    borderBottomLeftRadius: 'var(--unstable_actionRadius)',
-                    borderBottomRightRadius: 'var(--unstable_actionRadius)',
-                }}
-            >
+            <Box sx={{ overflowX: 'auto' }}>
+                <Table aria-labelledby="tableTitle" sx={{
+            '--TableCell-headBackground': 'transparent',
+            '--TableCell-selectedBackground': (theme) => theme.vars.palette.success.softBg,
+            '& thead th:nth-child(1)': { width: '40px' },
+            '& thead th:nth-child(2)': { width: '40%' },
+            '& thead th:nth-child(3)': { width: '30%' },
+            '& thead th:nth-child(4)': { width: '40%' },
+            '& thead th:nth-child(5)': { width: '40%' },
+            // '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+          }}>
+                    <EnhancedTableHead
+                        numSelected={selected.length}
+                        order={order}
+                        orderBy={orderBy}
+                        onSelectAllClick={handleSelectAllClick}
+                        onRequestSort={handleRequestSort}
+                        rowCount={services?.length}
+                    />
+                    <tbody>
+                        {stableSort(services, getComparator(order, orderBy))
+                            ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            ?.map((row, index) => {
+                                const isItemSelected = isSelected(row?._id);
+                                return (
+                                    <tr key={row?._id}>
+                                        <td>
+                                            <Checkbox
+                                                checked={isItemSelected}
+                                                onChange={(event) => handleClick(event, row?._id)}
+                                            />
+                                        </td>
+                                        <td>{row?.title}</td>
+                                        <td>{`${row?.heading?.slice(0, 20)}...`}</td>
+                                        <td>{row?.createdAt}</td>
+                                        <td>{row?.updatedAt}</td>
+                                    </tr>
+                                );
+                            })}
+                        {emptyRows > 0 && (
+                            <tr style={{ height: 53 * emptyRows }}>
+                                <td colSpan={6} />
+                            </tr>
+                        )}
+                    </tbody>
+                </Table>
+            </Box>
+            <Box sx={{
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, borderTop: '1px solid', borderColor: 'divider'
+            }}>
                 <Select
                     variant="outlined"
                     size="sm"
@@ -377,13 +352,7 @@ function ServiceTable() {
                         </Option>
                     ))}
                 </Select>
-                <Typography textColor="text.secondary" fontSize="sm">
-                    {page * rowsPerPage + 1}-
-                    {page * rowsPerPage + rowsPerPage > services?.length
-                        ? services?.length
-                        : page * rowsPerPage + rowsPerPage}{' '}
-                    of {services?.length}
-                </Typography>
+                <Typography fontSize="sm">{page * rowsPerPage + 1}-{Math.min(page * rowsPerPage + rowsPerPage, services?.length)} of {services?.length}</Typography>
                 <Box sx={{ display: 'flex', gap: 1 }}>
                     <IconButton
                         size="sm"
@@ -391,12 +360,8 @@ function ServiceTable() {
                         variant="outlined"
                         disabled={page === 0}
                         onClick={() => handleChangePage(null, page - 1)}
-                        sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(90deg)' }} />
                     </IconButton>
                     <IconButton
                         size="sm"
@@ -404,12 +369,8 @@ function ServiceTable() {
                         variant="outlined"
                         disabled={page >= Math.ceil(services?.length / rowsPerPage) - 1}
                         onClick={() => handleChangePage(null, page + 1)}
-                        sx={{ bgcolor: 'background.surface' }}
                     >
-                        <ArrowDownwardIcon
-                            fontSize="small"
-                            sx={{ transform: 'rotate(-90deg)' }}
-                        />
+                        <ArrowDownwardIcon fontSize="small" sx={{ transform: 'rotate(-90deg)' }} />
                     </IconButton>
                 </Box>
             </Box>

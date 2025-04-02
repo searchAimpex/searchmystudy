@@ -26,7 +26,7 @@ import CreateCounsellorPop from './PopUps/CreateCounsellorPop';
 import { deleteCounsellor, getCounsellor } from '../../slices/counsellorSlice';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
+    // { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
     { id: 'Experince', numeric: false, disablePadding: false, label: 'Experince' },
     { id: 'course', numeric: false, disablePadding: false, label: 'Course' },
@@ -217,14 +217,14 @@ function CounsellorTable() {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Testimonial fetched successfully');
-        }
-        if (DeleteState.isSuccess) {
-            toast.success('Testimonial deleted successfully');
-        }
-    }, [isSuccess, DeleteState.isSuccess]);
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success('Testimonial fetched successfully');
+    //     }
+    //     if (DeleteState.isSuccess) {
+    //         toast.success('Testimonial deleted successfully');
+    //     }
+    // }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -300,6 +300,16 @@ function CounsellorTable() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
 
+
+    ////////////////////////////////////////////////////////////////////////convert para into lines
+    function truncateDescription(description, wordLimit = 5) {
+        if (!description) return '';
+    
+        const words = description.split(' ');
+        return words.slice(0, wordLimit).join(' ') + (words.length > wordLimit ? '...' : '');
+    }
+
+    
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
             <EnhancedTableToolbar
@@ -308,7 +318,16 @@ function CounsellorTable() {
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
             />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
+            <Table aria-labelledby="tableTitle"  hoverRow sx={{
+            '--TableCell-headBackground': 'transparent',
+            '--TableCell-selectedBackground': (theme) => theme.vars.palette.success.softBg,
+            '& thead th:nth-child(1)': { width: '40px' },
+            '& thead th:nth-child(2)': { width: '20%' },
+            '& thead th:nth-child(3)': { width: '40%' },
+            '& thead th:nth-child(4)': { width: '20%' },
+            '& thead th:nth-child(5)': { width: '40%' },
+            // '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+          }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
@@ -341,9 +360,9 @@ function CounsellorTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
+                                    {/* <td id={labelId}>{row?._id}</td> */}
                                     <td>{row?.name}</td>
-                                    <td>{row?.experience}</td>
+                                 <td>{truncateDescription(row?.experience, 5)}</td>
                                     <td>{row?.course}</td>
                                     <td>{row?.createdAt}</td>
                                 </tr>

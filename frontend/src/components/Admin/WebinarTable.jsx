@@ -26,7 +26,7 @@ import { DeleteOneWebinar, FetchWebinar } from '../../slices/webinarSlice';
 import CreateWebinarPop from './PopUps/CreateWebinarPop';
 
 const headCells = [
-    { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
+    // { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
     { id: 'title', numeric: false, disablePadding: false, label: 'Title' },
     { id: 'description', numeric: false, disablePadding: false, label: 'Description' },
     { id: 'rating', numeric: false, disablePadding: false, label: 'Rating' },
@@ -217,14 +217,14 @@ function WebinarTable() {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success('Webinar fetched successfully');
-        }
-        if (DeleteState.isSuccess) {
-            toast.success('Webinar deleted successfully');
-        }
-    }, [isSuccess, DeleteState.isSuccess]);
+    // useEffect(() => {
+    //     if (isSuccess) {
+    //         toast.success('Webinar fetched successfully');
+    //     }
+    //     if (DeleteState.isSuccess) {
+    //         toast.success('Webinar deleted successfully');
+    //     }
+    // }, [isSuccess, DeleteState.isSuccess]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -298,6 +298,13 @@ function WebinarTable() {
 
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, services?.length - page * rowsPerPage);
 
+    ////////////////////////////////////////////////////////////////////////convert para into lines
+    function truncateDescription(description, wordLimit = 5) {
+        if (!description) return '';
+    
+        const words = description.split(' ');
+        return words.slice(0, wordLimit).join(' ') + (words.length > wordLimit ? '...' : '');
+    }
     return (
         <Box sx={{ width: '100%', boxShadow: 'md', borderRadius: 'sm' }}>
             <EnhancedTableToolbar
@@ -306,7 +313,16 @@ function WebinarTable() {
                 onViewBanner={handleViewBanner}
                 onDelete={handleDelete}
             />
-            <Table aria-labelledby="tableTitle" hoverRow sx={{ '--TableCell-headBackground': 'transparent' }}>
+            <Table aria-labelledby="tableTitle" hoverRow sx={{
+            '--TableCell-headBackground': 'transparent',
+            '--TableCell-selectedBackground': (theme) => theme.vars.palette.success.softBg,
+            '& thead th:nth-child(1)': { width: '40px' },
+            '& thead th:nth-child(2)': { width: '20%' },
+            '& thead th:nth-child(3)': { width: '40%' },
+            '& thead th:nth-child(4)': { width: '20%' },
+            '& thead th:nth-child(5)': { width: '40%' },
+            // '& tr > *:nth-child(n+3)': { textAlign: 'right' },
+          }}>
                 <EnhancedTableHead
                     numSelected={selected.length}
                     order={order}
@@ -339,11 +355,11 @@ function WebinarTable() {
                                             sx={{ verticalAlign: 'sub' }}
                                         />
                                     </td>
-                                    <td id={labelId}>{row?._id}</td>
+                                    {/* <td id={labelId}>{row?._id}</td> */}
                                     <td>{row?.title}</td>
-                                    <td>{row?.description}</td>
+                                    <td>{truncateDescription(row?.description, 5)}</td>
                                     <td>{row?.rating}</td>
-
+                                
                                     <td>{row?.createdAt}</td>
                                 </tr>
                             );
