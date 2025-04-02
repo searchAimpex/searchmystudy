@@ -2,11 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 910px) {
+  .res {
+    display: none;
+  }
+}
 
+
+
+@keyframes ringPhone {
+  0%, 10% { transform: scale(1); }
+  15% { transform: scale(1.3); } /* Zoom in */
+  25% { transform: scale(1.3) rotate(10deg); }
+  35% { transform: scale(1.3) rotate(-10deg); }
+  45% { transform: scale(1.3) rotate(8deg); }
+  55% { transform: scale(1.3) rotate(-8deg); }
+  65% { transform: scale(1.3) rotate(5deg); }
+  75% { transform: scale(1.3) rotate(-5deg); }
+  85% { transform: scale(1.3) rotate(2deg); }
+  95% { transform: scale(1.3) rotate(-2deg); }
+  100% { transform: scale(1); } /* Reset */
+
+  /* --- Pause Effect (Ensures it stays still for 5s) --- */
+  100% { transform: scale(1); }
+}
+
+.ring-bell {
+  animation: ringPhone 1s ease-in-out infinite;
+  animation-delay: 3s; /* Starts after 3 seconds */
+  animation-duration: 1s; /* 1s for effect + 5s pause */
+}
+
+
+
+@keyframes ringOnHover {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(10deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  60% { transform: rotate(-8deg); }
+  75% { transform: rotate(5deg); }
+  90% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.whatsapp-icon:hover {
+  animation: ringOnHover 0.5s ease-in-out infinite;
+}
+
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(10deg); }
+  30% { transform: rotate(-10deg); }
+  45% { transform: rotate(8deg); }
+  60% { transform: rotate(-8deg); }
+  75% { transform: rotate(5deg); }
+  90% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Apply shake effect to the icon when hovering over the parent div */
+.group:hover .shakable-icon {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+
+/* 
+@layer utilities {
+  @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-2px); }
+      50% { transform: translateX(2px); }
+      75% { transform: translateX(-2px); }
+      100% { transform: translateX(0); }
+  }
+
+  .shake {
+      animation: shake 0.3s ease-in-out infinite;
+  }
+} */
 .platform {
     position: relative;
     transition: right 0.3s;
   }
+
+
+
   
   .body {
     background-color: white !important;
@@ -137,4 +219,3 @@
 .flip-card-back {
     transform: rotateY(180deg);
 }
-
