@@ -162,10 +162,10 @@ function NavBar() {
 
       <div className='border border-red flex' style={{ width: "100vw", height: "100vh" }}>
         <div style={{ width: "20%", border: "0px solid red" }}>
-          asdcasdsadcsadc
+          {/* asdcasdsadcsadc  */}
         </div>
         {/* my components */}
-        <div style={{ border: "3px solid green", width: "80%" }}>
+        <div style={{ border: "0px solid green", width: "80%" }}>
          
 
             {componentMapping[selectedComponent] || <p>Select a component from the menu.</p>}

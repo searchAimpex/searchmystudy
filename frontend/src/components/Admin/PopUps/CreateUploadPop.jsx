@@ -159,7 +159,7 @@ function CreateUploadPop({ open, handleClose }) {
               helperText={errors.target ? 'Target is required' : ''}
               variant="standard"
             >
-              <MenuItem value="main">Main</MenuItem>
+              <MenuItem value="frenchise">Frenchise</MenuItem>
               <MenuItem value="partner">Partner</MenuItem>
             </TextField>
             <TextField

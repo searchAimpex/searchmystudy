@@ -50,25 +50,24 @@ function AdminDashboard({component}) {
   const componentHandler = (id) => {
     dispatch(setSelectedComponent(id)); // Update Redux store
   }
-
-
+  
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className='fixed h-[100vh] w-64 bg-gray-800 text-white top-0 left-0'>
+      <div className='fixed h-[100vh] w-64  shadow-[5px_0_10px_rgba(0,0,0,0.2)] text-white top-0 left-0'>
         <div className="p-2 flex flex-row items-center ml-5 cursor-pointer">
           <img src={Logo} alt="Logo" className="w-12 h-12" />
-          <span className='text-white font-bold text-[25px]'>AIMPEX</span>
+          <span className='text-black font-bold text-[25px]'>AIMPEX</span>
         </div>
 
-        <h2 className='px-3 py-2 border-b text-gray-100 mb-5'>Admin Dashboard</h2>
+        <h2 className='px-3 py-2 border-b mb-5'>Admin Dashboard</h2>
 
         {/* Menu Items */}
         <div className='flex flex-col space-y-4'>
           {menuItems.map((item, index) => (
             <div
               key={index}
-              className='capitalize flex items-center space-x-2 rounded cursor-pointer text-gray-400 px-2 hover:text-white transition duration-300'
+              className='capitalize flex items-center space-x-2 rounded cursor-pointer text-black px-2 hover:bg-gray-500 transition duration-300'
             // onClick={() => navigate(item.path)}
             onClick={() => componentHandler(index)}
             >
