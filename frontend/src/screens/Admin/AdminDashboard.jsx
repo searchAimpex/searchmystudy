@@ -10,7 +10,7 @@ import { setSelectedComponent } from '../../slices/componentSlice';
 function AdminDashboard({component}) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const [component, setComponent] = useState(0); // Holds the currently selected component
+  const [selectedIndex, setSelectedIndex] = useState(null); // State to keep track of selected item
 
   const menuItems = [
     { name: 'Website Manager', path: '/admin/webManager', src: 'https://cdn-icons-png.flaticon.com/512/15862/15862329.png' },
@@ -49,38 +49,41 @@ function AdminDashboard({component}) {
 
   const componentHandler = (id) => {
     dispatch(setSelectedComponent(id)); // Update Redux store
+    setSelectedIndex(id); // Update selected menu item
   }
-  
+
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className='fixed h-[100vh] w-64  shadow-[5px_0_10px_rgba(0,0,0,0.2)] text-white top-0 left-0'>
+      <div className='fixed h-[100vh] w-64 bg-white shadow-[5px_0_10px_rgba(0,0,0,0.2)] top-0 left-0'>
         <div className="p-2 flex flex-row items-center ml-5 cursor-pointer">
           <img src={Logo} alt="Logo" className="w-12 h-12" />
           <span className='text-black font-bold text-[25px]'>AIMPEX</span>
         </div>
 
-        <h2 className='px-3 py-2 border-b mb-5'>Admin Dashboard</h2>
+        <h2 className='px-3  text-[25px] text-center font-bold  border-b mb-5 'style={{color: "#db7e19"}}>Admin Dashboard</h2>
 
         {/* Menu Items */}
-        <div className='flex flex-col space-y-4'>
+        <div className='flex flex-col '>
           {menuItems.map((item, index) => (
-            <div
-              key={index}
-              className='capitalize flex items-center space-x-2 rounded cursor-pointer text-black px-2 hover:bg-gray-500 transition duration-300'
-            // onClick={() => navigate(item.path)}
-            onClick={() => componentHandler(index)}
-            >
-              <img src={item.src} alt='icon' className='invert brightness-200 w-4 h-4' />
-              <span className='text-[15px] capitalize'>{item.name}</span>
-            </div>
+          <div
+          key={index}
+          className={` group capitalize flex items-center p-2
+             space-x-2 cursor-pointer text-black px-2 
+            ${selectedIndex === index ? 'bg-[#db7e19] text-white px-4' : 'hover:bg-gold-main hover:px-4'} 
+            transition-all duration-300 delay-50`} // Added smooth transition and delay
+          onClick={() => componentHandler(index)} // Update the selected index
+        >
+          <img src={item.src} alt="icon" className="invert brightness-200 w-4 h-4" />
+          <span className="text-[15px] capitalize group-hover:text-white ">{item.name}</span>
+        </div>
           ))}
         </div>
 
         {/* Logout Button */}
-        <div className="button-container my-5 p-2 bg-gray-700 hover:bg-gray-600 cursor-pointer" onClick={logoutHandler}>
+        <div className="button-container my-5 px-6 cursor-pointer" onClick={logoutHandler}>
           <span className='text-[16px] capitalize flex items-center'>
-            <LogoutIcon fontSize="medium" className="mr-2" />
+            <LogoutIcon fontSize="medium" className="mr-2 " />
             Logout
           </span>
         </div>
