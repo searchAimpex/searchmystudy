@@ -2,10 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
+.bg-orange-910 {
+  background: linear-gradient(135deg, #db7e19 50%, white 50%);
+}
+
+.icon-color {
+  color: #db7e19;
+}
+
+.myshadow {
+  box-shadow: -5px 7px 10px rgba(85, 85, 85, 0.123);
+}
 @media (max-width: 910px) {
+  .bg-orange-910 {
+    background: #db7e19 !important;
+  }
+
+  .icon-color {
+    color: white !important;
+  }
   .res {
     display: none;
   }
+  
 }
 
 
