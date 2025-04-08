@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import serbia from '../assets/serbia.png';
+import france from '../assets/france.png';
+import Italy from '../assets/Italy.png';
+import Lithuania from '../assets/Lithuania.webp';
+import RUSSIA from '../assets/RUSSIA.png';
+import poland from '../assets/poland.png';
+import Latvia from '../assets/Latvia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+// import serbia from '../assets/serbia.png';
+
 const Carousel = ({ interval = 5000 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [name, setName] = useState('');
@@ -12,11 +29,11 @@ const Carousel = ({ interval = 5000 }) => {
       heading: "Study Medicine Abroad",
       flags: [
         { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' }
+        { src: Latvia, name: 'Latvia' },
+        { src: poland, name: 'poland' },
+        { src: RUSSIA, name: 'Russia' },
+        { src: Lithuania, name: 'Lithuania' },
+        { src: Italy, name: 'Italy' }
       ]
     },
     {
@@ -24,11 +41,11 @@ const Carousel = ({ interval = 5000 }) => {
       heading: "At low cost ranked University!",
       flags: [
         { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' }
+        { src: serbia, name: 'Latvia' },
+        { src: serbia, name: 'poland' },
+        { src: serbia, name: 'RUSSIA' },
+        { src: serbia, name: 'Lithuania' },
+        { src: serbia, name: 'Italy' }
       ]
     },
     {
@@ -89,24 +106,35 @@ const Carousel = ({ interval = 5000 }) => {
               <img
                 src={slide.image}
                 alt={`Slide ${index}`}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${currentIndex === index ? 'zoom-animation' : ''
+                  }`}
               />
 
 
+
               {/* Heading + Flags Wrapper */}
-              <div className="absolute top-8 left-80 bg-white bg-opacity-80 p-4 rounded-lg text-white shadow-lg w-[400px]">
+              <div className="absolute top-12 left-[500px] text-white w-[400px]">
                 <h2 className="text-2xl font-bold text-black mb-2">{slide.heading}</h2>
                 <div className="flex gap-2 flex-wrap">
                   {slide.flags.map((flag, idx) => (
-                    <img
-                      key={idx}
-                      src={flag.src}
-                      alt={flag.name}
-                      title={flag.name}
-                      className="w-16  rounded-sm border"
-                    />
+                  <div className="group flex flex-col items-center m-2 cursor-pointer">
+                 <a href="" >
+                   <img
+                    src={flag.src}
+                    alt={flag.name}
+                    title={flag.name}
+               className="w-20 h-15 object-cover rounded-sm border transition-transform duration-300 group-hover:scale-110" 
+                  />
+                  <p className="text-lg text-center  text-black font-medium group-hover:text-red-500 transition-colors duration-300">
+                    {flag.name}
+                  </p>
+                 </a>
+                 </div>
+                
                   ))}
                 </div>
+
+
               </div>
 
 
@@ -115,7 +143,7 @@ const Carousel = ({ interval = 5000 }) => {
         </div>
 
         {/* Dots */}
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-[65px] left-1/2 transform -translate-x-1/2 flex gap-2">
           {carousel.map((_, index) => (
             <div
               key={index}
@@ -129,8 +157,8 @@ const Carousel = ({ interval = 5000 }) => {
       </div>
 
       {/* Form Section */}
-      <div className='absolute right-[50px] top-[50%] transform -translate-y-1/2 w-1/4 flex flex-col justify-center p-8 bg-white rounded-xl shadow-lg'>
-        <h2 className='text-2xl font-bold mb-4 text-blue-main text-center'>Join Our Program</h2>
+      <div className='absolute right-[50px] top-[45%] transform -translate-y-1/2 w-1/4 flex flex-col justify-center p-8 bg-white rounded-xl shadow-lg'>
+        <h2 className='text-2xl font-bold mb-3 text-blue-main text-center'>Join Our Program</h2>
         <form onSubmit={handleSubmit}>
           <div className='mb-4'>
             <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="name">Name</label>
@@ -143,7 +171,7 @@ const Carousel = ({ interval = 5000 }) => {
               className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
             />
           </div>
-          <div className='mb-4'>
+          <div className='mb-3'>
             <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email</label>
             <input
               id="email"

@@ -4,6 +4,63 @@
 
 
 
+@media (max-width: 1024px) {
+  .course_finder{
+   width: 80%;
+  }
+  .course{
+
+    width:150px
+  }
+}
+
+
+@media (max-width: 768px) {
+  .course_checker{
+    display: inline-block;
+  }
+  .course_finder{
+    border-radius: 0px;
+    box-shadow: #3333333b 0 0 40px;
+
+  }
+  .course{
+    width: 100%;
+  }
+  .country{
+    margin-top:10px;
+    width: 100%;
+  }
+  .level{
+    margin-top: 10px;
+    width: 100%;
+  }
+  .subt_btn{
+    margin-top: 10px;
+    width: 100%;
+  }
+  .form_heading span{
+    font-size: 30px;
+  }
+}
+
+
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1.2);
+  }
+  
+  100% {
+    transform: scale(1.1);
+  }
+}
+
+.zoom-animation {
+  animation: zoomInOut 1s ease-in-out forwards;
+}
+
+
+
 .bg-orange-910 {
   background: linear-gradient(135deg, #db7e19 50%, white 50%);
 }

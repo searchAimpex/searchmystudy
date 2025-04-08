@@ -23,11 +23,11 @@ function ServiceSection() {
     const dispatch = useDispatch()
     const [ServiceFetchAll,{isSuccess}] = useServiceFetchAllMutation()
     const { services } = useSelector((state) => state.service);
-    useEffect(()=>{
-        if(isSuccess){
-            toast.success("Service Fetached Successfull")
-        }
-    },[isSuccess])
+    // useEffect(()=>{
+    //     if(isSuccess){
+    //         toast.success("Service Fetached Successfull")
+    //     }
+    // },[isSuccess])
     useEffect(()=>{ 
         const fetchData = async () => {
             try {
@@ -41,19 +41,22 @@ function ServiceSection() {
 
     },[ServiceFetchAll])
   return (
-    <div className='mx-[200px] mt-[100px] py-2'>
+    <div className='mx-[50px] py-2'>
         <div className='flex flex-col justify-center items-center'>
-            <div className='flex flex-row space-x-3'>
-                <span className='text-4xl font-bold  text-blue-main'>SERVICES</span>
-                <span className='text-4xl font-bold  text-gold-main'>WE</span>
-                <span className='text-4xl font-bold  text-blue-main'>PROVIDE</span>
-            </div>
-            <div className='my-2'>
-               <p className='text-xl font-bold  text-gray-500'> Empowering Your Journey with Personalized Guidance and Support</p>
-            </div>
+        <div className="flex gap-x-2 gap-y-1 ">
+  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl  font-bold text-blue-main">SERVICES</span>
+  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gold-main">WE</span>
+  <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-main">PROVIDE</span>
+</div>
+<div className="my-2 ">
+  <p className="text-lg text-left sm:text-base md:text-lg lg:text-xl font-semibold text-gray-500  ">
+    Empowering Your Journey with Personalized Guidance and Support
+  </p>
+</div>
+
           
-            <div className='grid grid-cols-6 gap-4 mt-10'>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+            <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-10 '>
+                    <div className="flex flex-col items-center justify-center p-2 ">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {careercounselling} />
                         </div>
@@ -61,7 +64,7 @@ function ServiceSection() {
                             Career Counselling
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg ">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {universityshortlists} />
                         </div>
@@ -69,7 +72,7 @@ function ServiceSection() {
                             University Shortlists
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {icondocument} />
                         </div>
@@ -77,7 +80,7 @@ function ServiceSection() {
                             Application Document
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {liveapplicationtracking} />
                         </div>
@@ -85,7 +88,7 @@ function ServiceSection() {
                             Application Tracking
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {interviewtraining} />
                         </div>
@@ -93,7 +96,7 @@ function ServiceSection() {
                             Interview Training
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {successfuladmits} />
                         </div>
@@ -101,7 +104,7 @@ function ServiceSection() {
                             Successfull Admits
                             </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {visadocumentation} />
                         </div>
@@ -110,7 +113,7 @@ function ServiceSection() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {travelpackage} />
                         </div>
@@ -118,7 +121,7 @@ function ServiceSection() {
                             Travel Package
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {currencyexchange} />
                         </div>
@@ -126,7 +129,7 @@ function ServiceSection() {
                             Currency Exchange
                             </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {predepartureorientation} />
                         </div>
@@ -134,7 +137,7 @@ function ServiceSection() {
                             Departure Orientation
                         </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {postarrivalservices} />
                         </div>
@@ -142,7 +145,7 @@ function ServiceSection() {
                             Post Arrival Services
                             </div>
                     </div>
-                    <div className="flex flex-col items-center justify-center p-2 rounded-lg shadow-xl">
+                    <div className="flex flex-col items-center justify-center p-2 rounded-lg car">
                         <div>
                             <img className='w-[80px] h-[80px]' src= {campusbuddy} />
                         </div>

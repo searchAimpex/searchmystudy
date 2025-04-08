@@ -28,11 +28,11 @@ const PopularCategories = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
       {popularCategories.map((category) => (
         <div
           key={category.title}
-          className="bg-white rounded-lg flex items-center border-2 border-gold-main shadow-lg cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-xl"
+          className="bg-white rounded-lg flex items-center  border-gold-main border cursor-pointer transform transition duration-300 hover:scale-105 "
           onClick={() => handleClick(category.title)}
         >
           <img

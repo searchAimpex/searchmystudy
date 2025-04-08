@@ -16,7 +16,7 @@ import VerticalCardSlider from './VerticalCardsSlider'
 
             </div>
             <div className='my-2'>
-               <p className='text-xl font-bold  text-gray-500'>Discover dedicated professionals ready to support you on your journey</p>
+               <p className='text-xl font-bold  text-gray-500'>Hear what our students have to say about their experience.</p>
             </div>
             <div className='mt-10 w-full  px-[200px]'>
             <VerticalCardSlider />
