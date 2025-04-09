@@ -9,7 +9,7 @@ function AboutUsSection() {
   const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.2 })
 
   return (
-    <div className="mt-[120px] px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 py-8">
+    <div className="mt-[100px] px-4 sm:px-6 md:px-12 lg:px-20 xl:px-32 py-8">
       <div
         ref={ref}
         className="flex flex-col-reverse lg:flex-row items-center"
@@ -19,7 +19,7 @@ function AboutUsSection() {
           initial={{ x: -100, opacity: 0 }}
           animate={inView ? { x: 0, opacity: 1 } : {}}
           transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-start space-y-6 lg:space-y-8 py-4"
+          className="w-full lg:w-1/2 flex flex-col items-center lg:items-start justify-start space-y-6 lg:space-y-8 "
         >
           <div className="flex flex-row space-x-2">
             <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-blue-main">About</span>

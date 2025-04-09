@@ -65,8 +65,8 @@ const VerticalCardsSlider = () => {
 
   return (
     <div 
-      className="relative w-[500px] mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-8"
-      onMouseEnter={() => setIsHovered(true)}
+    className="relative w-[100%] mx-auto overflow-hidden rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 p-8"
+    onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Progress Bar */}
@@ -94,7 +94,7 @@ const VerticalCardsSlider = () => {
             }}
             className="absolute w-full h-full"
           >
-            <div className="w-full h-full p-6 rounded-xl bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="w-[90%] h-[100%] p-6 rounded-xl bg-white/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="flex flex-col items-center justify-start h-full space-y-2">
                 {/* Profile Image Section */}
                 <motion.div 

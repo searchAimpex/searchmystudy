@@ -26,14 +26,14 @@ function CountriesSection() {
     <div className=' my-20'>
       <div className='flex flex-col justify-center items-center'>
         <div className="flex gap-x-2 gap-y-1 text-center">
-          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-main">Countries</span>
-          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gold-main">We</span>
-          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-blue-main">Work</span>
-          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gold-main">With</span>
+          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-blue-main">Countries</span>
+          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gold-main">We</span>
+          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-blue-main">Work</span>
+          <span className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl font-bold text-gold-main">With</span>
         </div>
 
-        <div className='my-2'>
-          <p className='text-xl text-gray-600 font-bold'>500+ Universities around the world</p>
+        <div className='my-3'>
+          <p className='text-lg text-left sm:text-base md:text-lg lg:text-xl font-semibold text-gray-500  '>500+ Universities around the world</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-10 m-auto" style={{ border: "0px solid green",width:"95%" }}>
           {countries.map((item) => (

@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useAllVideoMutation } from '../../slices/adminApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getVideo } from '../../slices/videoSlice';
-
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-export default function VideoCards() {
+const VideoCards = () => {
   const [AllVideo] = useAllVideoMutation();
   const dispatch = useDispatch();
   const { video } = useSelector((state) => state.video);
@@ -27,99 +24,162 @@ export default function VideoCards() {
     fetchData();
   }, [AllVideo, dispatch]);
 
-  const settings = {
-    infinite: true,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 3000,
-    autoplaySpeed: 3000,
-    cssEase: "linear",
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
   return (
-    <div className="relative overflow-hidden p-6 sm:px-12 lg:px-32 xl:px-[100px]">
-      <div className="flex justify-between items-center mb-10">
-        <h2 className="text-4xl font-extrabold text-blue-main">Featured Videos</h2>
-        <button 
-          className="bg-gold-main text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
-          onClick={() => navigate('/videos')}
-        >
-          View All
-        </button>
+    <div className="relative overflow-hidden ">
+      {/* Header */}
+      <div className="flex flex-wrap  gap-x-2 gap-y-1 justify-center">
+
+        <span className="text-3xl sm:text-3xl md:text-4xl font-bold text-blue-main">Explore</span>
+        <span className="text-3xl sm:text-3xl md:text-4xl font-bold text-gold-main">Our</span>
+        <span className="text-3xl sm:text-3xl md:text-4xl font-bold text-blue-main">Video</span>
+        {/* <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gold-main">Picks</span> */}
       </div>
 
-      {/* React Slick Carousel */}
-      <Slider className='m-2' {...settings}>
-        {video.map((item) => (
-          <div
-            key={item._id}
-            onClick={() => setSelectedVideo(item.videoURL)}
-            className="relative w-[370px] h-[420px] p-4 m-4 shadow-md bg-white rounded-lg overflow-hidden shadow-lg cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl"
-          >
-            <div className="relative h-[370px] border border-b-black rounded-lg  overflow-hidden">
-              <img
-                src={item.thumbnailURL}
-                alt={item.name}
-                className="w-full h-full object-contained rounded-lg"
-              />
-              {/* Play Icon Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="w-16 h-16 text-white opacity-90"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M8 5v14l11-7z" />
-                </svg>
-              </div>
-            </div>
-            {/* Video Name */}
-            <h3 className="mt-1 text-blue-main text-lg font-bold text-center">
-              {item.name}
-            </h3>
-          </div>
-        ))}
-      </Slider>
+      {/* Custom Slider */}
+      <StyledWrapper>
+        <div
+          className="slider"
+          style={{
+            border: "0px solid green",
+            '--width': '370px',
+            '--height': '520px',
+            '--quantity': video.length
+          }}
+        >
+          <div className="list">
+            {video.map((item, index) => (
+              <div
+                key={item._id}
+                className="item"
+                style={{ '--position': index + 1 }}
+              >
+                <div onClick={() => setSelectedVideo(item.videoURL)} className="shadow-[0_0_15px_rgba(0,0,0,0.2)] relative w-[300px] h-[420px] p-4 m-4 shadow-md bg-white rounded-lg overflow-hidden cursor-pointer transition-transform duration-500 group">
+                  <div className="relative h-[370px]  rounded-lg overflow-hidden group-hover:scale-105 transition-transform duration-500">
+                    {/* Circular Border Overlay */}
+                    <div className="absolute inset-0 flex items-center justify-center z-29">
+                      <div style={{ borderColor: "white " }} className="w-[100px] h-[100px] border-[2px] rounded-full scale-0 group-hover:scale-100 transition-transform duration-700"></div>
+                    </div>
 
-      {/* Video Modal */}
-      {selectedVideo && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4">
-          <div className="relative w-full max-w-4xl bg-white rounded-lg overflow-hidden">
-            <button 
-              onClick={() => setSelectedVideo(null)} 
-              className="absolute top-2 right-2 text-black text-4xl cursor-pointer z-10"
-            >
-              &times;
-            </button>
-            <iframe
-              className="w-full h-[70vh] rounded-lg"
-              src={`https://www.youtube.com/embed/${selectedVideo.split('v=')[1]}`}
-              title="Video"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+                    {/* Thumbnail Image */}
+                    <img
+                      src={item.thumbnailURL}
+                      alt={item.name}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+
+                    {/* Play Icon Overlay */}
+                    <div className=" absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-10 z-10 space-y-2 top-2">
+                      {/* Play Icon */}
+                      <div className="flex items-center justify-center bg-white rounded-full w-14 h-14">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-6 h-6 text-[#db7e19]"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+
+                      <div>
+                        <p style={{ backgroundColor: "rgb(0 0 0 / 61%) ",height:"80px", color: "white", fontSize: "20px",padding:"0px 10px 0px 10px",borderRadius:"0px"}} className="capitalize text-center absolute font-semibold left-0 bottom-[-20px] w-full my-5 object-cover">
+                           {item.name}
+                        </p>
+                      </div>
+
+                    </div>
+
+                    {/* Video Title */}
+
+
+
+                  </div>
+
+                  {/* Video Name */}
+
+                </div>
+              </div>
+
+            ))}
           </div>
         </div>
-      )}
+      </StyledWrapper>
     </div>
   );
-}
+};
+
+const StyledWrapper = styled.div`
+  .card {
+  // border:1px solid red;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+    text-align: center;
+  }
+
+  .card p {
+    font-size: 14px;
+    color: white;
+  }
+
+  .slider {
+    width: 100%;
+    height: var(--height);
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10% 90%, transparent);
+    position: relative;
+  }
+  .slider .list {
+    display: flex;
+    width: 100%;
+    min-width: calc(var(--width) * var(--quantity));
+    position: relative;
+  }
+  .slider .list .item {
+    width: var(--width);
+    height: var(--height);
+    position: absolute;
+    left: 100%;
+    animation: autoRun 20s linear infinite;
+    transition: filter 0.5s;
+    animation-delay: calc((20s / var(--quantity)) * (var(--position) - 1) - 20s) !important;
+  }
+
+  .slider:hover .item {
+    animation-play-state: paused !important;
+    filter: grayscale(1);
+  }
+
+  .slider .item:hover {
+    filter: grayscale(0);
+  }
+
+  .slider[reverse="true"] .item {
+    animation: reversePlay 20s linear infinite;
+  }
+
+  @keyframes autoRun {
+    from {
+      left: 100%;
+    }
+    to {
+      left: calc(var(--width) * -1);
+    }
+  }
+
+  @keyframes reversePlay {
+    from {
+      left: calc(var(--width) * -1);
+    }
+    to {
+      left: 100%;
+    }
+  }
+`;
+
+export default VideoCards;

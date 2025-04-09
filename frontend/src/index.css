@@ -14,7 +14,11 @@
   }
 }
 
-
+@media (max-width: 425px) {
+  .webinar{
+    display: inline-block;
+  }
+}
 @media (max-width: 768px) {
   .course_checker{
     display: inline-block;
