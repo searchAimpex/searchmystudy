@@ -30,7 +30,7 @@ function AdminDashboard({component}) {
 
   useEffect(() => {
     if (isSuccess) {
-      navigate('/login');
+      navigate('/');
       toast.success('Logged Out Successfully');
     }
   }, [isSuccess, navigate]);
