@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import serbia from '../assets/serbia.png';
+import serbia from '../assets/Serbia.png';
 import france from '../assets/france.png';
 import Italy from '../assets/Italy.png';
 import Lithuania from '../assets/Lithuania.webp';
-import RUSSIA from '../assets/RUSSIA.png';
+import RUSSIA from '../assets/Russia.png';
 import poland from '../assets/poland.png';
 import Latvia from '../assets/Latvia.png';
-// import serbia from '../assets/serbia.png';
-// import serbia from '../assets/serbia.png';
-// import serbia from '../assets/serbia.png';
-// import serbia from '../assets/serbia.png';
-// import serbia from '../assets/serbia.png';
-// import serbia from '../assets/serbia.png';
+import Norway from '../assets/Norway.jpg';
+import germany from '../assets/germany.png';
+import Uzbekistan from '../assets/Uzbekistan.png';
+
+import Ireland from '../assets/Ireland.png';
+import UAE from '../assets/UAE.png';
+import Canada from '../assets/Canada.png';
 // import serbia from '../assets/serbia.png';
 // import serbia from '../assets/serbia.png';
 // import serbia from '../assets/serbia.png';
@@ -30,7 +31,7 @@ const Carousel = ({ interval = 5000 }) => {
       flags: [
         { src: serbia, name: 'Serbia' },
         { src: Latvia, name: 'Latvia' },
-        { src: poland, name: 'poland' },
+        { src: poland, name: 'Poland' },
         { src: RUSSIA, name: 'Russia' },
         { src: Lithuania, name: 'Lithuania' },
         { src: Italy, name: 'Italy' }
@@ -40,19 +41,19 @@ const Carousel = ({ interval = 5000 }) => {
       image: 'https://www.moksh16.com/assets/images/Desktop_02.webp',
       heading: "At low cost ranked University!",
       flags: [
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Latvia' },
-        { src: serbia, name: 'poland' },
-        { src: serbia, name: 'RUSSIA' },
-        { src: serbia, name: 'Lithuania' },
-        { src: serbia, name: 'Italy' }
+        { src: france, name: 'France' },
+        { src: germany, name: 'Germany' },
+        { src: Uzbekistan, name: 'poland' },
+        { src: Ireland, name: 'RUSSIA' },
+        { src: UAE, name: 'Lithuania' },
+        { src: Canada, name: 'Italy' }
       ]
     },
     {
       image: 'https://www.moksh16.com/assets/images/Desktop_01.webp',
       heading: "Honest Counselling | University | Selection | Admission",
       flags: [
-        { src: serbia, name: 'Serbia' },
+        { src: Norway, name: 'Norway' },
         { src: serbia, name: 'Serbia' },
         { src: serbia, name: 'Russia' },
         { src: serbia, name: 'Serbia' },
