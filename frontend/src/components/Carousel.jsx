@@ -28,6 +28,7 @@ const Carousel = ({ interval = 5000 }) => {
     {
       image: 'https://www.moksh16.com/assets/images/Desktop_01.webp',
       heading: "Study Medicine Abroad",
+      paragraph: "Top medical universities across the globe",
       flags: [
         { src: serbia, name: 'Serbia' },
         { src: Latvia, name: 'Latvia' },
@@ -39,26 +40,54 @@ const Carousel = ({ interval = 5000 }) => {
     },
     {
       image: 'https://www.moksh16.com/assets/images/Desktop_02.webp',
-      heading: "At low cost ranked University!",
+      heading: "At Low-Cost Ranked Universities!",
+      paragraph: "Affordable, globally ranked universities abroad",
       flags: [
         { src: france, name: 'France' },
         { src: germany, name: 'Germany' },
-        { src: Uzbekistan, name: 'poland' },
-        { src: Ireland, name: 'RUSSIA' },
-        { src: UAE, name: 'Lithuania' },
-        { src: Canada, name: 'Italy' }
+        { src: Uzbekistan, name: 'Uzbekistan' },
+        { src: Ireland, name: 'Ireland' },
+        { src: UAE, name: 'UAE' },
+        { src: Canada, name: 'Canada' }
       ]
     },
     {
       image: 'https://www.moksh16.com/assets/images/Desktop_01.webp',
       heading: "Honest Counselling | University | Selection | Admission",
+      paragraph: "Complete guidance from experts you trust",
       flags: [
         { src: Norway, name: 'Norway' },
         { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Serbia' },
-        { src: serbia, name: 'Russia' }
+        { src: RUSSIA, name: 'Russia' },
+        { src: poland, name: 'Poland' },
+        { src: Italy, name: 'Italy' },
+        { src: france, name: 'France' }
+      ]
+    },
+    {
+      image: 'https://www.moksh16.com/assets/images/Desktop_03.webp',
+      heading: "Pursue Your Dreams with Trusted Universities",
+      paragraph: "Start strong with trusted global universities",
+      flags: [
+        { src: france, name: 'France' },
+        { src: germany, name: 'Germany' },
+        { src: Uzbekistan, name: 'Uzbekistan' },
+        { src: Ireland, name: 'Ireland' },
+        { src: UAE, name: 'UAE' },
+        { src: Canada, name: 'Canada' }
+      ]
+    },
+    {
+      image: 'https://www.moksh16.com/assets/images/Desktop_04.webp',
+      heading: "Global Education, Affordable Tuition",
+      paragraph: "Low-cost quality education for everyone",
+      flags: [
+        { src: france, name: 'France' },
+        { src: germany, name: 'Germany' },
+        { src: Uzbekistan, name: 'Uzbekistan' },
+        { src: Ireland, name: 'Ireland' },
+        { src: UAE, name: 'UAE' },
+        { src: Canada, name: 'Canada' }
       ]
     }
   ];
@@ -88,9 +117,9 @@ const Carousel = ({ interval = 5000 }) => {
   };
 
   return (
-    <div className='relative w-full bg-blue-100 h-[480px] overflow-hidden'>
+    <div className='relative w-ful h-[480px] overflow-hidden'>
       {/* Carousel Section */}
-      <div className="relative w-full h-full overflow-hidden bg-gray-200">
+      <div className="relative w-full h-full overflow-hidden [@media(max-width:320px)]:h-[250px]">
         <div
           className="flex transition-transform duration-5000 ease-in-out"
           style={{
@@ -104,41 +133,45 @@ const Carousel = ({ interval = 5000 }) => {
               className="w-full flex-shrink-0 h-[480px] relative"
               style={{ width: `${100 / carousel.length}%` }}
             >
+              {/* Background Image */}
               <img
                 src={slide.image}
                 alt={`Slide ${index}`}
-                className={`w-full h-full object-cover ${currentIndex === index ? 'zoom-animation' : ''
-                  }`}
+                className={`
+    w-full
+    h-[470px]                      // default height
+    object-cover
+    ${currentIndex === index ? 'zoom-animation' : ''}
+    object-center
+    [@media(max-width:989px)]:object-left
+    [@media(max-width:320px)]:h-[250px]   // shorter height for small screens
+  `}
               />
 
-
-
-              {/* Heading + Flags Wrapper */}
-              <div className="absolute top-12 left-[500px] text-white w-[400px]">
-                <h2 className="text-2xl font-bold text-black mb-2">{slide.heading}</h2>
-                <div className="flex gap-2 flex-wrap">
-                  {slide.flags.map((flag, idx) => (
-                  <div className="group flex flex-col items-center m-2 cursor-pointer">
-                 <a href="" >
-                   <img
-                    src={flag.src}
-                    alt={flag.name}
-                    title={flag.name}
-               className="w-20 h-15 object-cover rounded-sm border transition-transform duration-300 group-hover:scale-110" 
-                  />
-                  <p className="text-lg text-center  text-black font-medium group-hover:text-red-500 transition-colors duration-300">
-                    {flag.name}
-                  </p>
-                 </a>
-                 </div>
-                
-                  ))}
-                </div>
-
-
+              {/* Content Box */}
+              <div className="absolute top-[10px] left-[900px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
+              <h2 className="text-2xl font-bold text-gold-main mb-2">{slide.heading}</h2>
+              <h4 className="text-xl font-semibold text-blue-main ">{slide.paragraph}</h4 >
+  
+              Flags
+              <div className="flex gap-2 flex-wrap">
+                {slide.flags.map((flag, idx) => (
+                  <div key={idx} className="group flex  my-4 flex-col items-center  mx-4 cursor-pointer">
+                    <a href="">
+                      <img
+                        src={flag.src}
+                        alt={flag.name}
+                        title={flag.name}
+                        className="w-[100px] h-[65px] shadow-xl object-cover rounded-sm border-[5px] border-gold-main transition-transform duration-300 group-hover:scale-110"
+                      />
+                      <p className="text-lg text-center text-black font-medium group-hover:text-red-500 transition-colors duration-300">
+                        {flag.name}
+                      </p>
+                    </a>
+                  </div>
+                ))}
               </div>
-
-
+            </div>
             </div>
           ))}
         </div>
@@ -150,59 +183,13 @@ const Carousel = ({ interval = 5000 }) => {
               key={index}
               onClick={() => goToSlide(index)}
               style={{ width: "10px", height: "10px", cursor: "pointer" }}
-              className={`rounded-full transition-colors duration-300 ${currentIndex === index ? 'bg-white' : 'bg-gray-400'
-                }`}
+              className={`rounded-full transition-colors duration-300 ${currentIndex === index ? 'bg-white' : 'bg-gray-400'}`}
             />
           ))}
         </div>
       </div>
-
-      {/* Form Section */}
-      <div className='absolute right-[50px] top-[45%] transform -translate-y-1/2 w-1/4 flex flex-col justify-center p-8 bg-white rounded-xl shadow-lg'>
-        <h2 className='text-2xl font-bold mb-3 text-blue-main text-center'>Join Our Program</h2>
-        <form onSubmit={handleSubmit}>
-          <div className='mb-4'>
-            <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="name">Name</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-            />
-          </div>
-          <div className='mb-3'>
-            <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-            />
-          </div>
-          <div className='mb-4'>
-            <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="phone">Phone</label>
-            <input
-              id="phone"
-              type="tel"
-              placeholder="Enter your phone number"
-              value={phoneNo}
-              onChange={(e) => setPhone(e.target.value)}
-              className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-            />
-          </div>
-          <button
-            type="submit"
-            className='w-full bg-blue-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300'
-          >
-            Submit
-          </button>
-        </form>
-      </div>
     </div>
+
   );
 };
 
