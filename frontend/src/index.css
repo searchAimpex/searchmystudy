@@ -4,6 +4,12 @@
 
 
 
+@media (min-width: 1020px) and (max-width: 1439px) {
+  .Counselor {
+    margin-left: 200px;
+  }
+}
+
 @media (max-width: 1024px) {
   .course_finder{
    width: 80%;
