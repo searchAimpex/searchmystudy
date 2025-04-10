@@ -102,8 +102,7 @@ const EnhancedTableToolbar = ({ numSelected, selectedRow, onDelete }) => {
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
     const [viewUpdateOpen, setViewUpdateOpen] = React.useState(false);
     const navigate = useNavigate()
-
-    const handleClickOpen = () => navigate('/admin/addprovince');
+    const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
 

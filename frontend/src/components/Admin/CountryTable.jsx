@@ -26,6 +26,7 @@ import StatusUpdatePop from './StatusUpdatePop.jsx';
 import UpdateCountryPop from './PopUps/UpdateCountryPop.jsx';
 import { Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import CreateBannerPop from './PopUps/CreateBannerPop.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -134,10 +135,13 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const navigate = useNavigate()
 
 
-    const handleClickOpen = () => navigate('/admin/addcountry');
+    function handleClickOpen (){
+        setOpen(true)
+        console.log(open)
+    }
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
-
+   
   
     const handleClose = () => {
         console.log("Closing dialog",open);  // Verify if this logs
@@ -216,8 +220,10 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 </div>
             ) : (
                 <Tooltip title="Create Country">
-                    <IconButton size="sm" variant="outlined" color="danger" onClick={handleClickOpen}>
-                        <AddIcon />
+                    <IconButton size="sm" variant="outlined" color="danger" >
+                    <AddIcon onClick={handleClickOpen} />
+                    <CreateCountryPop open={open} onClose={handleClose} />
+
                     </IconButton>
                 </Tooltip>
             )}
@@ -355,11 +361,11 @@ const CountryTable = () => {
                             key={service?._id}
                             onClick={(event) => handleClick(event, service?._id)}
                             role="checkbox"
-                            aria-checked={isSelected(service?._id)}
-                        >
+                            aria-checked={isSelected(service?._id)}>
                             <td><Checkbox checked={isSelected(service?._id)} /></td>
-                            <td>{service?._id}</td>
+                            {/* <td>{service?._id}</td> */}
                             <td>{service?.name}</td>
+                            <td>{service?.mbbsAbroad ? "YES" : "NO"}</td>
                             <td>{service?.mbbsAbroad ? "YES" : "NO"}</td>
                             <td>{service?.createdAt}</td>
                             <td>{service?.updatedAt}</td>

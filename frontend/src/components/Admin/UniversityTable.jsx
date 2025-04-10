@@ -141,7 +141,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
 
-    const handleClickOpen = () => navigate('/admin/adduniversity');
+    const handleClickOpen = () => setOpen(true);
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
     const handleClose = () => {
