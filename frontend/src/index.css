@@ -4,11 +4,10 @@
 
 
 
-@media (min-width: 1440px) {
-  .Counselor{
-   margin-left: 100px;
+@media (min-width: 1020px) and (max-width: 1439px) {
+  .Counselor {
+    margin-left: 200px;
   }
- 
 }
 
 @media (max-width: 1024px) {
