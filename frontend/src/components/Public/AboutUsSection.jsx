@@ -40,10 +40,11 @@ function AboutUsSection() {
 
         {/* Right: Image */}
         <motion.div
-          initial={{ x: 100, opacity: 0 }}
-          animate={inView ? { x: 0, opacity: 1 } : {}}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          className="w-full lg:w-1/2 flex justify-center mb-6 lg:mb-0"
+             initial={{ opacity: 0, y: 40 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             transition={{ duration: 0.6 }}
+          className=" lg:w-1/2 flex justify-center mb-6 lg:mb-0"
         >
           <img
             src={AboutHero}

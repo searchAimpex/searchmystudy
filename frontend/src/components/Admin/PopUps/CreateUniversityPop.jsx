@@ -84,7 +84,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
             };
         });
     };
-
     const handleChange = async (event) => {
         const { name, value, type, files } = event.target;
         const [section, index, field] = name.split('.');
@@ -94,7 +93,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
             if (file) {
                 let isValid = false;
     
-                // Validate based on the file type
                 switch (name) {
                     case 'bannerURL':
                         isValid = await validateImage(file, 1200, 500);
@@ -118,13 +116,12 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         ...prev,
                         [name]: false,
                     }));
-                    
-                    // Reset the corresponding form value if the image is invalid
+    
                     setFormValues((prevValues) => ({
                         ...prevValues,
                         [name]: '',
                     }));
-                    return; // Exit if the image is invalid
+                    return;
                 }
     
                 setImageValidations((prev) => ({
@@ -150,6 +147,12 @@ export default function CreateUniversityPop({ open, handleClose }) {
                 }
             }
         } else {
+            // Check for word limit on section descriptions
+            if (section === 'sections' && field === 'description') {
+                const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+                if (wordCount > 400) return; // limit to 400 words
+            }
+    
             if (field) {
                 setFormValues((prevValues) => ({
                     ...prevValues,
@@ -167,6 +170,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
             }
         }
     };
+    
 
     const uploadImage = async (file) => {
         const storageRef = ref(storage, `universities/${file.name}`);
@@ -269,16 +273,18 @@ export default function CreateUniversityPop({ open, handleClose }) {
                         label="Logo"
                     />
                     <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
-
                     <TextEditor
-                        id="description"
-                        name="description"
-                        label="Description"
-                        variant="standard"
-                        value={formValues.description}
-                        onChange={handleChange}
-                        className="mb-2"
-                    />
+    id="description"
+    name="description"
+    label="Description"
+    variant="standard"
+    value={formValues.description}
+    onChange={handleChange}
+    className="mb-2"
+  />
+  <p className="text-sm text-gray-500 text-right">
+    {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
+  </p>
 
                     {/* Sections */}
                     {formValues.sections.map((section, index) => (

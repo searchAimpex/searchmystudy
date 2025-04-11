@@ -78,7 +78,7 @@ const Carousel = ({ interval = 5000 }) => {
       ]
     },
     {
-      image: 'https://www.moksh16.com/assets/images/Desktop_04.webp',
+      image: 'https://www.moksh16.com/assets/images/Desktop_03.webp',
       heading: "Global Education, Affordable Tuition",
       paragraph: "Low-cost quality education for everyone",
       flags: [
@@ -149,7 +149,7 @@ const Carousel = ({ interval = 5000 }) => {
               />
 
               {/* Content Box */}
-              <div className="absolute top-[10px] left-[900px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
+              <div className="absolute top-[10px] left-[750px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
               <h2 className="text-2xl font-bold text-gold-main mb-2">{slide.heading}</h2>
               <h4 className="text-xl font-semibold text-blue-main ">{slide.paragraph}</h4 >
   
@@ -162,7 +162,7 @@ const Carousel = ({ interval = 5000 }) => {
                         src={flag.src}
                         alt={flag.name}
                         title={flag.name}
-                        className="w-[100px] h-[65px] shadow-xl object-cover rounded-sm border-[5px] border-gold-main transition-transform duration-300 group-hover:scale-110"
+                        className="w-[80px] h-[55px] shadow-xl object-cover rounded-sm border-[5px] border-gold-main transition-transform duration-300 group-hover:scale-110"
                       />
                       <p className="text-lg text-center text-black font-medium group-hover:text-red-500 transition-colors duration-300">
                         {flag.name}
@@ -175,18 +175,19 @@ const Carousel = ({ interval = 5000 }) => {
             </div>
           ))}
         </div>
+   {/* Dots */}
+   <div className="absolute bottom-10 sm:bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex gap-1 sm:gap-2">
+  {carousel.map((_, index) => (
+    <div
+      key={index}
+      onClick={() => goToSlide(index)}
+      className={`w-1.5 h-1.5 sm:w-2 sm:h-2 md:w-2.5 md:h-2.5 lg:w-3 lg:h-3 rounded-full cursor-pointer transition-colors duration-300 ${
+        currentIndex === index ? 'bg-white' : 'bg-gray-400'
+      }`}
+    />
+  ))}
+</div>
 
-        {/* Dots */}
-        <div className="absolute bottom-[65px] left-1/2 transform -translate-x-1/2 flex gap-2">
-          {carousel.map((_, index) => (
-            <div
-              key={index}
-              onClick={() => goToSlide(index)}
-              style={{ width: "10px", height: "10px", cursor: "pointer" }}
-              className={`rounded-full transition-colors duration-300 ${currentIndex === index ? 'bg-white' : 'bg-gray-400'}`}
-            />
-          ))}
-        </div>
       </div>
     </div>
 

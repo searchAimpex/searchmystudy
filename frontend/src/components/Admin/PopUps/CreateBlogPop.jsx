@@ -38,18 +38,27 @@ const CreateBlogPop = ({ open, handleClose }) => {
     thumbnail: { progress: 0, preview: null, name: '', loading: false }
   });
 
+  const [wordCount, setWordCount] = useState(0);
+  const maxWords = 400;
+
   const [CreateBlog, { isSuccess }] = useCreateBlogMutation();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Blog has been created");
+    }
+  }, [isSuccess]);
 
   const handleTextChange = (e) => {
     const { name, value } = e.target;
     setFormValues(prev => ({ ...prev, [name]: value }));
   };
-  useEffect(()=>{
-    if(isSuccess){
-      toast.success("Blog has been created")
-    }
-  },[])
+
+  const countWords = (htmlString) => {
+    const plainText = htmlString.replace(/<[^>]+>/g, '').trim(); // Remove HTML tags
+    return plainText === '' ? 0 : plainText.split(/\s+/).length;
+  };
 
   const handleFileChange = async (event, type) => {
     const file = event.target.files[0];
@@ -62,7 +71,7 @@ const CreateBlogPop = ({ open, handleClose }) => {
 
     try {
       const previewURL = URL.createObjectURL(file);
-      
+
       const progressInterval = setInterval(() => {
         setUploads(prev => ({
           ...prev,
@@ -108,15 +117,17 @@ const CreateBlogPop = ({ open, handleClose }) => {
         content: '',
         bannerURL: '',
         thumbnailURL: '',
-      })
+      });
       setUploads({
         banner: { progress: 0, preview: null, name: '', loading: false },
         thumbnail: { progress: 0, preview: null, name: '', loading: false },
-      })
+      });
+      setWordCount(0);
     } catch (error) {
       toast.error('Failed to create blog');
     }
   };
+
   const FileUploadCard = ({ type, label }) => (
     <Card>
       <CardContent>
@@ -133,26 +144,25 @@ const CreateBlogPop = ({ open, handleClose }) => {
               display: uploads[type].preview ? 'none' : 'block',
               width: '100%',
               cursor: 'pointer',
-              padding: '10px 0', // Adjust padding for better visibility of the input
+              padding: '10px 0',
             }}
           />
         </Box>
-  
-        {/* Upload Icon and Instructions below Input */}
+
         {!uploads[type].preview && (
           <Box
             sx={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              mt: 2, // Add margin to push it below the input field
+              mt: 2,
             }}
           >
             <Upload sx={{ mr: 1 }} />
             <span>{uploads[type].loading ? 'Uploading...' : 'Choose file or drag and drop'}</span>
           </Box>
         )}
-  
+
         {(uploads[type].progress > 0 || uploads[type].preview) && (
           <Box sx={{ mt: 2 }}>
             {uploads[type].preview ? (
@@ -205,7 +215,7 @@ const CreateBlogPop = ({ open, handleClose }) => {
       </CardContent>
     </Card>
   );
-  
+
   return (
     <Dialog 
       open={open} 
@@ -256,8 +266,19 @@ const CreateBlogPop = ({ open, handleClose }) => {
             <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, height: '100%' }}>
               <TextEditor 
                 popupData={formValues.content} 
-                setPopUpData={setFormValues}
+                setPopUpData={(value) => {
+                  const wc = countWords(value);
+                  if (wc <= maxWords) {
+                    setFormValues(prev => ({ ...prev, content: value }));
+                    setWordCount(wc);
+                  } else {
+                    toast.warn(`Word limit exceeded! Max ${maxWords} words allowed.`);
+                  }
+                }}
               />
+            </Box>
+            <Box sx={{ textAlign: 'right', mt: 1, fontSize: '0.9rem' }}>
+              {wordCount} / {maxWords} words
             </Box>
           </Box>
         </Box>
@@ -268,10 +289,14 @@ const CreateBlogPop = ({ open, handleClose }) => {
         p: 2,
         gap: 1 
       }}>
-        <Button variant="outlined" onClick={()=>handleClose()}>
+        <Button variant="outlined" onClick={handleClose}>
           Cancel
         </Button>
-        <Button variant="contained" onClick={onSubmit}>
+        <Button 
+          variant="contained" 
+          onClick={onSubmit}
+          disabled={wordCount > maxWords}
+        >
           Create Blog
         </Button>
       </DialogActions>

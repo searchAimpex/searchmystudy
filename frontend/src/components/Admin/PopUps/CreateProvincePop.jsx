@@ -55,61 +55,98 @@ export default function CreateProvincePop({ open, handleClose }) {
 
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-
+  
     if (type === 'file') {
       const file = files[0];
-      if (file) {
-        try {
-          if (name === 'bannerURL') {
-            await validateImageDimensions(file, { width: 1500, height: 500 });
-            const previewURL = URL.createObjectURL(file);
-            setBannerPreview(previewURL);
-            const imageURL = await uploadImage(file);
-            setFormValues(prev => ({ ...prev, bannerURL: imageURL }));
-          } 
-          else if (name === 'heroURL') {
-            await validateImageDimensions(file, { width: 350, height: 400 });
-            const previewURL = URL.createObjectURL(file);
-            setHeroPreview(previewURL);
-            const imageURL = await uploadImage(file);
-            setFormValues(prev => ({ ...prev, heroURL: imageURL }));
-          }
-          else if (name.startsWith('sectionImage')) {
-            const sectionIndex = parseInt(name.split('-')[1]);
-            const previewURL = URL.createObjectURL(file);
-            setSectionPreviews(prev => {
-              const newPreviews = [...prev];
-              newPreviews[sectionIndex] = previewURL;
-              return newPreviews;
-            });
-            const imageURL = await uploadImage(file);
-            setFormValues(prev => {
-              const newSections = [...prev.sections];
-              newSections[sectionIndex] = {
-                ...newSections[sectionIndex],
-                url: imageURL
-              };
-              return { ...prev, sections: newSections };
-            });
-          }
-        } catch (error) {
-          toast.error(error.message);
+      if (!file) return;
+  
+      // Sections Image Upload (e.g., sections.0.url)
+      if (name.includes('sections') && name.includes('url')) {
+        const isValid = await validateImage(file, 300, 300); // Minimum size for section image
+        if (!isValid) {
+          setFormErrors((prev) => ({
+            ...prev,
+            [name]: `Image must be at least 300px x 300px`,
+          }));
+          return;
         }
+  
+        setFormErrors((prev) => ({ ...prev, [name]: '' }));
+  
+        const imageURL = await uploadImage(file);
+        const index = parseInt(name.split('.')[1]);
+        const updatedSections = [...formValues.sections];
+        updatedSections[index].url = imageURL;
+  
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          sections: updatedSections,
+        }));
+  
+        const updatedPreviews = [...sectionPreviews];
+        updatedPreviews[index] = URL.createObjectURL(file);
+        setSectionPreviews(updatedPreviews);
+  
+      } else {
+        // Handle Banner & Flag Uploads
+        const imageURL = await uploadImage(file);
+  
+        if (name === 'bannerURL') {
+          const isValid = await validateImage(file, 1500, 500);
+          if (!isValid) {
+            setFormErrors((prev) => ({
+              ...prev,
+              [name]: `Banner must be at least 1500px x 500px`,
+            }));
+            return;
+          }
+          setBannerPreview(URL.createObjectURL(file));
+        }
+  
+        if (name === 'flagURL') {
+          const isValid = await validateImage(file, 200, 200);
+          if (!isValid) {
+            setFormErrors((prev) => ({
+              ...prev,
+              [name]: `Flag must be at least 200px x 200px`,
+            }));
+            return;
+          }
+          setFlagPreview(URL.createObjectURL(file));
+        }
+  
+        setFormErrors((prev) => ({ ...prev, [name]: '' }));
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: imageURL,
+        }));
       }
-    } else if (name.startsWith('section-')) {
-      const [, index, field] = name.split('-');
-      setFormValues(prev => {
-        const newSections = [...prev.sections];
-        newSections[parseInt(index)] = {
-          ...newSections[parseInt(index)],
-          [field]: value
-        };
-        return { ...prev, sections: newSections };
-      });
+  
+    } else if (name.includes('sections') || name.includes('faq')) {
+      const [arrayName, index, field] = name.split('.');
+      const updatedArray = [...formValues[arrayName]];
+      updatedArray[index][field] = value;
+  
+      // Limit section description to 400 words
+      if (arrayName === 'sections' && field === 'description') {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        if (wordCount > 400) return;
+      }
+  
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [arrayName]: updatedArray,
+      }));
     } else {
-      setFormValues(prev => ({ ...prev, [name]: value }));
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [name]: value,
+      }));
     }
+  
+    checkFormValidity();
   };
+  
 
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `provinces/${Date.now()}-${file.name}`);
@@ -215,14 +252,19 @@ export default function CreateProvincePop({ open, handleClose }) {
                     onChange={handleChange}
                     fullWidth
                   />
-                  <TextEditor
-                    name={`section-${index}-description`}
-                    label="Description"
-                    variant="standard"
-                    value={section.description}
-                    onChange={handleChange}
-                    fullWidth
-                  />
+                                <TextEditor
+    id="description"
+    name="description"
+    label="Description"
+    variant="standard"
+    value={formValues.description}
+    onChange={handleChange}
+    className="mb-2"
+  />
+  <p className="text-sm text-gray-500 text-right">
+    {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
+  </p>
+
                   <TextField
                     name={`sectionImage-${index}`}
                     label="Image URL"

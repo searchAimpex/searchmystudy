@@ -57,60 +57,100 @@ function CreateCountryPop({ open, onClose }) {
       };
     });
   };
-
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-
+  
     if (type === 'file') {
       const file = files[0];
-      if (file) {
-        if (name.includes('sections') && name.includes('url')) {
-          // Handling the file for `url` field in sections
-          const isValid = await validateImage(file, 300, 300); // Example image size for section URL image
+      if (!file) return;
+  
+      // Sections Image Upload (e.g., sections.0.url)
+      if (name.includes('sections') && name.includes('url')) {
+        const isValid = await validateImage(file, 900, 500); // Minimum size for section image
+        if (!isValid) {
+          setFormErrors((prev) => ({
+            ...prev,
+            [name]: `Image must be at least 900px x 500px`,
+          }));
+          return;
+        }
+  
+        setFormErrors((prev) => ({ ...prev, [name]: '' }));
+  
+        const imageURL = await uploadImage(file);
+        const index = parseInt(name.split('.')[1]);
+        const updatedSections = [...formValues.sections];
+        updatedSections[index].url = imageURL;
+  
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          sections: updatedSections,
+        }));
+  
+        const updatedPreviews = [...sectionPreviews];
+        updatedPreviews[index] = URL.createObjectURL(file);
+        setSectionPreviews(updatedPreviews);
+  
+      } else {
+        // Handle Banner & Flag Uploads
+        const imageURL = await uploadImage(file);
+  
+        if (name === 'bannerURL') {
+          const isValid = await validateImage(file, 1500, 500);
           if (!isValid) {
             setFormErrors((prev) => ({
               ...prev,
-              [name]: `Image must be at least 300px x 300px`,
+              [name]: `Banner must be at least 1500px x 500px`,
             }));
-          } else {
-            setFormErrors((prev) => ({ ...prev, [name]: '' }));
-            const imageURL = await uploadImage(file);
-            const index = parseInt(name.split('.')[1]);
-            const updatedSections = [...formValues.sections];
-            updatedSections[index].url = imageURL;
-
-            setFormValues({ ...formValues, sections: updatedSections });
-
-            // Set image preview
-            const updatedPreviews = [...sectionPreviews];
-            updatedPreviews[index] = URL.createObjectURL(file);
-            setSectionPreviews(updatedPreviews);
+            return;
           }
-        } else {
-          // Handling other file inputs (like banner and flag)
-          const imageURL = await uploadImage(file);
-          if (name === 'bannerURL') {
-            setBannerPreview(URL.createObjectURL(file));
-            setFormValues((prevValues) => ({ ...prevValues, [name]: imageURL }));
-          } else if (name === 'flagURL') {
-            setFlagPreview(URL.createObjectURL(file));
-            setFormValues((prevValues) => ({ ...prevValues, [name]: imageURL }));
-          }
+          setBannerPreview(URL.createObjectURL(file));
         }
+  
+        if (name === 'flagURL') {
+          const isValid = await validateImage(file, 200, 200);
+          if (!isValid) {
+            setFormErrors((prev) => ({
+              ...prev,
+              [name]: `Flag must be at least 200px x 200px`,
+            }));
+            return;
+          }
+          setFlagPreview(URL.createObjectURL(file));
+        }
+  
+        setFormErrors((prev) => ({ ...prev, [name]: '' }));
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: imageURL,
+        }));
       }
+  
     } else if (name.includes('sections') || name.includes('faq')) {
-      const [sectionOrFaq, index, field] = name.split('.');
-      const updatedArray = [...formValues[sectionOrFaq]];
+      const [arrayName, index, field] = name.split('.');
+      const updatedArray = [...formValues[arrayName]];
       updatedArray[index][field] = value;
-      setFormValues({ ...formValues, [sectionOrFaq]: updatedArray });
+  
+      // Limit section description to 400 words
+      if (arrayName === 'sections' && field === 'description') {
+        const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
+        if (wordCount > 400) return;
+      }
+  
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        [arrayName]: updatedArray,
+      }));
     } else {
       setFormValues((prevValues) => ({
         ...prevValues,
         [name]: value,
       }));
     }
+  
     checkFormValidity();
   };
+  
 
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `countries/${file.name}`);
@@ -246,15 +286,19 @@ function CreateCountryPop({ open, onClose }) {
             className="mb-2"
             label="Bullet Point"
           />
-          <TextEditor
-            id="description"
-            name="description"
-            label="Description"
-            variant="standard"
-            value={formValues.description}
-            onChange={handleChange}
-            className="mb-2"
-          />
+                             <TextEditor
+             id="description"
+             name="description"
+             label="Description"
+             variant="standard"
+             value={formValues.description}
+             onChange={handleChange}
+             className="mb-2"
+           />
+           <p className="text-sm text-gray-500 text-right">
+             {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
+           </p>
+         
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (
@@ -263,50 +307,70 @@ function CreateCountryPop({ open, onClose }) {
                 <Typography>Section {index + 1}</Typography>
               </AccordionSummary>
               <AccordionDetails className="flex flex-col gap-6">
-                <TextField
-                  id={`sectionTitle${index}`}
-                  name={`sections.${index}.title`}
-                  label="Title"
-                  variant="standard"
-                  value={section.title}
-                  onChange={handleChange}
-                  className="mb-2"
-                />
-                <TextEditor
-                  id={`sectionDescription${index}`}
-                  name={`sections.${index}.description`}
-                  label="Description"
-                  variant="standard"
-                  value={section.description}
-                  onChange={handleChange}
-                  className="mb-2"
-                />
-                <TextField
-                  id={`sectionURL${index}`}
-                  name={`sections.${index}.url`}
-                  type="file"
-                  variant="standard"
-                  onChange={handleChange}
-                  label="Section Image URL"
-                  className="mb-2"
-                  InputLabelProps={{ shrink: true }}
-                />
-                {sectionPreviews[index] && (
-                  <img
-                    src={sectionPreviews[index]}
-                    alt={`Section ${index + 1} Image Preview`}
-                    className="mt-2 w-full h-40 object-cover rounded"
-                  />
-                )}
-                <Button
-                  onClick={() => removeSection(index)}
-                  color="error"
-                  className="mt-2"
-                  variant="outlined"
-                >
-                  Remove Section
-                </Button>
-              </AccordionDetails>
+  <TextField
+    id={`sectionTitle${index}`}
+    name={`sections.${index}.title`}
+    label="Title"
+    variant="standard"
+    value={section.title}
+    onChange={handleChange}
+    className="mb-2"
+  />
+
+  <TextEditor
+    id={`sectionDescription${index}`}
+    name={`sections.${index}.description`}
+    label="Description"
+    value={section.description}
+    onChange={(val) =>
+      handleChange({
+        target: {
+          name: `sections.${index}.description`,
+          value: val,
+        },
+      })
+    }
+    className="mb-2"
+  />
+
+  <TextField
+    id={`sectionURL${index}`}
+    name={`sections.${index}.url`}
+    type="file"
+    variant="standard"
+    onChange={(e) => handleChange(e, index, "sectionImage")}
+    label="Section Image URL"
+    className="mb-2"
+    InputLabelProps={{ shrink: true }}
+  />
+
+  {sectionPreviews[index] && (
+    <>
+      <img
+        src={sectionPreviews[index]}
+        onLoad={(e) =>
+          console.log(
+            `Section ${index + 1} image size: ${e.target.naturalWidth}x${e.target.naturalHeight}`
+          )
+        }
+        style={{ width: "900px", height: "500px", objectFit: "cover" }}
+        alt={`Section ${index + 1} Image Preview`}
+        className="mt-2 rounded"
+      />
+      <p style={{ color: "red" }}>Image size must be 900px x 500px</p>
+    </>
+  )}
+
+  <Button
+    onClick={() => removeSection(index)}
+    color="error"
+    className="mt-2"
+    variant="outlined"
+  >
+    Remove Section
+  </Button>
+</AccordionDetails>
+
             </Accordion>
           ))}
           <Button

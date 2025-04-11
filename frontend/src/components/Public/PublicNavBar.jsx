@@ -399,7 +399,7 @@ export default function PublicNavBar() {
 
                     {/* Login Button */}
                     <div className="">
-                        <button onClick={() => navigate('/login')} className="px-3 py-1 text-sm text-white font-bold rounded-lg bg-blue-500 hover:bg-blue-600 transition">
+                        <button onClick={() => navigate('/Signin')} className="px-3 py-1 text-sm text-white font-bold rounded-lg bg-blue-500 hover:bg-blue-600 transition">
                             LOGIN
                         </button>
                     </div>

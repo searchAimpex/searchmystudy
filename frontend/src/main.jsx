@@ -55,12 +55,17 @@ import CountryAdd from './components/Admin/CountryAdd.jsx';
 import ProvinceAdd from './components/Admin/ProvinceAdd.jsx';
 import AddUniversity from './components/Admin/AddUniversity.jsx';
 import AddUniversitys from './components/Admin/AddUniversity.jsx';
+import Signin from './screens/Signin.jsx';
+import SignUp from './screens/SignUp.jsx';
+
+// import UserLogin from './screens/Signin.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
-
+      <Route path='/SignUp' element={<SignUp/>} />
       <Route path='/login' element={<LoginScreen />} />
+      <Route path = '/Signin' element={< Signin />} />
       <Route  element={<PublicRoutes />} >
         <Route index={true} path='/' element={<HomeScreen />} />
         <Route path =  '/services'  element={<ServiceScreen />} />
@@ -85,6 +90,9 @@ const router = createBrowserRouter(
         <Route path = '/pharmacyindia' element =  {<PharmacyIndia />} />
         <Route path = '/bvScindia' element= {< BvScIndia/>}/>
         <Route path = '/videos' element = {<Videos />}/>
+     
+
+
       </Route>     
       {/* <Route path='/register' element={<RegisterScreen />} /> */}
       <Route path='' element={<PrivateRoute />}>
@@ -105,7 +113,6 @@ const router = createBrowserRouter(
         <Route path = '/admin/addcountry' element={< CountryAdd />} />
         <Route path = '/admin/addprovince' element={< ProvinceAdd />} />
         <Route path = '/admin/adduniversity' element={< AddUniversitys />} />
-
 
 
 

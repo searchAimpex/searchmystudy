@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+ @media (max-width:320px){
+  .course_finder{
+    bottom: 190px;
+    /* box-shadow: 10px 10px 10px black; */
+    background-color: #fdfdfd;
+  }
+} 
 
 
 @media (min-width: 1020px) and (max-width: 1439px) {
@@ -12,7 +19,8 @@
 
 @media (max-width: 1024px) {
   .course_finder{
-   width: 80%;
+   width: 95%;
+   
   }
   .course{
 

@@ -47,9 +47,12 @@ export default function CourseFinder() {
   };
 
   return (
-    <div className='rounded-3xl relative bottom-[70px] bg-white m-auto course_finder my-[20px] w-[80%] shadow-[0_0_12px_#0004]
+    <div className='rounded-3xl relative bottom-[50px] pb-5 bg-white m-auto course_finder my-[20px] w-[80%] shadow-[0_0_12px_#0004]
 ' style={{ border: "0px solid black" }}>
-      <div className='flex flex-col p-5 justify-center items-center'>
+      <div 
+
+      
+      className='flex flex-col p-5 justify-center items-center'>
         <div className="flex flex-wrap  gap-x-2 gap-y-1 ">
           <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main">Find</span>
           <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gold-main">Your</span>
@@ -60,7 +63,7 @@ export default function CourseFinder() {
           <p className="text-lg text-left sm:text-base md:text-lg lg:text-xl font-semibold text-gray-500  ">
             Discover dedicated professionals ready to support you on your journey</p>
         </div>
-        <div className='course_checker flex flex-row mt-5 pb-3 items-center justify-center w-full gap-10'>
+        <div className='course_checker flex flex-row mt-5  items-center justify-center w-full gap-10'>
           <div>
             <select name="category" onChange={handleChange} className='course p-2 w-[200px] border border-gray-400  rounded-lg'
             >
