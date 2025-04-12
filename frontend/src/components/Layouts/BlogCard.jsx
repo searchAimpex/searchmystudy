@@ -5,33 +5,46 @@ const BlogCard = ({ blog }) => {
     const navigate = useNavigate();
 
     return (
-        <div className="p-8 border shadow-lg rounded-lg flex flex-col">
+        <div onClick={() => navigate(`/blog/${blog._id}`)} className="p-4 cursor-pointer border  shadow-lg rounded-lg flex flex-col">
             <div className="w-full rounded-lg overflow-hidden">
-                <img
-                    src={blog?.thumbnailURL}
-                    alt={blog?.title}
-                    className="w-full h-[250px] object-cover rounded-lg"
-                />
+                <div className="w-full h-[250px] relative overflow-hidden rounded-lg">
+                    <img
+                        src={blog?.thumbnailURL}
+                        alt={blog?.title}
+                        className="w-full h-full object-cover rounded-lg"
+                    />
+                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden rounded-lg">
+                        <div className="shine-bar"></div>
+                    </div>
+                </div>
+
             </div>
-            <div className="p-5 flex flex-col justify-between space-y-6 flex-grow">
+            <div className=" flex flex-col justify-between space-y-6 flex-grow">
                 <div className="flex-grow">
-                    <h2 className="font-bold text-xl">{blog?.title}</h2>
-                    <div
-                        dangerouslySetInnerHTML={{
-                            __html: blog?.content?.slice(0, 200) + (blog?.content?.length > 200 ? "..." : "")
-                        }}
-                        className="text-gray-500"
-                    ></div>
+                    <p >
+                        {blog?.title?.split(" ").slice(0, 50).join(" ")}
+                        {blog?.title?.split(" ").length > 50 && "..."}
+
+
+                        {(blog?.title?.split(" ").length > 50 || blog?.content?.split(" ").length > 100) && (
+                            <div className="font-semibold">
+                                <button
+                                    onClick={() => navigate(`/blog/${blog._id}`)}
+                                    className='mx-[-18px]'
+                                    style={{ backgroundColor: 'transparent', color: '#db7e19 ' }}
+                                >
+                                    Read More
+                                </button>
+                            </div>
+                        )}
+                    </p>
+
+
                 </div>
-                <div className="flex flex-row justify-between items-center font-bold">
-                    <button
-                        onClick={() => navigate(`/blog/${blog._id}`)}
-                        className="text-white font-bold bg-blue-main p-2 rounded-md"
-                    >
-                        Read More
-                    </button>
-                </div>
+
+
             </div>
+
         </div>
     );
 };

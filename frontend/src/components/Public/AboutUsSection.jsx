@@ -46,11 +46,15 @@ function AboutUsSection() {
              transition={{ duration: 0.6 }}
           className=" lg:w-1/2 flex justify-center mb-6 lg:mb-0"
         >
-          <img
-            src={AboutHero}
-            alt="About Us"
-            className="w-full max-w-md md:max-w-lg lg:max-w-full object-contain"
-          />
+         <div className="relative w-full max-w-md md:max-w-lg lg:max-w-full">
+  <img
+    src={AboutHero}
+    alt="About Us"
+    className="w-full object-contain"
+  />
+  <div className="shine-barr absolute top-0 left-0 w-full h-full"></div>
+</div>
+
         </motion.div>
       </div>
     </div>

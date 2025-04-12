@@ -72,14 +72,14 @@ const PharmacyPage = () => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 opacity-70" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-8 space-y-6">
-          <Typography variant="h1" className="text-4xl md:text-5xl font-bold text-shadow-lg">Pharmacy Courses</Typography>
+          <Typography variant="p" className="text-4xl md:text-5xl font-bold text-shadow-lg">Pharmacy Courses</Typography>
           <Typography variant="h6" className="text-lg md:text-xl font-light text-shadow-lg">Explore our comprehensive pharmacy programs and career paths.</Typography>
           <Button variant="contained" color="secondary" size="large" className="hover:bg-secondary-dark transition-colors">Explore Programs</Button>
         </div>
       </motion.div>
 
       {/* Content Section */}
-      <Grid container spacing={6} className="mb-12">
+      <Grid spacing={6} className="mb-12">
         <Grid item xs={12} md={8}>
           <motion.div
             initial="hidden"
@@ -95,7 +95,6 @@ const PharmacyPage = () => {
               The main objective of pursuing a pharmacy degree is to understand the process behind drug manufacturing and the benefits of pharmaceuticals for human welfare.
             </Typography>
 
-            {/* Detailed Course Information */}
             {courses.map((course, index) => (
               <motion.div
                 key={index}
@@ -103,15 +102,15 @@ const PharmacyPage = () => {
                 whileInView="visible"
                 variants={sectionVariants}
                 transition={{ duration: 0.8 }}
-                className="mb-12"
+                className="my-5"
               >
-                <Typography variant="h3" className="text-2xl md:text-3xl font-bold mb-6 text-blue-900">{course.title}</Typography>
+                <Typography variant="h4" className="text-2xl md:text-3xl font-bold mb-6 text-blue-900" style={{ marginBottom: "5px" }}>{course.title}</Typography>
                 <Grid container spacing={6} className="mb-8">
                   <Grid item xs={12} md={5}>
                     <img
                       src={course.image}
                       alt={course.title}
-                      className="object-cover w-full h-48 md:h-60 lg:h-72 rounded-lg shadow-lg"
+                      className="object-cover w-full h-48 sm:h-56 md:h-64 lg:h-72 xl:h-[230px] rounded-lg shadow-lg"
                     />
                   </Grid>
                   <Grid item xs={12} md={7}>

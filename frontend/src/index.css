@@ -2,6 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes shinee {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(25deg);
+  }
+}
+
+.shine-barr {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 105%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 40%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 60%
+  );
+  animation: shine 3s infinite linear;
+  pointer-events: none;
+  z-index: 10;
+}
+
+  
+  @keyframes shine {
+    0% {
+      transform: translateX(-100%) translateY(-100%) rotate(25deg);
+    }
+    100% {
+      transform: translateX(100%) translateY(100%) rotate(25deg);
+    }
+  }
+
+
+  .shine-bar {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.3) 50%,
+      rgba(255, 255, 255, 0) 60%
+    );
+    animation: shine 3s infinite linear;
+    pointer-events: none;
+  }
+
  @media (max-width:320px){
   .course_finder{
     bottom: 190px;

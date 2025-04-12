@@ -94,20 +94,21 @@ const BamsIndia = () => {
           marginBottom: "3rem",
           borderRadius: "15px",
           position: "relative",
-          boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)",
+          boxShadow: "0 6px 12px rgba(0, 0, 0, 0.12)",
         }}
       >
-        <Typography
+        {/* <Typography
           variant="h2"
           component="h1"
           style={{
             fontWeight: "bold",
             fontSize: "2.5rem",
+            color:"red",
             textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)",
           }}
         >
           Get Guidance From The Experts Who Will Lead You To Your Dreams
-        </Typography>
+        </Typography> */}
       </motion.div>
 
       {/* Stepper and Content Layout */}
@@ -120,31 +121,49 @@ const BamsIndia = () => {
             style={{
               width: "100%",
               backgroundColor: "transparent",
-              padding: "0 1rem",
+              paddingLeft: "0.5rem",
+              gap: "0.75rem",
             }}
           >
-            {sections.map((section, index) => (
-              <Step key={index} onClick={() => handleStepClick(index)}>
-                <StepLabel>
-                  <motion.div
-                    initial={{ scale: 1 }}
-                    animate={activeStep === index ? { scale: 1.1, transition: { duration: 0.3 } } : { scale: 1 }}
-                    style={{ cursor: "pointer" }}
+            {sections.map((section, index) => {
+              const isActive = activeStep === index;
+
+              return (
+                <Step key={index} onClick={() => handleStepClick(index)}>
+                  <StepLabel
+                    style={{
+                      padding: "8px 12px",
+                      borderRadius: "10px",
+                      backgroundColor: isActive ? "#e6f0ff" : "transparent",
+                      borderLeft: isActive ? "4px solid #007bff" : "4px solid transparent",
+                      boxShadow: isActive
+                        ? "0 4px 12px rgba(0, 123, 255, 0.2)"
+                        : "0 2px 6px rgba(0, 0, 0, 0.05)",
+                      transition: "all 0.3s ease-in-out",
+                    }}
                   >
-                    <Typography
-                      variant="body1"
-                      style={{
-                        fontWeight: activeStep === index ? "bold" : "normal",
-                        color: activeStep === index ? "#007bff" : "#555",
-                      }}
+                    <motion.div
+                      initial={{ scale: 1 }}
+                      animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                      style={{ cursor: "pointer" }}
                     >
-                      {section}
-                    </Typography>
-                  </motion.div>
-                </StepLabel>
-              </Step>
-            ))}
+                      <Typography
+                        variant="body1"
+                        style={{
+                          fontWeight: isActive ? "bold" : "normal",
+                          color: isActive ? "#007bff" : "#333",
+                        }}
+                      >
+                        {section}
+                      </Typography>
+                    </motion.div>
+                  </StepLabel>
+                </Step>
+              );
+            })}
           </Stepper>
+
         </Grid>
 
         {/* Main Content */}
@@ -157,7 +176,7 @@ const BamsIndia = () => {
               variants={variants}
               style={{ marginBottom: "3rem" }}
             >
-              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}>
+              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden" }}>
                 <CardHeader
                   title="About BAMS"
                   titleTypographyProps={{ style: { color: "#007bff", fontWeight: "bold" } }}
@@ -171,7 +190,7 @@ const BamsIndia = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={controls}
                         variants={variants}
-                        style={{ width: "100%", borderRadius: "15px", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}
+                        style={{ border: "0px solid black", width: "450px", borderRadius: "15px" }}
                       />
                     </Grid>
                     <Grid item xs={12} md={7}>
@@ -183,12 +202,12 @@ const BamsIndia = () => {
                       >
                         <Typography variant="body1" paragraph style={{ color: "#333", fontSize: "1rem" }}>
                           After completing Class 12, candidates who want to pursue a career in medicine can enroll in the Bachelor of Ayurveda Medicine and Surgery (BAMS).
-                          In India, BAMS is an undergraduate medical program based on Ayurveda, the traditional healing arts. The BAMS course covers all aspects of 
+                          In India, BAMS is an undergraduate medical program based on Ayurveda, the traditional healing arts. The BAMS course covers all aspects of
                           “Ashtanga Ayurveda,” as well as scientific advances in modern medicine and extensive practical training.
                         </Typography>
                         <Typography variant="body1" paragraph style={{ color: "#333", fontSize: "1rem" }}>
-                          The Central Council of Indian Medicine (CCIM) is the governing body for admission to Ayurveda education at both the undergraduate and 
-                          postgraduate levels, as well as the practice of Ayurveda medicine in India. Ayurveda is one of the oldest medical systems, dating back to 
+                          The Central Council of Indian Medicine (CCIM) is the governing body for admission to Ayurveda education at both the undergraduate and
+                          postgraduate levels, as well as the practice of Ayurveda medicine in India. Ayurveda is one of the oldest medical systems, dating back to
                           Vedic times. Its treatment is known for the natural elements it contains and is based on the curative properties of herbs.
                         </Typography>
                       </motion.div>
@@ -207,7 +226,7 @@ const BamsIndia = () => {
               variants={variants}
               style={{ marginBottom: "3rem" }}
             >
-              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}>
+              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden" }}>
                 <CardHeader
                   title="Analyzed Future Scope"
                   titleTypographyProps={{ style: { color: "#007bff", fontWeight: "bold" } }}
@@ -221,7 +240,7 @@ const BamsIndia = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={controls}
                         variants={variants}
-                        style={{ width: "100%", borderRadius: "15px", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}
+                        style={{ width: "100%", borderRadius: "15px" }}
                       />
                     </Grid>
                     <Grid item xs={12} md={7}>
@@ -232,14 +251,14 @@ const BamsIndia = () => {
                         style={{ transition: "transform 0.3s" }}
                       >
                         <Typography variant="body1" paragraph style={{ color: "#333", fontSize: "1rem" }}>
-                          Ayurveda, a traditional form of medicine that has been practiced in India for centuries, is gaining recognition worldwide for its 
-                          holistic approach to health and wellness. With the increasing awareness of alternative and complementary medicine, the demand for 
-                          qualified Ayurvedic practitioners is on the rise. This trend indicates a promising future for BAMS graduates, who can explore various 
+                          Ayurveda, a traditional form of medicine that has been practiced in India for centuries, is gaining recognition worldwide for its
+                          holistic approach to health and wellness. With the increasing awareness of alternative and complementary medicine, the demand for
+                          qualified Ayurvedic practitioners is on the rise. This trend indicates a promising future for BAMS graduates, who can explore various
                           career opportunities, including clinical practice, research, teaching, and consultancy.
                         </Typography>
                         <Typography variant="body1" paragraph style={{ color: "#333", fontSize: "1rem" }}>
-                          BAMS graduates can also work in Ayurvedic hospitals, wellness centers, and herbal product companies, or even pursue further studies 
-                          and specializations in Ayurveda or integrative medicine. With the potential for growth in the field, BAMS is a rewarding career path 
+                          BAMS graduates can also work in Ayurvedic hospitals, wellness centers, and herbal product companies, or even pursue further studies
+                          and specializations in Ayurveda or integrative medicine. With the potential for growth in the field, BAMS is a rewarding career path
                           for those passionate about traditional medicine and holistic health.
                         </Typography>
                       </motion.div>
@@ -258,7 +277,7 @@ const BamsIndia = () => {
               variants={variants}
               style={{ marginBottom: "3rem" }}
             >
-              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}>
+              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden" }}>
                 <CardHeader
                   title="Eligibility Criteria"
                   titleTypographyProps={{ style: { color: "#007bff", fontWeight: "bold" } }}
@@ -272,7 +291,7 @@ const BamsIndia = () => {
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={controls}
                         variants={variants}
-                        style={{ width: "100%", borderRadius: "15px", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}
+                        style={{ width: "100%", borderRadius: "15px" }}
                       />
                     </Grid>
                     <Grid item xs={12} md={8}>
@@ -285,7 +304,7 @@ const BamsIndia = () => {
                         <List>
                           <ListItem>
                             <Typography variant="body1" style={{ color: "#333", fontSize: "1rem", marginRight: "1rem" }}>
-                              • Students must complete the Higher Secondary Examination with a minimum of 50% marks (General) or 40% (Reserved categories) 
+                              • Students must complete the Higher Secondary Examination with a minimum of 50% marks (General) or 40% (Reserved categories)
                               in the Science stream with Physics, Chemistry, and Biology as subjects.
                             </Typography>
                           </ListItem>
@@ -311,7 +330,7 @@ const BamsIndia = () => {
               variants={variants}
               style={{ marginBottom: "3rem" }}
             >
-              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden", boxShadow: "0 6px 12px rgba(0, 0, 0, 0.4)" }}>
+              <Card elevation={3} style={{ borderRadius: "15px", overflow: "hidden" }}>
                 <CardHeader
                   title="Frequently Asked Questions"
                   titleTypographyProps={{ style: { color: "#007bff", fontWeight: "bold" } }}
@@ -323,12 +342,12 @@ const BamsIndia = () => {
                       style={{
                         marginBottom: "1rem",
                         borderRadius: "10px",
-                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+
                         transition: "transform 0.3s, box-shadow 0.3s",
                         cursor: "pointer",
                         "&:hover": {
                           transform: "scale(1.05)",
-                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                          boxShadow: "0 8px 16px rgba(0, 0, 0, 0.14)",
                         }
                       }}
                     >

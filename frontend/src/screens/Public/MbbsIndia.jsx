@@ -632,64 +632,66 @@ const MbbsIndia = () => {
   ];
 
   return (
-    <div className="container mx-auto">
-      {/* Hero Section */}
-      <section className="relative flex flex-col md:flex-row items-center bg-blue-200 py-8 px-4 md:px-12 lg:px-24 overflow-hidden">
-        {/* Left Side: Text Content */}
-        <motion.div
-          className="flex-1 text-center md:text-left mb-8 md:mb-0"
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+    <div className="container mx-auto px-4">
+    {/* Hero Section */}
+    <section className="relative flex flex-col md:flex-row items-center bg-blue-200 py-8 md:py-16 lg:py-24">
+      {/* Left Side: Text Content */}
+      <motion.div
+        className="flex-1 text-center md:text-left mb-8 md:mb-0"
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
+        <motion.h1
+          className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
         >
-          <motion.h1
-            className="text-4xl md:text-5xl font-bold text-gray-800"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-          >
-            MBBS in India
-          </motion.h1>
-          <motion.h2
-            className="mt-4 text-2xl md:text-3xl font-semibold text-gray-700"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-          >
-            A Pathway to Success in Medical Education
-          </motion.h2>
-        </motion.div>
-        {/* Right Side: Image */}
-        <motion.div
-          className="flex-1 w-full md:w-1/2 flex items-center justify-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+          MBBS in India
+        </motion.h1>
+        <motion.h2
+          className="mt-4 text-xl sm:text-2xl md:text-3xl font-semibold text-gray-700"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
         >
-          <img src={AboutImage} alt="MBBS in India" className="w-full h-auto" />
-        </motion.div>
-      </section>
-
-      {/* Expandable Sections */}
-      <div className="flex flex-row mx-[100px] space-x-4">
-      <section className="mt-12 w-2/3">
-      <div className="mb-10 flex items-center justify-center">
-        <Card>
-          <CardHeader
-            title="MBBS in India Overview"
-            subheader="Why MBBS in India is a great choice"
-            className="text-blue-main  flex items-center justify-center"
-          />
-          <CardContent>
-            <p className="text-lg text-gray-700">
-              MBBS in India is one of the highly preferred courses by medical aspirants worldwide. The strong education structure, sincere professors, and top-hole medical universities in India are paving the way for success. To secure admission for MBBS courses in India, the aspirants are required to appear in NEET.
-            </p>
-            <p className="mt-4 text-lg text-gray-700">
-              A healthy and peaceful environment in India helps the students to acquire knowledge more quickly. MBBS in India demands a student to get at least 50% in the 10+2 examinations. The duration of MBBS courses in India is 5.5 years.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          A Pathway to Success in Medical Education
+        </motion.h2>
+      </motion.div>
+      {/* Right Side: Image */}
+      <motion.div
+        className="flex-1 w-full md:w-1/2 flex items-center justify-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+      >
+        <img src={AboutImage} alt="MBBS in India" className="w-full h-auto" />
+      </motion.div>
+    </section>
+  
+    {/* Expandable Sections */}
+    <div className="flex flex-col md:flex-row mx-auto space-y-6 md:space-x-6 md:space-y-0">
+      <section className="mt-12 w-full md:w-2/3">
+        <div className="mb-10 flex items-center justify-center">
+          <Card>
+            <CardHeader
+              title="MBBS in India Overview"
+              subheader="Why MBBS in India is a great choice"
+              className="text-blue-main text-center"
+            />
+            <CardContent>
+              <p className="text-lg text-gray-700">
+                MBBS in India is one of the highly preferred courses by medical aspirants worldwide. The strong education structure, sincere professors, and top-hole medical universities in India are paving the way for success.
+              </p>
+              <p className="mt-4 text-lg text-gray-700">
+                A healthy and peaceful environment in India helps the students to acquire knowledge more quickly. MBBS in India demands a student to get at least 50% in the 10+2 examinations. The duration of MBBS courses in India is 5.5 years.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+  
+        {/* Toggleable Sections */}
         {sections.map((section, index) => (
           <div key={index} className="mb-6">
             <motion.div
@@ -718,99 +720,102 @@ const MbbsIndia = () => {
             )}
           </div>
         ))}
-     
       </section>
-
-      <div className="flex flex-col w-1/3 p-4">
-      {/* Quick Form Section */}
-      <div className="bg-white p-4 rounded-lg shadow-lg mb-6">
-        <h2 className="text-xl text-blue-main font-semibold mb-4">Quick Contact Form</h2>
-        <form>
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Your Name"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email Address
-            </label>
-            <input
-              type="email"
-              id="email"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Your Email"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-              Message
-            </label>
-            <textarea
-              id="message"
-              rows="4"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Your Message"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Send
-          </button>
-        </form>
-      </div>
-
-      {/* Recent Blogs Section */}
-      <div className="bg-white p-4 rounded-lg shadow-lg">
-        <h2 className="text-xl text-blue-main font-semibold mb-4">Recent Blogs</h2>
-        <ul className="space-y-4">
-          {blogs.map((blog, index) => (
-            <li key={index} className="border-b pb-4">
-              <a href={blog.link} className="text-lg font-semibold text-blue-600 hover:underline">
-                {blog.title}
-              </a>
-              <p className="text-gray-600 mt-2">{blog.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div className="mt-10">
-                <Typography variant="h5" gutterBottom>
-                Frequently Asked Questions (FAQ)
-            </Typography>
-
-            {faq.map((item, index) => (
-                <Accordion
-                key={index}
-                expanded={expanded === index + sections.length}
-                onChange={() => toggleExpansion(index + sections.length)}
-                TransitionComponent={motion.div}
-                sx={{ mb: 2 }}
-                >
-                <AccordionSummary
-                    expandIcon={<BookmarkIcon />}
-                    aria-controls={`faq-panel${index}-content`}
-                    id={`faq-panel${index}-header`}
-                >
-                    <Typography>{item.question}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <Typography>{item.answer}</Typography>
-                </AccordionDetails>
-                </Accordion>
-            ))}
+  
+      {/* Right Section: Quick Form & Recent Blogs */}
+      <div className="w-full md:w-1/3 p-4 space-y-6">
+        {/* Quick Contact Form */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl text-blue-main font-semibold mb-4">Quick Contact Form</h2>
+          <form>
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                Full Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Your Name"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                Email Address
+              </label>
+              <input
+                type="email"
+                id="email"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Your Email"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+                Message
+              </label>
+              <textarea
+                id="message"
+                rows="4"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Your Message"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Send
+            </button>
+          </form>
         </div>
-    </div>
+  
+        {/* Recent Blogs Section */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl text-blue-main font-semibold mb-4">Recent Blogs</h2>
+          <ul className="space-y-4">
+            {blogs.map((blog, index) => (
+              <li key={index} className="border-b pb-4">
+                <a href={blog.link} className="text-lg font-semibold text-blue-600 hover:underline">
+                  {blog.title}
+                </a>
+                <p className="text-gray-600 mt-2">{blog.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+  
+        {/* FAQ Section */}
+        <div className="mt-10">
+          <Typography variant="h5" gutterBottom>
+            Frequently Asked Questions (FAQ)
+          </Typography>
+  
+          {faq.map((item, index) => (
+            <Accordion
+              key={index}
+              expanded={expanded === index + sections.length}
+              onChange={() => toggleExpansion(index + sections.length)}
+              TransitionComponent={motion.div}
+              sx={{ mb: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<BookmarkIcon />}
+                aria-controls={`faq-panel${index}-content`}
+                id={`faq-panel${index}-header`}
+              >
+                <Typography>{item.question}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{item.answer}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </div>
       </div>
     </div>
+  </div>
+  
   );
 };
 

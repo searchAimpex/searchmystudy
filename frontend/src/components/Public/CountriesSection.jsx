@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useCountryFetchMutation } from '../../slices/adminApiSlice';
 import { FetchCountry } from '../../slices/countrySlice';
@@ -10,6 +10,9 @@ function CountriesSection() {
   const navigate = useNavigate();
   const [CountryFetch] = useCountryFetchMutation();
   const { countries } = useSelector((state) => state.country);
+  
+  // State to toggle showing all countries or just the first 8
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,6 +25,14 @@ function CountriesSection() {
     };
     fetchData();
   }, [CountryFetch, dispatch]);
+
+  // Handle the toggle for showing all countries
+  const handleToggleCountries = () => {
+    setShowAll(!showAll);
+  };
+
+  // Get only the first 8 countries or all depending on the state
+  const displayedCountries = showAll ? countries : countries.slice(0, 8);
 
   return (
     <div className='my-20'>
@@ -56,7 +67,7 @@ function CountriesSection() {
 
         {/* Grid of Countries */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-10 m-auto" style={{ width: "95%" }}>
-          {countries.map((item, index) => (
+          {displayedCountries.map((item, index) => (
             <motion.div
               key={item._id}
               onClick={() => navigate(`/country/${item._id}`)}
@@ -88,6 +99,21 @@ function CountriesSection() {
             </motion.div>
           ))}
         </div>
+
+        {/* View All Countries Button */}
+        {!showAll && countries.length > 8 && (
+         <button
+         style={{ backgroundColor: 'transparent', color: 'black' }}
+         onClick={handleToggleCountries}
+         className="mt-8 px-6 py-2 font-semibold flex justify-center items-center mx-auto"
+       >
+         Browse all countries
+         <svg xmlns="http://www.w3.org/2000/svg" style={{marginTop:"2px"}} width="16" height="16" fill="currentColor" className="bi bi-arrow-right ml-2" viewBox="0 0 16 16">
+           <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+         </svg>
+       </button>
+       
+        )}
       </div>
     </div>
   );
