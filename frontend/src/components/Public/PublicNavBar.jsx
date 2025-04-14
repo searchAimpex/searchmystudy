@@ -8,6 +8,10 @@ import { FetchAllServices } from "../../slices/serviceSlice";
 import { FetchCountry } from "../../slices/countrySlice";
 // import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import Logo from "../../assets/SearchMyStudy.png";
+import contact from "../../assets/contact.png";
+import about from "../../assets/about.png";
+import blog from "../../assets/blog.png";
+// import Logo from "../../assets/SearchMyStudy.png";
 import CounsellingModal from "./PopUp/CounsellingModal";
 import HeadsetMicOutlinedIcon from '@mui/icons-material/HeadsetMicOutlined';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -33,9 +37,9 @@ const initialLinks = [
         name: "RESOURCES",
         submenu: true,
         sublinks: [
-            { name: "ABOUT US", link: "/aboutus", path: "/aboutus" },
-            { name: "BLOG", link: "/blog", path: "/blog" },
-            { name: "CONTACT US", link: "/contactus", path: "/contactus" },
+            { name: "ABOUT US", link: "/aboutus", path: "/aboutus",flagURL:about },
+            { name: "BLOG", link: "/blog", path: "/blog" ,flagURL:blog},
+            { name: "CONTACT US", link: "/contactus", path: "/contactus",flagURL:contact },
         ]
     },
 
@@ -62,7 +66,10 @@ const initialLinks = [
 
                 ]
             },
-            { name: "ABROAD", sublinks: [] },
+            { name: "ABROAD", sublinks: [
+                { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+                { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+            ] },
         ],
     },
     {
@@ -344,16 +351,16 @@ export default function PublicNavBar() {
                                          grid grid-cols-3 gap-6">
                                             {link.sublinks?.map((sublink, index) => (
                                                 <div key={index}>
-                                                    <li className="text-xs text-gray-600 my-2.5">
+                                                    <li className="font-semibold text-x text-gray-600 my-2.5">
                                                         <Link
                                                             to={sublink.link}
                                                             className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row"
                                                         >
                                                             <img
-                                                                className="object-contained h-[20px] w-[20px]"
+                                                                className="object-contained h-[25px] w-[25px]"
                                                                 src={sublink?.flagURL}
                                                             />
-                                                            <span>{sublink?.name}</span>
+                                                            <h5>{sublink?.name}</h5>
                                                         </Link>
                                                     </li>
                                                 </div>
