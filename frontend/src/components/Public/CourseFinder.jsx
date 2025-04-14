@@ -54,10 +54,10 @@ export default function CourseFinder() {
 
   const handleSearch = () => {
     const { category, level, country } = filters;
-    if (category && level && country) {
+    if (category && level) {
       navigate('/course/all', { state: { filters } });
     } else {
-      toast.error("All fields are required.");
+      toast.error("category and level are required.");
     }
   };
 
