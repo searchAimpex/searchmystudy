@@ -61,22 +61,59 @@ export default function CountryDetailed() {
         <div className="mt-4 text-sm sm:text-base md:text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }} />
       </motion.div>
 
-      {/* Sections */}
       {singleCountry?.sections?.length > 0 && (
-        <motion.div ref={refSections} className="max-w-7xl mx-auto px-4 mt-12 space-y-16" initial={{ opacity: 0 }} animate={inViewSections ? { opacity: 1 } : {}} transition={{ duration: 1 }}>
-          {singleCountry.sections.map((section, index) => (
-            <motion.div key={section._id} className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`} initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }} animate={inViewSections ? { opacity: 1, x: 0 } : {}} transition={{ duration: 1 }}>
-              <div className="md:w-1/2 p-4">
-                <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">{section.title}</h3>
-                <div className="text-gray-600" dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }} />
-              </div>
-              <div className="md:w-1/2 p-4">
-                <motion.img src={section.url} alt={section.title} className="w-full h-auto rounded-lg shadow-lg" whileHover={{ scale: 1.05 }} transition={{ duration: 0.3 }} />
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
+  <motion.div
+    ref={refSections}
+    className="max-w-7xl mx-auto px-4 mt-12 space-y-16"
+    initial={{ opacity: 0 }}
+    animate={inViewSections ? { opacity: 1 } : {}}
+    transition={{ duration: 1 }}
+  >
+    {singleCountry.sections.map((section, index) => {
+      const isReversed = index % 2 === 0;
+
+      return (
+        <div
+          key={section._id}
+          className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`}
+        >
+          {/* Text Block Animation */}
+          <motion.div
+            className="md:w-1/2 p-4"
+            initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
+            animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">
+              {section.title}
+            </h3>
+            <div
+              className="text-gray-600"
+              dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }}
+            />
+          </motion.div>
+
+          {/* Image Block Animation */}
+          <motion.div
+            className="md:w-1/2 p-4"
+            initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
+            animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <motion.img
+              src={section.url}
+              alt={section.title}
+              className="w-full h-auto rounded-lg shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            />
+          </motion.div>
+        </div>
+      );
+    })}
+  </motion.div>
+)}
+
 
       {/* Province Header */}
       <motion.div ref={refProvinces} className="mt-16 text-center px-4" initial={{ opacity: 0 }} animate={inViewProvinces ? { opacity: 1 } : {}} transition={{ duration: 1 }}>

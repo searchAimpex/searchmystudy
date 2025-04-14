@@ -55,7 +55,7 @@ const BvScIndia = () => {
   ];
 
   return (
-    <Container maxWidth="lg" className="py-8">
+    <Container maxWidth="lg" className="py-8 px-4 sm:px-6 lg:px-12">
       {/* Hero Section */}
       <motion.div
         initial="hidden"
@@ -68,12 +68,24 @@ const BvScIndia = () => {
         <img
           src={bvScImage}
           alt="Bachelor of Veterinary Sciences & Animal Husbandry"
-          className="object-cover w-full h-72 md:h-80 lg:h-96"
+          className="object-cover w-full h-64 sm:h-72 md:h-80 lg:h-[28rem] xl:h-[32rem] rounded-xl shadow-lg"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 via-blue-200 to-green-100 opacity-70" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-8 space-y-6">
-          <Typography variant="h1" className="text-4xl md:text-5xl font-bold">Bachelor in Veterinary Sciences & Animal Husbandry</Typography>
-          <Typography variant="h6" className="text-lg md:text-xl font-light">A comprehensive 5½ years program for aspiring veterinarians.</Typography>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-300 to-green-100 opacity-60 rounded-xl" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6 md:px-12 lg:px-20 space-y-4 sm:space-y-6">
+          <Typography
+            variant="p"
+            className="text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md"
+          >
+            Bachelor in Veterinary Sciences & Animal Husbandry
+          </Typography>
+
+          <Typography
+            variant="p"
+            className="text-sm sm:text-base md:text-lg lg:text-2xl font-light drop-shadow-sm"
+          >
+            A comprehensive 5½ years program for aspiring veterinarians.
+          </Typography>
+
         </div>
       </motion.div>
 
@@ -86,7 +98,13 @@ const BvScIndia = () => {
             variants={sectionVariants}
             transition={{ duration: 0.8 }}
           >
-            <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">About B.V.Sc & AH</Typography>
+ <Typography
+            variant="p"
+            className="text-3xl sm:text-2xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md mb-6 text-blue-main"
+          >
+          About B.V.Sc & AH
+          </Typography>
+            {/* <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">About B.V.Sc & AH</Typography> */}
             <Typography variant="body1" className="text-base md:text-lg mb-6 leading-relaxed">
               Bachelor in Veterinary Sciences & Animal Husbandry (B.V.Sc. & A.H.) is a 5½ years undergraduate program under the medical discipline. It focuses on the study of medical diagnostics and treatment of animal diseases. The course includes subjects like Veterinary Anatomy, Histology, Physiology, Biochemistry, Pharmacology, and Toxicology.
             </Typography>
@@ -95,8 +113,6 @@ const BvScIndia = () => {
             </Typography>
           </motion.div>
         </Grid>
-
-        {/* Right Sidebar */}
         <Grid item xs={12} md={4} className="hidden md:block">
           <Card className="p-6 shadow-lg rounded-lg">
             <CardContent>
@@ -111,11 +127,11 @@ const BvScIndia = () => {
       </Grid>
 
       {/* Course Details Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Course Details</Typography>
+      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Course Details</Typography>
       <Grid container spacing={6} className="mb-12">
         <Grid item xs={12} md={6}>
           <Typography variant="h6" className="text-xl font-semibold mb-4">Course Highlights</Typography>
-          <Typography variant="body1" className="mb-4">
+          <Typography variant="body1" className="mb-4 text-sm sm:text-base">
             <strong>Course Level:</strong> Bachelor in Veterinary Sciences & Animal Husbandry<br />
             <strong>Duration:</strong> 5.5 Years<br />
             <strong>Eligibility:</strong> Passed 10+2 with Physics, Biology, Chemistry, and English<br />
@@ -128,7 +144,7 @@ const BvScIndia = () => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Typography variant="h6" className="text-xl font-semibold mb-4">Specializations</Typography>
-          <Typography variant="body1" className="mb-4">
+          <Typography variant="body1" className="mb-4 text-sm sm:text-base">
             - Animal Genetics and Breeding<br />
             - Veterinary Microbiology<br />
             - Veterinary Surgery & Radiology<br />
@@ -142,7 +158,7 @@ const BvScIndia = () => {
       </Grid>
 
       {/* Documents Required Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Documents Required</Typography>
+      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Documents Required</Typography>
       <Grid container spacing={6} className="mb-12">
         {documentsRequired.map((doc, index) => (
           <Grid item xs={12} md={4} key={index}>
@@ -152,8 +168,8 @@ const BvScIndia = () => {
               variants={sectionVariants}
               transition={{ duration: 0.8 }}
             >
-              <Card elevation={3} className="p-4 rounded-lg">
-                <Typography variant="body1">{doc}</Typography>
+              <Card elevation={3} className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
+                <Typography variant="body1" className="text-sm sm:text-base">{doc}</Typography>
               </Card>
             </motion.div>
           </Grid>
@@ -161,24 +177,24 @@ const BvScIndia = () => {
       </Grid>
 
       {/* Admission Process Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Admission Process</Typography>
+      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Admission Process</Typography>
       <Grid container spacing={6} className="mb-12">
         {admissionProcess.map((step, index) => (
-          <Grid item xs={12} md={12} key={index}>
+          <Grid item xs={12} key={index}>
             <motion.div
               initial="hidden"
               whileInView="visible"
               variants={sectionVariants}
               transition={{ duration: 0.8 }}
             >
-              <Typography variant="body1" className="mb-2">{step}</Typography>
+              <Typography variant="body1" className="mb-2 text-sm sm:text-base">{step}</Typography>
             </motion.div>
           </Grid>
         ))}
       </Grid>
 
       {/* Top B.V.Sc Colleges Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Top B.V.Sc Colleges in India</Typography>
+      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Top B.V.Sc Colleges in India</Typography>
       <Grid container spacing={6} className="mb-12">
         {bvscColleges.map((college, index) => (
           <Grid item xs={12} md={4} key={index}>
@@ -188,9 +204,9 @@ const BvScIndia = () => {
               variants={sectionVariants}
               transition={{ duration: 0.8 }}
             >
-              <Card elevation={3} className="p-4 rounded-lg">
+              <Card elevation={3} className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
                 <Typography variant="h6" className="font-semibold">{college.name}</Typography>
-                <Typography variant="body2">{college.location}</Typography>
+                <Typography variant="body2" className="text-gray-600">{college.location}</Typography>
               </Card>
             </motion.div>
           </Grid>
@@ -198,7 +214,7 @@ const BvScIndia = () => {
       </Grid>
 
       {/* FAQ Section */}
-      <Typography variant="h2" className="text-3xl md:text-4xl font-bold mb-6 text-blue-main">Frequently Asked Questions (FAQs)</Typography>
+      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Frequently Asked Questions (FAQs)</Typography>
       <Grid container spacing={6} className="mb-12">
         {faqData.map((faq, index) => (
           <Grid item xs={12} key={index}>
@@ -210,10 +226,10 @@ const BvScIndia = () => {
             >
               <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6" className="font-semibold">{faq.question}</Typography>
+                  <Typography variant="h6" className="font-semibold text-sm sm:text-base">{faq.question}</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography variant="body1">{faq.answer}</Typography>
+                  <Typography variant="body1" className="text-sm sm:text-base">{faq.answer}</Typography>
                 </AccordionDetails>
               </Accordion>
             </motion.div>
@@ -222,6 +238,7 @@ const BvScIndia = () => {
       </Grid>
     </Container>
   );
+
 };
 
 export default BvScIndia;

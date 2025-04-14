@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Typography, Card, CardContent, CardHeader, Accordion, AccordionSummary, AccordionDetails, TextField, Button } from "@mui/material";
+import { Typography, Card, CardContent, CardHeader, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MdIndiaImage from "../../assets/AboutHero.png";
 
@@ -52,18 +52,13 @@ const MdIndia = () => {
     visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
-  const listVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { delay: 0.3, duration: 0.6 } },
-  };
-
   return (
     <div className="">
       {/* Hero Section */}
-      <section className="relative flex flex-col md:flex-row items-center space-x-10 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 py-8 md:px-12 lg:px-24 overflow-hidden shadow-lg rounded-lg">
+      <section className="relative flex flex-col lg:flex-row items-center space-x-10 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 py-8 md:px-12 lg:px-24 overflow-hidden shadow-lg rounded-lg">
         {/* Left Side: Image */}
         <motion.div
-          className="flex-1 w-full md:w-1/2 flex items-center justify-center"
+          className="flex-1 w-full lg:w-1/2 flex items-center justify-center mb-8 lg:mb-0"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -72,13 +67,13 @@ const MdIndia = () => {
         </motion.div>
         {/* Right Side: Text Content */}
         <motion.div
-          className="flex-1 text-center md:text-left mb-8 md:mb-0"
+          className="flex-1 text-center lg:text-left"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-4xl md:text-5xl font-bold text-white drop-shadow-md"
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-md"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -86,7 +81,7 @@ const MdIndia = () => {
             MD in India
           </motion.h1>
           <motion.h2
-            className="mt-4 text-2xl md:text-3xl font-semibold text-gray-100 drop-shadow-sm"
+            className="mt-4 text-xl md:text-2xl lg:text-3xl font-semibold text-gray-100 drop-shadow-sm"
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
@@ -97,7 +92,7 @@ const MdIndia = () => {
       </section>
 
       {/* Two-Column Section */}
-      <section className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[100px]">
+      <section className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 sm:px-8 lg:px-24">
         {/* Content Column */}
         <motion.div className="space-y-10" initial="hidden" animate="visible" variants={sectionVariants}>
           {/* About Section */}

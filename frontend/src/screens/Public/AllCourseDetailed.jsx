@@ -70,7 +70,7 @@ const AllCourseDetailed = () => {
     standardizeRequirement: '',
   });
 
-  console.log("state",state)
+  // console.log("state",state)
   const [countries, setCountries] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [universities, setUniversities] = useState([]);
@@ -155,7 +155,7 @@ const AllCourseDetailed = () => {
   const handleSearch = async () => {
     try {
       const result = await AllCourse(filters).unwrap();
-      console.log("Filters ",filters)
+      console.log("my results------------",result)
       if (Array.isArray(result)) {
         setCourses(result);
       } else {
@@ -217,7 +217,7 @@ const AllCourseDetailed = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row mx-[100px] my-[50px] space-y-6 lg:space-y-0 lg:space-x-10">
+    <div className="flex flex-col lg:flex-row mx-[9%0px] my-[50px] space-y-6 lg:space-y-0 lg:space-x-10">
       <div className="w-full lg:w-1/4 p-4 bg-gray-100 rounded-lg shadow-md">
         <div
           className="flex justify-between items-center cursor-pointer"
@@ -367,76 +367,82 @@ const AllCourseDetailed = () => {
           <p className="text-red-600">Error loading courses</p>
         ) : (
           <div className="space-y-4">
-            {courses.map((course) => (
-              <div key={course._id} className="bg-white p-4 flex flex-row space-x-6 rounded-lg shadow-md">
-                  <div>
-                    <img className='h-[250px] w-[350px]' src={course.University.logo} />
-                  </div>
-                  <div className='flex flex-col space-y-2 w-full'>
-                      <div className='flex flex-row w-full justify-between items-center'>
-                            <div>
-                                <span className='text-lg font-bold flex flex-row space-x-4'>University:{course?.University?.name}</span>
-                            </div>
-                   
-                      </div>
-                      <div className='flex flex-row space-x-2'>
-                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.ProgramName},</span>
-                                <span className='text-lg font-bold flex flex-row space-x-4'>{course?.Category}</span>
+         {courses.map((course) => (
+  <div
+    key={course._id}
+    style={{
+      boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
+    }}
+    className="bg-white p-4 flex flex-col md:flex-row gap-6 rounded-lg"
+  >
+    {/* Image Section */}
+    <div className="w-full md:w-[350px] flex justify-center items-center">
+      <img
+        className="h-[200px] md:h-[250px] w-full object-contain rounded-lg"
+        src={course.University.logo}
+        alt={course.University.name}
+      />
+    </div>
 
-                            </div>
-                      <div className='flex flex-row justify-between w-full rounded-xl  items-center'>
-                            <div className='bg-blue-main p-2 rounded-xl space-x-4 flex flex-row items-center '> 
-                                <span className='text-md font-bold  text-white flex flex-row space-x-4'>Fees</span>
-                                <span className='text-md font-bold text-white'>{course?.Fees} INR</span>
-                            </div>
-                            <div className='flex flex-row justify-start items-start w-1/4'>
-                                <span className='text-md font-bold'>Duration: {course.Duration}</span>
-                            </div>
+    {/* Details Section */}
+    <div className="flex flex-col gap-3 w-full">
+      {/* University Name */}
+      <div className="text-lg md:text-xl font-bold">
+        🎓 University: {course?.University?.name}
+      </div>
 
-                      </div>
-                      <div className='flex flex-row justify-between rounded-xl  items-center'>
-                            <div className='bg-blue-main p-2 rounded-xl space-x-4 flex flex-row items-center '> 
-                            <span className='text-md font-bold text-white'>Level: {course.ProgramLevel}</span>
+      {/* Program Name and Category */}
+      <div className="text-base flex flex-wrap gap-2 font-semibold">
+        <span>{course?.ProgramName}</span>
+        <span className="text-gray-500">| {course?.Category}</span>
+      </div>
 
-                            </div>
-                            <div className='flex flex-row justify-start items-start w-1/4'>
-                                <span className='text-md font-bold'>Type: {course.University.type}</span>
-                            </div>
+      {/* Fees and Duration */}
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+        <div className="bg-blue-main text-white px-4 py-2 rounded-xl font-semibold w-fit">
+          💸 Fees: {course?.Fees} INR
+        </div>
+        <div className="text-sm font-medium text-gray-600">
+          ⏳ Duration: {course?.Duration}
+        </div>
+      </div>
 
-                      </div>
-                      <div className='flex flex-row justify-between'>
-                        <div className='rounded-xl  items-center'>
-                              <div className='rounded-xl flex flex-row items-center '> 
-                                <span className='text-md font-bold'>Rank: {course.University.rank}</span>
+      {/* Program Level and Type */}
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+        <div className="bg-blue-main text-white px-4 py-2 rounded-xl font-semibold w-fit">
+          🎯 Level: {course?.ProgramLevel}
+        </div>
+        <div className="text-sm font-medium text-gray-600">
+          🏫 Type: {course?.University?.type}
+        </div>
+      </div>
 
-                              </div>
-                            
+      {/* Rank and Rating */}
+      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
+        <div className="text-sm font-medium text-gray-600">
+          ⭐ Rank: {course?.University?.rank}
+        </div>
+        <div className="text-sm font-medium text-gray-600">
+          🌟 Rating: {course?.University?.rating}
+        </div>
+      </div>
 
-                        </div>
-                          <div className='flex flex-row justify-start items-start w-1/4'>
-                                <span className='text-md font-bold'>Rating: {course.University.rating}</span>
-                         </div>
-                         </div>
-                      <div className='flex flex-row w-full justify-between items-center'>
-                    
-                            <div className='flex flex-row justify-start items-start w-1/4'>
-                                <span className='text-lg font-bold'>Location: {course.Location}</span>
-                            </div>
+      {/* Location and View Button */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+        <div className="text-base font-semibold text-gray-800">
+          📍 Location: {course?.Location}
+        </div>
+        <button
+          className="bg-blue-main hover:bg-blue-700 transition text-white px-5 py-2 rounded-lg font-semibold"
+          onClick={() => navigate(`/course/${course._id}`)}
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  </div>
+))}
 
-                            <div>
-                                <button 
-                                className='px-2 py-2 rounded-xl text-white font-bold bg-blue-main'
-                                onClick={(e)=>navigate(`/course/${course._id}`)}
-                                >View</button>
-                            </div>
-
-                      </div>
-
-
-                  </div>
-       
-              </div>
-            ))}
           </div>
         )}
       </div>

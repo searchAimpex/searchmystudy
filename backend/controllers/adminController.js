@@ -537,13 +537,40 @@ const createProvince = asyncHandler(async (req, res) => {
   if (!country) {
     return res.status(404).json({ message: 'Country not found' });
   }
-  console.log("fix",country)
+  console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+  console.log(req.body);
   const province = new Province(req.body);
-  await province.save();
+  const a = await province.save();
+
+  
   country.Province.push(province._id)
   country.save();
   res.status(201).json(province);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // @desc    Get all provinces
 // @route   GET /provinces

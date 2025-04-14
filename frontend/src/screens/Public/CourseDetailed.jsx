@@ -23,7 +23,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import CategoryIcon from '@mui/icons-material/Category';
 import TimerIcon from '@mui/icons-material/Timer';
 import { motion } from 'framer-motion';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 export default function CourseDetailed() {
   const { id } = useParams();
@@ -31,12 +31,11 @@ export default function CourseDetailed() {
   const navigate = useNavigate();
   const { singleCourse } = useSelector((state) => state.course);
   const [FetchOneCourse] = useFetchOneCourseMutation();
-  const [tabValue, setTabValue] = React.useState(0);
+  const [tabValue, setTabValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-const handleModalOpen = () => setIsModalOpen(true);
-const handleModalClose = () => setIsModalOpen(false);
-
+  const handleModalOpen = () => setIsModalOpen(true);
+  const handleModalClose = () => setIsModalOpen(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -53,91 +52,59 @@ const handleModalClose = () => setIsModalOpen(false);
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
   const openBrochure = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+
   const openKnowMore = (url) => {
-    console.log("url",url)
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+
   return (
     <motion.div
-      className="p-4 mx-auto max-w-7xl my-8"
+      className="p-4 mx-auto max-w-screen-xl my-8"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
     >
-      <PopUp isModalOpen = {isModalOpen} handleModalClose={handleModalClose} />
+      <PopUp isModalOpen={isModalOpen} handleModalClose={handleModalClose} />
       {singleCourse && (
         <>
-          <motion.div
-            className="relative mb-6"
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <CardMedia
-              component="img"
-              height="300"
-              image={singleCourse?.University?.bannerURL}
-              alt={singleCourse?.University?.name}
-              className="object-cover"
-            />
-            {/* <div className="absolute top-1/6 left-8 transform -translate-y-1/2"> */}
-            <div className='flex flex-row  mt-6 space-x-10'>
+          <motion.div className="relative mb-6" initial={{ scale: 0.95 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
+            <CardMedia component="img" height="250" image={singleCourse?.University?.bannerURL} alt={singleCourse?.University?.name} className="object-cover w-full rounded-lg" />
+            <div className="flex flex-col sm:flex-row items-center mt-6 space-y-6 sm:space-y-0 sm:space-x-6">
               <motion.img
                 src={singleCourse?.University?.logo}
                 alt={singleCourse?.University?.name}
-                className="w-40 h-40 rounded-full border-4 border-white shadow-lg"
+                className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-lg"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               />
-            {/* </div> */}
-            <CardContent className="relative flex flex-col items-start space-y-2">
-              <Box className="flex space-x-4">
-              <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{
-                    boxShadow: 2,
-                    fontWeight: 'bold',
-                    textTransform: 'none',
-                    transition: 'transform 0.2s',
-                    '&:hover': { transform: 'scale(1.05)' },
-                  }}
-                  onClick={handleModalOpen}
-                >
-                  Apply
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick = {()=>openBrochure(singleCourse?.broucherURL)}
-                  sx={{
-                    boxShadow: 1,
-                    fontWeight: 'bold',
-                    textTransform: 'none',
-                    '&:hover': {
-                      backgroundColor: 'primary.main',
-                      color: 'white',
-                    },
-                  }}
-                >
-                  Brochure
-                </Button>
-                
-              </Box>
-              <Typography variant="h4" component="div" gutterBottom sx={{ fontWeight: 'bold' }}>
-                {singleCourse?.ProgramName}
-              </Typography>
-              <Typography variant="h5" component="div" gutterBottom>
-                {singleCourse?.University?.name}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary">
-                {singleCourse?.Location}
-              </Typography>
-            </CardContent>
+              <CardContent className="flex flex-col items-start space-y-2 w-full sm:w-auto">
+                <Box className="flex flex-col sm:flex-row gap-4 mb-2">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ boxShadow: 2, fontWeight: 'bold', textTransform: 'none' }}
+                    onClick={handleModalOpen}
+                  >
+                    Apply
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => openBrochure(singleCourse?.broucherURL)}
+                    sx={{ boxShadow: 1, fontWeight: 'bold', textTransform: 'none' }}
+                  >
+                    Brochure
+                  </Button>
+                </Box>
+                <Typography variant="h5" component="div" sx={{ fontWeight: 'bold' }}>{singleCourse?.ProgramName}</Typography>
+                <Typography variant="h6" component="div">{singleCourse?.University?.name}</Typography>
+                <Typography variant="subtitle2" color="text.secondary">{singleCourse?.Location}</Typography>
+              </CardContent>
             </div>
           </motion.div>
 
@@ -149,8 +116,8 @@ const handleModalClose = () => setIsModalOpen(false);
               className="mb-4"
               indicatorColor="primary"
               textColor="primary"
-              variant="fullWidth"
-              centered
+              variant="scrollable"
+              scrollButtons="auto"
             >
               <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
               <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
@@ -161,69 +128,67 @@ const handleModalClose = () => setIsModalOpen(false);
             </Tabs>
 
             <TabPanel value={tabValue} index={0}>
-              <Box
-                sx={{
-                  padding: 4,
-                  borderRadius: 2,
-                  boxShadow: 1,
-                  backgroundColor: 'background.paper',
-                  maxWidth: 800,
-                  margin: '0 auto',
-                }}
-              >
-                <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                  Program Details
-                </Typography>
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <InfoIcon sx={{ mr: 1, color: 'primary.main' }} />
-                    Program Name: <strong>{singleCourse.ProgramName}</strong>
-                  </Typography>
-                  <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CategoryIcon sx={{ mr: 1, color: 'primary.main' }} />
-                    Category: <strong>{singleCourse.Category}</strong>
-                  </Typography>
-                  <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <TimerIcon sx={{ mr: 1, color: 'primary.main' }} />
-                    Duration: <strong>{singleCourse.Duration}</strong>
-                  </Typography>
-                  <Typography variant="body1" sx={{ display: 'flex', alignItems: 'center' }}>
-                    <TimerIcon sx={{ mr: 1, color: 'primary.main' }} />
-                    Program Level: <strong>{singleCourse.ProgramLevel}</strong>
-                  </Typography>
-                </Box>
+  <Box   style={{
+      boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.28), -4px -4px 10px rgba(0, 0, 0, 0.28)',
+    }} className="bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8 w-full max-w-5xl mx-auto">
+    <Typography
+      variant="h6"
+      sx={{ fontWeight: 'bold' }}
+      className="text-lg sm:text-xl md:text-2xl text-center sm:text-left"
+    >
+      Program Details
+    </Typography>
 
-                <Typography variant="body1">
-                
-                  <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick = {()=>openKnowMore(singleCourse?.WebsiteURL)}
-                  sx={{
-                    boxShadow: 1,
-                    fontWeight: 'bold',
-                    textTransform: 'none',
-                    '&:hover': {
-                      backgroundColor: 'primary.main',
-                      color: 'white',
-                    },
-                  }}
-                >
-                  Know More
-                </Button>
-                </Typography>
+    <Box className="mt-4 space-y-3 sm:space-y-4 text-sm sm:text-base">
+      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+        <InfoIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+        <Typography className="flex-1">
+          Program Name: <strong>{singleCourse.ProgramName}</strong>
+        </Typography>
+      </Box>
 
-              </Box>
-            </TabPanel>
+      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+        <CategoryIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+        <Typography className="flex-1">
+          Category: <strong>{singleCourse.Category}</strong>
+        </Typography>
+      </Box>
+
+      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+        <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+        <Typography className="flex-1">
+          Duration: <strong>{singleCourse.Duration}</strong>
+        </Typography>
+      </Box>
+
+      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+        <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+        <Typography className="flex-1">
+          Program Level: <strong>{singleCourse.ProgramLevel}</strong>
+        </Typography>
+      </Box>
+    </Box>
+
+    <Box className="mt-6 text-center sm:text-right">
+      <Button
+        variant="outlined"
+        color="primary"
+        onClick={() => openKnowMore(singleCourse?.WebsiteURL)}
+        className="w-full sm:w-auto"
+      >
+        Know More
+      </Button>
+    </Box>
+  </Box>
+</TabPanel>
+
 
             <TabPanel value={tabValue} index={1}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Intake Details
-              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Intake Details</Typography>
               {singleCourse?.Intake?.map((intake, index) => (
-                <Accordion key={index} className="mb-2">
+                <Accordion key={index} className="my-2">
                   <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                    <Typography sx={{ fontWeight: 'bold' }}>Intake {index + 1}</Typography>
+                    <Typography>Intake {index + 1}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>
                     <Typography>Status: {intake.status ? 'Yes' : 'No'}</Typography>
@@ -234,14 +199,12 @@ const handleModalClose = () => setIsModalOpen(false);
             </TabPanel>
 
             <TabPanel value={tabValue} index={2}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold' }}>
-                Language Requirements
-              </Typography>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Language Requirements</Typography>
               {singleCourse?.LanguageRequirements ? (
                 Object.entries(singleCourse.LanguageRequirements).map(([key, req]) => (
-                  <Accordion key={key} className="mb-2">
+                  <Accordion key={key} className="my-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography sx={{ fontWeight: 'bold' }}>{key}</Typography>
+                      <Typography>{key}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
@@ -250,18 +213,14 @@ const handleModalClose = () => setIsModalOpen(false);
                     </AccordionDetails>
                   </Accordion>
                 ))
-              ) : (
-                <Typography>No language requirements available</Typography>
-              )}
+              ) : <Typography>No language requirements available</Typography>}
 
-              <Typography variant="h6" className="mt-4 mb-2" sx={{ fontWeight: 'bold' }}>
-                Standardized Requirements
-              </Typography>
+              <Typography variant="h6" className="mt-6" sx={{ fontWeight: 'bold' }}>Standardized Requirements</Typography>
               {singleCourse?.StandardizeRequirement ? (
                 Object.entries(singleCourse.StandardizeRequirement).map(([key, req]) => (
-                  <Accordion key={key} className="mb-2">
+                  <Accordion key={key} className="my-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography sx={{ fontWeight: 'bold' }}>{key}</Typography>
+                      <Typography>{key}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
@@ -270,61 +229,45 @@ const handleModalClose = () => setIsModalOpen(false);
                     </AccordionDetails>
                   </Accordion>
                 ))
-              ) : (
-                <Typography>No standardized requirements available</Typography>
-              )}
+              ) : <Typography>No standardized requirements available</Typography>}
             </TabPanel>
-
-            {/* Add additional tabs content here */}
           </Box>
         </>
       )}
-     
     </motion.div>
   );
 }
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`tabpanel-${index}`}
-      aria-labelledby={`tab-${index}`}
-      {...other}
-    >
+    <div role="tabpanel" hidden={value !== index} {...other}>
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
-} // Import your RTK query endpoint
+}
 
 function PopUp({ isModalOpen, handleModalClose }) {
-  // Controlled form states
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
-
-  // RTK Query mutation hook
   const [createLead, { isLoading, isSuccess, isError, error }] = useCreateLeadMutation();
-  useEffect(()=>{
-    if(isSuccess){
-      toast.success("Thank you for applying , we will get back to you shortly!")
-    }
 
-  },[isSuccess])
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Thank you for applying, we will get back to you shortly!');
+    }
+  }, [isSuccess]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const leadData = { name, email, phoneNo };
-      await createLead(leadData).unwrap(); // Perform mutation
-      // Clear form fields
+      await createLead(leadData).unwrap();
       setName('');
       setEmail('');
       setPhoneNo('');
-      handleModalClose(); // Close the modal
+      handleModalClose();
     } catch (err) {
       console.error('Failed to submit form:', err.message || err.data);
     }
@@ -335,24 +278,13 @@ function PopUp({ isModalOpen, handleModalClose }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="absolute top-[20px] left-[40%] transform -translate-x-1/2 p-6 rounded-lg bg-white shadow-2xl max-w-sm w-full"
+        transition={{ duration: 0.5 }}
+        className="absolute top-[10%] left-1/2 transform -translate-x-1/2 p-6 rounded-lg bg-white shadow-2xl w-[90%] max-w-md"
       >
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-          <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#333' }}>
-            Apply for the Course
-          </Typography>
-          <span
-            onClick={handleModalClose}
-            className="cursor-pointer hover:text-red-500 transition duration-200"
-          >
-            X
-          </span>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Apply for the Course</Typography>
+          <span onClick={handleModalClose} className="cursor-pointer hover:text-red-500">X</span>
         </Box>
-
-        <Typography variant="body1" color="textSecondary" mb={3}>
-          Fill in the details below to apply for this program.
-        </Typography>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -380,33 +312,13 @@ function PopUp({ isModalOpen, handleModalClose }) {
             required
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            sx={{ py: 1.5, fontWeight: 'bold' }}
-            disabled={isLoading}
-          >
+          <Button type="submit" variant="contained" color="primary" fullWidth disabled={isLoading}>
             {isLoading ? 'Submitting...' : 'Submit Application'}
           </Button>
         </form>
 
-        {/* Show error message */}
-        {isError && (
-          <Typography color="error" mt={2}>
-            {error?.data?.message || 'Something went wrong. Please try again.'}
-          </Typography>
-        )}
-
-        {/* Success message */}
-        {isSuccess && (
-          <Typography color="green" mt={2}>
-            Lead created successfully!
-          </Typography>
-        )}
+        {isError && <Typography color="error" mt={2}>{error?.data?.message || 'Something went wrong. Please try again.'}</Typography>}
       </motion.div>
     </Modal>
   );
 }
-
