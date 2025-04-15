@@ -27,6 +27,7 @@ import UpdateCountryPop from './PopUps/UpdateCountryPop.jsx';
 import { Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CreateBannerPop from './PopUps/CreateBannerPop.jsx';
+import MbbsCreateCountryPopup from './PopUps/MbbsCreateCountryPopup.jsx';
 
 const headCells = [
     { id: '_id', numeric: false, disablePadding: true, label: 'ID' },
@@ -135,19 +136,19 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const navigate = useNavigate()
 
 
-    function handleClickOpen (){
+    function handleClickOpen() {
         setOpen(true)
         console.log(open)
     }
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
-   
-  
+
+
     const handleClose = () => {
-        console.log("Closing dialog",open);  // Verify if this logs
+        console.log("Closing dialog", open);  // Verify if this logs
         setOpen(false);  // Ensure this updates `open`
-      };
-    console.log("fix",open)
+    };
+    console.log("fix", open)
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
 
@@ -195,43 +196,44 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon
-                            onClick =  {()=> {
-                                handleViewOpen()
-                            }} />
+                                onClick={() => {
+                                    handleViewOpen()
+                                }} />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="MBBS Status Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon
-                                onClick = {()=>{
+                                onClick={() => {
                                     handleViewUpdateOpen()
                                 }}
                             />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
+                        <IconButton size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {
                                 onViewBanner(selectedRow?.banner);
                                 handleViewBannerOpen();
-                            }}/>
+                            }} />
                         </IconButton>
                     </Tooltip>
                 </div>
             ) : (
                 <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" >
-                    <AddIcon onClick={handleClickOpen} />
-                    <CreateCountryPop open={open} onClose={handleClose} />
+                        <AddIcon onClick={handleClickOpen} />
+                        <MbbsCreateCountryPopup open={open} onClose={handleClose} />
 
                     </IconButton>
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
-            <UpdateCountryPop open ={viewOpen} handleClose= {handleViewClose} countryData={selectedRow} />
+            <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId={selectedRow?._id} statuss={selectedRow?.mbbsAbroad} />
+            <UpdateCountryPop open={viewOpen} handleClose={handleViewClose} countryData={selectedRow} />
         </Box>
-    );}
+    );
+}
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
     selectedRow: PropTypes.object,
@@ -239,7 +241,7 @@ EnhancedTableToolbar.propTypes = {
     onDelete: PropTypes.func.isRequired,
 };
 
-const CountryTable = () => {
+const MbbsCountrytable = () => {
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('_id');
     const [selected, setSelected] = React.useState([]);
@@ -332,16 +334,16 @@ const CountryTable = () => {
     // Calculate the current page's data
     const startIndex = (page - 1) * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
-    const filteredServices = services.filter(
-        item => item.mbbsAbroad === false || item.mbbsAbroad === ''
-      );
-      
-      const currentData = stableSort(filteredServices, getComparator(order, orderBy))
-        .slice(startIndex, endIndex);
-      
-      // Calculate total pages
-      const totalPages = Math.max(1, Math.ceil(filteredServices.length / rowsPerPage));
-      
+    
+    const currentData = stableSort(services, getComparator(order, orderBy))
+    .slice(startIndex, endIndex)
+    .filter(item => item.mbbsAbroad === true); // 👈 filter only where mbbsAbroad is true
+  
+  console.log(currentData, "=======================================================");
+  
+    // Calculate total pages
+    const totalPages = Math.max(1, Math.ceil(services.length / rowsPerPage));
+
     return (
         <Box sx={{ width: '100%', mt: 3 }}>
             <EnhancedTableToolbar
@@ -391,5 +393,5 @@ const CountryTable = () => {
             </Box>
         </Box>
     );
-}; 
-export default CountryTable
+};
+export default MbbsCountrytable

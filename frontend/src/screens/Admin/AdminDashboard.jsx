@@ -24,6 +24,7 @@ function AdminDashboard({component}) {
     { name: 'Assessment Manager', path: '/admin/assessment', src: 'https://cdn-icons-png.flaticon.com/512/4337/4337557.png' },
     { name: 'Upload Manager', path: '/admin/upload', src: 'https://cdn-icons-png.flaticon.com/512/159/159626.png' },
     { name: 'Transaction Manager', path: '/admin/transaction', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
+    { name: 'MBBS Abroad', path: '/admin/MbbsAbroad', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
   ];
 
   const [logoutApiCall, { isSuccess }] = useLogoutMutation();

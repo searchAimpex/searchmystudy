@@ -24,18 +24,20 @@ import TextEditor from '../TextEditor';
 
 const storage = getStorage(app);
 
-function CreateCountryPop({ open, onClose }) {
+function MbbsCreateCountryPopup({ open, onClose }) {
   const [formValues, setFormValues] = useState({
     name: '',
     bannerURL: '',
     bullet: '',
-    mbbsAbroad:false,
+    mbbsAbroad:true,
     flagURL: '',
     description: '',
     sections: [{ title: '', description: '', url: '' }],
     eligiblity: ['', '', '', '', '', '', ''],
     faq: [{ question: '', answer: '' }],
   });
+  // console.log(formValues,"================================================================");
+  
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [bannerPreview, setBannerPreview] = useState(null);
@@ -60,11 +62,11 @@ function CreateCountryPop({ open, onClose }) {
   };
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-
+  
     if (type === 'file') {
       const file = files[0];
       if (!file) return;
-
+  
       // Sections Image Upload (e.g., sections.0.url)
       if (name.includes('sections') && name.includes('url')) {
         const isValid = await validateImage(file, 900, 500); // Minimum size for section image
@@ -75,27 +77,27 @@ function CreateCountryPop({ open, onClose }) {
           }));
           return;
         }
-
+  
         setFormErrors((prev) => ({ ...prev, [name]: '' }));
-
+  
         const imageURL = await uploadImage(file);
         const index = parseInt(name.split('.')[1]);
         const updatedSections = [...formValues.sections];
         updatedSections[index].url = imageURL;
-
+  
         setFormValues((prevValues) => ({
           ...prevValues,
           sections: updatedSections,
         }));
-
+  
         const updatedPreviews = [...sectionPreviews];
         updatedPreviews[index] = URL.createObjectURL(file);
         setSectionPreviews(updatedPreviews);
-
+  
       } else {
         // Handle Banner & Flag Uploads
         const imageURL = await uploadImage(file);
-
+  
         if (name === 'bannerURL') {
           const isValid = await validateImage(file, 1500, 500);
           if (!isValid) {
@@ -107,7 +109,7 @@ function CreateCountryPop({ open, onClose }) {
           }
           setBannerPreview(URL.createObjectURL(file));
         }
-
+  
         if (name === 'flagURL') {
           const isValid = await validateImage(file, 200, 200);
           if (!isValid) {
@@ -119,25 +121,25 @@ function CreateCountryPop({ open, onClose }) {
           }
           setFlagPreview(URL.createObjectURL(file));
         }
-
+  
         setFormErrors((prev) => ({ ...prev, [name]: '' }));
         setFormValues((prevValues) => ({
           ...prevValues,
           [name]: imageURL,
         }));
       }
-
+  
     } else if (name.includes('sections') || name.includes('faq')) {
       const [arrayName, index, field] = name.split('.');
       const updatedArray = [...formValues[arrayName]];
       updatedArray[index][field] = value;
-
+  
       // Limit section description to 400 words
       if (arrayName === 'sections' && field === 'description') {
         const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
         if (wordCount > 400) return;
       }
-
+  
       setFormValues((prevValues) => ({
         ...prevValues,
         [arrayName]: updatedArray,
@@ -148,10 +150,10 @@ function CreateCountryPop({ open, onClose }) {
         [name]: value,
       }));
     }
-
+  
     checkFormValidity();
   };
-
+  
 
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `countries/${file.name}`);
@@ -171,6 +173,8 @@ function CreateCountryPop({ open, onClose }) {
 
   const onSubmit = async () => {
     const res = await createCountry(formValues).unwrap();
+    console.log(res, "++++++++++++++++++++++++++++++++++++++---------------------");
+    
     dispatch(AddCountry({ ...res }));
     onClose();
   };
@@ -218,7 +222,7 @@ function CreateCountryPop({ open, onClose }) {
 
   return (
     <Dialog fullWidth={true} open={open} onClose={onClose}>
-      <DialogTitle className="text-white bg-custom-primary font-bold">Add Country</DialogTitle>
+      <DialogTitle className="text-white bg-custom-primary font-bold">Add MBBS Country</DialogTitle>
       <DialogContent>
         <div className="py-2">
           <DialogContentText>You can add a country.</DialogContentText>
@@ -287,19 +291,19 @@ function CreateCountryPop({ open, onClose }) {
             className="mb-2"
             label="Bullet Point"
           />
-          <TextEditor
-            id="description"
-            name="description"
-            label="Description"
-            variant="standard"
-            value={formValues.description}
-            onChange={handleChange}
-            className="mb-2"
-          />
-          <p className="text-sm text-gray-500 text-right">
-            {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
-          </p>
-
+                             <TextEditor
+             id="description"
+             name="description"
+             label="Description"
+             variant="standard"
+             value={formValues.description}
+             onChange={handleChange}
+             className="mb-2"
+           />
+           <p className="text-sm text-gray-500 text-right">
+             {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
+           </p>
+         
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (
@@ -308,69 +312,69 @@ function CreateCountryPop({ open, onClose }) {
                 <Typography>Section {index + 1}</Typography>
               </AccordionSummary>
               <AccordionDetails className="flex flex-col gap-6">
-                <TextField
-                  id={`sectionTitle${index}`}
-                  name={`sections.${index}.title`}
-                  label="Title"
-                  variant="standard"
-                  value={section.title}
-                  onChange={handleChange}
-                  className="mb-2"
-                />
+  <TextField
+    id={`sectionTitle${index}`}
+    name={`sections.${index}.title`}
+    label="Title"
+    variant="standard"
+    value={section.title}
+    onChange={handleChange}
+    className="mb-2"
+  />
 
-                <TextEditor
-                  id={`sectionDescription${index}`}
-                  name={`sections.${index}.description`}
-                  label="Description"
-                  value={section.description}
-                  onChange={(val) =>
-                    handleChange({
-                      target: {
-                        name: `sections.${index}.description`,
-                        value: val,
-                      },
-                    })
-                  }
-                  className="mb-2"
-                />
+  <TextEditor
+    id={`sectionDescription${index}`}
+    name={`sections.${index}.description`}
+    label="Description"
+    value={section.description}
+    onChange={(val) =>
+      handleChange({
+        target: {
+          name: `sections.${index}.description`,
+          value: val,
+        },
+      })
+    }
+    className="mb-2"
+  />
 
-                <TextField
-                  id={`sectionURL${index}`}
-                  name={`sections.${index}.url`}
-                  type="file"
-                  variant="standard"
-                  onChange={(e) => handleChange(e, index, "sectionImage")}
-                  label="Section Image URL"
-                  className="mb-2"
-                  InputLabelProps={{ shrink: true }}
-                />
+  <TextField
+    id={`sectionURL${index}`}
+    name={`sections.${index}.url`}
+    type="file"
+    variant="standard"
+    onChange={(e) => handleChange(e, index, "sectionImage")}
+    label="Section Image URL"
+    className="mb-2"
+    InputLabelProps={{ shrink: true }}
+  />
 
-                {sectionPreviews[index] && (
-                  <>
-                    <img
-                      src={sectionPreviews[index]}
-                      onLoad={(e) =>
-                        console.log(
-                          `Section ${index + 1} image size: ${e.target.naturalWidth}x${e.target.naturalHeight}`
-                        )
-                      }
-                      style={{ width: "900px", height: "500px", objectFit: "cover" }}
-                      alt={`Section ${index + 1} Image Preview`}
-                      className="mt-2 rounded"
-                    />
-                    <p style={{ color: "red" }}>Image size must be 900px x 500px</p>
-                  </>
-                )}
+  {sectionPreviews[index] && (
+    <>
+      <img
+        src={sectionPreviews[index]}
+        onLoad={(e) =>
+          console.log(
+            `Section ${index + 1} image size: ${e.target.naturalWidth}x${e.target.naturalHeight}`
+          )
+        }
+        style={{ width: "900px", height: "500px", objectFit: "cover" }}
+        alt={`Section ${index + 1} Image Preview`}
+        className="mt-2 rounded"
+      />
+      <p style={{ color: "red" }}>Image size must be 900px x 500px</p>
+    </>
+  )}
 
-                <Button
-                  onClick={() => removeSection(index)}
-                  color="error"
-                  className="mt-2"
-                  variant="outlined"
-                >
-                  Remove Section
-                </Button>
-              </AccordionDetails>
+  <Button
+    onClick={() => removeSection(index)}
+    color="error"
+    className="mt-2"
+    variant="outlined"
+  >
+    Remove Section
+  </Button>
+</AccordionDetails>
 
             </Accordion>
           ))}
@@ -427,7 +431,7 @@ function CreateCountryPop({ open, onClose }) {
           >
             Add FAQ
           </Button>
-
+            
           <DialogActions>
             <Button onClick={handleCancelled} color="primary">Cancel</Button>
             <Button
@@ -445,4 +449,4 @@ function CreateCountryPop({ open, onClose }) {
   );
 }
 
-export default CreateCountryPop;
+export default MbbsCreateCountryPopup;

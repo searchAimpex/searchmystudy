@@ -41,37 +41,68 @@ const initialLinks = [
             { name: "BLOG", link: "/blog", path: "/blog" ,flagURL:blog},
             { name: "CONTACT US", link: "/contactus", path: "/contactus",flagURL:contact },
         ]
-    },
-
-    {
-        name: "MEDICAL STUDY",
+    }, {
+        name: "MEDICAL STUDY IN ABROAD",
         submenu: true,
-        tabs: [
-            {
-                name: "INDIA", sublinks: [
-                    { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-                    { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-
-                    { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: "https://imgur.com/0L7BLOw.png" }
-
-                ]
-            },
-            { name: "ABROAD", sublinks: [
-                { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-                { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" }
-            ] },
-        ],
+        sublinks: [
+            { name: "ABOUT US", link: "/aboutus", path: "/aboutus",flagURL:about },
+            { name: "BLOG", link: "/blog", path: "/blog" ,flagURL:blog},
+            { name: "CONTACT US", link: "/contactus", path: "/contactus",flagURL:contact },
+        ]
     },
+    {
+        name: "MEDICAL STUDY IN INDIA",
+        submenu: true,
+        sublinks: [
+            { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+            { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+
+        ]
+    },
+
+
+
+    // {
+    //     name: "MEDICAL STUDY",
+    //     submenu: true,
+    //     tabs: [
+    //         {
+    //             name: "INDIA", sublinks: [
+    //                 { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    //                 { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+
+    //                 { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+
+    //             ]
+    //         },
+    //         { name: "ABROAD", sublinks: [
+    //             { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    //             { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+    //         ] },
+    //     ],
+    // },
     {
         name: "ABROAD STUDY",
         submenu: true,
@@ -161,7 +192,17 @@ export default function PublicNavBar() {
                                 flagURL: country.flagURL
                             }))
                         };
-                    } else if (link.name === "MEDICAL STUDY") {
+                    }else if(link.name === "MEDICAL STUDY IN ABROAD"){
+                        return {
+                            ...link,
+                            sublinks: linkResult.map(item => ({
+                                name: `${item.name}`,
+                                link: `/country/${item._id}`,
+                                flagURL: item.flagURL ? item?.flagURL : "https://i.imgur.com/0L7BLOw.png"
+                            }))
+                        };
+                    } 
+                    else if (link.name === "MEDICAL STUDY") { 
                         const updatedTabs = link.tabs.map(tab => {
                             if (tab.name === "ABROAD") {
                                 return {

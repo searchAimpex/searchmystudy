@@ -19,6 +19,7 @@ import AdminAssessmentManagement from '../../screens/Admin/AdminAssessmentManage
 import AdminUploadManagement from '../../screens/Admin/AdminUploadManagement';
 import AdminTransactionLedgerManagement from '../../screens/Admin/AdminTransactionLedgerManagement';
 import { useSelector } from "react-redux";
+import MbbsAbroad from '../../screens/Admin/MbbsAbroad';
 
 
 const componentMapping = {
@@ -33,6 +34,7 @@ const componentMapping = {
   8: <AdminAssessmentManagement />,
   9: <AdminUploadManagement />,
   10: <AdminTransactionLedgerManagement />,
+  11:<MbbsAbroad/>
 };
 function NavBar() {
   const selectedComponent = useSelector((state) => state.component.selectedComponent)

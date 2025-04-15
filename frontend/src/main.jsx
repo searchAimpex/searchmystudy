@@ -57,6 +57,7 @@ import AddUniversity from './components/Admin/AddUniversity.jsx';
 import AddUniversitys from './components/Admin/AddUniversity.jsx';
 import Signin from './screens/Signin.jsx';
 import SignUp from './screens/SignUp.jsx';
+import MbbsAbroad from './screens/Admin/MbbsAbroad.jsx';
 
 // import UserLogin from './screens/Signin.jsx';
 
@@ -111,6 +112,8 @@ const router = createBrowserRouter(
         <Route path = '/admin/upload' element ={ < AdminUploadManagement />} />
         <Route path = '/admin/transaction' element ={ < AdminTransactionLedgerManagement />} />
         <Route path = '/admin/addcountry' element={< CountryAdd />} />
+        <Route path = '/admin/MbbsAbroad' element={< MbbsAbroad />} />
+      
         <Route path = '/admin/addprovince' element={< ProvinceAdd />} />
         <Route path = '/admin/adduniversity' element={< AddUniversitys />} />
 

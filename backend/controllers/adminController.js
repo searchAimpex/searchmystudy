@@ -434,13 +434,15 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
+  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
 
   const country = new Country({
     name,
     bannerURL,
     description,
+
     sections,
+    mbbsAbroad,
     flagURL,
     elegiblity,
     bullet,
@@ -448,6 +450,8 @@ const createCountry = asyncHandler(async (req, res) => {
     MbbsSections
     
   });
+  console.log(country,"+++++++++++++++++++++");
+  
 
   const createdCountry = await country.save();
   res.status(201).json(createdCountry);
@@ -489,17 +493,17 @@ const getCountryById = asyncHandler(async (req, res) => {
 // @access  Public
 const updateCountry = asyncHandler(async (req, res) => {
   const { name, bannerURL, description, sections, provinces,mbbsAbroad,faq ,MbbsSections} = req.body;
-
+  
   const country = await Country.findById(req.params.id);
   console.log("req.body===>",req.body)
   // console.log("counbtry",country,status)
   if (country) {
     country.name = name || country.name;
     country.bannerURL = bannerURL || country.bannerURL;
-    country.description = description || country.description;
-    country.sections = sections || country.sections;
+    country.description = dion || country.description;
+    country.sections = sectionsescript || country.sections;
     country.provinces = provinces || country.provinces;
-    country.mbbsAbroad = mbbsAbroad || false;
+    country.mbbsAbroad = mbbsAbroad;
     country.faq = faq || country.faq;
     country.MbbsSections = MbbsSections || country.MbbsSections;
 
@@ -934,7 +938,7 @@ const getCoursesForIndiaMedical = async (req, res) => {
       const medicalCourses = await Country.find({mbbsAbroad:true})
     
       
-
+      
       res.status(200).json(medicalCourses);
   } catch (error) {
       res.status(500).json({ message: error.message });
