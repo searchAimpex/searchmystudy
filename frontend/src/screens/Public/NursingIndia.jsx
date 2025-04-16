@@ -156,8 +156,8 @@ const NursingIndia = () => {
                 <Grid item xs={12} md={6} className="flex flex-col justify-center">
                   <Typography variant="body1" className="mb-2">
                     We are India’s most trusted and fastest growing Admission Consulting Company. Our innovative and exclusively designed counselling programs help you accomplish your dream to become a Nurse.
-                    Our exclusively designed smart counselling process has made us a force to reckon with in the highly competitive industry. 
-                    With our commendable track record in such a short span of time, University Expert has become the most sought after consulting firm for medical admissions in India through NEET UG & NEET PG aspirants. With the help of our associates, we are able to extend our support to medical aspirants across Mumbai, Delhi, Bangalore, Kolkata, Chennai, Lucknow, Patna, Ranchi, Chandigarh, Jaipur, Dehradun, Ahmedabad, Bhubaneshwar, Raipur, Bhopal, Gurgaon, Indore, Nagpur, and Guwahati.                  
+                    Our exclusively designed smart counselling process has made us a force to reckon with in the highly competitive industry.
+                    With our commendable track record in such a short span of time, University Expert has become the most sought after consulting firm for medical admissions in India through NEET UG & NEET PG aspirants. With the help of our associates, we are able to extend our support to medical aspirants across Mumbai, Delhi, Bangalore, Kolkata, Chennai, Lucknow, Patna, Ranchi, Chandigarh, Jaipur, Dehradun, Ahmedabad, Bhubaneshwar, Raipur, Bhopal, Gurgaon, Indore, Nagpur, and Guwahati.
                   </Typography>
                 </Grid>
               </Grid>

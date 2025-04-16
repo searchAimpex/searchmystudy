@@ -16,6 +16,7 @@ function AdminDashboard({component}) {
     { name: 'Website Manager', path: '/admin/webManager', src: 'https://cdn-icons-png.flaticon.com/512/15862/15862329.png' },
     { name: 'Blog Manager', path: '/admin/blog', src: 'https://cdn-icons-png.flaticon.com/512/3573/3573196.png' },
     { name: 'Course Manager', path: '/admin/course', src: 'https://cdn-icons-png.flaticon.com/512/566/566985.png' },
+    { name: 'MBBS Abroad', path: '/admin/MbbsAbroad', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
     { name: 'Lead Manager', path: '/admin/leads', src: 'https://cdn-icons-png.flaticon.com/512/3126/3126647.png' },
     { name: 'Notification Manager', path: '/admin/notification', src: 'https://cdn-icons-png.flaticon.com/512/4991/4991422.png' },
     { name: 'User Manager', path: '/admin/user', src: 'https://cdn-icons-png.flaticon.com/512/16797/16797245.png' },
@@ -23,9 +24,7 @@ function AdminDashboard({component}) {
     { name: 'Ticket Manager', path: '/admin/ticket', src: 'https://cdn-icons-png.flaticon.com/512/8943/8943507.png' },
     { name: 'Assessment Manager', path: '/admin/assessment', src: 'https://cdn-icons-png.flaticon.com/512/4337/4337557.png' },
     { name: 'Upload Manager', path: '/admin/upload', src: 'https://cdn-icons-png.flaticon.com/512/159/159626.png' },
-    { name: 'Transaction Manager', path: '/admin/transaction', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
-    { name: 'MBBS Abroad', path: '/admin/MbbsAbroad', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
-  ];
+    { name: 'Transaction Manager', path: '/admin/transaction', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' }];
 
   const [logoutApiCall, { isSuccess }] = useLogoutMutation();
 

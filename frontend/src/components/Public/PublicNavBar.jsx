@@ -186,18 +186,21 @@ export default function PublicNavBar() {
                     } else if (link.name === "ABROAD STUDY") {
                         return {
                             ...link,
-                            sublinks: countryResult.map(country => ({
+                            sublinks: countryResult
+                              .filter(country => country.hasOwnProperty('mbbsAbroad') && country.mbbsAbroad == false)
+                              .map(country => ({
                                 name: country.name,
                                 link: `/country/${country._id}`,
                                 flagURL: country.flagURL
-                            }))
-                        };
+                              }))
+                          };
+                          
                     }else if(link.name === "MEDICAL STUDY IN ABROAD"){
                         return {
                             ...link,
                             sublinks: linkResult.map(item => ({
                                 name: `${item.name}`,
-                                link: `/country/${item._id}`,
+                                link: `/MbbsCountryDetailed/${item._id}`,
                                 flagURL: item.flagURL ? item?.flagURL : "https://i.imgur.com/0L7BLOw.png"
                             }))
                         };
@@ -350,18 +353,7 @@ export default function PublicNavBar() {
                                             }}
                                         >
                                             {link.name}
-                                            <span className="text-sm md:hidden inline flex items-center">
-                                                {heading === link.name ? <ExpandLess /> : <ExpandMore />}
-                                            </span>
-                                            <span className="text-sm md:block hidden group-hover:rotate-180">
-                                                {link?.submenu && <ExpandMore />}
-                                            </span>
-                                            <span className="md:hidden inline flex items-center">
-                                                {heading === link.name ? <ExpandLess /> : <ExpandMore />}
-                                            </span>
-                                            <span className="md:hidden flex items-center group-hover:rotate-180">
-                                                {link?.submenu && <ExpandMore />}
-                                            </span>
+                                          
                                         </h1>
                                     </Link>
                                 ) : (

@@ -247,6 +247,7 @@ const CountryTable = () => {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { countries } = useSelector((state) => state.country);
     const services = countries;
+    
     const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
     const [CountryDelete, DeleteState] = useCountryDeleteMutation();
     const dispatch = useDispatch();
@@ -335,13 +336,12 @@ const CountryTable = () => {
     const filteredServices = services.filter(
         item => item.mbbsAbroad === false || item.mbbsAbroad === ''
       );
-      
-      const currentData = stableSort(filteredServices, getComparator(order, orderBy))
+      const currentData = stableSort(services, getComparator(order, orderBy))
         .slice(startIndex, endIndex);
-      
-      // Calculate total pages
-      const totalPages = Math.max(1, Math.ceil(filteredServices.length / rowsPerPage));
-      
+
+    // Calculate total pages
+    const totalPages = Math.max(1, Math.ceil(services.length / rowsPerPage));
+
     return (
         <Box sx={{ width: '100%', mt: 3 }}>
             <EnhancedTableToolbar

@@ -26,15 +26,16 @@ const componentMapping = {
   0: <AdminWebManagement />,
   1: <AdminBlogManagement />,
   2: <AdminCourseManagement />,
-  3: <AdminLeadManagement />,
-  4: <AdminNotificationManagement />,
-  5: <AdminUserManagement />,
-  6: <AdminStudentManagement />,
-  7: <AdminTicketManagement />,
-  8: <AdminAssessmentManagement />,
-  9: <AdminUploadManagement />,
-  10: <AdminTransactionLedgerManagement />,
-  11:<MbbsAbroad/>
+  3:<MbbsAbroad/>,
+  4: <AdminLeadManagement />,
+  5: <AdminNotificationManagement />,
+  6: <AdminUserManagement />,
+  7: <AdminStudentManagement />,
+  8: <AdminTicketManagement />,
+  9: <AdminAssessmentManagement />,
+  10: <AdminUploadManagement />,
+  11: <AdminTransactionLedgerManagement />,
+
 };
 function NavBar() {
   const selectedComponent = useSelector((state) => state.component.selectedComponent)

@@ -58,6 +58,7 @@ import AddUniversitys from './components/Admin/AddUniversity.jsx';
 import Signin from './screens/Signin.jsx';
 import SignUp from './screens/SignUp.jsx';
 import MbbsAbroad from './screens/Admin/MbbsAbroad.jsx';
+import MbbsCountryDetailed from './screens/Public/MbbsCountryDetailed.jsx';
 
 // import UserLogin from './screens/Signin.jsx';
 
@@ -74,6 +75,7 @@ const router = createBrowserRouter(
         <Route path = "/blog" element = {<BlogScreeen /> } />
         <Route path = "/blog/:id" element = {<BlogDetailed /> } />
         <Route path = '/country/:id' element = { <CountryDetailed />} />
+        <Route path = '/MbbsCountryDetailed/:id' element = { <MbbsCountryDetailed />} />
         <Route path = '/country' element={< AllCountryDetailled/>} />
         <Route path = '/province/:id' element ={<ProvinceDetailed />}  />
         <Route path = '/university/:id' element ={<UniversityDetailed />}  />

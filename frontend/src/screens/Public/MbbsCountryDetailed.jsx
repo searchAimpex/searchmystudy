@@ -13,19 +13,17 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormImage from '../../assets/FormImage.png';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useCountryFetchMutation, useLinkFetchMutation, useServiceFetchAllMutation } from "../../slices/adminApiSlice";
-import { FetchCountry } from "../../slices/countrySlice";
+
 const truncateText = (text, maxWords = 250) => {
   if (!text) return '';
   const words = text.split(' ');
   return words.length > maxWords ? words.slice(0, maxWords).join(' ') + '...' : text;
 };
 
-export default function CountryDetailed() {
+export default function MbbsCountryDetailed() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-      const [CountryFetch] = useCountryFetchMutation();
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const { singleCountry } = useSelector((state) => state.country);
 
@@ -36,41 +34,25 @@ export default function CountryDetailed() {
   const [refHelp, inViewHelp] = useInView({ triggerOnce: true });
   const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
 
-
-  
-      useEffect(() => {
-          const fetchData = async () => {
-              try {
-            
-  
-                  const countryResult = await CountryFetch().unwrap()
-                  console.log(countryResult);
-                  
-                  dispatch(FetchCountry(countryResult));
-  
-
-              } catch (error) {
-                  console.error("Failed to fetch data:", error);
-              }
-          };
-          fetchData();
-      }, [ServiceFetchAll, CountryFetch, LinkFetch, dispatch]);
-  
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await CountryFetchOne(id).unwrap();
-        dispatch(FetchOneCountry(result));
+  
+        // ✅ Check if mbbsabroad is true before dispatching
+        if (result?.mbbsAbroad === true) {
+          dispatch(FetchOneCountry(result));
+        } else {
+          console.warn('This country is not marked as MBBS Abroad.');
+        }
       } catch (error) {
         console.error('Failed to fetch country:', error);
       }
     };
+  
     fetchData();
   }, [id, dispatch, CountryFetchOne]);
-
+  
   if (isLoading) return <Loader />;
 
   return (
@@ -80,77 +62,65 @@ export default function CountryDetailed() {
         <img src={singleCountry?.bannerURL} alt="Country Banner" className="h-[300px] md:h-[450px] w-full object-cover" />
       </motion.div>
 
+      {/* Country Info */}
+      <motion.div ref={refInfo} className="max-w-7xl mx-auto p-4 mt-10" initial={{ opacity: 0, y: 50 }} animate={inViewInfo ? { opacity: 1, y: 0 } : {}} transition={{ duration: 1 }}>
+        <h2 className="text-2xl sm:text-3xl text-center md:text-4xl p-2 font-bold  text-gray-800 bg-gray-300 rounded-xl" >MBBS in <span className='capitalize'>{singleCountry?.name}</span></h2>
+        <div className="mt-4 text-sm sm:text-base md:text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }} />
+      </motion.div>
 
-      <div className="flex  w-[100%]">
-        <div className='w-[80%]'>
-          <div>
-            {/* Country Info */}
-            <motion.div ref={refInfo} className="max-w-7xl mx-auto p-4 mt-10" initial={{ opacity: 0, y: 50 }} animate={inViewInfo ? { opacity: 1, y: 0 } : {}} transition={{ duration: 1 }}>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main">{singleCountry?.name}</h2>
-              <div className="mt-4 text-sm sm:text-base md:text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }} />
-            </motion.div>
-          </div>
+      {singleCountry?.sections?.length > 0 && (
+        <motion.div
+          ref={refSections}
+          className="max-w-7xl mx-auto px-4 mt-12 space-y-16"
+          initial={{ opacity: 0 }}
+          animate={inViewSections ? { opacity: 1 } : {}}
+          transition={{ duration: 1 }}
+        >
+          {singleCountry.sections.map((section, index) => {
+            const isReversed = index % 2 === 0;
 
-          <div>
-            {singleCountry?.sections?.length > 0 && (
-              <motion.div
-                ref={refSections}
-                className="max-w-7xl mx-auto px-4 mt-12 space-y-16"
-                initial={{ opacity: 0 }}
-                animate={inViewSections ? { opacity: 1 } : {}}
-                transition={{ duration: 1 }}
+            return (
+              <div
+                key={section._id}
+                className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`}
               >
-                {singleCountry.sections.map((section, index) => {
-                  const isReversed = index % 2 === 0;
+                {/* Text Block Animation */}
+                <motion.div
+                  className="md:w-1/2 p-4"
+                  initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
+                  animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 1 }}
+                >
+                  <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">
+                    {section.title}
+                  </h3>
+                  <div
+                    className="text-gray-600"
+                    dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }}
+                  />
+                </motion.div>
 
-                  return (
-                    <div
-                      key={section._id}
-                      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`}
-                    >
-                      {/* Text Block Animation */}
-                      <motion.div
-                        className="md:w-1/2 p-4"
-                        initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
-                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1 }}>
+                {/* Image Block Animation */}
+                <motion.div
+                  className="md:w-1/2 p-4"
+                  initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
+                  animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 1 }}
+                >
+                  <motion.img
+                    src={section.url}
+                    alt={section.title}
+                    className="w-full h-auto rounded-lg shadow-lg"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.3 }}
+                  />
+                </motion.div>
+              </div>
+            );
+          })}
+        </motion.div>
+      )}
 
-                        <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">
-                          {section.title}
-                        </h3>
-                        <div
-                          className="text-gray-600"
-                          dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }}
-                        />
-                      </motion.div>
-
-                      {/* Image Block Animation */}
-                      <motion.div
-                        className="md:w-1/2 p-4"
-                        initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
-                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1 }}
-                      >
-                        <motion.img
-                          src={section.url}
-                          alt={section.title}
-                          className="w-full h-auto rounded-lg shadow-lg"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
-          </div>
-        </div>
-
-        <div className='border border-green-500 w-[20%]'>
-            <p>Top countries</p>
-        </div>
-      </div>
 
       {/* Province Header */}
       <motion.div ref={refProvinces} className="mt-16 text-center px-4" initial={{ opacity: 0 }} animate={inViewProvinces ? { opacity: 1 } : {}} transition={{ duration: 1 }}>

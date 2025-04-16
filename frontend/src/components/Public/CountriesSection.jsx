@@ -18,6 +18,8 @@ function CountriesSection() {
     const fetchData = async () => {
       try {
         const result = await CountryFetch().unwrap();
+          console.log(result, "+++++++++++++++++++++++++++++++++++++++");
+
         dispatch(FetchCountry(result));
       } catch (error) {
         console.error('Failed to fetch countries:', error);
