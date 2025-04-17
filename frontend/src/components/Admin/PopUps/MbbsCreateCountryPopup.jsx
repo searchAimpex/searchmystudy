@@ -178,7 +178,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
 
   return (
     <Dialog fullWidth={true} open={open} onClose={onClose}>
-      <DialogTitle className="text-white bg-custom-primary font-bold">Add Country</DialogTitle>
+      <DialogTitle className="text-white bg-custom-primary font-bold">Add MBBS Country</DialogTitle>
       <DialogContent>
         <div className="py-2">
           <DialogContentText>You can add a country.</DialogContentText>

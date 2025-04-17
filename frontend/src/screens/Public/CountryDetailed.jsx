@@ -41,14 +41,13 @@ export default function CountryDetailed() {
     fetchData();
   }, [id, dispatch, CountryFetchOne]);
 
-  // Render loading state after hooks have been initialized
-  if (isLoading) {
+   if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div>
-      {/* Section 2: Country Information */}
+      
       <motion.div
         ref={refInfo}
         className='flex flex-col p-4 text-left justify-center  '
@@ -63,7 +62,6 @@ export default function CountryDetailed() {
         ></div>
       </motion.div>
 
-      {/* Section with Sections */}
       <motion.div
         ref={refSections}
         className="mt-10 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 space-y-16"
