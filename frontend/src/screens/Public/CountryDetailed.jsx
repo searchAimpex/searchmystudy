@@ -13,8 +13,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormImage from '../../assets/FormImage.png';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { useCountryFetchMutation, useLinkFetchMutation, useServiceFetchAllMutation } from "../../slices/adminApiSlice";
-import { FetchCountry } from "../../slices/countrySlice";
+
+
+
+import { useCountryFetchMutation } from '../../slices/adminApiSlice'; // adjust path accordingly
+// import { useDispatch } from 'react-redux';
+import { FetchCountry } from '../../slices/countrySlice'; // your local Redux slice
+
 const truncateText = (text, maxWords = 250) => {
   if (!text) return '';
   const words = text.split(' ');
@@ -25,9 +30,13 @@ export default function CountryDetailed() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-      const [CountryFetch] = useCountryFetchMutation();
-  const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
+  // const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const { singleCountry } = useSelector((state) => state.country);
+  // const [CountryFetch] = useCountryFetchMutation();
+  const { countries } = useSelector((state) => state.country); // filtered MBBS Abroad countries
+
+  const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
+  const [CountryFetch] = useCountryFetchMutation(); // ← add this
 
   const [refBanner, inViewBanner] = useInView({ triggerOnce: true });
   const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
@@ -35,41 +44,30 @@ export default function CountryDetailed() {
   const [refProvinces, inViewProvinces] = useInView({ triggerOnce: true });
   const [refHelp, inViewHelp] = useInView({ triggerOnce: true });
   const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
-
-
-  
-      useEffect(() => {
-          const fetchData = async () => {
-              try {
-            
-  
-                  const countryResult = await CountryFetch().unwrap()
-                  console.log(countryResult);
-                  
-                  dispatch(FetchCountry(countryResult));
-  
-
-              } catch (error) {
-                  console.error("Failed to fetch data:", error);
-              }
-          };
-          fetchData();
-      }, [ServiceFetchAll, CountryFetch, LinkFetch, dispatch]);
-  
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch single country by ID
         const result = await CountryFetchOne(id).unwrap();
         dispatch(FetchOneCountry(result));
+
+        // Fetch all countries
+        const allCountries = await CountryFetch().unwrap();
+
+        // Filter only MBBS Abroad countries
+        const mbbsAbroadCountries = allCountries.filter(country => country.mbbsAbroad === true);
+
+        console.log('MBBS Abroad Countries:', mbbsAbroadCountries); // 🧾 LOG
+
+        // Dispatch only mbbsAbroad countries to store (optional)
+        dispatch(FetchCountry(mbbsAbroadCountries));
       } catch (error) {
-        console.error('Failed to fetch country:', error);
+        console.error('Failed to fetch data:', error);
       }
     };
+
     fetchData();
-  }, [id, dispatch, CountryFetchOne]);
+  }, [id, dispatch, CountryFetchOne, CountryFetch]);
 
   if (isLoading) return <Loader />;
 
@@ -80,84 +78,118 @@ export default function CountryDetailed() {
         <img src={singleCountry?.bannerURL} alt="Country Banner" className="h-[300px] md:h-[450px] w-full object-cover" />
       </motion.div>
 
+      <div className='flex'>
 
-      <div className="flex  w-[100%]">
-        <div className='w-[80%]'>
-          <div>
-            {/* Country Info */}
+        <div className='flex m-2 w-[100%]'>
+          <div className=' w-[80%]'>
             <motion.div ref={refInfo} className="max-w-7xl mx-auto p-4 mt-10" initial={{ opacity: 0, y: 50 }} animate={inViewInfo ? { opacity: 1, y: 0 } : {}} transition={{ duration: 1 }}>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main">{singleCountry?.name}</h2>
               <div className="mt-4 text-sm sm:text-base md:text-lg text-gray-600" dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }} />
             </motion.div>
-          </div>
 
-          <div>
-            {singleCountry?.sections?.length > 0 && (
-              <motion.div
-                ref={refSections}
-                className="max-w-7xl mx-auto px-4 mt-12 space-y-16"
-                initial={{ opacity: 0 }}
-                animate={inViewSections ? { opacity: 1 } : {}}
-                transition={{ duration: 1 }}
-              >
-                {singleCountry.sections.map((section, index) => {
-                  const isReversed = index % 2 === 0;
 
-                  return (
-                    <div
-                      key={section._id}
-                      className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`}
-                    >
-                      {/* Text Block Animation */}
-                      <motion.div
-                        className="md:w-1/2 p-4"
-                        initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
-                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1 }}>
+            <div>
+              {singleCountry?.sections?.length > 0 && (
+                <motion.div
+                  ref={refSections}
+                  className="max-w-7xl mx-auto px-4 mt-12 space-y-16"
+                  initial={{ opacity: 0 }}
+                  animate={inViewSections ? { opacity: 1 } : {}}
+                  transition={{ duration: 1 }}
+                >
+                  {singleCountry.sections.map((section, index) => {
+                    const isReversed = index % 2 === 0;
 
-                        <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">
-                          {section.title}
-                        </h3>
-                        <div
-                          className="text-gray-600"
-                          dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }}
-                        />
-                      </motion.div>
-
-                      {/* Image Block Animation */}
-                      <motion.div
-                        className="md:w-1/2 p-4"
-                        initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
-                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                        transition={{ duration: 1 }}
+                    return (
+                      <div
+                        key={section._id}
+                        className={`flex flex-col ${isReversed ? 'md:flex-row-reverse' : 'md:flex-row'} items-center`}
                       >
-                        <motion.img
-                          src={section.url}
-                          alt={section.title}
-                          className="w-full h-auto rounded-lg shadow-lg"
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.3 }}
-                        />
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </motion.div>
-            )}
+
+                        <motion.div
+                          className="md:w-1/2 p-4"
+                          initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
+                          animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                          transition={{ duration: 1 }}
+                        >
+                          <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">
+                            {section.title}
+                          </h3>
+                          <div
+                            className="text-gray-600"
+                            dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 250) }}
+                          />
+                        </motion.div>
+
+
+                        <motion.div
+                          className="md:w-1/2 p-4"
+                          initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
+                          animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                          transition={{ duration: 1 }}
+                        >
+                          <motion.img
+                            src={section.url}
+                            alt={section.title}
+                            className="w-full h-auto rounded-lg shadow-lg"
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ duration: 0.3 }}
+                          />
+                        </motion.div>
+                      </div>
+                    );
+                  })}
+                </motion.div>
+              )}
+            </div>
           </div>
+
+          <div className='w-[20%]'>
+            <div className='overflow-y-auto p-2'>
+              <h3 className='font-bold text-blue-main mb-2'>All Countries</h3>
+              <ul className='space-y-4'>
+                {countries?.length > 0 ? (
+                  countries.map((country) => (
+                    <motion.li
+                      key={country._id}
+                      className='bg-blue-100 hover:bg-blue-200 p-4 rounded-lg cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105'
+                      onClick={() => navigate(`/country/${country._id}`)}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <div className='flex items-center'>
+                        <img
+                          src={country.flagURL || UniversityLogo}  // Use country flag or fallback to a default logo
+                          alt={country.name}
+                          className='h-[40px] w-[40px] rounded-full mr-3'
+                        />
+                        <span className='text-lg font-semibold text-blue-main'>{country.name}</span>
+                      </div>
+                    </motion.li>
+                  ))
+                ) : (
+                  <p>No countries found</p>
+                )}
+              </ul>
+            </div>
+          </div>
+
         </div>
 
-        <div className='border border-green-500 w-[20%]'>
-            <p>Top countries</p>
-        </div>
+
+
       </div>
 
-      {/* Province Header */}
+
+
+
+      {/*  
       <motion.div ref={refProvinces} className="mt-16 text-center px-4" initial={{ opacity: 0 }} animate={inViewProvinces ? { opacity: 1 } : {}} transition={{ duration: 1 }}>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main">
           Province-wise Universities/Colleges in {singleCountry?.name}
         </h2>
-      </motion.div>
+      </motion.div> */}
 
       {/* Provinces */}
       <motion.div ref={refProvinces} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-4 mt-10 max-w-7xl mx-auto" initial="hidden" animate={inViewProvinces ? "visible" : "hidden"} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { delayChildren: 0.3, staggerChildren: 0.2 } } }}>
