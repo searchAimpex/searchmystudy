@@ -52,7 +52,7 @@ function AboutUsSection() {
     alt="About Us"
     className="w-full object-contain"
   />
-  <div className="shine-barr absolute top-0 left-0 w-full h-full"></div>
+  <div className=""></div>
 </div>
 
         </motion.div>

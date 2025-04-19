@@ -58,7 +58,7 @@ function CounsellorSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7, delay: 0.4 }}
-          className="mt-10 w-full Counselor"
+          className="mt-10  Counselor"
         >
           <Gallery isLoading={isLoading} testimonial={testimonial} />
         </motion.div>

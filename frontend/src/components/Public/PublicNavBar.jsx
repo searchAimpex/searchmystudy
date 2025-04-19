@@ -337,104 +337,104 @@ export default function PublicNavBar() {
                         </IconButton>
                     </div>
 
-                    <ul className="hidden md:flex">
-                        {menuLinks?.map((link, index) => (
-                            <li
-                                key={link.name}
-                                className="relative flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none"
-                            >
-                                {link.path ? (
-                                    <Link to={link.path}>
+                        <ul className="hidden md:flex">
+                            {menuLinks?.map((link, index) => (
+                                <li
+                                    key={link.name}
+                                    className="relative flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none"
+                                >
+                                    {link.path ? (
+                                        <Link to={link.path}>
+                                            <h1
+                                                className="text-sm text-text-color flex justify-start items-center group"
+                                                onClick={() => {
+                                                    heading !== link.name ? setHeading(link.name) : setHeading("");
+                                                    setSubHeading("");
+                                                }}
+                                            >
+                                                {link.name}
+                                            
+                                            </h1>
+                                        </Link>
+                                    ) : (
                                         <h1
-                                            className="text-sm text-text-color flex justify-start items-center group"
+                                            className="py-2 text-sm text-text-color flex justify-start items-center group"
                                             onClick={() => {
                                                 heading !== link.name ? setHeading(link.name) : setHeading("");
                                                 setSubHeading("");
                                             }}
                                         >
                                             {link.name}
-                                          
+                                            <span className="text-sm md:hidden inline flex items-center">
+                                                {heading === link.name ? <ExpandLess /> : <ExpandMore />}
+                                            </span>
+                                            <span className="text-sm md:block hidden group-hover:rotate-180">
+                                                {link?.submenu && <ExpandMore />}
+                                            </span>
                                         </h1>
-                                    </Link>
-                                ) : (
-                                    <h1
-                                        className="py-2 text-sm text-text-color flex justify-start items-center group"
-                                        onClick={() => {
-                                            heading !== link.name ? setHeading(link.name) : setHeading("");
-                                            setSubHeading("");
-                                        }}
-                                    >
-                                        {link.name}
-                                        <span className="text-sm md:hidden inline flex items-center">
-                                            {heading === link.name ? <ExpandLess /> : <ExpandMore />}
-                                        </span>
-                                        <span className="text-sm md:block hidden group-hover:rotate-180">
-                                            {link?.submenu && <ExpandMore />}
-                                        </span>
-                                    </h1>
-                                )}
+                                    )}
 
-                                {/* Submenu */}
-                                {link?.submenu && (
-                                    <div className=" absolute top-7  mx-12  hidden w-[800px] z-[50] group-hover:md:block hover:md:block">
-                                        <div className="py-3">
-                                            <div className="w-4 h-4 left-7 absolute mt-1 bg-white rotate-45"></div>
+                                    {/* Submenu */}
+                                    {link?.submenu && (
+                                        <div className=" absolute top-7  mx-12  hidden w-[800px] z-[50] group-hover:md:block hover:md:block">
+                                            <div className="py-3">
+                                                <div className="w-4 h-4 left-7 absolute mt-1 bg-white rotate-45"></div>
+                                            </div>
+                                            <div className="  myshadow bg-white w-[500px] p-5
+                                            grid grid-cols-3 gap-6">
+                                                {link.sublinks?.map((sublink, index) => (
+                                                    <div key={index}>
+                                                        <li className="font-semibold text-x text-gray-600 my-2.5">
+                                                            <Link
+                                                                to={sublink.link}
+                                                                className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row"
+                                                            >
+                                                                <img
+                                                                    className="object-contained h-[25px] w-[25px]"
+                                                                    src={sublink?.flagURL}
+                                                                />
+                                                                <h5>{sublink?.name}</h5>
+                                                            </Link>
+                                                        </li>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="  myshadow bg-white w-[700px] p-5
-                                         grid grid-cols-3 gap-6">
-                                            {link.sublinks?.map((sublink, index) => (
-                                                <div key={index}>
-                                                    <li className="font-semibold text-x text-gray-600 my-2.5">
-                                                        <Link
-                                                            to={sublink.link}
-                                                            className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row"
-                                                        >
-                                                            <img
-                                                                className="object-contained h-[25px] w-[25px]"
-                                                                src={sublink?.flagURL}
-                                                            />
-                                                            <h5>{sublink?.name}</h5>
-                                                        </Link>
-                                                    </li>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
+                                    )}
 
-                                {/* Special MEDICAL STUDY submenu */}
-                                {link.name === "MEDICAL STUDY" && (
-                                    <div style={{ border: "0px solid red" }} className="myshadow absolute top-12 my-1 mx-9 hidden w-[800px] z-[50] bg-white group-hover:md:block hover:md:block">
-                                        <Tabs
-                                            value={tabValue}
-                                            onChange={handleTabChange}
-                                            aria-label="medical tabs"
-                                            className="p-5 space-between"
-                                        >
-                                            {link.tabs.map((tab, index) => (
-                                                <Tab className="text-xs font-bold" key={index} label={tab.name} />
-                                            ))}
-                                        </Tabs>
-                                        <div className="p-5 grid grid-cols-4 gap-4">
-                                            {link.tabs[tabValue]?.sublinks.map((sublink, index) => (
-                                                <div key={index}>
-                                                    <li className="text-xs hover:bg-blue-100 p-2 rounded-md text-gray-600 my-2.5">
-                                                        <Link to={sublink.link} className="flex space-x-2 flex-row">
+                                    {/* Special MEDICAL STUDY submenu */}
+                                    {link.name === "MEDICAL STUDY" && (
+                                        <div style={{ border: "0px solid red" }} className="myshadow absolute top-12 my-1 mx-9 hidden w-[800px] z-[50] bg-white group-hover:md:block hover:md:block">
+                                            <Tabs
+                                                value={tabValue}
+                                                onChange={handleTabChange}
+                                                aria-label="medical tabs"
+                                                className="p-5 space-between"
+                                            >
+                                                {link.tabs.map((tab, index) => (
+                                                    <Tab className="text-xs font-bold" key={index} label={tab.name} />
+                                                ))}
+                                            </Tabs>
+                                            <div className="p-5 grid grid-cols-4 gap-4">
+                                                {link.tabs[tabValue]?.sublinks.map((sublink, index) => (
+                                                    <div key={index}>
+                                                        <li className="text-xs hover:bg-blue-100 p-2 rounded-md text-gray-600 my-2.5">
+                                                            <Link to={sublink.link} className="flex space-x-2 flex-row">
                                                             <img
-                                                                className="object-contained h-[20px] w-[20px]"
-                                                                src={sublink?.flagURL}
-                                                            />
-                                                            <span>{sublink?.name}</span>
-                                                        </Link>
-                                                    </li>
-                                                </div>
-                                            ))}
+                                                                    className="object-contained h-[25px] w-[25px]"
+                                                                    src={sublink?.flagURL}
+                                                                />
+                                                                <span>{sublink?.name}</span>
+                                                            </Link>
+                                                        </li>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
-                                    </div>
-                                )}
-                            </li>
-                        ))}
-                    </ul>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
 
 
                     {/* Login Button */}
@@ -446,46 +446,84 @@ export default function PublicNavBar() {
                 </div>
 
                 {/* Mobile Drawer Menu */}
-                <Drawer anchor="left" open={isOpen} onClose={() => setIsOpen(false)}>
-                    <div className="flex justify-end p-2">
-                        <IconButton onClick={() => setIsOpen(false)}>
-                            <Close />
-                        </IconButton>
-                    </div>
-                    <div className="p-4 w-[250px]">
-                        {initialLinks.map((link, index) => (
-                            <Accordion key={index} expanded={expanded === index} onChange={handleAccordionToggle(index)}>
-                                <AccordionSummary expandIcon={expanded === index ? <ExpandLess /> : <ExpandMore />}>
-                                    <Typography>{link.name}</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    {link.tabs ? (
-                                        <>
-                                            <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>
-                                                {link.tabs.map((tab, i) => (
-                                                    <Tab key={i} label={tab.name} />
-                                                ))}
-                                            </Tabs>
-                                            <div className="mt-2">
-                                                {link.tabs[tabValue]?.sublinks.map((sublink, i) => (
-                                                    <div key={i}>
-                                                        <Link to={sublink.link} className="block py-1 text-sm">{sublink.name}</Link>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </>
-                                    ) : (
-                                        link.sublinks?.map((sublink, i) => (
-                                            <div key={i}>
-                                                <Link to={sublink.link} className="block py-1 text-sm">{sublink.name}</Link>
-                                            </div>
-                                        ))
-                                    )}
-                                </AccordionDetails>
-                            </Accordion>
-                        ))}
-                    </div>
-                </Drawer>
+               {/* Mobile Drawer Menu */}
+               <Drawer anchor="left" open={isOpen} onClose={() => setIsOpen(false)}>
+  <div className="flex justify-end p-2">
+    <IconButton onClick={() => setIsOpen(false)}>
+      <Close />
+    </IconButton>
+  </div>
+
+  <div className="p-4 w-[250px]">
+    {menuLinks?.map((link, index) => (
+      <Accordion
+        key={index}
+        expanded={expanded === index}
+        onChange={handleAccordionToggle(index)}
+      >
+        <AccordionSummary
+          expandIcon={expanded === index ? <ExpandLess /> : <ExpandMore />}
+        >
+          <Typography>{link.name}</Typography>
+        </AccordionSummary>
+
+        <AccordionDetails>
+          {/* MEDICAL STUDY with Tabs */}
+          {link.name === "MEDICAL STUDY" ? (
+            <>
+              <Tabs
+                value={tabValue}
+                onChange={(e, newValue) => setTabValue(newValue)}
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                {link.tabs.map((tab, i) => (
+                  <Tab key={i} label={tab.name} />
+                ))}
+              </Tabs>
+
+              <div className="mt-3">
+                {link.tabs[tabValue]?.sublinks?.map((sublink, i) => (
+                  <Link
+                    key={i}
+                    to={sublink.link}
+                    className="flex items-center gap-2 py-1 text-sm"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <img
+                      src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
+                      alt="flag"
+                      className="h-[20px] w-[20px] object-contain rounded"
+                    />
+                    <span>{sublink.name}</span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          ) : (
+            // Other Links with Submenu
+            link.sublinks?.map((sublink, i) => (
+              <Link
+                key={i}
+                to={sublink.link}
+                className="flex items-center gap-2 py-1 text-sm"
+                onClick={() => setIsOpen(false)}
+              >
+                <img
+                  src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
+                  alt="flag"
+                  className="h-[20px] w-[20px] object-contain rounded"
+                />
+                <span>{sublink.name}</span>
+              </Link>
+            ))
+          )}
+        </AccordionDetails>
+      </Accordion>
+    ))}
+  </div>
+</Drawer>
+
             </div>
             {/* Counselling Modal */}
             {isModalOpen && (
