@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from "react-redux";
 import CallIcon from '@mui/icons-material/Call';
 import { FetchAllServices } from "../../slices/serviceSlice";
 import { FetchCountry } from "../../slices/countrySlice";
-// import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import Logo from "../../assets/SearchMyStudy.png";
 import contact from "../../assets/contact.png";
 import about from "../../assets/about.png";
+import india_flag from "../../assets/india_flag.png";
 import blog from "../../assets/blog.png";
 // import Logo from "../../assets/SearchMyStudy.png";
 import CounsellingModal from "./PopUp/CounsellingModal";
@@ -45,29 +45,27 @@ const initialLinks = [
         name: "MEDICAL STUDY IN ABROAD",
         submenu: true,
         sublinks: [
-            { name: "ABOUT US", link: "/aboutus", path: "/aboutus",flagURL:about },
-            { name: "BLOG", link: "/blog", path: "/blog" ,flagURL:blog},
-            { name: "CONTACT US", link: "/contactus", path: "/contactus",flagURL:contact },
+            
         ]
     },
     {
         name: "MEDICAL STUDY IN INDIA",
         submenu: true,
         sublinks: [
-            { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
-            { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: india_flag },
+            { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: india_flag },
 
-            { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: india_flag },
 
-            { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: india_flag },
 
-            { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: india_flag },
 
-            { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: india_flag },
 
-            { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+            { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: india_flag },
 
-            { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+            { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: india_flag }
 
         ]
     },

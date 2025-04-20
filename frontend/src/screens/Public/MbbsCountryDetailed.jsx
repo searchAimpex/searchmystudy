@@ -47,6 +47,7 @@ export default function MbbsCountryDetailed() {
       try {
         // Fetch single country by ID
         const result = await CountryFetchOne(id).unwrap();
+        console.log(result,"+++++++++++++++++++++++++++++++++++++")
         dispatch(FetchOneCountry(result));
 
         // Fetch all countries
