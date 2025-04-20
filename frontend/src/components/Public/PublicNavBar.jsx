@@ -339,8 +339,7 @@ export default function PublicNavBar() {
                             {menuLinks?.map((link, index) => (
                                 <li
                                     key={link.name}
-                                    className="relative flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none"
-                                >
+                                    className="relative flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none">
                                     {link.path ? (
                                         <Link to={link.path}>
                                             <h1
@@ -351,6 +350,12 @@ export default function PublicNavBar() {
                                                 }}
                                             >
                                                 {link.name}
+                                                <span className="text-sm md:hidden inline flex items-center">
+                                                {heading === link.name ? <ExpandMore /> : <ExpandLess />}
+                                            </span>
+                                            <span className="text-sm md:block hidden group-hover:rotate-180">
+                                                {link?.submenu && <ExpandLess />}
+                                            </span>
                                             
                                             </h1>
                                         </Link>
@@ -364,10 +369,10 @@ export default function PublicNavBar() {
                                         >
                                             {link.name}
                                             <span className="text-sm md:hidden inline flex items-center">
-                                                {heading === link.name ? <ExpandLess /> : <ExpandMore />}
+                                                {heading === link.name ? <ExpandMore /> : <ExpandLess />}
                                             </span>
                                             <span className="text-sm md:block hidden group-hover:rotate-180">
-                                                {link?.submenu && <ExpandMore />}
+                                                {link?.submenu && <ExpandLess />}
                                             </span>
                                         </h1>
                                     )}
@@ -392,6 +397,8 @@ export default function PublicNavBar() {
                                                                     src={sublink?.flagURL}
                                                                 />
                                                                 <h5>{sublink?.name}</h5>
+                                                                
+                                                                
                                                             </Link>
                                                         </li>
                                                     </div>
@@ -423,6 +430,7 @@ export default function PublicNavBar() {
                                                                     src={sublink?.flagURL}
                                                                 />
                                                                 <span>{sublink?.name}</span>
+                                                                
                                                             </Link>
                                                         </li>
                                                     </div>
