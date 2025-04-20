@@ -269,7 +269,6 @@ export default function PublicNavBar() {
                         alt="Logo"
                         className="h-11 sm:h-12 md:h-[50px] w-auto max-w-[130px] sm:max-w-[200px]"
                     />
-
                 </div>
 
                 {/* Right Section */}
