@@ -46,9 +46,12 @@ export default function MbbsCountryDetailed() {
     const fetchData = async () => {
       try {
         // Fetch single country by ID
-        const result = await CountryFetchOne(id).unwrap();
-        console.log(result,"+++++++++++++++++++++++++++++++++++++")
-        dispatch(FetchOneCountry(result));
+        // const result = await CountryFetchOne(id).unwrap();
+        
+        // if (result.mbbsAbroad) {
+        //   dispatch(FetchOneCountry(result));
+        //   console.log(result, "+++++++++++++++++++++++++++++++++++++");
+        // }
 
         // Fetch all countries
         const allCountries = await CountryFetch().unwrap();
