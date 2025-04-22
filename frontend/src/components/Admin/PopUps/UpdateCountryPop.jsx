@@ -46,6 +46,8 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   const [updateCountry, { isSuccess }] = useCountryStatusUpdateMutation();
   const dispatch = useDispatch();
   console.log("my form values",formValues)
+
+
   useEffect(() => {
     if (countryData) {
       setFormValues({
@@ -65,6 +67,8 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
       });
     }
   }, [countryData]);
+
+  
   console.log("fix.===>",countryData)
   const validateImage = async (file, requiredWidth, requiredHeight) => {
     return new Promise((resolve) => {
@@ -185,6 +189,7 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
   const onSubmit = async () => {
     const data = { id:countryData._id,raw:formValues} 
     const res = await updateCountry(data).unwrap();
+    console.log(res)
     handleClose();
   };
 
@@ -349,6 +354,7 @@ function UpdateCountryPop({ open, handleClose, countryData }) {
                     className="mt-2 w-full h-40 object-cover rounded"
                   />
                 )}
+                <p className='text-red-300 font-bold'>Image size should be 300px x 300px</p>
                 <Button
                   onClick={() => removeSection(index)}
                   color="error"

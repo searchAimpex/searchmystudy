@@ -374,26 +374,26 @@ function MbbsUniversityTable() {
                 </select>
             </div>
                 <div className="flex items-center gap-4">
-                        <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-                            Filter by Province:
-                        </Typography>
+                            {/* <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
+                                Filter by Province:
+                            </Typography>
 
-                        <select
-                            variant="outlined"
-                            size="sm"
-                            className='border p-2 rounded-sm'
-                            value={selectedProvince}
-                            onChange={handleProvinceChange}
-                        >
-                            <option value="all">All Provinces</option>
-                            {province
-                                ?.filter((prov) => prov.Country?._id === selectedCountry)
-                                .map((prov) => (
-                                    <option key={prov?._id} value={prov?._id}>
-                                        {prov.name}
-                                    </option>
-                                ))}
-                        </select>
+                            <select
+                                variant="outlined"
+                                size="sm"
+                                className='border p-2 rounded-sm'
+                                value={selectedProvince}
+                                onChange={handleProvinceChange}
+                            >
+                                <option value="all">All Provinces</option>
+                                {province
+                                    ?.filter((prov) => prov.Country?._id === selectedCountry)
+                                    .map((prov) => (
+                                        <option key={prov?._id} value={prov?._id}>
+                                            {prov.name}
+                                        </option>
+                                    ))}
+                            </select> */}
                 </div>
             </Box>
             </CardContent>

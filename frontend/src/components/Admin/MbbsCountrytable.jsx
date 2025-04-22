@@ -201,15 +201,15 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                                 }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="MBBS Status Country">
-                        <IconButton size="sm" color="danger" variant='solid' >
-                            <EditIcon
-                                onClick={() => {
-                                    handleViewUpdateOpen()
-                                }}
-                            />
-                        </IconButton>
-                    </Tooltip>
+                        {/* <Tooltip title="MBBS Status Country">
+                            <IconButton size="sm" color="danger" variant='solid' >
+                                <EditIcon
+                                    onClick={() => {
+                                        handleViewUpdateOpen()
+                                    }}
+                                />
+                            </IconButton>
+                        </Tooltip> */}
                     <Tooltip title="View Hero Image">
                         <IconButton size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {

@@ -19,15 +19,16 @@ import UniversityTable from "./UniversityTable";
 import CourseTable from "./CourseTable";
 
 const theme = createTheme({
-    palette: {
-        background: {
-            paper: '#9C2949',
-        },
-        customColor: {
-            main: '#fffff',
-        },
+  palette: {
+    background: {
+      paper: '#9C2949',
     },
-  });
+    customColor: {
+      main: '#ffffff',
+    },
+  },
+});
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -61,9 +62,7 @@ function a11yProps(index) {
   };
 }
 
-
 export default function CourseTab() {
-//   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -75,25 +74,24 @@ export default function CourseTab() {
   };
 
   return (
-    
     <Box sx={{ width: "100%" }}>
-         <ThemeProvider theme={theme}>
-      <AppBar  sx={{ bgcolor: 'background.paper'}} position="static">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="inherit"
-          variant="fullWidth"
-          aria-label="full width tabs example"
-        >
-          <Tab label="COUNTRY MANAGEMENT" {...a11yProps(0)} />
-          <Tab label="PROVINCE MANAGEMENT" {...a11yProps(1)} />
-          <Tab label="UNIVERSITY MANAGMENT" {...a11yProps(2)} />
-          <Tab label="COURSE MANAGMENT" {...a11yProps(3)} />
-        </Tabs>
-      </AppBar>
+      <ThemeProvider theme={theme}>
+        <AppBar sx={{ bgcolor: 'background.paper' }} position="static">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="secondary"
+            textColor="inherit"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label=" COUNTRY MANAGEMENT" {...a11yProps(0)} />
+            <Tab label=" UNIVERSITY MANAGEMENT" {...a11yProps(1)} />
+            <Tab label=" COURSE MANAGEMENT" {...a11yProps(2)} />
+          </Tabs>
+        </AppBar>
       </ThemeProvider>
+
       <SwipeableViews
         axis={theme.direction === "rtl" ? "x-reverse" : "x"}
         index={value}
@@ -102,17 +100,20 @@ export default function CourseTab() {
         <TabPanel value={value} index={0} dir={theme.direction}>
             <CountryTable />
         </TabPanel>
+
         <TabPanel value={value} index={1} dir={theme.direction}>
-            <ProvinceTable />
+        <UniversityTable />
         </TabPanel>
+
         <TabPanel value={value} index={2} dir={theme.direction}>
-             <UniversityTable />
+        <CourseTable />
         </TabPanel>
-        <TabPanel value={value} index={3} dir={theme.direction}>
+
+        {/* <TabPanel value={value} index={3} dir={theme.direction}>
               <CourseTable />
-        </TabPanel>
+        </TabPanel> */}
+
       </SwipeableViews>
     </Box>
-   
   );
 }

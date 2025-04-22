@@ -33,7 +33,11 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
     const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
     console.log("imnital data",initialData)
-
+  const [previewImages, setPreviewImages] = useState({
+    banner: '',
+    flag: '',
+    sectionImages: [],
+  });
     // State for form values and image validation
     const [formValues, setFormValues] = useState(initialData || {
         name: '',
@@ -55,6 +59,47 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
     });
     console.log("form data",formValues)
 
+
+
+
+
+
+    useEffect(() => {
+        if (initialData ) {
+          setFormValues({
+            name: initialData.name || '',
+            bannerURL: initialData.bannerURL || '',
+            heroURL: initialData.heroURL || '',
+            description: initialData.description || '',
+            grade: initialData.grade || 'A',
+            rating: initialData.rating || '5',
+            sections: initialData.sections || [{ title: '', description: '', url: '' }],
+            eligiblity: initialData.eligiblity || '',
+            logo: initialData.logo || '',
+            Province: initialData.Province || '',
+            campusLife: initialData.campusLife || '',
+            hostel: initialData.hostel || '',
+            type: initialData.type || 'Public',
+            rank: initialData.rank || 0,
+            UniLink: initialData.UniLink || '',
+            Course: initialData.Course || [],
+          });
+      
+          setPreviewImages({
+            banner: initialData.bannerURL || '',
+            hero: initialData.heroURL || '',
+            logo: initialData.logo || '',
+            sectionImages: initialData.sections?.map(sec => sec.url) || [],
+          });
+        }
+      }, [initialData]);
+
+      
+
+   
+    
+
+
     const [imageValidations, setImageValidations] = useState({
         bannerURL: false,
         heroURL: false,
@@ -75,6 +120,9 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
         };
         fetchData();
     }, [FetchProvince, dispatch]);
+
+
+
 
     const validateImage = (file, requiredWidth, requiredHeight) => {
         return new Promise((resolve) => {

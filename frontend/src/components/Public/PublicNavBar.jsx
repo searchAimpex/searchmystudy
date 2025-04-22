@@ -167,6 +167,8 @@ export default function PublicNavBar() {
 
                 const countryResult = await CountryFetch().unwrap();
                 dispatch(FetchCountry(countryResult));
+                console.log(countryResult,"///////////////////////////////////////");
+                
 
                 const linkResult = await LinkFetch().unwrap();
                 dispatch(FetchedLinked(linkResult));

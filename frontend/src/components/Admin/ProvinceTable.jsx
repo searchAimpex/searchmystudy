@@ -276,7 +276,7 @@ function ProvinceTable() {
         <CardContent>
             <div className="flex items-center gap-4">
                 <Typography level="body-sm" sx={{ fontWeight: 'bold', fontSize: '16px' }}>
-                    Filter by Country:
+                    Filter by Countra:
                 </Typography>
                 <Select
                     value={selectedCountry}

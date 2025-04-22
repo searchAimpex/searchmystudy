@@ -45,7 +45,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
         sections: [{ title: '', description: '', url: '' }],
         eligiblity: '',
         logo: '',
-        Province: '',
         campusLife: '',
         hostel: '',
         type: 'Public',
@@ -63,17 +62,17 @@ export default function CreateUniversityPop({ open, handleClose }) {
     const [isFormValid, setIsFormValid] = useState(false);
     const [createUniversity, { isSuccess }] = useCreateUniversityMutation();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await FetchProvince().unwrap();
-                dispatch(FetchProvinces(result));
-            } catch (error) {
-                console.error('Failed to fetch provinces:', error);
-            }
-        };
-        fetchData();
-    }, [FetchProvince, dispatch]);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const result = await FetchProvince().unwrap();
+    //             dispatch(FetchProvinces(result));
+    //         } catch (error) {
+    //             console.error('Failed to fetch provinces:', error);
+    //         }
+    //     };
+    //     fetchData();
+    // }, [FetchProvince, dispatch]);
 
     const validateImage = (file, requiredWidth, requiredHeight) => {
         return new Promise((resolve) => {
@@ -87,12 +86,12 @@ export default function CreateUniversityPop({ open, handleClose }) {
     const handleChange = async (event) => {
         const { name, value, type, files } = event.target;
         const [section, index, field] = name.split('.');
-    
+
         if (type === 'file') {
             const file = files[0];
             if (file) {
                 let isValid = false;
-    
+
                 switch (name) {
                     case 'bannerURL':
                         isValid = await validateImage(file, 1200, 500);
@@ -109,26 +108,26 @@ export default function CreateUniversityPop({ open, handleClose }) {
                     default:
                         break;
                 }
-    
+
                 if (!isValid) {
                     toast.error(`${name} must be of the correct dimensions.`);
                     setImageValidations((prev) => ({
                         ...prev,
                         [name]: false,
                     }));
-    
+
                     setFormValues((prevValues) => ({
                         ...prevValues,
                         [name]: '',
                     }));
                     return;
                 }
-    
+
                 setImageValidations((prev) => ({
                     ...prev,
                     [name]: true,
                 }));
-    
+
                 const imageURL = await uploadImage(file);
                 if (field) {
                     setFormValues((prevValues) => ({
@@ -152,7 +151,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                 const wordCount = value.trim().split(/\s+/).filter(Boolean).length;
                 if (wordCount > 400) return; // limit to 400 words
             }
-    
+
             if (field) {
                 setFormValues((prevValues) => ({
                     ...prevValues,
@@ -170,7 +169,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
             }
         }
     };
-    
+
 
     const uploadImage = async (file) => {
         const storageRef = ref(storage, `universities/${file.name}`);
@@ -208,10 +207,10 @@ export default function CreateUniversityPop({ open, handleClose }) {
             toast.success('University Added Successfully');
         }
     }, [isSuccess]);
-    const handlecancell = (e)=>{
+    const handlecancell = (e) => {
         e.stopPropagation();
         handleClose();
-      }
+    }
     useEffect(() => {
         // Check if all required images are valid
         const allImagesValid = Object.values(imageValidations).every(Boolean);
@@ -223,7 +222,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
             <DialogTitle className='text-white bg-custom-primary font-bold'>Add University</DialogTitle>
             <DialogContent>
                 <div className='py-2'>
-                    <DialogContentText>You can add a university.</DialogContentText>
+                    <DialogContentText></DialogContentText>
                 </div>
                 <Box
                     component="form"
@@ -274,17 +273,17 @@ export default function CreateUniversityPop({ open, handleClose }) {
                     />
                     <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
                     <TextEditor
-    id="description"
-    name="description"
-    label="Description"
-    variant="standard"
-    value={formValues.description}
-    onChange={handleChange}
-    className="mb-2"
-  />
-  <p className="text-sm text-gray-500 text-right">
-    {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
-  </p>
+                        id="description"
+                        name="description"
+                        label="Description"
+                        variant="standard"
+                        value={formValues.description}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    <p className="text-sm text-gray-500 text-right">
+                        {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
+                    </p>
 
                     {/* Sections */}
                     {formValues.sections.map((section, index) => (
@@ -329,7 +328,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
 
                     {/* Additional Fields */}
                     <FormControl variant="standard" fullWidth className="mb-2">
-                        <InputLabel id="province-label">Province</InputLabel>
+                        {/* <InputLabel id="province-label">Province</InputLabel>
                         <Select
                             labelId="province-label"
                             id="province"
@@ -340,7 +339,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                             {province.map((prov) => (
                                 <MenuItem key={prov.id} value={prov._id}>{prov.name}</MenuItem>
                             ))}
-                        </Select>
+                        </Select> */}
                     </FormControl>
                     <TextField
                         id="eligiblity"

@@ -29,7 +29,6 @@ function CreateCountryPop({ open, onClose }) {
     name: '',
     bannerURL: '',
     bullet: '',
-    mbbsAbroad:false,
     flagURL: '',
     description: '',
     sections: [{ title: '', description: '', url: '' }],
@@ -178,7 +177,7 @@ function CreateCountryPop({ open, onClose }) {
 
   return (
     <Dialog fullWidth={true} open={open} onClose={onClose}>
-      <DialogTitle className="text-white bg-custom-primary font-bold">Add MBBS Country</DialogTitle>
+      <DialogTitle className="text-white bg-custom-primary font-bold">Add Country</DialogTitle>
       <DialogContent>
         <div className="py-2">
           <DialogContentText>You can add a country.</DialogContentText>
@@ -282,14 +281,14 @@ function CreateCountryPop({ open, onClose }) {
                   onChange={handleChange}
                   className="mb-2"
                 />
-                <p class="text-red-300 font-bold">only 100 words are allowed</p>
+                 <p class="text-red-500">only 100 words are allowed</p>
                 <TextField
                   id={`sectionURL${index}`}
                   name={`sections.${index}.url`}
                   type="file"
                   variant="standard"
                   onChange={handleChange}
-                  label="Only 110 words are allowed"
+                
                   className="mb-2"
                   InputLabelProps={{ shrink: true }}
                 />
@@ -300,7 +299,6 @@ function CreateCountryPop({ open, onClose }) {
                     className="mt-2 w-full h-40 object-cover rounded"
                   />
                 )}
-                   <p class="text-red-300 font-bold">Image size should be 300px x 300px</p>
                 <Button
                   onClick={() => removeSection(index)}
                   color="error"

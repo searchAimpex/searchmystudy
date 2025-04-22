@@ -41,61 +41,77 @@ export default function CountryDetailed() {
     fetchData();
   }, [id, dispatch, CountryFetchOne]);
 
-   if (isLoading) {
+  if (isLoading) {
     return <Loader />;
   }
 
   return (
     <div>
-      
+
       <motion.div
         ref={refInfo}
-        className='flex flex-col p-4 text-left justify-center  '
+        className='bg-gray-100 flex flex-col p-4 text-left justify-center  '
         initial={{ opacity: 0, y: 50 }}
         animate={inViewInfo ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 1 }}
       >
-        <span className='text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main text-center'>{singleCountry?.name}</span>
-        <div
-          className="text-sm sm:text-base font-bold mt-5 text-gray-600 text-center md:text-left"
+        <img
+          src={singleCountry?.bannerURL}
+          alt="Country Banner"
+          className="w-full h-[250px] sm:h-[350px] md:h-[450px] object-cover"
+        />
+        <div className="my-12 bg-[linear-gradient(to_right,#f3f4f6_0%,#264790_30%,#264790_70%,#f3f4f6_100%)] text-white text-center p-2 sm:p-2 md:p-2 lg:p-2">
+          <h1 className="text-sm font-bold sm:text-3xl md:text-4xl lg:text-2xl">{singleCountry?.name}</h1>
+        </div>
+        <p
+          className="text-xl text-gray-800 group-hover:text-gold-main group-active:text-white transition-all"
           dangerouslySetInnerHTML={{ __html: singleCountry?.description }}
-        ></div>
+        ></p>
       </motion.div>
 
       <motion.div
         ref={refSections}
-        className="mt-10 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 space-y-16"
+        className="my-[10px] space-y-16"
         initial={{ opacity: 0 }}
         animate={inViewSections ? { opacity: 1 } : {}}
         transition={{ duration: 1 }}
       >
         {singleCountry?.sections?.map((section, index) => (
           <motion.div
+          
             key={section._id}
-            className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-6`}
+            className=" flex flex-col md:flex-row gap-6 items-center md:items-start p-4"
             initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
             animate={inViewSections ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1 }}
           >
-            <div className="w-full md:w-1/2 text-center md:text-left">
-              <h3 className="text-xl sm:text-2xl font-bold text-blue-main mb-4">{section.title}</h3>
-              <div className="text-gray-600" dangerouslySetInnerHTML={{ __html: section?.description }}></div>
+           <div className='flex w-[80%]' >
+           <div className=" md:w-1/2 text-center md:text-left">
+              <h3 className="text-lg sm:text-xl md:text-4xl font-bold text-blue-main mb-4">
+                {section.title}
+              </h3>
+              <div
+                className="text-gray-600 text-sm sm:text-base"
+                dangerouslySetInnerHTML={{ __html: section?.description }}
+              ></div>
             </div>
-            <div className="w-full md:w-1/2">
+            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
               <motion.img
                 src={section.url}
                 alt={section.title}
-                className="w-full h-auto object-cover rounded-lg shadow-lg"
+                className=" h-auto object-cover rounded-lg shadow-lg"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.3 }}
               />
             </div>
+           </div>
           </motion.div>
+
         ))}
       </motion.div>
 
       {/* Province Header */}
-      <motion.div
+      {/* <motion.div
         ref={refProvinces}
         className='mt-10 flex items-center justify-center px-4 text-center'
         initial={{ opacity: 0 }}
@@ -105,10 +121,10 @@ export default function CountryDetailed() {
         <span className='text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main'>
           PROVINCE (state) wise University/College in {singleCountry?.name}
         </span>
-      </motion.div>
+      </motion.div> */}
 
       {/* Province Cards */}
-      <motion.div
+      {/* <motion.div
         ref={refProvinces}
         className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32'
         initial="hidden"
@@ -151,7 +167,7 @@ export default function CountryDetailed() {
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </motion.div> */}
 
       {/* Help Section */}
       <motion.div
@@ -199,30 +215,22 @@ export default function CountryDetailed() {
         </div>
       </motion.div>
 
-      {/* FAQ Section */}
+      {/* FAQs */}
       <motion.div
         ref={refFaq}
-        className='px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32 my-20'
+        className="max-w-7xl mx-auto px-4 my-20"
         initial={{ opacity: 0, y: 50 }}
         animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 1 }}
       >
-        <div className='text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-10'>
-          <span className='text-blue-main'>Frequently </span>
-          <span className='text-gold-main'>asked </span>
-          <span className='text-blue-main'>question?</span>
-        </div>
+        <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
+          Frequently Asked Questions
+        </h2>
         {singleCountry?.faq?.map((faqItem, index) => (
           <Accordion key={index}>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className="text-white" />}
-              aria-controls={`panel${index}-content`}
-              id={`panel${index}-header`}
-              sx={{
-                bgcolor: 'primary.main',
-                color: 'white',
-                fontWeight: 'bold',
-              }}
+              sx={{ bgcolor: '#003366', color: 'white' }}
             >
               <Typography className="font-bold">{faqItem.question}</Typography>
             </AccordionSummary>

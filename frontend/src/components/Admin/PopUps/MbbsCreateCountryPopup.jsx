@@ -282,7 +282,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
                   onChange={handleChange}
                   className="mb-2"
                 />
-                <p class="text-red-500">only 100 words are allowed</p>
+                <p class="text-red-300 font-bold">only 100 words are allowed</p>
                 <TextField
                   id={`sectionURL${index}`}
                   name={`sections.${index}.url`}
@@ -300,6 +300,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
                     className="mt-2 w-full h-40 object-cover rounded"
                   />
                 )}
+                   <p class="text-red-300 font-bold">Image size should be 300px x 300px</p>
                 <Button
                   onClick={() => removeSection(index)}
                   color="error"

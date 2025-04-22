@@ -491,29 +491,63 @@ const getCountryById = asyncHandler(async (req, res) => {
 // @desc    Update a country
 // @route   PUT /countries/:id
 // @access  Public
-const updateCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, provinces,mbbsAbroad,faq ,MbbsSections} = req.body;
+// const updateCountry = asyncHandler(async (req, res) => {
+//   const { name, bannerURL, description, sections, provinces,mbbsAbroad,faq ,MbbsSections} = req.body;
   
+//   const country = await Country.findById(req.params.id);
+
+//   // console.log("counbtry",country,status)
+//   if (country) {
+//     country.name = name || country.name;
+//     country.bannerURL = bannerURL || country.bannerURL;
+//     country.description = description || country.description;
+//     country.sections = sections || country.sections;
+//     country.provinces = provinces || country.provinces;
+//     country.mbbsAbroad = mbbsAbroad;
+//     country.faq = faq || country.faq;
+//     country.MbbsSections = MbbsSections || country.MbbsSections;
+
+//     const updatedCountry = await country.save();
+//     res.json(updatedCountry);
+//   } else {
+//     res.status(404);
+//     throw new Error('Country not found');
+//   }
+// });
+
+const updateCountry = asyncHandler(async (req, res) => {
+  const { name, bannerURL, description, sections, provinces, mbbsAbroad, faq, MbbsSections } = req.body;
+
+  // Ensure that we find the country by ID
   const country = await Country.findById(req.params.id);
-  console.log("req.body===>",req.body)
-  // console.log("counbtry",country,status)
+
   if (country) {
+    // Log the existing country data to compare with the incoming data
+    console.log("Existing country data:", country);
+
+    // Only update the fields that are provided, else keep existing values
     country.name = name || country.name;
     country.bannerURL = bannerURL || country.bannerURL;
-    country.description = dion || country.description;
-    country.sections = sectionsescript || country.sections;
+    country.description = description || country.description;
+    country.sections = sections || country.sections;
     country.provinces = provinces || country.provinces;
-    country.mbbsAbroad = mbbsAbroad;
+    country.mbbsAbroad = mbbsAbroad !== undefined ? mbbsAbroad : country.mbbsAbroad;  // Avoid overwriting with undefined
     country.faq = faq || country.faq;
-    country.MbbsSections = MbbsSections || country.MbbsSections;
+    country.MbbsSections = MbbsSections || country.MbbsSections;  
 
+    // Log the updated country data to verify the changes
+    console.log("Updated country data:", country);
+
+    // Save the updated country to the database
     const updatedCountry = await country.save();
     res.json(updatedCountry);
   } else {
+    // If the country is not found
     res.status(404);
     throw new Error('Country not found');
   }
 });
+
 
 // @desc    Delete a country
 // @route   DELETE /countries/:id
@@ -672,10 +706,11 @@ const createUniversity = asyncHandler(async (req, res) => {
   });
 
   const createdUniversity = await university.save();
-  const province = await Province.findById(createdUniversity.Province)
-  console.log("province", province)
-  province.University.push(createdUniversity._id)
-  await province.save();
+  // const province = await Province.findById(createdUniversity.Province)
+  // console.log("province", province)
+  // province.University.push(createdUniversity._id)
+  // await province.save();
+  
   res.status(201).json(createdUniversity);
 });
 

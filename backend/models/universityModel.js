@@ -42,10 +42,15 @@ const universitySchema = mongoose.Schema(
             default: 'https://via.placeholder.com/150x150.png'
         },
         Province: { 
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Province',
-            required: true,
+            type: String,
+            // ref: 'Province',
+            // required: true,
         },   
+        // Province: { 
+        //     type: mongoose.Schema.Types.ObjectId,
+        //     ref: 'Province',
+        //     required: true,
+        // },   
         Course: [
             {
             type: mongoose.Schema.Types.ObjectId,

@@ -15,7 +15,7 @@ function AdminDashboard({component}) {
   const menuItems = [
     { name: 'Website Manager', path: '/admin/webManager', src: 'https://cdn-icons-png.flaticon.com/512/15862/15862329.png' },
     { name: 'Blog Manager', path: '/admin/blog', src: 'https://cdn-icons-png.flaticon.com/512/3573/3573196.png' },
-    { name: 'Course Manager', path: '/admin/course', src: 'https://cdn-icons-png.flaticon.com/512/566/566985.png' },
+    { name: 'Abroad Study', path: '/admin/course', src: 'https://cdn-icons-png.flaticon.com/512/566/566985.png' },
     { name: 'MBBS Abroad', path: '/admin/MbbsAbroad', src: 'https://cdn-icons-png.flaticon.com/512/879/879890.png' },
     { name: 'Lead Manager', path: '/admin/leads', src: 'https://cdn-icons-png.flaticon.com/512/3126/3126647.png' },
     { name: 'Notification Manager', path: '/admin/notification', src: 'https://cdn-icons-png.flaticon.com/512/4991/4991422.png' },

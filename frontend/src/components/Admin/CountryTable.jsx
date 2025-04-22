@@ -135,24 +135,29 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
     const navigate = useNavigate()
 
 
-    function handleClickOpen (){
+    function handleClickOpen() {
         setOpen(true)
         console.log(open)
     }
     const handleViewBannerOpen = () => setViewBannerOpen(true);
     const handleViewBannerClose = () => setViewBannerOpen(false);
-   
-  
+
+
     const handleClose = () => {
-        console.log("Closing dialog",open);  // Verify if this logs
+        console.log("Closing dialog", open);  // Verify if this logs
         setOpen(false);  // Ensure this updates `open`
-      };
-    console.log("fix",open)
+    };
+
+
+    console.log("fix", open)
     const handleViewUpdateOpen = () => setViewUpdateOpen(true);
     const handleViewUpdateClose = () => setViewUpdateOpen(false);
 
+
+
     const handleViewOpen = () => setViewOpen(true);
     const handleViewClose = () => setViewOpen(false);
+
 
 
     return (
@@ -195,12 +200,12 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     <Tooltip title="Edit Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon
-                            onClick =  {()=> {
-                                handleViewOpen()
-                            }} />
+                                onClick={() => {
+                                    handleViewOpen()
+                                }} />
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="MBBS Status Country">
+                    {/* <Tooltip title="MBBS Status Country">
                         <IconButton size="sm" color="danger" variant='solid' >
                             <EditIcon
                                 onClick = {()=>{
@@ -208,30 +213,31 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                                 }}
                             />
                         </IconButton>
-                    </Tooltip>
+                    </Tooltip> */}
                     <Tooltip title="View Hero Image">
-                        <IconButton  size="sm" color="danger" variant="solid">
+                        <IconButton size="sm" color="danger" variant="solid">
                             <RemoveRedEye onClick={() => {
                                 onViewBanner(selectedRow?.banner);
                                 handleViewBannerOpen();
-                            }}/>
+                            }} />
                         </IconButton>
                     </Tooltip>
                 </div>
             ) : (
                 <Tooltip title="Create Country">
                     <IconButton size="sm" variant="outlined" color="danger" >
-                    <AddIcon onClick={handleClickOpen} />
-                    <CreateCountryPop open={open} onClose={handleClose} />
+                        <AddIcon onClick={handleClickOpen} />
+                        <CreateCountryPop open={open} onClose={handleClose} />
 
                     </IconButton>
                 </Tooltip>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId = { selectedRow?._id} statuss = {selectedRow?.mbbsAbroad}  />
-            <UpdateCountryPop open ={viewOpen} handleClose= {handleViewClose} countryData={selectedRow} />
+            <StatusUpdatePop open={viewUpdateOpen} handleClose={handleViewUpdateClose} countryId={selectedRow?._id} statuss={selectedRow?.mbbsAbroad} />
+            <UpdateCountryPop open={viewOpen} handleClose={handleViewClose} countryData={selectedRow} />
         </Box>
-    );}
+    );
+}
 EnhancedTableToolbar.propTypes = {
     numSelected: PropTypes.number.isRequired,
     selectedRow: PropTypes.object,
@@ -247,7 +253,7 @@ const CountryTable = () => {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { countries } = useSelector((state) => state.country);
     const services = countries;
-    
+
     const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
     const [CountryDelete, DeleteState] = useCountryDeleteMutation();
     const dispatch = useDispatch();
@@ -256,7 +262,10 @@ const CountryTable = () => {
         const fetchData = async () => {
             try {
                 const result = await CountryFetch().unwrap();
-                dispatch(FetchCountry(result));
+                const filtered = result.filter(country => country.mbbsAbroad === false);
+                dispatch(FetchCountry(filtered));
+
+                console.log(filtered, "-----------------------------------------------")
             } catch (error) {
                 toast.error('Something went wrong while fetching the countries.');
             }
@@ -335,8 +344,8 @@ const CountryTable = () => {
     const endIndex = startIndex + rowsPerPage;
     const filteredServices = services.filter(
         item => item.mbbsAbroad === false || item.mbbsAbroad === ''
-      );
-      const currentData = stableSort(services, getComparator(order, orderBy))
+    );
+    const currentData = stableSort(services, getComparator(order, orderBy))
         .slice(startIndex, endIndex);
 
     // Calculate total pages
@@ -391,5 +400,5 @@ const CountryTable = () => {
             </Box>
         </Box>
     );
-}; 
+};
 export default CountryTable
