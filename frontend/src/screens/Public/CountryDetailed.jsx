@@ -58,7 +58,7 @@ export default function CountryDetailed() {
         <img
           src={singleCountry?.bannerURL}
           alt="Country Banner"
-          className="w-full h-[250px] sm:h-[350px] md:h-[450px] object-cover"
+          className="w-[full] h-[250px] sm:h-[350px] md:h-[450px] object-cover"
         />
         <div className="my-12 bg-[linear-gradient(to_right,#f3f4f6_0%,#264790_30%,#264790_70%,#f3f4f6_100%)] text-white text-center p-2 sm:p-2 md:p-2 lg:p-2">
           <h1 className="text-sm font-bold sm:text-3xl md:text-4xl lg:text-2xl">{singleCountry?.name}</h1>
@@ -70,45 +70,49 @@ export default function CountryDetailed() {
       </motion.div>
 
       <motion.div
-        ref={refSections}
-        className="my-[10px] space-y-16"
-        initial={{ opacity: 0 }}
-        animate={inViewSections ? { opacity: 1 } : {}}
-        transition={{ duration: 1 }}
-      >
-        {singleCountry?.sections?.map((section, index) => (
-          <motion.div
-          
-            key={section._id}
-            className=" flex flex-col md:flex-row gap-6 items-center md:items-start p-4"
-            initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
-            animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 1 }}
-          >
-           <div className='flex w-[80%]' >
-           <div className=" md:w-1/2 text-center md:text-left">
-              <h3 className="text-lg sm:text-xl md:text-4xl font-bold text-blue-main mb-4">
-                {section.title}
-              </h3>
-              <div
-                className="text-gray-600 text-sm sm:text-base"
-                dangerouslySetInnerHTML={{ __html: section?.description }}
-              ></div>
-            </div>
-            <div className="w-full md:w-1/2 flex justify-center md:justify-end">
-              <motion.img
-                src={section.url}
-                alt={section.title}
-                className=" h-auto object-cover rounded-lg shadow-lg"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
-              />
-            </div>
-           </div>
-          </motion.div>
+  ref={refSections}
+  className="my-10 space-y-16 px-4 sm:px-6 md:px-12"
+  initial={{ opacity: 0 }}
+  animate={inViewSections ? { opacity: 1 } : {}}
+  transition={{ duration: 1 }}
+>
+  {singleCountry?.sections?.map((section, index) => (
+    <motion.div
+      key={section._id}
+      className="flex flex-col lg:flex-row gap-6 items-center lg:items-start"
+      initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
+      animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+      transition={{ duration: 1 }}
+    >
+      {/* Content Wrapper */}
+      <div className="w-full flex flex-col-reverse lg:flex-row gap-6 items-center lg:items-start">
+        
+        {/* Text Content */}
+        <div className="w-full lg:w-1/2 text-center lg:text-left">
+          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-main mb-4">
+            {section.title}
+          </h3>
+          <div
+            className="text-gray-600 text-sm sm:text-base md:text-lg"
+            dangerouslySetInnerHTML={{ __html: section?.description }}
+          ></div>
+        </div>
 
-        ))}
-      </motion.div>
+        {/* Image Content */}
+        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+          <motion.img
+            src={section.url}
+            alt={section.title}
+            className="w-full max-w-[500px] h-auto object-cover rounded-lg shadow-lg"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  ))}
+</motion.div>
+
 
       {/* Province Header */}
       {/* <motion.div
@@ -187,7 +191,7 @@ export default function CountryDetailed() {
         <div className='flex flex-col md:flex-row mt-10 gap-10 items-center'>
           <motion.div
             className='w-full md:w-1/2 flex items-center justify-center'
-            initial={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1 }}
           >
@@ -196,7 +200,7 @@ export default function CountryDetailed() {
 
           <motion.div
             className='w-full md:w-1/2 flex flex-col p-6 sm:p-10 bg-blue-main rounded-lg'
-            initial={{ opacity: 0, x: 100 }}
+            initial={{ opacity: 0, y: 50 }}
             animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1 }}
           >
