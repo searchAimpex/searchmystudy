@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCountryAllFetchMutation, useCountryFetchOneMutation } from '../../slices/adminApiSlice';
+import { useCountryAllFetchMutation, useCountryFetchOneMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice';
 import { FetchOneCountry } from '../../slices/countrySlice';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
@@ -12,9 +12,11 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormImage from '../../assets/FormImage.png';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { useCountryFetchMutation } from '../../slices/adminApiSlice';
+import styled from 'styled-components';
 
+import { useInView } from 'react-intersection-observer';
+// import { useCountryFetchMutation } from '../../slices/adminApiSlice';
+import { FetchUniversitys } from '../../slices/universitySlice.js';
 
 // sidebar
 import { FetchCountry } from '../../slices/countrySlice.js';
@@ -33,7 +35,7 @@ export default function MbbsCountryDetailed() {
   const { singleCountry } = useSelector((state) => state.country);
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
-  // const [CountryFetch] = useCountryFetchMutation();
+  const [FetchUniversity] = useFetchUniversityMutation();
 
   const [refBanner, inViewBanner] = useInView({ triggerOnce: true });
   const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
@@ -42,6 +44,8 @@ export default function MbbsCountryDetailed() {
   const [refHelp, inViewHelp] = useInView({ triggerOnce: true });
   const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
   const { countries } = useSelector((state) => state.country);
+  const { university } = useSelector(state => state.university);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -50,6 +54,15 @@ export default function MbbsCountryDetailed() {
         const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
         dispatch(FetchCountry(filtered));
         console.log(filtered, "************************************************")
+
+
+        // universities
+        const Universities_result = await FetchUniversity().unwrap();
+        dispatch(FetchUniversitys(Universities_result));
+        console.log(Universities_result, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@U");
+
+
+
 
         // country for webpage
         const result = await CountryFetchOne(id).unwrap();
@@ -63,6 +76,11 @@ export default function MbbsCountryDetailed() {
   }, [id, dispatch, CountryFetchOne, CountryFetch]);
 
   if (isLoading) return <Loader />;
+
+
+
+
+
 
   return (
     <div className="bg-gray-100 text-white">
@@ -261,6 +279,42 @@ export default function MbbsCountryDetailed() {
         ))}
       </motion.div>
 
+      {/* univerities */}
+
+      <div>
+        <h1 className='text-blue-main text-4xl font-bold text-center'>Top Universities in MBBS</h1>
+      </div>
+
+      <div className=" mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+
+        {university.map((univeristy, ind) => (
+          <div
+            key={univeristy._id}
+            className="relative w-full h-[300px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
+          >
+            {/* Gradient Top Banner */}
+            <div style={{ backgroundImage: `url(${univeristy.heroURL})` }} className="absolute top-0 left-0 w-full h-[150px] bg-gradient-to-r from-purple-600 via-red-500 to-yellow-400 rounded-t-2xl border-b-2 border-white transition-all duration-500 group-hover:h-full group-hover:scale-95 z-0" />
+
+            {/* Image Circle with Banner */}
+            <div
+              className="w-[95px] h-[95px] border-2 border-white rounded-full  mt-[100px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
+              style={{ backgroundImage: `url(${univeristy.logo})` }}
+            />
+
+            {/* Name */}
+            <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
+              <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg   leading-tight">
+                {univeristy.name}
+              </span>
+              <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg " >
+                Top Ranked University
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+
       {/* Help Section */}
       <motion.div
         ref={refHelp}
@@ -331,7 +385,7 @@ export default function MbbsCountryDetailed() {
           Frequently Asked Questions
         </h2>
         {singleCountry?.faq?.map((faqItem, index) => (
-          <Accordion key={index}>
+          <Accordion key={index} className='my-3'>
             <AccordionSummary
               expandIcon={<ExpandMoreIcon className="text-white" />}
               sx={{ bgcolor: '#003366', color: 'white' }}
@@ -347,3 +401,6 @@ export default function MbbsCountryDetailed() {
     </div>
   );
 }
+
+
+
