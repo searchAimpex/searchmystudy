@@ -34,9 +34,9 @@ import { AddCourse } from '../../../slices/courseSlice';
 import { NearMe } from '@mui/icons-material';
 
 const storage = getStorage(app);
-const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG','UG+PG(Accelerated)Degree','PhD','Foundation','Short Term Program','Pathway Program','Twiming Program(UG)','Twiming Program(PG)','Online Programe/Distance Learning']
+const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated)Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twiming Program(UG)', 'Twiming Program(PG)', 'Online Programe/Distance Learning']
 
-const categories =  [
+const categories = [
   'Arts',
   'Accounts',
   'Finance',
@@ -107,8 +107,8 @@ export default function CreateCoursePop({ open, handleClose }) {
     Location: '',
     Duration: '',
     Category: '',
-    Fees: 0 ,
-    Intake: [{ status: true, date: '',expiresAt: new Date() }],
+    Fees: 0,
+    Intake: [{ status: true, date: '', expiresAt: new Date() }],
     Scholarships: false,
     ProgramLevel: '',
     LanguageRequirements: {
@@ -125,13 +125,13 @@ export default function CreateCoursePop({ open, handleClose }) {
     },
     broucherURL: ""
   });
-  const handlecancell = (e)=>{
+  const handlecancell = (e) => {
     e.stopPropagation();
     handleClose();
   }
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-    console.log("value",value,name,type,files)
+    console.log("value", value, name, type, files)
     const [section, subSection, field] = name.split('.');
 
     if (type === 'file') {
@@ -140,7 +140,7 @@ export default function CreateCoursePop({ open, handleClose }) {
         const imageURL = await uploadImage(file);
         setFormValues((prevValues) => ({
           ...prevValues,
-         [name]: imageURL 
+          [name]: imageURL
         }));
       }
     } else {
@@ -310,7 +310,7 @@ export default function CreateCoursePop({ open, handleClose }) {
               className="mb-2"
               sx={{ flex: '1 1 30%' }}
             />
-                <TextField
+            <TextField
               id="broucherURL"
               type='file'
               name="broucherURL"
@@ -329,13 +329,13 @@ export default function CreateCoursePop({ open, handleClose }) {
                 value={formValues.Category}
                 onChange={handleChange}
                 label="Category"
-              >{ 
-                categories.map((item)=> {
+              >{
+                  categories.map((item) => {
                     return (
                       <MenuItem value={item}>{item}</MenuItem>
 
                     )
-              })}
+                  })}
               </Select>
             </FormControl>
           </Box>
@@ -359,37 +359,55 @@ export default function CreateCoursePop({ open, handleClose }) {
                 }
                 label="Status"
               />
-              <TextField
-                id={`Intake-${index}-date`}
-                label="Date"
-                variant="standard"
-                value={intake.date}
-                onChange={(e) => {
-                  const updatedIntake = [...formValues.Intake];
-                  updatedIntake[index].date = e.target.value;
-                  setFormValues((prevValues) => ({
-                    ...prevValues,
-                    Intake: updatedIntake
-                  }));
-                }}
-                sx={{ flex: '1 1 30%' }}
-              />
+              <div className="w-full sm:w-1/2 md:w-1/3 px-2">
+                <label
+                  htmlFor={`Intake-${index}-date`}
+                  className="block text-sm font-semibold text-gray-700 mb-1"
+                >
+                  Start Date
+                </label>
                 <TextField
-                id={`Intake-${index}-expiresAt`}
-                label="Expire Date"
-                type = 'date'
-                variant="standard"
-                value={intake.expiresAt}
-                onChange={(e) => {
-                  const updatedIntake = [...formValues.Intake];
-                  updatedIntake[index].expiresAt = e.target.value;
-                  setFormValues((prevValues) => ({
-                    ...prevValues,
-                    Intake: updatedIntake
-                  }));
-                }}
-                sx={{ flex: '1 1 30%' }}
-              />
+                  id={`Intake-${index}-date`}
+                  type="date"
+                  variant="standard"
+                  fullWidth
+                  value={intake.date}
+                  onChange={(e) => {
+                    const updatedIntake = [...formValues.Intake];
+                    updatedIntake[index].date = e.target.value;
+                    setFormValues((prevValues) => ({
+                      ...prevValues,
+                      Intake: updatedIntake
+                    }));
+                  }}
+                  InputLabelProps={{ shrink: true }} // Optional: to avoid label overlap
+                />
+              </div>
+              <div className="w-full sm:w-1/2 md:w-1/3 px-2">
+                <label
+                  htmlFor={`Intake-${index}-expiresAt`}
+                  className="block text-sm font-semibold text-gray-700 mb-1"
+                >
+                  Expire Date
+                </label>
+                <TextField
+                  id={`Intake-${index}-expiresAt`}
+                  type="date"
+                  variant="standard"
+                  fullWidth
+                  value={intake.expiresAt}
+                  onChange={(e) => {
+                    const updatedIntake = [...formValues.Intake];
+                    updatedIntake[index].expiresAt = e.target.value;
+                    setFormValues((prevValues) => ({
+                      ...prevValues,
+                      Intake: updatedIntake
+                    }));
+                  }}
+                  InputLabelProps={{ shrink: true }} // Optional to prevent overlap
+                />
+              </div>
+
               <IconButton color="primary" onClick={addIntake}>
                 <AddIcon />
               </IconButton>
@@ -412,14 +430,14 @@ export default function CreateCoursePop({ open, handleClose }) {
               label="Program Level"
             >
               {
-                level.map((item)=>{
+                level.map((item) => {
                   return (
                     <MenuItem value={item}>{item}</MenuItem>
                   )
                 })
               }
-      
-             
+
+
             </Select>
           </FormControl>
 

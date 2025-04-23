@@ -783,6 +783,9 @@ const getCourseById = asyncHandler(async (req, res) => {
 // @access  Public
 const createCourse = asyncHandler(async (req, res) => {
 
+  // let tareekh = new Date()
+
+
   const course = new Course({
     ProgramName :req.body.ProgramName,
     University:req.body.University,

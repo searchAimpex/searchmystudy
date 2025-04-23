@@ -65,7 +65,7 @@ const courseSchema = mongoose.Schema(
             {
                 status: {
                     type: Boolean,
-                    required: true
+                    required: true  
                 },
                 date: {
                     type: String,

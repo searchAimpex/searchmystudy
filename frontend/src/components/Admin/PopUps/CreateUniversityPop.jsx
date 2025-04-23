@@ -328,7 +328,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
 
                     {/* Additional Fields */}
                     <FormControl variant="standard" fullWidth className="mb-2">
-                        {/* <InputLabel id="province-label">Province</InputLabel>
+                        <InputLabel id="province-label">Province</InputLabel>
                         <Select
                             labelId="province-label"
                             id="province"
@@ -339,7 +339,7 @@ export default function CreateUniversityPop({ open, handleClose }) {
                             {province.map((prov) => (
                                 <MenuItem key={prov.id} value={prov._id}>{prov.name}</MenuItem>
                             ))}
-                        </Select> */}
+                        </Select>
                     </FormControl>
                     <TextField
                         id="eligiblity"
