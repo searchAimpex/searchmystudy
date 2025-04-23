@@ -21,6 +21,12 @@ export default function CountryDetailed() {
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const { singleCountry } = useSelector((state) => state.country);
 
+  const truncateText = (text, maxWords = 250) => {
+    if (!text) return '';
+    const words = text.split(' ');
+    return words.length > maxWords ? words.slice(0, maxWords).join(' ') + '...' : text;
+  };
+
   // Ensure all hooks are called consistently
   const [refBanner, inViewBanner] = useInView({ triggerOnce: true });
   const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
@@ -63,55 +69,55 @@ export default function CountryDetailed() {
         <div className="my-12 bg-[linear-gradient(to_right,#f3f4f6_0%,#264790_30%,#264790_70%,#f3f4f6_100%)] text-white text-center p-2 sm:p-2 md:p-2 lg:p-2">
           <h1 className="text-sm font-bold sm:text-3xl md:text-4xl lg:text-2xl">{singleCountry?.name}</h1>
         </div>
-        <p
-          className="text-xl text-gray-800 group-hover:text-gold-main group-active:text-white transition-all"
-          dangerouslySetInnerHTML={{ __html: singleCountry?.description }}
-        ></p>
+        <div
+          className="mt-4 text-sm sm:text-base md:text-lg text-gray-600"
+          dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }}
+        />
       </motion.div>
 
       <motion.div
-  ref={refSections}
-  className="my-10 space-y-16 px-4 sm:px-6 md:px-12"
-  initial={{ opacity: 0 }}
-  animate={inViewSections ? { opacity: 1 } : {}}
-  transition={{ duration: 1 }}
->
-  {singleCountry?.sections?.map((section, index) => (
-    <motion.div
-      key={section._id}
-      className="flex flex-col lg:flex-row gap-6 items-center lg:items-start"
-      initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
-      animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 1 }}
-    >
-      {/* Content Wrapper */}
-      <div className="w-full flex flex-col-reverse lg:flex-row gap-6 items-center lg:items-start">
-        
-        {/* Text Content */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-main mb-4">
-            {section.title}
-          </h3>
-          <div
-            className="text-gray-600 text-sm sm:text-base md:text-lg"
-            dangerouslySetInnerHTML={{ __html: section?.description }}
-          ></div>
-        </div>
+        ref={refSections}
+        className="my-10 space-y-16 px-4 sm:px-6 md:px-12"
+        initial={{ opacity: 0 }}
+        animate={inViewSections ? { opacity: 1 } : {}}
+        transition={{ duration: 1 }}
+      >
+        {singleCountry?.sections?.map((section, index) => (
+          <motion.div
+            key={section._id}
+            className="flex flex-col lg:flex-row gap-6 items-center lg:items-start"
+            initial={{ opacity: 0, x: index % 2 === 0 ? 100 : -100 }}
+            animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            {/* Content Wrapper */}
+            <div className="w-full flex flex-col-reverse lg:flex-row gap-6 items-center lg:items-start">
 
-        {/* Image Content */}
-        <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
-          <motion.img
-            src={section.url}
-            alt={section.title}
-            className="w-full max-w-[500px] h-auto object-cover rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-      </div>
-    </motion.div>
-  ))}
-</motion.div>
+              {/* Text Content */}
+              <div className="w-full lg:w-1/2 text-center lg:text-left">
+                <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-main mb-4">
+                  {section.title}
+                </h3>
+                <div
+                  className="text-gray-600 text-left text-sm sm:text-base md:text-lg"
+                  dangerouslySetInnerHTML={{ __html: section?.description }}
+                ></div>
+              </div>
+
+              {/* Image Content */}
+              <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
+                <motion.img
+                  src={section.url}
+                  alt={section.title}
+                  className="w-full max-w-[500px] h-auto object-cover rounded-lg shadow-lg"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                />
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
 
 
       {/* Province Header */}
