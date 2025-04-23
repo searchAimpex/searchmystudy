@@ -8,7 +8,7 @@ import {
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Filter2Sharp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
-
+import styled from 'styled-components';
 const Program = [
   'High School',
   'UG Diploma/Certificate/Associate Degree',
@@ -64,7 +64,7 @@ const AllCourseDetailed = () => {
     province: '',
     university: '',
     programLevel: state.filters.category || '',
-    category:state.filters.level ||  '',
+    category: state.filters.level || '',
     scholarships: false,
     languageRequirement: '',
     standardizeRequirement: '',
@@ -98,7 +98,7 @@ const AllCourseDetailed = () => {
 
     const fetchInitialCourses = async () => {
       try {
-        console.log("fitlers",filters)
+        console.log("fitlers", filters)
         const result = await AllCourse(filters).unwrap();
         if (Array.isArray(result)) {
           setCourses(result);
@@ -113,7 +113,7 @@ const AllCourseDetailed = () => {
     getCountries();
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
-  console.log("course",courses)
+  console.log("course", courses)
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newFilters = {
@@ -155,7 +155,7 @@ const AllCourseDetailed = () => {
   const handleSearch = async () => {
     try {
       const result = await AllCourse(filters).unwrap();
-      console.log("my results------------",result)
+      console.log("my results------------", result)
       if (Array.isArray(result)) {
         setCourses(result);
       } else {
@@ -292,7 +292,7 @@ const AllCourseDetailed = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="e.g., GRE, GMAT"
               />
-            </div> 
+            </div>
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Country</label>
               <select
@@ -309,7 +309,7 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
-            {filters.country && (
+            {/* {filters.country && (
               <div className="mb-4">
                 <label className="block mb-2 font-semibold">Province</label>
                 <select
@@ -326,8 +326,8 @@ const AllCourseDetailed = () => {
                   ))}
                 </select>
               </div>
-            )}
-            {filters.province && (
+            )} */}
+            {/* {filters.province && (
               <div className="mb-4">
                 <label className="block mb-2 font-semibold">University</label>
                 <select
@@ -347,106 +347,294 @@ const AllCourseDetailed = () => {
                   ))}
                 </select>
               </div>
-            )}
+            )} */}
             <div className="mb-4">
-              <button
-                onClick={handleSearch}
-                className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Search
-              </button>
+
+
+              <StyledWrapper1>
+                <button onClick={handleSearch} className="button w-[100%]">  Search
+                </button>
+              </StyledWrapper1>
             </div>
           </>
         )}
       </div>
 
-      <div className="w-full lg:w-3/4 p-4">
+      <div className="w-full lg:w-3/4 ">
         {isLoading ? (
           <p>Loading...</p>
         ) : isError ? (
           <p className="text-red-600">Error loading courses</p>
         ) : (
           <div className="space-y-4">
-         {courses.map((course) => (
-  <div
-    key={course._id}
-    style={{
-      boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
-    }}
-    className="bg-white p-4 flex flex-col md:flex-row gap-6 rounded-lg"
-  >
-    {/* Image Section */}
-    <div className="w-full md:w-[350px] flex justify-center items-center">
-      <img
-        className="h-[200px] md:h-[250px] w-full object-contain rounded-lg"
-        src={course.University.logo}
-        alt={course.University.name}
-      />
-    </div>
+            {courses.map((course) => (
+              <div
+                key={course._id}
+                className="bg-white flex flex-col md:flex-row  gap-4 rounded-lg "
+                style={{
+                  boxShadow:
+                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                {/* Image Section */}
+                <div className="w-full md:w-[45%] relative flex justify-center items-center">
+                  <div className="relative w-full  w-full h-[100%] ">
+                    {/* Hero Image */}
+                    <img
+                      className="object-cover w-full h-[100%]"
+                      src={course.University.heroURL}
+                      alt={course.University.name}
+                    />
 
-    {/* Details Section */}
-    <div className="flex flex-col gap-3 w-full">
-      {/* University Name */}
-      <div className="text-lg md:text-xl font-bold">
-        🎓 University: {course?.University?.name}
-      </div>
+                    {/* Black Overlay */}
+                    <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
 
-      {/* Program Name and Category */}
-      <div className="text-base flex flex-wrap gap-2 font-semibold">
-        <span>{course?.ProgramName}</span>
-        <span className="text-gray-500">| {course?.Category}</span>
-      </div>
+                  </div>
 
-      {/* Fees and Duration */}
-      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-        <div className="bg-blue-main text-white px-4 py-2 rounded-xl font-semibold w-fit">
-          💸 Fees: {course?.Fees} INR
-        </div>
-        <div className="text-sm font-medium text-gray-600">
-          ⏳ Duration: {course?.Duration}
-        </div>
-      </div>
+                  {/* Logo */}
+                  <img
+                    className="absolute top-2 right-2 w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
+                    src={course.University.logo}
+                    alt={course.University.name}
+                  />
 
-      {/* Program Level and Type */}
-      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-        <div className="bg-blue-main text-white px-4 py-2 rounded-xl font-semibold w-fit">
-          🎯 Level: {course?.ProgramLevel}
-        </div>
-        <div className="text-sm font-medium text-gray-600">
-          🏫 Type: {course?.University?.type}
-        </div>
-      </div>
+                  {/* Type Badge */}
+                  <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-xs sm:text-sm font-semibold rounded-lg z-20">
+                    {course.University.type}
+                  </div>
 
-      {/* Rank and Rating */}
-      <div className="flex flex-col sm:flex-row sm:justify-between gap-2">
-        <div className="text-sm font-medium text-gray-600">
-          ⭐ Rank: {course?.University?.rank}
-        </div>
-        <div className="text-sm font-medium text-gray-600">
-          🌟 Rating: {course?.University?.rating}
-        </div>
-      </div>
+                  {/* Admission Badge */}
+                  <div className="absolute bottom-2 left-2 px-2 py-1  text-green-500 font-bold text-2xl shadow z-20">
+                    Admission open
+                  </div>
+                </div>
 
-      {/* Location and View Button */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
-        <div className="text-base font-semibold text-gray-800">
-          📍 Location: {course?.Location}
-        </div>
-        <button
-          className="bg-blue-main hover:bg-blue-700 transition text-white px-5 py-2 rounded-lg font-semibold"
-          onClick={() => navigate(`/course/${course._id}`)}
-        >
-          View Details
-        </button>
-      </div>
-    </div>
-  </div>
-))}
+                {/* Details Section */}
+                <div className="flex flex-col w-full ">
+                  <h1 className="text-lg md:text-2xl my-2 font-bold">
+                    {course?.University?.name}
+                  </h1>
+                  <hr />
 
+                  {/* Program Info */}
+                  <div className="flex flex-col md:flex-row m-2 justify-between gap-6">
+                    {/* Left Column */}
+                    <div className="flex-1 space-y-2">
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Program Type:</span>
+                        <span>{course?.University?.type}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Program:</span>
+                        <span>{course?.ProgramName}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Category:</span>
+                        <span>{course?.Category}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Fees:</span>
+                        <span>{course?.Fees} INR</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Level:</span>
+                        <span>{course?.ProgramLevel}</span>
+                      </div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className="flex-1 space-y-2 ">
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Grade:</span>
+                        <span>{course?.University?.grade}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Intake:</span>
+                        <span> {new Date(course?.Intake[0].date).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })} - {new Date(course?.Intake[0].expiresAt).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Duration:</span>
+                        <span>{course?.Duration}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
+                        {/* Star Rating */}
+                        <span className="font-semibold">Location:</span>
+                        <span>  {course?.Location}</span>
+
+                      </div>
+
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
+                        {/* Star Rating */}
+                        <span className="font-semibold">Rating:</span>
+                        <div className="flex text-yellow-500">
+
+                          {Array.from({ length: course?.University?.rank || 0 }).map((_, i) => (
+                            <span key={i}>★</span>
+                          ))}
+                        </div>
+                      </div>
+
+
+
+                    </div>
+                  </div>
+
+                  <hr />
+                  {/* Location & Button */}
+                  <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 pt-2 my-6 w-full">
+                    <StyledWrapper className="w-full md:w-auto">
+                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
+                        View Details
+                      </button>
+                    </StyledWrapper>
+
+                    <StyledWrapper1 className="w-full md:w-auto">
+                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
+                        Download Brochure
+                      </button>
+                    </StyledWrapper1>
+                  </div>
+
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
+
     </div>
   );
+
+  // export default Button;
+
 };
 export default AllCourseDetailed;
+const StyledWrapper = styled.div`
+.button {
+ --color: #db7e19 ;
+ padding: 0.5em 1.3em;
+ background-color: transparent;
+ border-radius: .3em;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ transition: .5s;
+ font-weight: 500;
+ font-size: 14px;
+ border: 2px solid;
+ font-family: inherit;
+//  text-transform: uppercase;
+ color: var(--color);
+//  font-weight: 700;     
+ z-index: 1;
+}
+
+.button::before, .button::after {
+ content: '';
+ display: block;
+ width: 50px;
+ height: 50px;
+ transform: translate(-50%, -50%);
+ position: absolute;
+ border-radius: 50%;
+ z-index: -1;
+ background-color: var(--color);
+ transition: 1s ease;
+}
+
+.button::before {
+ top: -1em;
+ left: -1em;
+}
+
+.button::after {
+ left: calc(100% + 1em);
+ top: calc(100% + 1em);
+}
+
+.button:hover::before, .button:hover::after {
+ height: 410px;
+ width: 410px;
+}
+
+.button:hover {
+
+ color: rgb(255, 255, 255);
+}
+
+.button:active {
+ filter: brightness(.8);
+}`;
+
+const StyledWrapper1 = styled.div`
+.button {
+ --color: #264790 ;
+ padding: 0.5em 1.3em;
+ background-color: transparent;
+ border-radius: .3em;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ transition: .5s;
+ font-weight: 500;
+ font-size: 14px;
+ border: 2px solid;
+ font-family: inherit;
+//  text-transform: uppercase;
+ color: var(--color);
+//  font-weight: 700;     
+ z-index: 1;
+}
+
+.button::before, .button::after {
+ content: '';
+ display: block;
+ width: 50px;
+ height: 50px;
+ transform: translate(-50%, -50%);
+ position: absolute;
+ border-radius: 50%;
+ z-index: -1;
+ background-color: var(--color);
+ transition: 1s ease;
+}
+
+.button::before {
+ top: -1em;
+ left: -1em;
+}
+
+.button::after {
+ left: calc(100% + 1em);
+ top: calc(100% + 1em);
+}
+
+.button:hover::before, .button:hover::after {
+ height: 410px;
+ width: 410px;
+}
+
+.button:hover {
+
+ color: rgb(255, 255, 255);
+}
+
+.button:active {
+ filter: brightness(.8);
+}`;
