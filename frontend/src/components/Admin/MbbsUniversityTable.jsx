@@ -32,6 +32,7 @@ import UpdateUniversityPop from './PopUps/UpdateUniversityPop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
 import { Card, CardContent, MenuItem, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import MbbsCreateUniversityPop from './PopUps/MbbsCreateUniversityPop.jsx';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -204,7 +205,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     >
                         Create
                     </button>
-                    <CreateUniversityPop open={open} handleClose={handleClose} />
+                    <MbbsCreateUniversityPop open={open} handleClose={handleClose} />
                     
                </div>
             )}

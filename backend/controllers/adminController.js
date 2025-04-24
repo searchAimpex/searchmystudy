@@ -698,6 +698,7 @@ const createUniversity = asyncHandler(async (req, res) => {
     sections:req.body.sections,
     eligiblity:req.body.eligiblity,
     Province:req.body.Province,
+    Country:req.body.Country,
     logo:req.body.logo,
     campusLife:req.body.campusLife ,
     hostel:req.body.hostel,
@@ -706,10 +707,10 @@ const createUniversity = asyncHandler(async (req, res) => {
   });
 
   const createdUniversity = await university.save();
-  // const province = await Province.findById(createdUniversity.Province)
-  // console.log("province", province)
-  // province.University.push(createdUniversity._id)
-  // await province.save();
+  const province = await Province.findById(createdUniversity.Province)
+  console.log("province", province)
+  province.University.push(createdUniversity._id)
+  await province.save();
   
   res.status(201).json(createdUniversity);
 });

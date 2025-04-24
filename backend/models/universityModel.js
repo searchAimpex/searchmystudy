@@ -46,11 +46,11 @@ const universitySchema = mongoose.Schema(
             // ref: 'Province',
             // required: true,
         },   
-        // Province: { 
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: 'Province',
-        //     required: true,
-        // },   
+        Country: { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Country',
+            // required: true,
+        },   
         Course: [
             {
             type: mongoose.Schema.Types.ObjectId,

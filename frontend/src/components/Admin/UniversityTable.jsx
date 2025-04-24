@@ -248,6 +248,7 @@ function UniversityTable() {
         const fetchData = async () => {
             try {
                 const result = await FetchUniversity().unwrap();
+                console.log(result,"++++++++++++++++++++++++++++++++++++++++++++")
                 dispatch(FetchUniversitys(result));
                 const result2 = await FetchProvince().unwrap();
                 const result3 = await CountryFetch().unwrap();
