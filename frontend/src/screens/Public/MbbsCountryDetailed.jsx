@@ -226,7 +226,7 @@ export default function MbbsCountryDetailed() {
             <div className="rounded-xl my-4 space-y-4 px-2">
               {countries.map((country, index) => (
                 <Link
-                  to={country.path}
+                  to={`/country/${country._id}`}
                   key={index}
                   className="flex items-center gap-4 w-full p-2 bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-gold-main hover:bg-gold-main-100 active:bg-gold-main transition-all duration-200 ease-in-out group"
                 >
