@@ -571,18 +571,25 @@ const deleteCountry = asyncHandler(async (req, res) => {
 // @access  Public
 const createProvince = asyncHandler(async (req, res) => {
 
-  const country = await Country.findOne({_id:req.body.Country})
-  if (!country) {
-    return res.status(404).json({ message: 'Country not found' });
-  }
-  console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
-  console.log(req.body);
-  const province = new Province(req.body);
-  const a = await province.save();
-
+  const country = await Country.findById(req.body.Country)
   
+  // const province = await Province.findById(req.body.Province)
+  console.log("country", country)
+  // province.University.push(createdUniversity._id)
+  // await province.save();
+  // if (!country) {
+  //   return res.status(404).json({ message: 'Country not found' });
+  // }
+  // console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+  // console.log(req.body);
+  const province = new Province({...req.body,Country:country});
+  console.log(province,"+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  
+  await province.save();
+
   country.Province.push(province._id)
   country.save();
+
   res.status(201).json(province);
 });
 
@@ -615,6 +622,8 @@ const createProvince = asyncHandler(async (req, res) => {
 // @access  Public
 const getAllProvinces = asyncHandler(async (req, res) => {
   const provinces = await Province.find().populate('Country');
+  console.log(provinces,"+*+*+*+*+*+*+*+*+*+*+***+*+**+*+*+***+*+*+*+*+*+");
+  
   res.status(200).json(provinces);
 });
 
@@ -690,6 +699,14 @@ const getUniversityById = asyncHandler(async (req, res) => {
 // @route   POST /universities
 // @access  Private/Admin
 const createUniversity = asyncHandler(async (req, res) => {
+
+
+
+  const province = await Province.findById(req.body.Province)
+  const country = await Country.findById(req.body.Country)
+  console.log("province", province)
+  // province.University.push(createdUniversity._id)
+  // await province.save();
     const university = new University({
     name:req.body.name,
     bannerURL:req.body.bannerURL,
@@ -697,8 +714,8 @@ const createUniversity = asyncHandler(async (req, res) => {
     description:req.body.description,
     sections:req.body.sections,
     eligiblity:req.body.eligiblity,
-    Province:req.body.Province,
-    Country:req.body.Country,
+    Province:province,
+    Country:country,
     logo:req.body.logo,
     campusLife:req.body.campusLife ,
     hostel:req.body.hostel,
@@ -706,12 +723,11 @@ const createUniversity = asyncHandler(async (req, res) => {
     UniLink:req.body.UniLink
   });
 
+
   const createdUniversity = await university.save();
-  const province = await Province.findById(createdUniversity.Province)
-  console.log("province", province)
-  province.University.push(createdUniversity._id)
-  await province.save();
-  
+
+console.log(createdUniversity,"/////////////////////////////////////////////////");
+
   res.status(201).json(createdUniversity);
 });
 
@@ -785,11 +801,13 @@ const getCourseById = asyncHandler(async (req, res) => {
 const createCourse = asyncHandler(async (req, res) => {
 
   // let tareekh = new Date()
-
-
+  const university = await University.findById(req.body.University)
+  // university.Course.push(createdCourse._id)
+  // await university.save()
+  
   const course = new Course({
     ProgramName :req.body.ProgramName,
-    University:req.body.University,
+    University:university,
     WebsiteURL:req.body.WebsiteURL,
     Location:req.body.Location,
     Duration:req.body.Duration,
@@ -802,11 +820,10 @@ const createCourse = asyncHandler(async (req, res) => {
     Fees:req.body.Fees,
     broucherURL:req.body.broucherURL
   });
-
+  
   const createdCourse = await course.save();
-  const university = await University.findById(createdCourse.University)
-  university.Course.push(createdCourse._id)
-  await university.save()
+
+console.log(createdCourse,"cccccccccccccccccccccccccccccccccccccc++++++++++++++++++++++++++++");
 
   res.status(201).json(createdCourse);
 });

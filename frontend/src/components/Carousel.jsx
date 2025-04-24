@@ -149,7 +149,7 @@ const Carousel = ({ interval = 5000 }) => {
               />
 
               {/* Content Box */}
-              <div className="absolute top-[10px] left-[720px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
+              <div className="absolute top-[10px] right-[20px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
                 <h2 className="text-2xl font-bold text-gold-main mb-2">{slide.heading}</h2>
                 <h4 className="text-xl font-semibold text-blue-main ">{slide.paragraph}</h4 >
 

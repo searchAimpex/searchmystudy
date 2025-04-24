@@ -195,6 +195,8 @@ export default function CreateUniversityPop({ open, handleClose }) {
     const onSubmit = async () => {
         try {
             const res = await createUniversity(formValues).unwrap();
+            console.log(res,"///////////////////////////////////////////////////////");
+            
             dispatch(AddUniversity({ ...res }));
             handleClose();
         } catch (error) {
