@@ -35,10 +35,10 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     const dispatch = useDispatch();
     const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
-    const [CountryFetch, { isLoading }] = useCountryAllFetchMutation();
+    const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
     // State for form values and image validation
-
-    const { countries } = useSelector((state) => state.country);
+    const[countries, setCountries] = useState([])
+    // const { countries } = useSelector((state) => state.country);
     const [formValues, setFormValues] = useState({
         name: '',
         bannerURL: '',
@@ -70,17 +70,18 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const resultforsidebar = await CountryFetch().unwrap();
+                const resultforsidebar = await CountryAllFetch().unwrap();
                 // const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
                 dispatch(FetchCountry(resultforsidebar));
-                console.log(filtered, "************************************************")
+                setCountries(resultforsidebar)
+                console.log(resultforsidebar, "************************************************")
         
             } catch (error) {
                 console.error('Failed to fetch provinces:', error);
             }
         };
         fetchData();
-    }, [CountryFetch, dispatch]);
+    }, [CountryAllFetch, dispatch]);
 
     const validateImage = (file, requiredWidth, requiredHeight) => {
         return new Promise((resolve) => {

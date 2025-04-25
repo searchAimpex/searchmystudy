@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCountryFetchMutation } from '../../slices/adminApiSlice';
+import { useCountryAllFetchMutation, useCountryFetchMutation } from '../../slices/adminApiSlice';
 import { FetchCountry } from '../../slices/countrySlice';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -8,25 +8,25 @@ import { motion } from 'framer-motion';
 function CountriesSection() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [CountryFetch] = useCountryFetchMutation();
-  const { countries } = useSelector((state) => state.country);
-  
+  const [CountryAllFetch] = useCountryAllFetchMutation();
+  // const { countries } = useSelector((state) => state.country);
+  const[countries, setCountries] = useState([])
   // State to toggle showing all countries or just the first 8
   const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await CountryFetch().unwrap();
+        const result = await CountryAllFetch().unwrap();
           console.log(result, "+++++++++++++++++++++++++++++++++++++++");
-
         dispatch(FetchCountry(result));
+        setCountries(result)
       } catch (error) {
         console.error('Failed to fetch countries:', error);
       }
     };
     fetchData();
-  }, [CountryFetch, dispatch]);
+  }, [CountryAllFetch, dispatch]);
 
   // Handle the toggle for showing all countries
   const handleToggleCountries = () => {

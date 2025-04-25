@@ -73,9 +73,10 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
 
   const [fetchProvinces] = useFetchProvinceMutation();
   const [FetchUniversity] = useFetchUniversityMutation();
-  const [CountryFetch, { isLoading }] = useCountryAllFetchMutation();
+  const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
   const [createCourse, { isSuccess }] = useCreateCourseMutation();
-  const { countries } = useSelector((state) => state.country);
+  // const { countries } = useSelector((state) => state.country);
+   const[countries, setCountries] = useState([])
   const [CountryId, setCountryId] = useState("") 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -101,16 +102,17 @@ console.log(CountryId,"%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 useEffect(() => {
   const fetchCountries = async () => {
     try {
-      const result = await CountryFetch().unwrap();
-      const filtered = result.filter(country => country.mbbsAbroad === true);
-      dispatch(FetchCountry(filtered));
+      const result = await CountryAllFetch().unwrap();
+      // const filtered = result.filter(country => country.mbbsAbroad === true);
+      dispatch(FetchCountry(result));
+      setCountries(result)
     } catch (error) {
       console.error('Failed to fetch countries:', error);
     }
   };
 
   fetchCountries();
-}, [CountryFetch, dispatch]);
+}, [CountryAllFetch, dispatch]);
 
 // Fetch universities when country is selected
 useEffect(() => {
