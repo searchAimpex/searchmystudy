@@ -683,6 +683,7 @@ const createUniversity = asyncHandler(async (req, res) => {
   console.log("province", province)
   // province.University.push(createdUniversity._id)
   // await province.save();
+  const assignedProvince = province ? province : "";
     const university = new University({
     name:req.body.name,
     bannerURL:req.body.bannerURL,
@@ -690,7 +691,7 @@ const createUniversity = asyncHandler(async (req, res) => {
     description:req.body.description,
     sections:req.body.sections,
     eligiblity:req.body.eligiblity,
-    Province:province,
+    Province:assignedProvince,
     Country:country,
     logo:req.body.logo,
     campusLife:req.body.campusLife ,
@@ -780,6 +781,7 @@ const createCourse = asyncHandler(async (req, res) => {
   const university = await University.findById(req.body.University)
   // university.Course.push(createdCourse._id)
   // await university.save()
+  console.log(req.body.University,"----------------------------------------------------------------");
   
   const course = new Course({
     ProgramName :req.body.ProgramName,

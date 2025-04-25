@@ -178,7 +178,8 @@ useEffect(() => {
   }
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-  
+    console.log(name, value, type, files);
+    
     if (name === "Country") {
       setCountryId(value); // this is for filtering universities
     }
@@ -263,7 +264,7 @@ useEffect(() => {
   const onSubmit = async () => {
     try {
       const res = await createCourse(formValues).unwrap();
-      console.log(res,"sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+      console.log(formValues,"sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
       
       dispatch(AddCourse({ ...res }));
       handleClose();
