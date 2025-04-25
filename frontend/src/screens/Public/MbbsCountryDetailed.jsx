@@ -33,6 +33,7 @@ export default function MbbsCountryDetailed() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { singleCountry } = useSelector((state) => state.country);
+  // console.log(singleCountry,"------------------------------------------------------++++++++++++++++++++++")
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
   const [FetchUniversity] = useFetchUniversityMutation();
@@ -58,8 +59,11 @@ export default function MbbsCountryDetailed() {
 
         // universities
         const Universities_result = await FetchUniversity().unwrap();
-        dispatch(FetchUniversitys(Universities_result));
-        console.log(Universities_result, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@U");
+        const filteredUniversities = Universities_result.filter(
+          (university) => university.Country === singleCountry._id
+        );
+        dispatch(FetchUniversitys(filteredUniversities));
+        console.log(filteredUniversities, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@U");
 
 
 
@@ -226,7 +230,7 @@ export default function MbbsCountryDetailed() {
             <div className="rounded-xl my-4 space-y-4 px-2">
               {countries.map((country, index) => (
                 <Link
-                  to={`/country/${country._id}`}
+                  to={`/MbbsCountryDetailed/${country._id}`}
                   key={index}
                   className="flex items-center gap-4 w-full p-2 bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-gold-main hover:bg-gold-main-100 active:bg-gold-main transition-all duration-200 ease-in-out group"
                 >
@@ -281,8 +285,9 @@ export default function MbbsCountryDetailed() {
 
       {/* univerities */}
 
+   
       <div>
-        <h1 className='text-blue-main text-4xl font-bold text-center'>Top Universities in MBBS</h1>
+        <h1 className='text-blue-main text-4xl font-bold text-center'>Top-Rated MBBS<span className='text-gold-main'> Colleges and Universities</span>  in <span className=''>{singleCountry?.name}</span></h1>
       </div>
 
       <div className=" mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">

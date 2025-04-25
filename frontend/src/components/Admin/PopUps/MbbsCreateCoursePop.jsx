@@ -26,13 +26,13 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { useCreateCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
+import { useCountryAllFetchMutation, useCreateCourseMutation, useFetchProvinceMutation, useFetchUniversityMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
 import { toast } from 'react-toastify';
 import { FetchProvinces } from '../../../slices/provinceSlice';
 import { FetchUniversitys } from '../../../slices/universitySlice';
 import { AddCourse } from '../../../slices/courseSlice';
 import { NearMe } from '@mui/icons-material';
-
+import { FetchCountry } from '../../../slices/countrySlice.js';
 const storage = getStorage(app);
 const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated)Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twiming Program(UG)', 'Twiming Program(PG)', 'Online Programe/Distance Learning']
 
@@ -73,20 +73,65 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
 
   const [fetchProvinces] = useFetchProvinceMutation();
   const [FetchUniversity] = useFetchUniversityMutation();
-
+  const [CountryFetch, { isLoading }] = useCountryAllFetchMutation();
   const [createCourse, { isSuccess }] = useCreateCourseMutation();
+  const { countries } = useSelector((state) => state.country);
+  const [CountryId, setCountryId] = useState("") 
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const result = await FetchUniversity().unwrap();
+  //       const filteredUniversities = Universities_result.filter(
+  //         (university) => university.Country === countries._id
+  //       );
+  //       dispatch(FetchUniversitys(filteredUniversities));
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+  //       console.log(result,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+        
+  //     } catch (error) {
+  //       console.error('Failed to fetch universities:', error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [FetchUniversity, dispatch]);
+
+console.log(CountryId,"%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+
+// Fetch countries on component load
+useEffect(() => {
+  const fetchCountries = async () => {
+    try {
+      const result = await CountryFetch().unwrap();
+      const filtered = result.filter(country => country.mbbsAbroad === true);
+      dispatch(FetchCountry(filtered));
+    } catch (error) {
+      console.error('Failed to fetch countries:', error);
+    }
+  };
+
+  fetchCountries();
+}, [CountryFetch, dispatch]);
+
+// Fetch universities when country is selected
+useEffect(() => {
+  const fetchUniversitiesByCountry = async () => {
+    try {
+      if (CountryId) {
         const result = await FetchUniversity().unwrap();
-        dispatch(FetchUniversitys(result));
-      } catch (error) {
-        console.error('Failed to fetch universities:', error);
+        const filteredUniversities = result.filter(
+          (university) => university.Country === CountryId
+        );
+        dispatch(FetchUniversitys(filteredUniversities));
+        console.log("Filtered Universities:", filteredUniversities);
       }
-    };
-    fetchData();
-  }, [FetchUniversity, dispatch]);
+    } catch (error) {
+      console.error('Failed to fetch universities:', error);
+    }
+  };
+
+  fetchUniversitiesByCountry();
+}, [CountryId, FetchUniversity, dispatch]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,9 +176,13 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
   }
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-    console.log("value", value, name, type, files)
+  
+    if (name === "Country") {
+      setCountryId(value); // this is for filtering universities
+    }
+  
     const [section, subSection, field] = name.split('.');
-
+  
     if (type === 'file') {
       const file = files[0];
       if (file) {
@@ -160,6 +209,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
       }
     }
   };
+  
 
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `courses/${file.name}`);
@@ -256,6 +306,26 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
               sx={{ flex: '1 1 30%' }}
             />
             <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+              <InputLabel id="Country-label">Country</InputLabel>
+              <Select
+                labelId="Country-label"
+                id="Country"
+                name="Country"
+                value={formValues.Country}
+                onChange={handleChange}
+                label="Country"
+              >
+                {countries?.map((uni) => (
+                  <MenuItem key={uni?.id} value={uni?._id}>
+                    {uni?.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+
+            {/* country  */}
+            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="University-label">University</InputLabel>
               <Select
                 labelId="University-label"
@@ -272,6 +342,8 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
                 ))}
               </Select>
             </FormControl>
+
+
             <TextField
               id="WebsiteURL"
               name="WebsiteURL"

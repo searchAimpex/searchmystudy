@@ -92,10 +92,11 @@ export default function CountryDetailed() {
                 <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-blue-main mb-4">
                   {section.title}
                 </h3>
+
                 <div
-                  className="text-gray-600 text-left text-sm sm:text-base md:text-lg"
-                  dangerouslySetInnerHTML={{ __html: section?.description }}
-                />
+                  className="ql-editor"
+                  dangerouslySetInnerHTML={{ __html: yourSavedContent }}
+                ></div>
               </div>
               <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
                 <motion.img
@@ -111,75 +112,75 @@ export default function CountryDetailed() {
         ))}
       </motion.div>
 
-        <motion.div
-          ref={refHelp}
-          className='my-20 pt-10 border-2 shadow-xl px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32'
-          initial={{ opacity: 0, y: 50 }}
-          animate={inViewHelp ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <div className='flex flex-wrap gap-2 items-center justify-center  text-center text-2xl sm:text-3xl md:text-4xl font-bold'>
-            <span className='text-blue-main'>Need</span>
-            <span className='text-gold-main'>help</span>
-            <span className='text-blue-main'>with</span>
-            <span className='text-gold-main'>your</span>
-            <span className='text-blue-main'>application?</span>
-          </div>
-          <div className='flex flex-col md:flex-row mt-10 gap-10 items-center'>
-            <motion.div
-              className='w-full  md:w-1/2 flex items-center justify-center'
-              initial={{ opacity: 0 }}
-              animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 1 }}
-            >
-              <img src={FormImage} className='object-cover w-full max-w-md h-auto' alt='Contact Form' />
-            </motion.div>
+      <motion.div
+        ref={refHelp}
+        className='my-20 pt-10 border-2 shadow-xl px-4 sm:px-8 md:px-16 lg:px-24 xl:px-32'
+        initial={{ opacity: 0, y: 50 }}
+        animate={inViewHelp ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1 }}
+      >
+        <div className='flex flex-wrap gap-2 items-center justify-center  text-center text-2xl sm:text-3xl md:text-4xl font-bold'>
+          <span className='text-blue-main'>Need</span>
+          <span className='text-gold-main'>help</span>
+          <span className='text-blue-main'>with</span>
+          <span className='text-gold-main'>your</span>
+          <span className='text-blue-main'>application?</span>
+        </div>
+        <div className='flex flex-col md:flex-row mt-10 gap-10 items-center'>
+          <motion.div
+            className='w-full  md:w-1/2 flex items-center justify-center'
+            initial={{ opacity: 0 }}
+            animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <img src={FormImage} className='object-cover w-full max-w-md h-auto' alt='Contact Form' />
+          </motion.div>
 
-            <motion.div
-              className='w-full md:w-1/2 flex flex-col p-6 sm:p-10 bg-blue-main rounded-lg'
-              initial={{ opacity: 0,}}
-              animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 1 }}
-            >
-              <span className='text-white text-lg sm:text-xl font-bold mb-4'>
-                Contact our admissions team for personalized guidance.
-              </span>
-              <form className='flex flex-col space-y-4'>
-                <input type='text' placeholder='Full Name' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
-                <input type='email' placeholder='Email' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
-                <input type='tel' placeholder='Phone Number' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
-                <button type='submit' className='bg-gold-main text-white font-bold py-2 rounded-md hover:bg-gold-dark'>
-                  Submit
-                </button>
-              </form>
-            </motion.div>
-          </div>
-        </motion.div>
+          <motion.div
+            className='w-full md:w-1/2 flex flex-col p-6 sm:p-10 bg-blue-main rounded-lg'
+            initial={{ opacity: 0, }}
+            animate={inViewHelp ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 1 }}
+          >
+            <span className='text-white text-lg sm:text-xl font-bold mb-4'>
+              Contact our admissions team for personalized guidance.
+            </span>
+            <form className='flex flex-col space-y-4'>
+              <input type='text' placeholder='Full Name' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
+              <input type='email' placeholder='Email' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
+              <input type='tel' placeholder='Phone Number' className='p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-gold-main' />
+              <button type='submit' className='bg-gold-main text-white font-bold py-2 rounded-md hover:bg-gold-dark'>
+                Submit
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      </motion.div>
 
-        <motion.div
-          ref={refFaq}
-          className="max-w-7xl mx-auto px-4 my-20"
-          initial={{ opacity: 0,}}
-          animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1 }}
-        >
-          <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
-            Frequently Asked Questions
-          </h2>
-          {singleCountry?.faq?.map((faqItem, index) => (
-            <Accordion key={index} className='my-3'>
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon className="text-white" />}
-                sx={{ bgcolor: '#003366', color: 'white' }}
-              >
-                <Typography className="font-bold">{faqItem.question}</Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography>{faqItem.answer}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </motion.div>
+      <motion.div
+        ref={refFaq}
+        className="max-w-7xl mx-auto px-4 my-20"
+        initial={{ opacity: 0, }}
+        animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1 }}
+      >
+        <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
+          Frequently Asked Questions
+        </h2>
+        {singleCountry?.faq?.map((faqItem, index) => (
+          <Accordion key={index} className='my-3'>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon className="text-white" />}
+              sx={{ bgcolor: '#003366', color: 'white' }}
+            >
+              <Typography className="font-bold">{faqItem.question}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{faqItem.answer}</Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </motion.div>
     </div>
   );
 }
