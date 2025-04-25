@@ -264,7 +264,6 @@ const CountryTable = () => {
                 const result = await CountryFetch().unwrap();
                 const filtered = result.filter(country => country.mbbsAbroad === false);
                 dispatch(FetchCountry(filtered));
-
                 console.log(filtered, "-----------------------------------------------")
             } catch (error) {
                 toast.error('Something went wrong while fetching the countries.');

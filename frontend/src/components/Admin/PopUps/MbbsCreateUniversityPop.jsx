@@ -71,8 +71,8 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         const fetchData = async () => {
             try {
                 const resultforsidebar = await CountryFetch().unwrap();
-                const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
-                dispatch(FetchCountry(filtered));
+                // const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
+                dispatch(FetchCountry(resultforsidebar));
                 console.log(filtered, "************************************************")
         
             } catch (error) {
@@ -289,10 +289,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-                    <p className="text-sm text-gray-500 text-right">
-                        {formValues.description.trim().split(/\s+/).filter(Boolean).length} / 400 words
-                    </p>
-
+                    <p  className="text-red-300 text-sm font-bold">Only 200 hundered words are allowed.</p>
                     {/* Sections */}
                     {formValues.sections.map((section, index) => (
                         <Accordion key={index}>

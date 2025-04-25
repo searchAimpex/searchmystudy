@@ -256,6 +256,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
             onChange={handleChange}
             className="mb-2"
           />
+          <p  className="text-red-300 text-sm font-bold">Only 200 hundered words are allowed.</p>
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (

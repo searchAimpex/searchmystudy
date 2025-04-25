@@ -440,7 +440,6 @@ const createCountry = asyncHandler(async (req, res) => {
     name,
     bannerURL,
     description,
-
     sections,
     mbbsAbroad,
     flagURL,
@@ -450,7 +449,7 @@ const createCountry = asyncHandler(async (req, res) => {
     MbbsSections
     
   });
-  console.log(country,"+++++++++++++++++++++");
+  console.log(country,"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
   
 
   const createdCountry = await country.save();
@@ -592,29 +591,6 @@ const createProvince = asyncHandler(async (req, res) => {
 
   res.status(201).json(province);
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // @desc    Get all provinces

@@ -5,16 +5,36 @@ import 'react-quill/dist/quill.snow.css';
 const TextEditor = ({ id, name, label, onChange, className, value: propValue }) => {
   const editorRef = useRef(null);
   const [value, setValue] = useState(propValue || '');
+  const [wordCount, setWordCount] = useState(0);
+  const wordLimit = 200;
 
   useEffect(() => {
     setValue(propValue || '');
   }, [propValue]);
 
+  useEffect(() => {
+    // Update word count whenever the content changes
+    const text = editorRef.current.getEditor().getText();
+    setWordCount(countWords(text));
+  }, [value]);
+
   const handleChange = (content) => {
-    setValue(content);
-    if (onChange) {
-      onChange({ target: { name, value: content } });
+    const text = content;
+    const currentWordCount = countWords(text);
+
+    // Prevent changes if the word count exceeds the limit
+    if (currentWordCount <= wordLimit) {
+      setValue(content);
+      if (onChange) {
+        onChange({ target: { name, value: content } });
+      }
     }
+  };
+
+  const countWords = (text) => {
+    // Remove extra spaces and split the text into words
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    return words.length;
   };
 
   const modules = {
@@ -48,6 +68,9 @@ const TextEditor = ({ id, name, label, onChange, className, value: propValue }) 
         formats={formats}
         style={{ height: '260px', marginBottom: '20px' }}
       />
+      <div className="text-sm text-gray-600 mt-4">
+        Word count: {wordCount} / {wordLimit}
+      </div>
     </div>
   );
 };

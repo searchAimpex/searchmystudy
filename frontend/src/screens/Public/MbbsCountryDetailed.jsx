@@ -1,27 +1,19 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCountryAllFetchMutation, useCountryFetchOneMutation, useFetchUniversityMutation } from '../../slices/adminApiSlice';
-import { FetchOneCountry } from '../../slices/countrySlice';
+import {
+  useCountryAllFetchMutation,
+  useCountryFetchOneMutation,
+  useFetchUniversityMutation
+} from '../../slices/adminApiSlice';
+import { FetchOneCountry, FetchCountry } from '../../slices/countrySlice';
+import { FetchUniversitys } from '../../slices/universitySlice';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
-import UniversityLogo from "../../assets/UniversityLogo.png";
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import UniversityLogo from '../../assets/UniversityLogo.png';
 import FormImage from '../../assets/FormImage.png';
 import { motion } from 'framer-motion';
-import styled from 'styled-components';
-
 import { useInView } from 'react-intersection-observer';
-// import { useCountryFetchMutation } from '../../slices/adminApiSlice';
-import { FetchUniversitys } from '../../slices/universitySlice.js';
-
-// sidebar
-import { FetchCountry } from '../../slices/countrySlice.js';
-
-
+import "./mbbs.css"
 const truncateText = (text, maxWords = 250) => {
   if (!text) return '';
   const words = text.split(' ');
@@ -32,59 +24,43 @@ export default function MbbsCountryDetailed() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { singleCountry } = useSelector((state) => state.country);
-  // console.log(singleCountry,"------------------------------------------------------++++++++++++++++++++++")
+
+  const { singleCountry, countries } = useSelector((state) => state.country);
+  const { university } = useSelector((state) => state.university);
+
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
-  const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
+  const [CountryFetch] = useCountryAllFetchMutation();
   const [FetchUniversity] = useFetchUniversityMutation();
 
   const [refBanner, inViewBanner] = useInView({ triggerOnce: true });
   const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
   const [refSections, inViewSections] = useInView({ triggerOnce: true });
   const [refProvinces, inViewProvinces] = useInView({ triggerOnce: true });
-  const [refHelp, inViewHelp] = useInView({ triggerOnce: true });
-  const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
-  const { countries } = useSelector((state) => state.country);
-  const { university } = useSelector(state => state.university);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const allCountries = await CountryFetch().unwrap();
+        const filteredCountries = allCountries.filter((country) => country.mbbsAbroad === true);
+        dispatch(FetchCountry(filteredCountries));
 
-        const resultforsidebar = await CountryFetch().unwrap();
-        const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
-        dispatch(FetchCountry(filtered));
-        console.log(filtered, "************************************************")
+        const countryDetails = await CountryFetchOne(id).unwrap();
+        dispatch(FetchOneCountry(countryDetails));
 
-
-        // universities
-        const Universities_result = await FetchUniversity().unwrap();
-        const filteredUniversities = Universities_result.filter(
-          (university) => university.Country === singleCountry._id
+        const allUniversities = await FetchUniversity().unwrap();
+        const filteredUniversities = allUniversities.filter(
+          (uni) => uni.Country === countryDetails._id
         );
         dispatch(FetchUniversitys(filteredUniversities));
-        console.log(filteredUniversities, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@U");
-
-
-
-
-        // country for webpage
-        const result = await CountryFetchOne(id).unwrap();
-        dispatch(FetchOneCountry(result));
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
     };
 
     fetchData();
-  }, [id, dispatch, CountryFetchOne, CountryFetch]);
+  }, [id, dispatch, CountryFetch, CountryFetchOne, FetchUniversity]);
 
   if (isLoading) return <Loader />;
-
-
-
-
-
 
   return (
     <div className="bg-gray-100 text-white">
@@ -102,22 +78,19 @@ export default function MbbsCountryDetailed() {
         />
       </motion.div>
 
-      {/* Content Wrapper */}
       <div className="flex flex-col lg:flex-row p-4 gap-6">
         {/* Main Content */}
         <div className="w-full lg:w-3/4">
-          {/* Country Info */}
           <motion.div
             ref={refInfo}
-            className="max-w-7xl mx-auto "
+            className="max-w-7xl mx-auto"
             initial={{ opacity: 0, y: 50 }}
             animate={inViewInfo ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1 }}
           >
-            <div className="bg-[linear-gradient(to_right,#f3f4f6_0%,#264790_30%,#264790_70%,#f3f4f6_100%)] text-white text-center p-2 sm:p-2 md:p-2 lg:p-2">
-              <h1 className="text-sm font-bold sm:text-3xl md:text-4xl lg:text-2xl">{singleCountry?.name}</h1>
+            <div className="bg-[linear-gradient(to_right,#f3f4f6_0%,#264790_30%,#264790_70%,#f3f4f6_100%)] text-white text-center p-2">
+              <h1 className="text-sm sm:text-3xl md:text-4xl lg:text-2xl font-bold">{singleCountry?.name}</h1>
             </div>
-
             <div
               className="mt-4 text-sm sm:text-base md:text-lg text-gray-600"
               dangerouslySetInnerHTML={{ __html: truncateText(singleCountry?.description, 400) }}
@@ -136,43 +109,38 @@ export default function MbbsCountryDetailed() {
               {singleCountry.sections.map((section, index) => {
                 const isReversed = index % 2 === 0;
                 return (
-                  <div>
-                    <h2 className="text-2xl sm:text-3xl md:text-3xl font-bold text-blue-main">
+                  <div key={section._id}>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-blue-main mb-4">
                       {section.title}
                     </h2>
                     <div
-                      key={section._id}
                       className={`flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} items-center gap-4`}
                     >
+                      <motion.div
+                        className="md:w-1/2"
+                        initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
+                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 1 }}
+                      >
+                        <div
+                          className="hello text-black px-3"
+                          dangerouslySetInnerHTML={{ __html: truncateText(section.description, 110) }}
+                        />
+                      </motion.div>
 
-                      <div className="flex flex-col md:flex-row">
-                        <motion.div
-                          className="md:w-1/2 my-2"
-                          initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
-                          animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                          transition={{ duration: 1 }}
-                        >
-                          <div
-                            className="text-black px-3"
-                            dangerouslySetInnerHTML={{ __html: truncateText(section?.description, 110) }}
-                          />
-                        </motion.div>
-
-                        <motion.div
-                          className="md:w-1/2 p-4"
-                          initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
-                          animate={inViewSections ? { opacity: 1, x: 0 } : {}}
-                          transition={{ duration: 1 }}
-                        >
-                          <motion.img
-                            src={section.url}
-                            alt={section.title}
-                            className="w-full h-80 object-cover rounded-lg shadow-lg"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.3 }}
-                          />
-                        </motion.div>
-                      </div>
+                      <motion.div
+                        className="md:w-1/2 p-4"
+                        initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
+                        animate={inViewSections ? { opacity: 1, x: 0 } : {}}
+                        transition={{ duration: 1 }}
+                      >
+                        <motion.img
+                          src={section.url}
+                          alt={section.title}
+                          className="w-full h-80 object-cover rounded-lg shadow-lg"
+                          whileHover={{ scale: 1.05 }}
+                        />
+                      </motion.div>
                     </div>
                   </div>
                 );
@@ -183,71 +151,51 @@ export default function MbbsCountryDetailed() {
 
         {/* Sidebar */}
         <div className="w-full lg:w-1/4 space-y-6">
-          <form
-            className='bg-white border rounded-lg border-gold-main shadow-xl p-4 p-2'
-          >
-            <div className='mb-4'>
-              <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="name">Name</label>
-              <input
-                id="name"
-                type="text"
-                placeholder="Enter your name"
-                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-              />
+          <form className="bg-white border rounded-lg border-gold-main shadow-xl p-4">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
+              <input id="name" type="text" placeholder="Enter your name"
+                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
             </div>
-            <div className='mb-4'>
-              <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email</label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-              />
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+              <input id="email" type="email" placeholder="Enter your email"
+                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
             </div>
-            <div className='mb-4'>
-              <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor="phone">Phone</label>
-              <input
-                id="phone"
-                type="tel"
-                placeholder="Enter your phone number"
-                className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main'
-              />
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">Phone</label>
+              <input id="phone" type="tel" placeholder="Enter your phone number"
+                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
             </div>
             <button
               type="submit"
-              className='w-full bg-blue-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300'
+              className="w-full bg-blue-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300"
             >
               Submit
             </button>
           </form>
 
-
           <div>
-
-
-            <p className='text-blue-main font-bold text-2xl text-center'>Top countries for MBBS</p>
-
+            <p className="text-blue-main font-bold text-2xl text-center">Top countries for MBBS</p>
             <div className="rounded-xl my-4 space-y-4 px-2">
-              {countries.map((country, index) => (
+              {countries.map((country) => (
                 <Link
                   to={`/MbbsCountryDetailed/${country._id}`}
-                  key={index}
-                  className="flex items-center gap-4 w-full p-2 bg-white rounded-xl shadow-md border border-gray-200 hover:shadow-lg hover:border-gold-main hover:bg-gold-main-100 active:bg-gold-main transition-all duration-200 ease-in-out group"
+                  key={country._id}
+                  className="flex items-center gap-4 p-2 bg-white rounded-xl shadow-md border hover:border-gold-main hover:bg-gold-main-100 group"
                 >
                   <img
                     src={country.flagURL}
                     className="w-14 h-14 rounded-full border-2 border-red-200 shadow-sm group-hover:scale-105 transition-transform"
                     alt={country.name}
                   />
-                  <p className="text-xl  font-semibold text-gray-800 group-hover:text-gold-main group-active:text-white transition-all">
+                  <p className="text-xl font-semibold text-gray-800 group-hover:text-gold-main">
                     {country.name}
                   </p>
                 </Link>
               ))}
             </div>
-
           </div>
-
         </div>
       </div>
 
@@ -267,7 +215,6 @@ export default function MbbsCountryDetailed() {
             key={province._id}
             className="relative group border-2 shadow-xl p-6 bg-white rounded-lg"
             whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
           >
             <div className="text-center">
               <img src={UniversityLogo} className="h-[80px] mx-auto mb-4" alt={province.name} />
@@ -283,129 +230,40 @@ export default function MbbsCountryDetailed() {
         ))}
       </motion.div>
 
-      {/* univerities */}
-
-   
-      <div>
-        <h1 className='text-blue-main text-4xl font-bold text-center'>Top-Rated MBBS<span className='text-gold-main'> Colleges and Universities</span>  in <span className=''>{singleCountry?.name}</span></h1>
+      {/* Universities */}
+      <div className="mt-12 text-center px-4">
+        <h1 className="text-blue-main text-4xl font-bold">
+          Top-Rated MBBS <span className="text-gold-main">Colleges and Universities</span> in{' '}
+          {singleCountry?.name}
+        </h1>
       </div>
 
-      <div className=" mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-
-        {university.map((univeristy, ind) => (
-          <div
-            key={univeristy._id}
-            className="relative w-full h-[300px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
+      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+        {university.map((uni) => (
+          <Link
+          to={`/university/${university._id}`}
+            key={uni._id}
+            className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
           >
-            {/* Gradient Top Banner */}
-            <div style={{ backgroundImage: `url(${univeristy.heroURL})` }} className="absolute top-0 left-0 w-full h-[150px] bg-gradient-to-r from-purple-600 via-red-500 to-yellow-400 rounded-t-2xl border-b-2 border-white transition-all duration-500 group-hover:h-full group-hover:scale-95 z-0" />
-
-            {/* Image Circle with Banner */}
             <div
-              className="w-[95px] h-[95px] border-2 border-white rounded-full  mt-[100px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
-              style={{ backgroundImage: `url(${univeristy.logo})` }}
+              style={{ backgroundImage: `url(${uni.heroURL})` }}
+              className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
             />
-
-            {/* Name */}
+            <div
+              className="w-[95px] h-[95px] border-2 border-white rounded-full mt-[80px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
+              style={{ backgroundImage: `url(${uni.logo})` }}
+            />
             <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
-              <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg   leading-tight">
-                {univeristy.name}
+              <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg leading-tight">
+                {uni.name}
               </span>
-              <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg " >
-                Top Ranked University
+              <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg text-white">
+                {singleCountry?.name}
               </span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
-
-
-      {/* Help Section */}
-      <motion.div
-        ref={refHelp}
-        className="my-20 py-10 px-4 bg-blue-main text-white"
-        initial={{ opacity: 0, y: 50 }}
-        animate={inViewHelp ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
-      >
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-          <img
-            src={FormImage}
-            alt="Help"
-            className="w-full h-[300px] object-cover rounded-md"
-          />
-          {/* Sidebar */}
-          <div className="w-full  space-y-6">
-            <form
-              className='p-4 p-2'
-            >
-              <div className='mb-4'>
-                <label className='block text-gray-700 text-sm font-bold mb-2 text-white' htmlFor="name">Name :</label>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your name"
-                  className='w-full px-3 py-2 border rounded-md focus:outline-none text-black focus:ring-2 focus:ring-blue-main'
-                />
-              </div>
-              <div className='mb-4'>
-                <label className='text-white block text-gray-700 text-sm font-bold mb-2' htmlFor="email">Email :</label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className='w-full px-3 py-2 border rounded-md focus:outline-none text-black focus:ring-2 focus:ring-blue-main'
-                />
-              </div>
-              <div className='mb-4'>
-                <label className='text-white block text-gray-700 text-sm font-bold mb-2' htmlFor="phone">Phone :</label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  className='w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main text-black'
-                />
-              </div>
-              <button
-                type="submit"
-                className='w-full bg-gold-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300'
-              >
-                Submit
-              </button>
-            </form>
-
-          </div>
-        </div>
-      </motion.div>
-
-      {/* FAQs */}
-      <motion.div
-        ref={refFaq}
-        className="max-w-7xl mx-auto px-4 my-20"
-        initial={{ opacity: 0, y: 50 }}
-        animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
-          Frequently Asked Questions
-        </h2>
-        {singleCountry?.faq?.map((faqItem, index) => (
-          <Accordion key={index} className='my-3'>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon className="text-white" />}
-              sx={{ bgcolor: '#003366', color: 'white' }}
-            >
-              <Typography className="font-bold">{faqItem.question}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{faqItem.answer}</Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </motion.div>
     </div>
   );
 }
-
-
-
