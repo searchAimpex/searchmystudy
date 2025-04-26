@@ -122,7 +122,7 @@ export default function CourseDetailed() {
               >
                 <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
                 <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
-                <Tab label="Requirements" icon={<SchoolIcon />} iconPosition="start" />
+                <Tab label="Eligiblity" icon={<SchoolIcon />} iconPosition="start" />
                 <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
                 <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
                 <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" />
@@ -373,7 +373,48 @@ export default function CourseDetailed() {
 
               <TabPanel value={tabValue} index={1}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Intake Details</Typography>
-                {singleCourse?.Intake?.map((intake, index) => (
+
+                <div className="w-[90%] p-2 my-4">
+                          {/* <h1 className='font-semibold text-2xl'>Intake Year</h1> */}
+                          {singleCourse?.Intake?.length > 0 ? (
+                            <div className=" my-3 overflow-x-auto rounded-lg shadow border">
+                              <table className="min-w-full table-auto text-center">
+                                <thead className="bg-blue-main">
+                                  <tr>
+                                    <th className="px-6 py-2 text-white text-lg font-semibold">Intake </th>
+                                    <th className="px-6 py-2 text-white text-lg font-semibold">Deadline</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {singleCourse.Intake.map((intakeItem, index) => (
+                                    <tr key={intakeItem._id || index} className="border-t">
+                                      <td className="px-6 py-2">
+                                        {intakeItem?.date
+                                          ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
+                                            month: 'long', // Full month name (e.g., "April")
+                                            year: 'numeric', // Full year (e.g., "2025")
+                                          })
+                                          : "N/A"}
+                                      </td>
+                                      <td className="px-6 py-4">
+                                        {intakeItem?.expiresAt
+                                          ? new Date(intakeItem.expiresAt).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'short', // Abbreviated month name (e.g., "Apr")
+                                            year: 'numeric',
+                                          })
+                                          : "N/A"}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <div className="text-gray-500">No intake dates available.</div>
+                          )}
+                        </div>
+                {/* {singleCourse?.Intake?.map((intake, index) => (
                   <Accordion key={index} className="my-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
                       <Typography>Intake {index + 1}</Typography>
@@ -383,10 +424,10 @@ export default function CourseDetailed() {
                       <Typography>Date: {intake.date}</Typography>
                     </AccordionDetails>
                   </Accordion>
-                ))}
+                ))} */}
               </TabPanel>
 
-              <TabPanel value={tabValue} index={2}>
+              {/* <TabPanel value={tabValue} index={2}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Language Requirements</Typography>
                 {singleCourse?.LanguageRequirements ? (
                   Object.entries(singleCourse.LanguageRequirements).map(([key, req]) => (
@@ -418,7 +459,16 @@ export default function CourseDetailed() {
                     </Accordion>
                   ))
                 ) : <Typography>No standardized requirements available</Typography>}
-              </TabPanel>
+              </TabPanel> */}
+
+
+               <TabPanel value={tabValue} index={2}>
+                {
+                  singleCourse.University.eligiblity
+                }
+               </TabPanel> 
+
+
             </Box>
           </div>
 

@@ -93,10 +93,10 @@ export default function CountryDetailed() {
                   {section.title}
                 </h3>
 
-                <div
+                {/* <div
                   className="ql-editor"
                   dangerouslySetInnerHTML={{ __html: yourSavedContent }}
-                ></div>
+                ></div> */}
               </div>
               <div className="w-full lg:w-1/2 flex justify-center lg:justify-end">
                 <motion.img

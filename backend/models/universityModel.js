@@ -45,7 +45,6 @@ const universitySchema = mongoose.Schema(
         Province: { 
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Province',
-            // required: true,
         },   
         Country: { 
             type: mongoose.Schema.Types.ObjectId,
