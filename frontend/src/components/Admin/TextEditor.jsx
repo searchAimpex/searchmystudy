@@ -13,28 +13,52 @@ const TextEditor = ({ id, name, label, onChange, className, value: propValue }) 
   }, [propValue]);
 
   useEffect(() => {
-    // Update word count whenever the content changes
+    // Update word count when the value changes
     const text = editorRef.current.getEditor().getText();
     setWordCount(countWords(text));
   }, [value]);
 
   const handleChange = (content) => {
-    const text = content;
-    const currentWordCount = countWords(text);
+    // Delay processing to optimize performance
+    debounce(() => {
+      const cleanContent = cleanHtmlContent(content);
+      const currentWordCount = countWords(cleanContent);
 
-    // Prevent changes if the word count exceeds the limit
-    if (currentWordCount <= wordLimit) {
-      setValue(content);
-      if (onChange) {
-        onChange({ target: { name, value: content } });
+      if (currentWordCount <= wordLimit) {
+        setValue(cleanContent);
+        if (onChange) {
+          onChange({ target: { name, value: cleanContent } });
+        }
       }
-    }
+    });
+  };
+
+  const debounce = (func, delay = 300) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(func, delay);
   };
 
   const countWords = (text) => {
-    // Remove extra spaces and split the text into words
     const words = text.trim().split(/\s+/).filter(Boolean);
     return words.length;
+  };
+
+  let debounceTimer; // Store timer for debouncing
+
+  const cleanHtmlContent = (html) => {
+    // Clean content (strip unwanted <p> tags, empty tags, etc.)
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const body = doc.body;
+
+    // Strip empty <p> tags or other tags you don't want
+    const pTags = body.querySelectorAll('p');
+    pTags.forEach(p => {
+      if (p.innerHTML.trim() === '') {
+        p.remove();
+      }
+    });
+
+    return body.innerHTML.trim();
   };
 
   const modules = {
@@ -48,10 +72,8 @@ const TextEditor = ({ id, name, label, onChange, className, value: propValue }) 
   };
 
   const formats = [
-    'header',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet',
-    'link', 'image'
+    'header', 'bold', 'italic', 'underline', 'strike',
+    'list', 'bullet', 'link', 'image'
   ];
 
   return (

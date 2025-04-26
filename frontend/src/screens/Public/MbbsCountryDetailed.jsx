@@ -27,6 +27,7 @@ export default function MbbsCountryDetailed() {
 
   const { singleCountry, countries } = useSelector((state) => state.country);
   const { university } = useSelector((state) => state.university);
+  console.log(university,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
 
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const [CountryFetch] = useCountryAllFetchMutation();

@@ -700,33 +700,21 @@ const getUniversityById = asyncHandler(async (req, res) => {
 // @route   POST /universities
 // @access  Private/Admin
 const createUniversity = asyncHandler(async (req, res) => {
-  console.log("Received data:", req.body);
+  console.log(req.body.Province, "-------------");
 
-  // Ensure `province` is provided and check if it exists in the database
-  let province;
-  if (req.body.province && req.body.province.length > 0) {
-    console.log("Searching for province with ID:", req.body.province);
-    province = await Province.findById(req.body.province);
-    if (!province) {
-      console.error("Province not found with ID:", req.body.province);
-      return res.status(404).json({ message: "Province not found" });
-    }
-    console.log("Found province:", province);
+  // Handle Province correctly
+  let provinceId = null;
+  if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length === 0) {
+    provinceId = null; // If empty array, set to null
+  } else {
+    provinceId = req.body.Province; // Otherwise keep the value
   }
 
-  // Ensure `country` exists in the database
-  console.log("Searching for country with ID:", req.body.Country);
   const country = await Country.findById(req.body.Country);
   if (!country) {
-    console.error("Country not found with ID:", req.body.Country);
-    return res.status(404).json({ message: "Country not found" });
+    return res.status(400).json({ message: 'Invalid country ID' });
   }
-  console.log("Found country:", country);
 
-  // Handle the province field (check if it's an empty array or not provided)
-  const provinceIds = req.body.province && req.body.province.length > 0 ? [req.body.province] : null;
-
-  // Create the new university
   const university = new University({
     name: req.body.name,
     bannerURL: req.body.bannerURL,
@@ -734,8 +722,8 @@ const createUniversity = asyncHandler(async (req, res) => {
     description: req.body.description,
     sections: req.body.sections,
     eligiblity: req.body.eligiblity,
-    Province: provinceIds, // If province is empty, it will be set to `null`
-    Country: country, // Storing the whole country object, assuming necessary
+    Province: provinceId,
+    Country: country._id,
     logo: req.body.logo,
     campusLife: req.body.campusLife,
     hostel: req.body.hostel,
@@ -743,30 +731,13 @@ const createUniversity = asyncHandler(async (req, res) => {
     UniLink: req.body.UniLink,
   });
 
-  console.log("University data being saved:", university);
+  const createdUniversity = await university.save();
 
-  try {
-    // Save the university document
-    const createdUniversity = await university.save();
-    console.log("University created:", createdUniversity);
+  console.log(createdUniversity, "/////////////////////////////////////////////////");
 
-    // If province exists, link the university to the province
-    if (province) {
-      console.log("Linking university to province...");
-      province.University.push(createdUniversity._id);
-      await province.save();
-      console.log("Province updated with university:", province);
-    }
-
-    // Send the created university back as the response
-    res.status(201).json(createdUniversity);
-  } catch (error) {
-    console.error("Error saving university:", error.message);
-    res.status(500).json({ message: "Error saving university", error: error.message });
-  }
+  res.status(201).json(createdUniversity);
 });
-
-
+;
 
 // @desc    Update a university
 // @route   PUT /universities/:id

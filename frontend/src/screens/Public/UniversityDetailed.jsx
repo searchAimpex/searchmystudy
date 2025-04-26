@@ -73,6 +73,8 @@ export default function UniversityDetailed() {
         const fetchData = async () => {
             try {
                 const result = await FetchOneUniversity(id).unwrap();
+                console.log(result,"/////////////***************************");
+                
                 dispatch(FetchOneUniversitys(result));
             } catch (error) {
                 console.error('Failed to fetch university:', error);

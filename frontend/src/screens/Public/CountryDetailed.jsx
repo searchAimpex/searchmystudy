@@ -93,6 +93,8 @@ export default function CountryDetailed() {
                   {section.title}
                 </h3>
 
+
+                <p>{singleCountry.description}</p>
                 {/* <div
                   className="ql-editor"
                   dangerouslySetInnerHTML={{ __html: yourSavedContent }}
