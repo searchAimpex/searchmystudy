@@ -45,6 +45,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     const [formValues, setFormValues] = useState({
         name: '',
         bannerURL: '',
+        Province:null,
         heroURL: '',
         Country: '',
         description: '',
@@ -214,7 +215,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
 
     const onSubmit = async () => {
         try {
-            // console.log(formValues);
+            console.log(formValues,"llllllllllllllllllllllllllllllll");
 
             const res = await createUniversity(formValues).unwrap();
             dispatch(AddUniversity({ ...res }));
