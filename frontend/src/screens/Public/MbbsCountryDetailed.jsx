@@ -200,7 +200,7 @@ export default function MbbsCountryDetailed() {
       </div>
 
       {/* Province Grid */}
-      <motion.div
+      {/* <motion.div
         ref={refProvinces}
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 px-4 mt-10 max-w-7xl mx-auto"
         initial="hidden"
@@ -228,7 +228,7 @@ export default function MbbsCountryDetailed() {
             </div>
           </motion.div>
         ))}
-      </motion.div>
+      </motion.div> */}
 
       {/* Universities */}
       <div className="mt-12 text-center px-4">
