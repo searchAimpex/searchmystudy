@@ -91,7 +91,6 @@ export default function CreateUniversityPop({ open, handleClose }) {
             const file = files[0];
             if (file) {
                 let isValid = false;
-
                 switch (name) {
                     case 'bannerURL':
                         isValid = await validateImage(file, 1200, 500);

@@ -33,6 +33,7 @@ const universitySchema = mongoose.Schema(
             url: String
             }
         ], 
+        
         eligiblity: {
             type:String,
             default:""
@@ -64,6 +65,14 @@ const universitySchema = mongoose.Schema(
         hostel : {
             type: String,
             default: ''
+        },
+        MCI:{
+            type:Boolean,
+            default:false
+        },
+        ECFMG:{
+            type:Boolean,
+            default:false
         },
         type:{
             type: String,

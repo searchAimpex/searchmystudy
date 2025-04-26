@@ -16,6 +16,7 @@ const courseSchema = mongoose.Schema(
             type: String,
             required: true
         },
+      
         Location: {
             type: String,
             required: true
@@ -68,7 +69,7 @@ const courseSchema = mongoose.Schema(
                     required: true  
                 },
                 date: {
-                    type: String,
+                    type: Date,
                     required: true
                 },
                 expiresAt: {
@@ -207,7 +208,7 @@ const courseSchema = mongoose.Schema(
 
         },
         Fees: {
-            type: Number,
+            type: String,
             default:0
         }
     },

@@ -434,7 +434,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
+  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet,MCI,ECFMG ,faq,MbbsSections} = req.body;
 
   const country = new Country({
     name,
@@ -445,11 +445,13 @@ const createCountry = asyncHandler(async (req, res) => {
     flagURL,
     elegiblity,
     bullet,
+    MCI,
+    ECFMG,
     faq,
     MbbsSections
     
   });
-  console.log(country,"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  console.log(country,"+++++++++++++++++++++");
   
 
   const createdCountry = await country.save();
@@ -593,6 +595,29 @@ const createProvince = asyncHandler(async (req, res) => {
 });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // @desc    Get all provinces
 // @route   GET /provinces
 // @access  Public
@@ -683,7 +708,6 @@ const createUniversity = asyncHandler(async (req, res) => {
   console.log("province", province)
   // province.University.push(createdUniversity._id)
   // await province.save();
-  const assignedProvince = province ? province : "";
     const university = new University({
     name:req.body.name,
     bannerURL:req.body.bannerURL,
@@ -691,7 +715,7 @@ const createUniversity = asyncHandler(async (req, res) => {
     description:req.body.description,
     sections:req.body.sections,
     eligiblity:req.body.eligiblity,
-    Province:assignedProvince,
+    Province:province,
     Country:country,
     logo:req.body.logo,
     campusLife:req.body.campusLife ,
@@ -781,7 +805,6 @@ const createCourse = asyncHandler(async (req, res) => {
   const university = await University.findById(req.body.University)
   // university.Course.push(createdCourse._id)
   // await university.save()
-  console.log(req.body.University,"----------------------------------------------------------------");
   
   const course = new Course({
     ProgramName :req.body.ProgramName,

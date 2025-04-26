@@ -34,6 +34,7 @@ import UpdateCoursePop from './PopUps/UpdateCoursePop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
 import { Card, CardContent } from '@mui/material';
 import MbbsCreateCoursePop from './PopUps/MbbsCreateCoursePop.jsx';
+import MbbsUpdateCoursePop from './PopUps/MbbsUpdateCoursePop.jsx';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -214,7 +215,7 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                 
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            <UpdateCoursePop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} courseData = {selectedRow} />
+            <MbbsUpdateCoursePop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} courseData = {selectedRow} />
         </Box>
     );
 }

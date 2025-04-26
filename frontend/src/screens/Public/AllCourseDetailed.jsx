@@ -373,9 +373,7 @@ const AllCourseDetailed = () => {
                 className="bg-white flex flex-col md:flex-row  gap-4 rounded-lg "
                 style={{
                   boxShadow:
-                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
-                }}
-              >
+                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',}}>
                 {/* Image Section */}
                 <div className="w-full md:w-[45%] relative flex justify-center items-center">
                   <div className="relative w-full  w-full h-[100%] ">
@@ -425,19 +423,21 @@ const AllCourseDetailed = () => {
                         <span>{course?.University?.type}</span>
                       </div>
 
+                      
+
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Program:</span>
                         <span>{course?.ProgramName}</span>
                       </div>
 
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Category:</span>
-                        <span>{course?.Category}</span>
-                      </div>
+                        <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                          <span className="font-semibold">Category:</span>
+                          <span>{course?.Category}</span>
+                        </div>
 
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Fees:</span>
-                        <span>{course?.Fees} INR</span>
+                        <span>{course?.Fees} </span>
                       </div>
 
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
@@ -456,14 +456,16 @@ const AllCourseDetailed = () => {
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Intake:</span>
                         <span> {new Date(course?.Intake[0].date).toLocaleDateString('en-GB', {
+                          // day: '2-digit',
+                          month: 'short',
+                          year: 'numeric',
+                        })}
+                          {/* - {new Date(course?.Intake[0].expiresAt).toLocaleDateString('en-GB', {
                           day: '2-digit',
                           month: 'short',
                           year: 'numeric',
-                        })} - {new Date(course?.Intake[0].expiresAt).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })}</span>
+                        })} */}
+                        </span>
                       </div>
 
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">

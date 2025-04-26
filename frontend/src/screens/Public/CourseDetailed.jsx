@@ -33,7 +33,7 @@ export default function CourseDetailed() {
   const [FetchOneCourse] = useFetchOneCourseMutation();
   const [tabValue, setTabValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  console.log(singleCourse, "----------------------------------------------------------");
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
@@ -63,7 +63,7 @@ export default function CourseDetailed() {
 
   return (
     <motion.div
-      className="p-4 mx-auto max-w-screen-xl my-8"
+      className=" border-2 border-red-500"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -72,7 +72,7 @@ export default function CourseDetailed() {
       {singleCourse && (
         <>
           <motion.div className="relative mb-6" initial={{ scale: 0.95 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
-            <CardMedia component="img" height="250" image={singleCourse?.University?.bannerURL} alt={singleCourse?.University?.name} className="object-cover w-full rounded-lg" />
+            <CardMedia component="img" height="250" image={singleCourse?.University?.bannerURL} alt={singleCourse?.University?.name} className="object-cover w-full " />
             <div className="flex flex-col sm:flex-row items-center mt-6 space-y-6 sm:space-y-0 sm:space-x-6">
               <motion.img
                 src={singleCourse?.University?.logo}
@@ -108,130 +108,324 @@ export default function CourseDetailed() {
             </div>
           </motion.div>
 
-          <Box>
-            <Tabs
-              value={tabValue}
-              onChange={handleTabChange}
-              aria-label="course tabs"
-              className="mb-4"
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="auto"
-            >
-              <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
-              <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
-              <Tab label="Requirements" icon={<SchoolIcon />} iconPosition="start" />
-              <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
-              <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
-              <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" />
-            </Tabs>
+          <div >
+            <Box>
+              <Tabs
+                value={tabValue}
+                onChange={handleTabChange}
+                aria-label="course tabs"
+                className="mb-4"
+                indicatorColor="primary"
+                textColor="primary"
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
+                <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
+                <Tab label="Requirements" icon={<SchoolIcon />} iconPosition="start" />
+                <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
+                <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
+                <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" />
+              </Tabs>
 
-            <TabPanel value={tabValue} index={0}>
-  <Box   style={{
-      boxShadow: '4px 4px 10px rgba(0, 0, 0, 0.28), -4px -4px 10px rgba(0, 0, 0, 0.28)',
-    }} className="bg-white rounded-xl shadow-xl p-4 sm:p-6 md:p-8 w-full max-w-5xl mx-auto">
-    <Typography
-      variant="h6"
-      sx={{ fontWeight: 'bold' }}
-      className="text-lg sm:text-xl md:text-2xl text-center sm:text-left"
-    >
-      Program Details
-    </Typography>
+              <TabPanel value={tabValue} index={0}>
+                <Box  >
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 'bold' }}
+                    className="px-5  sm:text-xl md:text-2xl text-center sm:text-left"
+                  >
+                    <span className='text-3xl mx-2'>Program Details in   {singleCourse?.University?.name}
+                    </span>
 
-    <Box className="mt-4 space-y-3 sm:space-y-4 text-sm sm:text-base">
-      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
-        <InfoIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
-        <Typography className="flex-1">
-          Program Name: <strong>{singleCourse.ProgramName}</strong>
-        </Typography>
-      </Box>
+                  </Typography>
 
-      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
-        <CategoryIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
-        <Typography className="flex-1">
-          Category: <strong>{singleCourse.Category}</strong>
-        </Typography>
-      </Box>
+                  {/* <Box className="mt-4 space-y-3 sm:space-y-4 text-sm sm:text-base">
+                  <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <InfoIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+                    <Typography className="flex-1">
+                      Program Name: <strong>{singleCourse.ProgramName}</strong>
+                    </Typography>
+                  </Box>
 
-      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
-        <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
-        <Typography className="flex-1">
-          Duration: <strong>{singleCourse.Duration}</strong>
-        </Typography>
-      </Box>
+                  <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <CategoryIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+                    <Typography className="flex-1">
+                      Category: <strong>{singleCourse.Category}</strong>
+                    </Typography>
+                  </Box>
 
-      <Box className="flex flex-col sm:flex-row items-start sm:items-center">
-        <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
-        <Typography className="flex-1">
-          Program Level: <strong>{singleCourse.ProgramLevel}</strong>
-        </Typography>
-      </Box>
-    </Box>
+                  <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+                    <Typography className="flex-1">
+                      Duration: <strong>{singleCourse.Duration}</strong>
+                    </Typography>
+                  </Box>
 
-    <Box className="mt-6 text-center sm:text-right">
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => openKnowMore(singleCourse?.WebsiteURL)}
-        className="w-full sm:w-auto"
-      >
-        Know More
-      </Button>
-    </Box>
-  </Box>
-</TabPanel>
+                  <Box className="flex flex-col sm:flex-row items-start sm:items-center">
+                    <TimerIcon className="text-blue-500 mr-2 mb-1 sm:mb-0" />
+                    <Typography className="flex-1">
+                      Program Level: <strong>{singleCourse.ProgramLevel}</strong>
+                    </Typography>
+                  </Box>
+                </Box>
+
+                <Box className="mt-6 text-center sm:text-right">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => openKnowMore(singleCourse?.WebsiteURL)}
+                    className="w-full sm:w-auto"
+                  >
+                    Know More
+                  </Button>
+                </Box> */}
 
 
-            <TabPanel value={tabValue} index={1}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Intake Details</Typography>
-              {singleCourse?.Intake?.map((intake, index) => (
-                <Accordion key={index} className="my-2">
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                    <Typography>Intake {index + 1}</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography>Status: {intake.status ? 'Yes' : 'No'}</Typography>
-                    <Typography>Date: {intake.date}</Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </TabPanel>
 
-            <TabPanel value={tabValue} index={2}>
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Language Requirements</Typography>
-              {singleCourse?.LanguageRequirements ? (
-                Object.entries(singleCourse.LanguageRequirements).map(([key, req]) => (
-                  <Accordion key={key} className="my-2">
+
+
+
+                  {/* ////////////////////////////////////////////////////// */}
+                  <div className='flex w-[100%]  my-2 gap-20  '>
+                    <div className='px-5 w-[70%] '>
+                      <div className="flex flex-col w-full  ">
+
+                        {/* <hr /> */}
+
+                        {/* Program Info */}
+                        <div className="flex flex-col md:flex-row m-2 justify-between gap-6">
+                          {/* Left Column */}
+                          <div className="flex-1 space-y-2">
+                            <div className="text-sm sm:text-base  flex flex-wrap gap-2">
+                              <span className="font-semibold text-xl">Program Type:</span>
+                              <span className='text-xl'>{singleCourse?.University?.type}</span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Program:</span>
+                              <span className='text-xl'>{singleCourse?.ProgramName}</span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Category:</span>
+                              <span className='text-xl'>{singleCourse?.Category}</span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className=" text-xl font-semibold">Fees:</span>
+                              <span className='text-xl'>{singleCourse?.Fees} </span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Level:</span>
+                              <span className='text-xl'>{singleCourse?.ProgramLevel}</span>
+                            </div>
+                          </div>
+
+                          {/* Right Column */}
+                          <div className="flex-1 space-y-2  ">
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Grade:</span>
+                              <span className='text-xl'>{singleCourse?.University?.grade}</span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Intake:</span>
+                              <span className='text-xl'>
+                                {/* className="text-2xl" */}
+                                {singleCourse?.Intake?.[0]?.date
+                                  ? new Date(singleCourse.Intake[0].date).toLocaleDateString('en-GB', {
+                                    month: 'short',
+                                    year: 'numeric',
+                                  })
+                                  : "Date not available"}
+                              </span>
+
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              <span className="text-xl font-semibold">Duration:</span>
+                              <span className='text-xl'>{singleCourse?.Duration}</span>
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
+                              {/* Star Rating */}
+                              <span className="text-xl font-semibold">Location:</span>
+                              <span className='text-xl'>  {singleCourse?.Location}</span>
+
+                            </div>
+
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
+                              {/* Star Rating */}
+                              <span className="text-2xl font-semibold">Rating:</span>
+                              <div className=" text-2xl flex text-yellow-500">
+
+                                {Array.from({ length: singleCourse?.University?.rank || 0 }).map((_, i) => (
+                                  <span key={i}>★</span>
+                                ))}
+                              </div>
+                            </div>
+
+
+
+                          </div>
+                        </div>
+
+
+
+
+                        {/* shadab */}
+
+                        <div className="p-2 my-4">
+                          <h1 className='font-semibold text-2xl'>Intake Year</h1>
+                          {singleCourse?.Intake?.length > 0 ? (
+                            <div className=" my-3 overflow-x-auto rounded-lg shadow border">
+                              <table className="min-w-full table-auto text-center">
+                                <thead className="bg-blue-main">
+                                  <tr>
+                                    <th className="px-6 py-2 text-white text-lg font-semibold">Intake </th>
+                                    <th className="px-6 py-2 text-white text-lg font-semibold">Deadline</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {singleCourse.Intake.map((intakeItem, index) => (
+                                    <tr key={intakeItem._id || index} className="border-t">
+                                      <td className="px-6 py-2">
+                                        {intakeItem?.date
+                                          ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
+                                            month: 'long', // Full month name (e.g., "April")
+                                            year: 'numeric', // Full year (e.g., "2025")
+                                          })
+                                          : "N/A"}
+                                      </td>
+                                      <td className="px-6 py-4">
+                                        {intakeItem?.expiresAt
+                                          ? new Date(intakeItem.expiresAt).toLocaleDateString('en-GB', {
+                                            day: '2-digit',
+                                            month: 'short', // Abbreviated month name (e.g., "Apr")
+                                            year: 'numeric',
+                                          })
+                                          : "N/A"}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
+                          ) : (
+                            <div className="text-gray-500">No intake dates available.</div>
+                          )}
+                        </div>
+
+                        {/* <hr /> */}
+                        {/* Location & Button */}
+
+
+
+                      </div>
+                    </div>
+
+                    <div className='[w-20%] '>
+                      <form className="bg-white w-[500px] border rounded-lg shadow-xl p-4">
+                        <div className="mb-4">
+                          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
+                          <input id="name" type="text" placeholder="Enter your name"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+                        </div>
+                        <div className="mb-4">
+                          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+                          <input id="email" type="email" placeholder="Enter your email"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+                        </div>
+                        <div className="mb-4">
+                          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">Phone</label>
+                          <input id="phone" type="tel" placeholder="Enter your phone number"
+                            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+                        </div>
+                        <button
+                          type="submit"
+                          className="w-full bg-blue-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300"
+                        >
+                          Submit
+                        </button>
+                      </form>
+                    </div>
+
+
+
+                  </div>
+
+
+                  <div className="px-4 ">
+                    <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
+                    <p className="text-gray-600 px-3  ">
+                      {singleCourse?.University?.description || "No university description available."}
+                    </p>
+                  </div>
+
+
+                  {/* //////////////////////////////////////////////////////////// */}
+                </Box>
+              </TabPanel>
+
+
+              <TabPanel value={tabValue} index={1}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Intake Details</Typography>
+                {singleCourse?.Intake?.map((intake, index) => (
+                  <Accordion key={index} className="my-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography>{key}</Typography>
+                      <Typography>Intake {index + 1}</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                      <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
-                      <Typography>Description: {req.description}</Typography>
-                      <Typography>Minimum Requirement: {req.minRequirement}</Typography>
+                      <Typography>Status: {intake.status ? 'Yes' : 'No'}</Typography>
+                      <Typography>Date: {intake.date}</Typography>
                     </AccordionDetails>
                   </Accordion>
-                ))
-              ) : <Typography>No language requirements available</Typography>}
+                ))}
+              </TabPanel>
 
-              <Typography variant="h6" className="mt-6" sx={{ fontWeight: 'bold' }}>Standardized Requirements</Typography>
-              {singleCourse?.StandardizeRequirement ? (
-                Object.entries(singleCourse.StandardizeRequirement).map(([key, req]) => (
-                  <Accordion key={key} className="my-2">
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
-                      <Typography>{key}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
-                      <Typography>Description: {req.description}</Typography>
-                      <Typography>Minimum Requirement: {req.minRequirement}</Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                ))
-              ) : <Typography>No standardized requirements available</Typography>}
-            </TabPanel>
-          </Box>
+              <TabPanel value={tabValue} index={2}>
+                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Language Requirements</Typography>
+                {singleCourse?.LanguageRequirements ? (
+                  Object.entries(singleCourse.LanguageRequirements).map(([key, req]) => (
+                    <Accordion key={key} className="my-2">
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
+                        <Typography>{key}</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
+                        <Typography>Description: {req.description}</Typography>
+                        <Typography>Minimum Requirement: {req.minRequirement}</Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))
+                ) : <Typography>No language requirements available</Typography>}
+
+                <Typography variant="h6" className="mt-6" sx={{ fontWeight: 'bold' }}>Standardized Requir ements</Typography>
+                {singleCourse?.StandardizeRequirement ? (
+                  Object.entries(singleCourse.StandardizeRequirement).map(([key, req]) => (
+                    <Accordion key={key} className="my-2">
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
+                        <Typography>{key}</Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Typography>Status: {req.status ? 'Required' : 'Not Required'}</Typography>
+                        <Typography>Description: {req.description}</Typography>
+                        <Typography>Minimum Requirement: {req.minRequirement}</Typography>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))
+                ) : <Typography>No standardized requirements available</Typography>}
+              </TabPanel>
+            </Box>
+          </div>
+
+
+          <div>
+
+          </div>
         </>
       )}
     </motion.div>

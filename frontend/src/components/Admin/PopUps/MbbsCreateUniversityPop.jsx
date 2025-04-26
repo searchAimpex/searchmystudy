@@ -17,8 +17,11 @@ import {
     Select,
     FormControl,
     InputLabel,
+    FormControlLabel, Checkbox
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import {  FormControl } from "@mui/material";
+
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
 import { useCountryAllFetchMutation, useCreateUniversityMutation, useFetchProvinceMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
@@ -37,13 +40,13 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     const [FetchProvince] = useFetchProvinceMutation();
     const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
     // State for form values and image validation
-    const[countries, setCountries] = useState([])
+    const [countries, setCountries] = useState([])
     // const { countries } = useSelector((state) => state.country);
     const [formValues, setFormValues] = useState({
         name: '',
         bannerURL: '',
         heroURL: '',
-        Country:'',
+        Country: '',
         description: '',
         grade: 'A',
         rating: '5',
@@ -53,6 +56,8 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         campusLife: '',
         hostel: '',
         type: 'Public',
+        MCI: '',
+        ECFMG: '',
         rank: 0,
         UniLink: '',
         Course: [],
@@ -66,7 +71,13 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
 
     const [isFormValid, setIsFormValid] = useState(false);
     const [createUniversity, { isSuccess }] = useCreateUniversityMutation();
-
+    const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;  // 'checked' holds true or false
+        setFormValues((prevValues) => ({
+            ...prevValues,
+            [name]: checked,  // Update to true or false based on checkbox status
+        }));
+    };
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -75,7 +86,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                 dispatch(FetchCountry(resultforsidebar));
                 setCountries(resultforsidebar)
                 console.log(resultforsidebar, "************************************************")
-        
+
             } catch (error) {
                 console.error('Failed to fetch provinces:', error);
             }
@@ -203,8 +214,12 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
 
     const onSubmit = async () => {
         try {
+            // console.log(formValues);
+
             const res = await createUniversity(formValues).unwrap();
             dispatch(AddUniversity({ ...res }));
+            console.log(res,"resresresresssssssssssssssssssssssssssssssssssssss");
+            
             handleClose();
         } catch (error) {
             console.error('Failed to create university:', error);
@@ -228,7 +243,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
 
     return (
         <Dialog fullWidth='xl' open={open} onClose={handleClose}>
-            <DialogTitle className='text-white bg-custom-primary font-bold'>Add University</DialogTitle>
+            <DialogTitle className='text-white bg-custom-primary font-bold'>Add MBBS University</DialogTitle>
             <DialogContent>
                 <div className='py-2'>
                     <DialogContentText></DialogContentText>
@@ -290,8 +305,11 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         onChange={handleChange}
                         className="mb-2"
                     />
-                    <p  className="text-red-300 text-sm font-bold">Only 200 hundered words are allowed.</p>
+                    <p className="text-red-300 text-sm font-bold">Only 200 hundered words are allowed.</p>
                     {/* Sections */}
+
+
+
                     {formValues.sections.map((section, index) => (
                         <Accordion key={index}>
                             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -347,7 +365,17 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                             ))}
                         </Select>
                     </FormControl>
-                    <TextField
+
+                    <TextEditor
+                        id="eligiblity"
+                        name="description"
+                        label="Eligibility"
+                        variant="standard"
+                        value={formValues.eligiblity}
+                        onChange={handleChange}
+                        className="mb-2"
+                    />
+                    {/* <TextField
                         id="eligiblity"
                         name="eligiblity"
                         label="Eligibility"
@@ -355,8 +383,8 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         value={formValues.eligiblity}
                         onChange={handleChange}
                         className="mb-2"
-                    />
-                    <TextField
+                    /> */}
+                    {/* <TextField
                         id="campusLife"
                         name="campusLife"
                         label="Campus Life"
@@ -364,8 +392,21 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         value={formValues.campusLife}
                         onChange={handleChange}
                         className="mb-2"
+                    /> */}
+
+                    <TextEditor
+                        id="description"
+                        name="description"
+                        label="Campus Life"
+                        variant="standard"
+                        value={formValues.campusLife}
+                        onChange={(e)=>{setFormValues((prev)=>({...prev,campusLife:e.target.value}))}}
+                        className="mb-2"
                     />
-                    <TextField
+
+
+
+                    {/* <TextField
                         id="hostel"
                         name="hostel"
                         label="Hostel"
@@ -373,8 +414,18 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         value={formValues.hostel}
                         onChange={handleChange}
                         className="mb-2"
+                    /> */}
+
+                    <TextEditor
+                        id="description"
+                        name="description"
+                        label="Hostel"
+                        variant="standard"
+                        value={formValues.hostel}
+                        onChange={(e)=>{setFormValues((prev)=>({...prev,hostel:e.target.value}))}}
+                        className="mb-2"
                     />
-                    <TextField
+                    {/* <TextField
                         id="type"
                         name="type"
                         label="University Type"
@@ -382,7 +433,69 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         value={formValues.type}
                         onChange={handleChange}
                         className="mb-2"
+                    /> */}
+
+
+
+                    {/* MCI Approved */}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                // checked={formValues.MCIApproved}  // Will be true or false
+                                onChange={(e) => {
+                                    setFormValues((prev) => ({
+                                        ...prev,
+                                        MCI: e.target.checked // Update the state with checked value
+                                    }));
+                                }}
+
+                                name="MCIApproved"  // Will update formValues.MCIApproved
+                            />
+                        }
+                        label="MCI Approved"
                     />
+
+                    {/* ECFMG Approved */}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={formValues.ECFMGApproved}  // Will be true or false
+                                onChange={(e) => {
+                                    setFormValues((prev) => ({
+                                        ...prev,
+                                        ECFMG: e.target.checked // Update the state with checked value
+                                    }));
+                                }}  // Update the state with checked value
+                                name="ECFMGApproved"  // Will update formValues.ECFMGApproved
+                            />
+                        }
+                        label="ECFMG Approved"
+                    />
+                    {/* <TextField
+                        id="type"
+                        name="type"
+                        label="University Type"
+                        variant="standard"
+                        value={formValues.type}
+                        onChange={handleChange}
+                        className="mb-2"
+                    /> */}
+
+
+
+                    <FormControl variant="standard" fullWidth>
+                        <InputLabel id="university-type-label">University Type</InputLabel>
+                        <Select
+                            labelId="university-type-label"
+                            id="type"
+                            name="type"
+                            value={formValues.type}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="Private">Private</MenuItem>
+                            <MenuItem value="Public">Public</MenuItem>
+                        </Select>
+                    </FormControl>
                     <TextField
                         id="rank"
                         name="rank"

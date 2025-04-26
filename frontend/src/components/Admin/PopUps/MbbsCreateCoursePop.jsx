@@ -33,6 +33,7 @@ import { FetchUniversitys } from '../../../slices/universitySlice';
 import { AddCourse } from '../../../slices/courseSlice';
 import { NearMe } from '@mui/icons-material';
 import { FetchCountry } from '../../../slices/countrySlice.js';
+import TextEditor from '../TextEditor.jsx';
 const storage = getStorage(app);
 const level = ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated)Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twiming Program(UG)', 'Twiming Program(PG)', 'Online Programe/Distance Learning']
 
@@ -76,8 +77,8 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
   const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
   const [createCourse, { isSuccess }] = useCreateCourseMutation();
   // const { countries } = useSelector((state) => state.country);
-   const[countries, setCountries] = useState([])
-  const [CountryId, setCountryId] = useState("") 
+  const [countries, setCountries] = useState([])
+  const [CountryId, setCountryId] = useState("")
   // useEffect(() => {
   //   const fetchData = async () => {
   //     try {
@@ -88,7 +89,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
   //       dispatch(FetchUniversitys(filteredUniversities));
 
   //       console.log(result,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
-        
+
   //     } catch (error) {
   //       console.error('Failed to fetch universities:', error);
   //     }
@@ -96,43 +97,43 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
   //   fetchData();
   // }, [FetchUniversity, dispatch]);
 
-console.log(CountryId,"%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  console.log(CountryId, "%$%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
-// Fetch countries on component load
-useEffect(() => {
-  const fetchCountries = async () => {
-    try {
-      const result = await CountryAllFetch().unwrap();
-      // const filtered = result.filter(country => country.mbbsAbroad === true);
-      dispatch(FetchCountry(result));
-      setCountries(result)
-    } catch (error) {
-      console.error('Failed to fetch countries:', error);
-    }
-  };
-
-  fetchCountries();
-}, [CountryAllFetch, dispatch]);
-
-// Fetch universities when country is selected
-useEffect(() => {
-  const fetchUniversitiesByCountry = async () => {
-    try {
-      if (CountryId) {
-        const result = await FetchUniversity().unwrap();
-        const filteredUniversities = result.filter(
-          (university) => university.Country === CountryId
-        );
-        dispatch(FetchUniversitys(filteredUniversities));
-        console.log("Filtered Universities:", filteredUniversities);
+  // Fetch countries on component load
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const result = await CountryAllFetch().unwrap();
+        // const filtered = result.filter(country => country.mbbsAbroad === true);
+        dispatch(FetchCountry(result));
+        setCountries(result)
+      } catch (error) {
+        console.error('Failed to fetch countries:', error);
       }
-    } catch (error) {
-      console.error('Failed to fetch universities:', error);
-    }
-  };
+    };
 
-  fetchUniversitiesByCountry();
-}, [CountryId, FetchUniversity, dispatch]);
+    fetchCountries();
+  }, [CountryAllFetch, dispatch]);
+
+  // Fetch universities when country is selected
+  useEffect(() => {
+    const fetchUniversitiesByCountry = async () => {
+      try {
+        if (CountryId) {
+          const result = await FetchUniversity().unwrap();
+          const filteredUniversities = result.filter(
+            (university) => university.Country === CountryId
+          );
+          dispatch(FetchUniversitys(filteredUniversities));
+          console.log("Filtered Universities:", filteredUniversities);
+        }
+      } catch (error) {
+        console.error('Failed to fetch universities:', error);
+      }
+    };
+
+    fetchUniversitiesByCountry();
+  }, [CountryId, FetchUniversity, dispatch]);
 
 
   useEffect(() => {
@@ -151,6 +152,7 @@ useEffect(() => {
     ProgramName: '',
     University: '',
     WebsiteURL: '',
+    CampusLife:'',
     Location: '',
     Duration: '',
     Category: '',
@@ -179,13 +181,13 @@ useEffect(() => {
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
     console.log(name, value, type, files);
-    
+
     if (name === "Country") {
       setCountryId(value); // this is for filtering universities
     }
-  
+
     const [section, subSection, field] = name.split('.');
-  
+
     if (type === 'file') {
       const file = files[0];
       if (file) {
@@ -212,7 +214,7 @@ useEffect(() => {
       }
     }
   };
-  
+
 
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `courses/${file.name}`);
@@ -261,11 +263,13 @@ useEffect(() => {
     }));
   };
 
+  
+
   const onSubmit = async () => {
     try {
       const res = await createCourse(formValues).unwrap();
-      console.log(formValues,"sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
-      
+      console.log(formValues, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+
       dispatch(AddCourse({ ...res }));
       handleClose();
     } catch (error) {
@@ -350,13 +354,20 @@ useEffect(() => {
             <TextField
               id="WebsiteURL"
               name="WebsiteURL"
-              label="Website URL"
+              label="University Website URL"
               variant="standard"
               value={formValues.WebsiteURL}
               onChange={handleChange}
               className="mb-2"
               sx={{ flex: '1 1 30%' }}
             />
+
+            
+
+            
+
+
+
             <TextField
               id="Location"
               name="Location"
