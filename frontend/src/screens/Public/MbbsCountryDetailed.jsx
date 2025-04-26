@@ -258,7 +258,7 @@ export default function MbbsCountryDetailed() {
                 {uni.name}
               </span>
               <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg text-white">
-                {singleCountry?.name}
+                Read more
               </span>
             </div>
           </Link>
