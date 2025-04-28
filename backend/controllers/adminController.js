@@ -434,7 +434,8 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet,MCI,ECFMG ,faq,MbbsSections} = req.body;
+  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
+  console.log(req.body.MCI,"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
   const country = new Country({
     name,
@@ -445,13 +446,10 @@ const createCountry = asyncHandler(async (req, res) => {
     flagURL,
     elegiblity,
     bullet,
-    MCI,
-    ECFMG,
     faq,
     MbbsSections
     
   });
-  console.log(country,"+++++++++++++++++++++");
   
 
   const createdCountry = await country.save();
@@ -478,14 +476,33 @@ const getAllCountries = asyncHandler(async (req, res) => {
 // @desc    Get single country
 // @route   GET /countries/:id
 // @access  Public
+// const getCountryById = asyncHandler(async (req, res) => {
+//   const country = await Country.findById(req.params.id).populate('Province')
+//   console.log("country",country)
+//   if (country) {
+//     res.json(country);
+//   } else {
+//     res.status(404);
+//     throw new Error('Country not found');
+//   }
+// });
 const getCountryById = asyncHandler(async (req, res) => {
-  const country = await Country.findById(req.params.id).populate('Province')
-  console.log("country",country)
-  if (country) {
-    res.json(country);
-  } else {
-    res.status(404);
-    throw new Error('Country not found');
+  try {
+    const country = await Country.findById(req.params.id);
+    
+    // Check if the Province field exists, and only then populate it
+    if (country) {
+      if (country.Province) {
+        await country.populate('Province'); // Populate Province if it exists
+      }
+      console.log("country", country);
+      res.json(country);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -726,6 +743,8 @@ const createUniversity = asyncHandler(async (req, res) => {
     Country: country._id,
     logo: req.body.logo,
     campusLife: req.body.campusLife,
+    MCI:req.body.MCI,
+    ECFMG:req.body.ECFMG,
     hostel: req.body.hostel,
     rank: req.body.rank,
     UniLink: req.body.UniLink,

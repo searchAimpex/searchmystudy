@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useCountryAllFetchMutation,
@@ -27,7 +27,7 @@ export default function MbbsCountryDetailed() {
 
   const { singleCountry, countries } = useSelector((state) => state.country);
   const { university } = useSelector((state) => state.university);
-  console.log(university,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu");
+  console.log(singleCountry, "=============================================");
 
   const [CountryFetchOne, { isLoading }] = useCountryFetchOneMutation();
   const [CountryFetch] = useCountryAllFetchMutation();
@@ -61,7 +61,13 @@ export default function MbbsCountryDetailed() {
     fetchData();
   }, [id, dispatch, CountryFetch, CountryFetchOne, FetchUniversity]);
 
-  if (isLoading) return <Loader />;
+  const scrollRef = useRef(null); // ✅ hooks must be on top, directly.
+
+  const scrollDown = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ top: 100, behavior: "smooth" });
+    }
+  };
 
   return (
     <div className="bg-gray-100 text-white">
@@ -123,10 +129,20 @@ export default function MbbsCountryDetailed() {
                         animate={inViewSections ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 1 }}
                       >
-                        <div
-                          className="hello text-black px-3"
-                          dangerouslySetInnerHTML={{ __html: truncateText(section.description, 110) }}
-                        />
+                        <div className="relative">
+                          <div
+                            ref={scrollRef}
+                            className="hello h-[300px] overflow-y-scroll overflow-x-hidden scrollbar-hide text-black px-3"
+                            dangerouslySetInnerHTML={{ __html: truncateText(section.description, 110) }}
+                          />
+
+                          <button
+                            onClick={scrollDown}
+                            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm bg-gold-main text-white p-2 rounded-full shadow-lg animate-bounce"
+                          >
+                            Click to now more
+                          </button>
+                        </div>
                       </motion.div>
 
                       <motion.div
@@ -156,17 +172,17 @@ export default function MbbsCountryDetailed() {
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
               <input id="name" type="text" placeholder="Enter your name"
-                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
               <input id="email" type="email" placeholder="Enter your email"
-                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">Phone</label>
               <input id="phone" type="tel" placeholder="Enter your phone number"
-                     className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main"/>
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
             </div>
             <button
               type="submit"
@@ -213,6 +229,8 @@ export default function MbbsCountryDetailed() {
       >
         {singleCountry?.Province?.map((province) => (
           <motion.div
+
+
             key={province._id}
             className="relative group border-2 shadow-xl p-6 bg-white rounded-lg"
             whileHover={{ scale: 1.05 }}
@@ -242,10 +260,12 @@ export default function MbbsCountryDetailed() {
       <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
         {university.map((uni) => (
           <Link
-          to={`/university/${university._id}`}
+            to={`/university/${uni._id}`}
             key={uni._id}
             className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
           >
+            {/* {console.log(uni,"------------------------------------------")
+            } */}
             <div
               style={{ backgroundImage: `url(${uni.heroURL})` }}
               className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
