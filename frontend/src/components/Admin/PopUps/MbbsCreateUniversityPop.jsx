@@ -191,7 +191,6 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         }
     };
 
-
     const uploadImage = async (file) => {
         const storageRef = ref(storage, `universities/${file.name}`);
         await uploadBytes(storageRef, file);
@@ -219,7 +218,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
 
             const res = await createUniversity(formValues).unwrap();
             dispatch(AddUniversity({ ...res }));
-            console.log(res,"resresresresssssssssssssssssssssssssssssssssssssss");
+            console.log(res,"resresresresssssssssss  ssssssssssssssssssssssssssss");
             
             handleClose();
         } catch (error) {
@@ -236,6 +235,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         e.stopPropagation();
         handleClose();
     }
+    
     useEffect(() => {
         // Check if all required images are valid
         const allImagesValid = Object.values(imageValidations).every(Boolean);
@@ -373,7 +373,10 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         label="Eligibility"
                         variant="standard"
                         value={formValues.eligiblity}
-                        onChange={handleChange}
+                        onChange={(e) => setFormValues((prev) => ({
+                            ...prev,
+                           eligiblity: e.target.value
+                          }))}
                         className="mb-2"
                     />
                     {/* <TextField

@@ -30,6 +30,7 @@ const storage = getStorage(app);
 
 export default function UpdateUniversityPop({ open, handleClose, initialData }) {
     const dispatch = useDispatch();
+    
     console.log(initialData,"++++++++++++++++++++++++++++++++++++++++++++++");
     
     const { province } = useSelector((state) => state.province);

@@ -150,9 +150,11 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
 
   const [formValues, setFormValues] = useState({
     ProgramName: '',
-    University: '',
-    WebsiteURL: '',
     CampusLife:'',
+    University: '',
+    Eligibility: '',
+    WebsiteURL: '',
+    CampusLife: '',
     Location: '',
     Duration: '',
     Category: '',
@@ -160,6 +162,11 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     Intake: [{ status: true, date: '', expiresAt: new Date() }],
     Scholarships: false,
     ProgramLevel: '',
+    languageRequire: {
+      english: '',
+      no_any_preference: '',
+      motherTongue: ''
+    },
     LanguageRequirements: {
       PTE: { status: false, description: '', minRequirement: '' },
       TOFFL: { status: false, description: '', minRequirement: '' },
@@ -263,20 +270,40 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     }));
   };
 
-  
 
   const onSubmit = async () => {
+    console.log(formValues);
     try {
-      const res = await createCourse(formValues).unwrap();
-      console.log(formValues, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+      if (
+        formValues.ProgramName !== '' &&
+        formValues.CampusLife !== '' &&
+        formValues.Eligibility !== '' &&
+        formValues.University !== '' &&
+        formValues.WebsiteURL !== '' &&
+        formValues.CampusLife !== '' &&
+        formValues.Location !== '' &&
+        formValues.Duration !== '' &&
+        formValues.Category !== '' &&
+        formValues.Intake.date !== '' &&
+        formValues.Intake.expiresAt !== '' &&
+        formValues.languageRequire.english && // Checkbox check (true or false)
+        formValues.languageRequire.no_any_preference && // Checkbox check (true or false)
+        formValues.languageRequire.motherTongue && // Checkbox check (true or false)
+        formValues.languageRequire.Duration !== ''
+      ) {
 
-      dispatch(AddCourse({ ...res }));
-      handleClose();
+        const res = await createCourse(formValues).unwrap();
+        console.log(formValues, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+
+        dispatch(AddCourse({ ...res }));
+        handleClose();
+      } else {
+        toast.error('Please fill in all required fields.');
+      }
     } catch (error) {
       console.error('Failed to create course:', error);
     }
   };
-
   useEffect(() => {
     if (isSuccess) {
       toast.success('Course Added Successfully');
@@ -362,9 +389,9 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
               sx={{ flex: '1 1 30%' }}
             />
 
-            
 
-            
+
+
 
 
 
@@ -529,115 +556,103 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
             </Select>
           </FormControl>
 
-          {/* Language Requirements */}
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="language-requirements-content"
-              id="language-requirements-header"
-            >
-              <Typography>Language Requirements</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                {['PTE', 'TOFFL', 'IELTS', 'DET'].map((test) => (
-                  <Accordion key={test}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{test}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={formValues.LanguageRequirements[test].status}
-                            onChange={(e) =>
-                              handleStatusChange('LanguageRequirements', test, 'status', e.target.checked)
-                            }
-                          />
-                        }
-                        label="Status"
-                      />
-                      <TextField
-                        label={`${test} Description`}
-                        variant="standard"
-                        value={formValues.LanguageRequirements[test].description}
-                        onChange={(e) =>
-                          handleRequirementChange('LanguageRequirements', test, 'description', e.target.value)
-                        }
-                        className="mb-2"
-                        sx={{ flex: '1 1 45%' }}
-                      />
-                      <TextField
-                        label={`${test} Min Requirement`}
-                        variant="standard"
-                        value={formValues.LanguageRequirements[test].minRequirement}
-                        onChange={(e) =>
-                          handleRequirementChange('LanguageRequirements', test, 'minRequirement', e.target.value)
-                        }
-                        className="mb-2"
-                        sx={{ flex: '1 1 45%' }}
-                      />
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+          <div>
+            <div className='py-2'>
+              <DialogContentText>Language Requirement</DialogContentText>
+            </div>
 
-          {/* Standardized Requirements */}
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="standardized-requirements-content"
-              id="standardized-requirements-header"
-            >
-              <Typography>Standardized Requirements</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-                {['SAT', 'ACT', 'GRE', 'GMAT'].map((test) => (
-                  <Accordion key={test}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{test}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={formValues.StandardizeRequirement[test].status}
-                            onChange={(e) =>
-                              handleStatusChange('StandardizeRequirement', test, 'status', e.target.checked)
-                            }
-                          />
-                        }
-                        label="Status"
-                      />
-                      <TextField
-                        label={`${test} Description`}
-                        variant="standard"
-                        value={formValues.StandardizeRequirement[test].description}
-                        onChange={(e) =>
-                          handleRequirementChange('StandardizeRequirement', test, 'description', e.target.value)
-                        }
-                        className="mb-2"
-                        sx={{ flex: '1 1 45%' }}
-                      />
-                      <TextField
-                        label={`${test} Min Requirement`}
-                        variant="standard"
-                        value={formValues.StandardizeRequirement[test].minRequirement}
-                        onChange={(e) =>
-                          handleRequirementChange('StandardizeRequirement', test, 'minRequirement', e.target.value)
-                        }
-                        className="mb-2"
-                        sx={{ flex: '1 1 45%' }}
-                      />
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
-              </Box>
-            </AccordionDetails>
-          </Accordion>
+            <div className="flex my-2 space-x-10">
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="english"
+                  name="language"
+                  value="English"
+                  className="mr-2"
+                  onChange={(e) => {
+                    setFormValues((prev) => ({
+                      ...prev,
+                      languageRequire: {
+                        ...prev.languageRequire, // Preserve existing languageRequire fields
+                        english: e.target.checked  // Update the 'english' field
+                      }
+                    }));
+                  }} />
+                <label htmlFor="english">  <DialogContentText>English</DialogContentText></label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="No_any_Preference"
+                  name="language"
+                  value="No_any_Preference"
+                  className="mr-2"
+                  onChange={(e) => {
+                    setFormValues((prev) => ({
+                      ...prev,
+                      languageRequire: {
+                        ...prev.languageRequire, // Preserve existing languageRequire fields
+                        no_any_preference: e.target.checked  // Update the 'english' field
+                      }
+                    }));
+                  }}
+                />
+                <label htmlFor="No_any_Preference">  <DialogContentText>No any Preference</DialogContentText></label>
+              </div>
+
+              <div className="flex items-center">
+                <input
+                  type="checkbox"
+                  id="motherTongue"
+                  name="language"
+                  value="motherTongue"
+                  className="mr-2"
+                  onChange={(e) => {
+                    setFormValues((prev) => ({
+                      ...prev,
+                      languageRequire: {
+                        ...prev.languageRequire, // Preserve existing languageRequire fields
+                        motherTongue: e.target.checked  // Update the 'english' field
+                      }
+                    }));
+                  }}
+                />
+                <label htmlFor="motherTongue">  <DialogContentText>Mother Tongue</DialogContentText></label>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <DialogContentText>Campus Life</DialogContentText>
+            <TextEditor
+              // id={`sectionDescription${index}`}
+              // name={`sections.${index}.description`}
+              // label="Description"
+              variant="standard"
+              // value={section.description}
+              onChange={(e)=>{setFormValues((prev)=>({...prev,CampusLife:e.target.value}))}}
+              className="mb-2"
+            />
+          </div>
+
+          <div>
+            <DialogContentText>Eligibility</DialogContentText>
+            <TextEditor
+              // id={`sectionDescription${index}`}
+              // name={`sections.${index}.description`}
+              // label="Description"
+              variant="standard"
+              // value={section.description}
+              onChange={(e)=>{setFormValues((prev)=>({...prev,Eligibility:e.target.value}))}}
+              className="mb-2"
+            />
+          </div>
+
+
+
+
+
         </Box>
       </DialogContent>
       <DialogActions>

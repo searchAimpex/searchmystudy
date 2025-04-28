@@ -373,7 +373,8 @@ const AllCourseDetailed = () => {
                 className="bg-white flex flex-col md:flex-row  gap-4 rounded-lg "
                 style={{
                   boxShadow:
-                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',}}>
+                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
+                }}>
                 {/* Image Section */}
                 <div className="w-full md:w-[45%] relative flex justify-center items-center">
                   <div className="relative w-full  w-full h-[100%] ">
@@ -423,17 +424,17 @@ const AllCourseDetailed = () => {
                         <span>{course?.University?.type}</span>
                       </div>
 
-                      
+
 
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Program:</span>
                         <span>{course?.ProgramName}</span>
                       </div>
 
-                        <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                          <span className="font-semibold">Category:</span>
-                          <span>{course?.Category}</span>
-                        </div>
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        <span className="font-semibold">Category:</span>
+                        <span>{course?.Category}</span>
+                      </div>
 
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Fees:</span>
@@ -443,6 +444,31 @@ const AllCourseDetailed = () => {
                       <div className="text-sm sm:text-base flex flex-wrap gap-2">
                         <span className="font-semibold">Level:</span>
                         <span>{course?.ProgramLevel}</span>
+                      </div>
+
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        {/* <span className="font-semibold">ECFMG:</span> */}
+                        {course?.University?.ECFMG && (
+                          <p>
+                            <span className="font-semibold">ECFMG:</span>
+                            <span> Approved</span>
+                          </p>
+                        )}
+
+
+                      </div>
+
+                      
+                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                        {/* <span className="font-semibold">ECFMG:</span> */}
+                        {course?.University?.MCI && (
+                          <p>
+                            <span className="font-semibold">MCI:</span>
+                            <span> Approved</span>
+                          </p>
+                        )}
+
+
                       </div>
                     </div>
 
@@ -491,6 +517,8 @@ const AllCourseDetailed = () => {
                           ))}
                         </div>
                       </div>
+
+
 
 
 

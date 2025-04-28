@@ -61,6 +61,7 @@ export default function CourseDetailed() {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
+  const aboutUniversity =singleCourse?.University?.description || "No university description available."
   return (
     <motion.div
       className=" border-2 border-red-500"
@@ -125,7 +126,7 @@ export default function CourseDetailed() {
                 <Tab label="Eligiblity" icon={<SchoolIcon />} iconPosition="start" />
                 <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
                 <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
-                <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" />
+                {/* <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" /> */}
               </Tabs>
 
               <TabPanel value={tabValue} index={0}>
@@ -259,8 +260,8 @@ export default function CourseDetailed() {
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
                               {/* Star Rating */}
-                              <span className="text-2xl font-semibold">Rating:</span>
-                              <div className=" text-2xl flex text-yellow-500">
+                              <span className="text-xl font-semibold">Rating:</span>
+                              <div className=" text-xl flex text-yellow-500">
 
                                 {Array.from({ length: singleCourse?.University?.rank || 0 }).map((_, i) => (
                                   <span key={i}>★</span>
@@ -361,12 +362,12 @@ export default function CourseDetailed() {
                   <div className="px-4 ">
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
-                      {singleCourse?.University?.description || "No university description available."}
+                      {aboutUniversity}
+                  {/* //////////////////////////////////////////////////////////// */}
                     </p>
                   </div>
 
 
-                  {/* //////////////////////////////////////////////////////////// */}
                 </Box>
               </TabPanel>
 
@@ -375,45 +376,45 @@ export default function CourseDetailed() {
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Intake Details</Typography>
 
                 <div className="w-[90%] p-2 my-4">
-                          {/* <h1 className='font-semibold text-2xl'>Intake Year</h1> */}
-                          {singleCourse?.Intake?.length > 0 ? (
-                            <div className=" my-3 overflow-x-auto rounded-lg shadow border">
-                              <table className="min-w-full table-auto text-center">
-                                <thead className="bg-blue-main">
-                                  <tr>
-                                    <th className="px-6 py-2 text-white text-lg font-semibold">Intake </th>
-                                    <th className="px-6 py-2 text-white text-lg font-semibold">Deadline</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {singleCourse.Intake.map((intakeItem, index) => (
-                                    <tr key={intakeItem._id || index} className="border-t">
-                                      <td className="px-6 py-2">
-                                        {intakeItem?.date
-                                          ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
-                                            month: 'long', // Full month name (e.g., "April")
-                                            year: 'numeric', // Full year (e.g., "2025")
-                                          })
-                                          : "N/A"}
-                                      </td>
-                                      <td className="px-6 py-4">
-                                        {intakeItem?.expiresAt
-                                          ? new Date(intakeItem.expiresAt).toLocaleDateString('en-GB', {
-                                            day: '2-digit',
-                                            month: 'short', // Abbreviated month name (e.g., "Apr")
-                                            year: 'numeric',
-                                          })
-                                          : "N/A"}
-                                      </td>
-                                    </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            </div>
-                          ) : (
-                            <div className="text-gray-500">No intake dates available.</div>
-                          )}
-                        </div>
+                  {/* <h1 className='font-semibold text-2xl'>Intake Year</h1> */}
+                  {singleCourse?.Intake?.length > 0 ? (
+                    <div className=" my-3 overflow-x-auto rounded-lg shadow border">
+                      <table className="min-w-full table-auto text-center">
+                        <thead className="bg-blue-main">
+                          <tr>
+                            <th className="px-6 py-2 text-white text-lg font-semibold">Intake </th>
+                            <th className="px-6 py-2 text-white text-lg font-semibold">Deadline</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {singleCourse.Intake.map((intakeItem, index) => (
+                            <tr key={intakeItem._id || index} className="border-t">
+                              <td className="px-6 py-2">
+                                {intakeItem?.date
+                                  ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
+                                    month: 'long', // Full month name (e.g., "April")
+                                    year: 'numeric', // Full year (e.g., "2025")
+                                  })
+                                  : "N/A"}
+                              </td>
+                              <td className="px-6 py-4">
+                                {intakeItem?.expiresAt
+                                  ? new Date(intakeItem.expiresAt).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short', // Abbreviated month name (e.g., "Apr")
+                                    year: 'numeric',
+                                  })
+                                  : "N/A"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="text-gray-500">No intake dates available.</div>
+                  )}
+                </div>
                 {/* {singleCourse?.Intake?.map((intake, index) => (
                   <Accordion key={index} className="my-2">
                     <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-gray-100">
@@ -426,6 +427,7 @@ export default function CourseDetailed() {
                   </Accordion>
                 ))} */}
               </TabPanel>
+
 
               {/* <TabPanel value={tabValue} index={2}>
                 <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Language Requirements</Typography>
@@ -462,14 +464,36 @@ export default function CourseDetailed() {
               </TabPanel> */}
 
 
-               <TabPanel value={tabValue} index={2}>
+              <TabPanel value={tabValue} index={2}>
                 {
-                  singleCourse.University.eligiblity
+                  singleCourse.eligiblity ? <span>{singleCourse.eligiblity}</span> : "Not available"
                 }
-               </TabPanel> 
+
+              </TabPanel>
 
 
+              <TabPanel value={tabValue} index={3}>
+                <Box>
+                  <div>
+                    <h1>{singleCourse.campusLife ? <span>{singleCourse.campusLife}</span> : "Not available"}</h1>
+                  </div>
+
+                </Box>
+              </TabPanel>
             </Box>
+
+
+            {/* <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" /> */}
+
+            <TabPanel value={tabValue} index={4}>
+              <div>
+                <p>{singleCourse.hostel ? <span>{singleCourse.hostel}</span> : "Not available"}</p>
+              </div>
+            </TabPanel>
+
+
+
+          
           </div>
 
 
