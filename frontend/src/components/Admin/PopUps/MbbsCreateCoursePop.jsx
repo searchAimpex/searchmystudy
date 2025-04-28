@@ -291,7 +291,6 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
         formValues.languageRequire.motherTongue && // Checkbox check (true or false)
         formValues.languageRequire.Duration !== ''
       ) {
-
         const res = await createCourse(formValues).unwrap();
         console.log(formValues, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
 
