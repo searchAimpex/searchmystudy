@@ -65,8 +65,7 @@ const courseSchema = mongoose.Schema(
         Intake: [
             {
                 status: {
-                    type: Boolean,
-                    required: true  
+                    type: Boolean
                 },
                 date: {
                     type: Date,
@@ -87,6 +86,20 @@ const courseSchema = mongoose.Schema(
             type: String,
             required: true,
             enum: ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG','UG+PG(Accelerated)Degree','PhD','Foundation','Short Term Program','Pathway Program','Twiming Program(UG)','Twiming Program(PG)','Online Programe/Distance Learning'], // Define your enum values here
+        },
+        languageRequire:{
+            english:{
+                type:Boolean,
+                default:false
+            },
+            no_any_preference:{
+                type:Boolean,
+                default:false
+            },
+            motherTongue:{
+                type:Boolean,
+                default:false
+            }
         },
         LanguageRequirements: {
             PTE: {
@@ -147,6 +160,10 @@ const courseSchema = mongoose.Schema(
                     required: false
                 }
             }
+        },
+        Eligibility:{
+            type:String,
+            required:true
         },
         StandardizeRequirement:{
             SAT : {
