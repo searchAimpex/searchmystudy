@@ -451,7 +451,6 @@ const createCountry = asyncHandler(async (req, res) => {
     
   });
   
-
   const createdCountry = await country.save();
   res.status(201).json(createdCountry);
 });
@@ -738,7 +737,7 @@ const createUniversity = asyncHandler(async (req, res) => {
     heroURL: req.body.heroURL,
     description: req.body.description,
     sections: req.body.sections,
-    eligiblity: req.body.eligiblity,
+    // eligiblity: req.body.eligiblity,
     Province: provinceId,
     Country: country._id,
     logo: req.body.logo,
@@ -842,7 +841,7 @@ const createCourse = asyncHandler(async (req, res) => {
     Intake:req.body.Intake,
     Scholarships:req.body.Scholarships,
     ProgramLevel:req.body.ProgramLevel,
-    languageRequire:req.body,
+    languageRequire:req.body.languageRequire,
     LanguageRequirements:req.body.LanguageRequirements,
     StandardizeRequirement:req.body.StandardizeRequirement,
     Category:req.body.Category,

@@ -34,10 +34,10 @@ const universitySchema = mongoose.Schema(
             }
         ], 
         
-        eligiblity: {
-            type:String,
-            default:""
-        },    
+        // eligiblity: {
+        //     type:String,
+        //     default:""
+        // },    
         logo: {
             type: String,
             default: 'https://via.placeholder.com/150x150.png'
