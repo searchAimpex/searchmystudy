@@ -34,7 +34,7 @@ export default function CourseDetailed() {
   const navigate = useNavigate();
   const { singleCourse } = useSelector((state) => state.course);
   const [singlecourses, setsinglecourses] = useState({})
-  
+
   const [FetchOneCourse] = useFetchOneCourseMutation();
   const [tabValue, setTabValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,19 +42,19 @@ export default function CourseDetailed() {
   const handleModalClose = () => setIsModalOpen(false);
   const EligibilityText = singleCourse.Eligibility?.replace(/^<p>|<\/p>$/g, '');
   // const hostel = singleCourse.University.hostel?.replace(/^<p>|<\/p>$/g, '');
-  useEffect(()=>{
-    setsinglecourses(singleCourse )
-  },[singleCourse])
+  useEffect(() => {
+    setsinglecourses(singleCourse)
+  }, [singleCourse])
   console.log(singlecourses, "----------------------------------------------------------");
-  
+
   const Eligibility = singlecourses.Eligibility?.replace(/^<p>|<\/p>$/g, '');
   const campusLifee = singlecourses?.University?.campusLife
-  ? singlecourses.University.campusLife.replace(/^<p>|<\/p>$/g, '') 
-  : 'Not available';
+    ? singlecourses.University.campusLife.replace(/^<p>|<\/p>$/g, '')
+    : 'Not available';
 
   const hostel = singlecourses?.University?.hostel
-  ? singlecourses.University.hostel.replace(/^<p>|<\/p>$/g, '') 
-  : 'Not available';
+    ? singlecourses.University.hostel.replace(/^<p>|<\/p>$/g, '')
+    : 'Not available';
 
 
   useEffect(() => {
@@ -81,10 +81,16 @@ export default function CourseDetailed() {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const aboutUniversity =singleCourse?.University?.description || "No university description available."
+  const stripHtml = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  };
+
+  const aboutUniversity = stripHtml(singleCourse?.University?.description || "No university description available.");
   return (
     <motion.div
-      className=" border-2 border-red-500"
+
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
@@ -129,7 +135,7 @@ export default function CourseDetailed() {
             </div>
           </motion.div>
 
-          <div >
+          <div className=''>
             <Box>
               <Tabs
                 value={tabValue}
@@ -144,19 +150,19 @@ export default function CourseDetailed() {
                 <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
                 <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
                 <Tab label="Eligiblity" icon={<ChecklistRtlSharpIcon />} iconPosition="start" />
-                <Tab label="Campus Life" icon={<VolunteerActivismSharpIcon/>} iconPosition="start" />
+                <Tab label="Campus Life" icon={<VolunteerActivismSharpIcon />} iconPosition="start" />
                 <Tab label="Hostel" icon={<HomeSharpIcon />} iconPosition="start" />
                 {/* <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" /> */}
               </Tabs>
 
               <TabPanel value={tabValue} index={0}>
-                <Box  >
+                <Box className="" >
                   <Typography
                     variant="h6"
                     sx={{ fontWeight: 'bold' }}
-                    className="px-5  sm:text-xl md:text-2xl text-center sm:text-left"
+                    className=" sm:text-xl md:text-2xl text-center sm:text-left"
                   >
-                    <span className='text-3xl mx-2'>Program Details in   {singleCourse?.University?.name}
+                    <span className="  sm:text-xl md:text-2xl sm:text-left">Program Details in   {singleCourse?.University?.name}
                     </span>
 
                   </Typography>
@@ -208,53 +214,69 @@ export default function CourseDetailed() {
 
 
                   {/* ////////////////////////////////////////////////////// */}
-                  <div className='flex w-[100%]  my-2 gap-20  '>
-                    <div className='px-5 w-[70%] '>
-                      <div className="flex flex-col w-full  ">
-
-                        {/* <hr /> */}
+                  <div className='flex flex-col lg:flex-row w-full my-2 gap-10'>
+                    {/* Left Section */}
+                    <div className='px-5 w-full lg:w-[70%]'>
+                      <div className="flex flex-col w-full">
 
                         {/* Program Info */}
                         <div className="flex flex-col md:flex-row m-2 justify-between gap-6">
                           {/* Left Column */}
                           <div className="flex-1 space-y-2">
-                            <div className="text-sm sm:text-base  flex flex-wrap gap-2">
-                              <span className="font-semibold text-xl">Program Type:</span>
-                              <span className='text-xl'>{singleCourse?.University?.type}</span>
+                            <div className="sm:text-base flex flex-wrap gap-2">
+                              <span className="font-semibold">Program Type:</span>
+                              <span>{singleCourse?.University?.type}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Program:</span>
-                              <span className='text-xl'>{singleCourse?.ProgramName}</span>
+                              <span className="font-semibold">Program:</span>
+                              <span>{singleCourse?.ProgramName}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Category:</span>
-                              <span className='text-xl'>{singleCourse?.Category}</span>
+                              <span className="font-semibold">Category:</span>
+                              <span>{singleCourse?.Category}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className=" text-xl font-semibold">Fees:</span>
-                              <span className='text-xl'>{singleCourse?.Fees} </span>
+                              <span className="font-semibold">Fees:</span>
+                              <span>{singleCourse?.Fees}</span>
+                            </div>
+
+                            <div className="sm:text-base flex flex-wrap gap-2">
+                              <span className="font-semibold">Level:</span>
+                              <span>{singleCourse?.ProgramLevel}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Level:</span>
-                              <span className='text-xl'>{singleCourse?.ProgramLevel}</span>
+                              {singleCourse?.University?.ECFMG && (
+                                <p>
+                                  <span className="font-semibold">ECFMG:</span>
+                                  <span> Approved</span>
+                                </p>
+                              )}
+                            </div>
+
+                            <div className="text-sm sm:text-base flex flex-wrap gap-2">
+                              {singleCourse?.University?.MCI && (
+                                <p>
+                                  <span className="font-semibold">MCI:</span>
+                                  <span> Approved</span>
+                                </p>
+                              )}
                             </div>
                           </div>
 
                           {/* Right Column */}
-                          <div className="flex-1 space-y-2  ">
+                          <div className="flex-1 space-y-2">
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Grade:</span>
-                              <span className='text-xl'>{singleCourse?.University?.grade}</span>
+                              <span className="font-semibold">Grade:</span>
+                              <span>{singleCourse?.University?.grade}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Intake:</span>
-                              <span className='text-xl'>
-                                {/* className="text-2xl" */}
+                              <span className="font-semibold">Intake:</span>
+                              <span>
                                 {singleCourse?.Intake?.[0]?.date
                                   ? new Date(singleCourse.Intake[0].date).toLocaleDateString('en-GB', {
                                     month: 'short',
@@ -262,50 +284,38 @@ export default function CourseDetailed() {
                                   })
                                   : "Date not available"}
                               </span>
-
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                              <span className="text-xl font-semibold">Duration:</span>
-                              <span className='text-xl'>{singleCourse?.Duration}</span>
+                              <span className="font-semibold">Duration:</span>
+                              <span>{singleCourse?.Duration}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                              {/* Star Rating */}
-                              <span className="text-xl font-semibold">Location:</span>
-                              <span className='text-xl'>  {singleCourse?.Location}</span>
-
+                              <span className="font-semibold">Location:</span>
+                              <span>{singleCourse?.Location}</span>
                             </div>
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                              {/* Star Rating */}
-                              <span className="text-xl font-semibold">Rating:</span>
-                              <div className=" text-xl flex text-yellow-500">
-
+                              <span className="font-semibold">Rating:</span>
+                              <div className="flex text-yellow-500">
                                 {Array.from({ length: singleCourse?.University?.rank || 0 }).map((_, i) => (
                                   <span key={i}>★</span>
                                 ))}
                               </div>
                             </div>
-
-
-
                           </div>
                         </div>
 
-
-
-
-                        {/* shadab */}
-
+                        {/* Intake Year Section */}
                         <div className="p-2 my-4">
                           <h1 className='font-semibold text-2xl'>Intake Year</h1>
                           {singleCourse?.Intake?.length > 0 ? (
-                            <div className=" my-3 overflow-x-auto rounded-lg shadow border">
+                            <div className="my-3 overflow-x-auto rounded-lg shadow border">
                               <table className="min-w-full table-auto text-center">
                                 <thead className="bg-blue-main">
                                   <tr>
-                                    <th className="px-6 py-2 text-white text-lg font-semibold">Intake </th>
+                                    <th className="px-6 py-2 text-white text-lg font-semibold">Intake</th>
                                     <th className="px-6 py-2 text-white text-lg font-semibold">Deadline</th>
                                   </tr>
                                 </thead>
@@ -315,8 +325,8 @@ export default function CourseDetailed() {
                                       <td className="px-6 py-2">
                                         {intakeItem?.date
                                           ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
-                                            month: 'long', // Full month name (e.g., "April")
-                                            year: 'numeric', // Full year (e.g., "2025")
+                                            month: 'long',
+                                            year: 'numeric',
                                           })
                                           : "N/A"}
                                       </td>
@@ -324,7 +334,7 @@ export default function CourseDetailed() {
                                         {intakeItem?.expiresAt
                                           ? new Date(intakeItem.expiresAt).toLocaleDateString('en-GB', {
                                             day: '2-digit',
-                                            month: 'short', // Abbreviated month name (e.g., "Apr")
+                                            month: 'short',
                                             year: 'numeric',
                                           })
                                           : "N/A"}
@@ -338,17 +348,12 @@ export default function CourseDetailed() {
                             <div className="text-gray-500">No intake dates available.</div>
                           )}
                         </div>
-
-                        {/* <hr /> */}
-                        {/* Location & Button */}
-
-
-
                       </div>
                     </div>
 
-                    <div className='[w-20%] '>
-                      <form className="bg-white w-[500px] border rounded-lg shadow-xl p-4">
+                    {/* Right Section (Form) */}
+                    <div className='w-full lg:w-[30%] mt-6 lg:mt-0 px-5'>
+                      <form className="bg-white w-full border rounded-lg shadow-xl p-4">
                         <div className="mb-4">
                           <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
                           <input id="name" type="text" placeholder="Enter your name"
@@ -372,17 +377,15 @@ export default function CourseDetailed() {
                         </button>
                       </form>
                     </div>
-
-
-
                   </div>
+
 
 
                   <div className="px-4 ">
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
                       {aboutUniversity}
-                  {/* //////////////////////////////////////////////////////////// */}
+                      {/* //////////////////////////////////////////////////////////// */}
                     </p>
                   </div>
 
@@ -484,7 +487,7 @@ export default function CourseDetailed() {
 
 
               <TabPanel value={tabValue} index={2}>
-              {EligibilityText ? <span>{EligibilityText}</span> : 'Not available'}
+                {EligibilityText ? <span>{EligibilityText}</span> : 'Not available'}
 
 
               </TabPanel>
@@ -492,7 +495,7 @@ export default function CourseDetailed() {
 
               <TabPanel value={tabValue} index={3}>
                 <Box>
-                {campusLifee ? <span>{campusLifee}</span> : 'Not available'}
+                  {campusLifee ? <span>{campusLifee}</span> : 'Not available'}
 
 
                 </Box>
@@ -503,19 +506,16 @@ export default function CourseDetailed() {
             {/* <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" /> */}
 
             <TabPanel value={tabValue} index={4}>
-            {hostel ? <span>{hostel}</span> : 'Not available'}
+              {hostel ? <span>{hostel}</span> : 'Not available'}
 
             </TabPanel>
 
 
 
-          
-          </div>
-
-
-          <div>
 
           </div>
+
+
         </>
       )}
     </motion.div>
@@ -563,7 +563,7 @@ function PopUp({ isModalOpen, handleModalClose }) {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
-        className="absolute top-[10%] left-1/2 transform -translate-x-1/2 p-6 rounded-lg bg-white shadow-2xl w-[90%] max-w-md"
+        className="absolute left-[35%] top-[30%] p-6 rounded-lg bg-white shadow-2xl w-[90%] max-w-md"
       >
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Apply for the Course</Typography>

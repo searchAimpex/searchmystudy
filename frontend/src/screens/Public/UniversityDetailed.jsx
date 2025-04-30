@@ -74,6 +74,9 @@ export default function UniversityDetailed() {
         setTabValue(newValue);
     };
 
+    console.log(courses,"coursescoursescoursescoursescoursescoursescoursescoursescoursescoursescourses")
+    
+    console.log(idUniversity,"idididididididididididididididididididididididididididididididididididididid");
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -83,8 +86,11 @@ export default function UniversityDetailed() {
                 // Fetch courses for the university
                 const course = await FetchCourse().unwrap();
                 const filteredCourses = course.filter((item) => item.University._id === idUniversity);
+                
                 setCourses(filteredCourses);
                 dispatch(FetchCourses(filteredCourses));
+
+                
             } catch (error) {
                 console.error('Failed to fetch university:', error);
             }
@@ -143,7 +149,7 @@ export default function UniversityDetailed() {
                 </div>
 
                 <div className='flex flex-col sm:flex-row'>
-                    <div className='w-full sm:w-[80%]'>
+                    <div className='w-full sm:w-[75%]'>
                         {/* Tabs Section */}
                         <Box>
                             <Tabs
@@ -241,7 +247,7 @@ export default function UniversityDetailed() {
                         </Box>
                     </div>
 
-                    <div className='w-full sm:w-[20%] mt-8 sm:mt-0'>
+                    <div className='w-full sm:w-[35%] mt-8 sm:mt-0'>
                         {/* Courses Section */}
                         <div className='bg-gray-100 rounded-lg p-4'>
                                 <h1 className='text-center font-semibold text-2xl text-blue-main'>Available Courses</h1>

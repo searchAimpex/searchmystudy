@@ -215,11 +215,9 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     const onSubmit = async () => {
         try {
             console.log(formValues,"lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-
             const res = await createUniversity(formValues).unwrap();
             dispatch(AddUniversity({ ...res }));
-            console.log(res,"resresresresssssssssss  ssssssssssssssssssssssssssss");
-            
+            console.log(res,"resresresresssssssssssssssssssssssssssssssssssssss");
             handleClose();
         } catch (error) {
             console.error('Failed to create university:', error);

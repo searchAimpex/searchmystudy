@@ -365,193 +365,110 @@ console.log(singleCourse.broucherURL, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         )}
       </div>
 
-      <div className="w-full lg:w-3/4 ">
-        {isLoading ? (
-          <p>Loading...</p>
-        ) : isError ? (
-          <p className="text-red-600">Error loading courses</p>
-        ) : (
-          <div className="space-y-4">
-            {courses.map((course) => (
-              <div
-                key={course._id}
-                className="bg-white flex flex-col md:flex-row  gap-4 rounded-lg "
-                style={{
-                  boxShadow:
-                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
-                }}>
-                {/* Image Section */}
-                <div className="w-full md:w-[45%] relative flex justify-center items-center">
-                  <div className="relative w-full  w-full h-[100%] ">
-                    {/* Hero Image */}
-                    <img
-                      className="object-cover w-full h-[100%]"
-                      src={course.University.heroURL}
-                      alt={course.University.name}
-                    />
+      <div className="w-full lg:w-3/4 px-2">
+  {isLoading ? (
+    <p>Loading...</p>
+  ) : isError ? (
+    <p className="text-red-600">Error loading courses</p>
+  ) : (
+    <div className="space-y-6">
+      {courses.map((course) => (
+        <div
+          key={course._id}
+          className="bg-white flex flex-col md:flex-row gap-4 rounded-lg shadow-md overflow-hidden"
+        >
+          {/* Image Section */}
+          <div className="w-full md:w-[45%] relative flex justify-center items-center">
+            <div className="relative w-full h-[250px] md:h-full">
+              <img
+                className="object-cover w-full h-full"
+                src={course.University.heroURL}
+                alt={course.University.name}
+              />
+              <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10" />
+            </div>
 
-                    {/* Black Overlay */}
-                    <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
+            <img
+              className="absolute top-2 right-2 w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
+              src={course.University.logo}
+              alt={course.University.name}
+            />
 
+            <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-xs sm:text-sm font-semibold rounded-lg z-20">
+              {course.University.type}
+            </div>
+
+            <div className="absolute bottom-2 left-2 px-2 py-1 text-green-500 font-bold text-lg sm:text-xl z-20">
+              Admission Open
+            </div>
+          </div>
+
+          {/* Details Section */}
+          <div className="flex flex-col w-full px-2 sm:px-4 py-2">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">{course?.University?.name}</h1>
+            <hr className="mb-3" />
+
+            <div className="flex flex-col md:flex-row justify-between gap-4">
+              {/* Left Info */}
+              <div className="flex-1 space-y-2 text-sm sm:text-base">
+                <p><span className="font-semibold">Program Type:</span> {course?.University?.type}</p>
+                <p><span className="font-semibold">Program:</span> {course?.ProgramName}</p>
+                <p><span className="font-semibold">Category:</span> {course?.Category}</p>
+                <p><span className="font-semibold">Fees:</span> {course?.Fees}</p>
+                <p><span className="font-semibold">Level:</span> {course?.ProgramLevel}</p>
+                {course?.University?.ECFMG && <p><span className="font-semibold">ECFMG:</span> Approved</p>}
+                {course?.University?.MCI && <p><span className="font-semibold">MCI:</span> Approved</p>}
+              </div>
+
+              {/* Right Info */}
+              <div className="flex-1 space-y-2 text-sm sm:text-base">
+                <p><span className="font-semibold">Grade:</span> {course?.University?.grade}</p>
+                <p>
+                  <span className="font-semibold">Intake:</span> {
+                    new Date(course?.Intake[0]?.date).toLocaleDateString('en-GB', {
+                      month: 'short', year: 'numeric'
+                    })
+                  }
+                </p>
+                <p><span className="font-semibold">Duration:</span> {course?.Duration}</p>
+                <p><span className="font-semibold">Location:</span> {course?.Location}</p>
+                <div className="flex items-center gap-1">
+                  <span className="font-semibold">Rating:</span>
+                  <div className="text-yellow-500">
+                    {Array.from({ length: course?.University?.rank || 0 }).map((_, i) => (
+                      <span key={i}>★</span>
+                    ))}
                   </div>
-
-                  {/* Logo */}
-                  <img
-                    className="absolute top-2 right-2 w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
-                    src={course.University.logo}
-                    alt={course.University.name}
-                  />
-
-                  {/* Type Badge */}
-                  <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-xs sm:text-sm font-semibold rounded-lg z-20">
-                    {course.University.type}
-                  </div>
-
-                  {/* Admission Badge */}
-                  <div className="absolute bottom-2 left-2 px-2 py-1  text-green-500 font-bold text-2xl shadow z-20">
-                    Admission open
-                  </div>
-                </div>
-
-                {/* Details Section */}
-                <div className="flex flex-col w-full ">
-                  <h1 className="text-lg md:text-2xl my-2 font-bold">
-                    {course?.University?.name}
-                  </h1>
-                  <hr />
-
-                  {/* Program Info */}
-                  <div className="flex flex-col md:flex-row m-2 justify-between gap-6">
-                    {/* Left Column */}
-                    <div className="flex-1 space-y-2">
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Program Type:</span>
-                        <span>{course?.University?.type}</span>
-                      </div>
-
-
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Program:</span>
-                        <span>{course?.ProgramName}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Category:</span>
-                        <span>{course?.Category}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Fees:</span>
-                        <span>{course?.Fees} </span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Level:</span>
-                        <span>{course?.ProgramLevel}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        {/* <span className="font-semibold">ECFMG:</span> */}
-                        {course?.University?.ECFMG && (
-                          <p>
-                            <span className="font-semibold">ECFMG:</span>
-                            <span> Approved</span>
-                          </p>
-                        )}
-
-
-                      </div>
-
-                      
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        {/* <span className="font-semibold">ECFMG:</span> */}
-                        {course?.University?.MCI && (
-                          <p>
-                            <span className="font-semibold">MCI:</span>
-                            <span> Approved</span>
-                          </p>
-                        )}
-
-
-                      </div>
-                    </div>
-
-                    {/* Right Column */}
-                    <div className="flex-1 space-y-2 ">
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Grade:</span>
-                        <span>{course?.University?.grade}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Intake:</span>
-                        <span> {new Date(course?.Intake[0].date).toLocaleDateString('en-GB', {
-                          // day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })}
-                          {/* - {new Date(course?.Intake[0].expiresAt).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })} */}
-                        </span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Duration:</span>
-                        <span>{course?.Duration}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                        {/* Star Rating */}
-                        <span className="font-semibold">Location:</span>
-                        <span>  {course?.Location}</span>
-
-                      </div>
-
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                        {/* Star Rating */}
-                        <span className="font-semibold">Rating:</span>
-                        <div className="flex text-yellow-500">
-
-                          {Array.from({ length: course?.University?.rank || 0 }).map((_, i) => (
-                            <span key={i}>★</span>
-                          ))}
-                        </div>
-                      </div>
-
-
-
-
-
-                    </div>
-                  </div>
-
-                  <hr />
-                  {/* Location & Button */}
-                  <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 pt-2 my-6 w-full">
-                    <StyledWrapper className="w-full md:w-auto">
-                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
-                        View Details
-                      </button>
-                    </StyledWrapper>
-
-                    <StyledWrapper1 className="w-full md:w-auto">
-                      <button   onClick={() => openBrochure(singleCourse?.broucherURL) } className="button w-full md:w-auto">
-                        Download Brochure
-                      </button>
-                    </StyledWrapper1>
-                  </div>
-
                 </div>
               </div>
-            ))}
+            </div>
+
+            <hr className="my-3" />
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+              <StyledWrapper className="w-full md:w-auto">
+                <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full">
+                  View Details
+                </button>
+              </StyledWrapper>
+
+              <StyledWrapper1 className="w-full md:w-auto">
+                <button
+                  onClick={() => openBrochure(singleCourse?.broucherURL)}
+                  className="button w-full"
+                >
+                  Download Brochure
+                </button>
+              </StyledWrapper1>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
 
     </div>
   );
