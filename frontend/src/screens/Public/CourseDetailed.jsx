@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import ChecklistRtlSharpIcon from '@mui/icons-material/ChecklistRtlSharp';
+import HomeSharpIcon from '@mui/icons-material/HomeSharp';
+import VolunteerActivismSharpIcon from '@mui/icons-material/VolunteerActivismSharp';
 import { useCreateLeadMutation, useFetchOneCourseMutation } from '../../slices/adminApiSlice';
 import { FetchOneCourses } from '../../slices/courseSlice';
 import {
@@ -30,12 +33,29 @@ export default function CourseDetailed() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { singleCourse } = useSelector((state) => state.course);
+  const [singlecourses, setsinglecourses] = useState({})
+  
   const [FetchOneCourse] = useFetchOneCourseMutation();
   const [tabValue, setTabValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  console.log(singleCourse, "----------------------------------------------------------");
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
+  const EligibilityText = singleCourse.Eligibility?.replace(/^<p>|<\/p>$/g, '');
+  // const hostel = singleCourse.University.hostel?.replace(/^<p>|<\/p>$/g, '');
+  useEffect(()=>{
+    setsinglecourses(singleCourse )
+  },[singleCourse])
+  console.log(singlecourses, "----------------------------------------------------------");
+  
+  const Eligibility = singlecourses.Eligibility?.replace(/^<p>|<\/p>$/g, '');
+  const campusLifee = singlecourses?.University?.campusLife
+  ? singlecourses.University.campusLife.replace(/^<p>|<\/p>$/g, '') 
+  : 'Not available';
+
+  const hostel = singlecourses?.University?.hostel
+  ? singlecourses.University.hostel.replace(/^<p>|<\/p>$/g, '') 
+  : 'Not available';
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -123,9 +143,9 @@ export default function CourseDetailed() {
               >
                 <Tab label="Details" icon={<InfoIcon />} iconPosition="start" />
                 <Tab label="Intake" icon={<EventNoteIcon />} iconPosition="start" />
-                <Tab label="Eligiblity" icon={<SchoolIcon />} iconPosition="start" />
-                <Tab label="Campus Life" icon={<SchoolIcon />} iconPosition="start" />
-                <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" />
+                <Tab label="Eligiblity" icon={<ChecklistRtlSharpIcon />} iconPosition="start" />
+                <Tab label="Campus Life" icon={<VolunteerActivismSharpIcon/>} iconPosition="start" />
+                <Tab label="Hostel" icon={<HomeSharpIcon />} iconPosition="start" />
                 {/* <Tab label="Fees" icon={<SchoolIcon />} iconPosition="start" /> */}
               </Tabs>
 
@@ -256,7 +276,6 @@ export default function CourseDetailed() {
                               <span className='text-xl'>  {singleCourse?.Location}</span>
 
                             </div>
-
 
                             <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
                               {/* Star Rating */}
@@ -465,18 +484,16 @@ export default function CourseDetailed() {
 
 
               <TabPanel value={tabValue} index={2}>
-                {
-                  singleCourse.eligiblity ? <span>{singleCourse.eligiblity}</span> : "Not available"
-                }
+              {EligibilityText ? <span>{EligibilityText}</span> : 'Not available'}
+
 
               </TabPanel>
 
 
               <TabPanel value={tabValue} index={3}>
                 <Box>
-                  <div>
-                    <h1>{singleCourse.campusLife ? <span>{singleCourse.campusLife}</span> : "Not available"}</h1>
-                  </div>
+                {campusLifee ? <span>{campusLifee}</span> : 'Not available'}
+
 
                 </Box>
               </TabPanel>
@@ -486,9 +503,8 @@ export default function CourseDetailed() {
             {/* <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" /> */}
 
             <TabPanel value={tabValue} index={4}>
-              <div>
-                <p>{singleCourse.hostel ? <span>{singleCourse.hostel}</span> : "Not available"}</p>
-              </div>
+            {hostel ? <span>{hostel}</span> : 'Not available'}
+
             </TabPanel>
 
 

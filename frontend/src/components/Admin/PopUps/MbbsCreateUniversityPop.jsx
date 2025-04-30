@@ -52,7 +52,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         grade: 'A',
         rating: '5',
         sections: [{ title: '', description: '', url: '' }],
-        eligiblity: '',
+        // eligiblity: '',
         logo: '',
         campusLife: '',
         hostel: '',

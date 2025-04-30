@@ -1,5 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
 import {
   useCountryAllFetchMutation,
   useCountryFetchOneMutation,
@@ -37,6 +42,7 @@ export default function MbbsCountryDetailed() {
   const [refInfo, inViewInfo] = useInView({ triggerOnce: true });
   const [refSections, inViewSections] = useInView({ triggerOnce: true });
   const [refProvinces, inViewProvinces] = useInView({ triggerOnce: true });
+  const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -257,6 +263,7 @@ export default function MbbsCountryDetailed() {
         </h1>
       </div>
 
+
       <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
         {university.map((uni) => (
           <Link
@@ -285,6 +292,33 @@ export default function MbbsCountryDetailed() {
           </Link>
         ))}
       </div>
+
+        <div>
+        <motion.div
+        ref={refFaq}
+        className="max-w-7xl mx-auto px-4 my-20"
+        initial={{ opacity: 0, }}
+        animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 1 }}
+      >
+        <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
+          Frequently Asked Questions
+        </h2>
+        {singleCountry?.faq?.map((faqItem, index) => (
+          <Accordion key={index} className='my-3'>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon className="text-white" />}
+              sx={{ bgcolor: '#003366', color: 'white' }}
+            >
+              <Typography className="font-bold">{faqItem.question}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>{faqItem.answer}</Typography>
+            </AccordionDetails>
+          </Accordion>
+        ))}
+      </motion.div>
+        </div>
     </div>
   );
 }

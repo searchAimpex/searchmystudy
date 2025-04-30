@@ -150,7 +150,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
 
   const [formValues, setFormValues] = useState({
     ProgramName: '',
-    CampusLife:'',
+    // CampusLife:'',
     University: '',
     Eligibility: '',
     WebsiteURL: '',
@@ -167,24 +167,30 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
       no_any_preference: '',
       motherTongue: ''
     },
-    LanguageRequirements: {
-      PTE: { status: false, description: '', minRequirement: '' },
-      TOFFL: { status: false, description: '', minRequirement: '' },
-      IELTS: { status: false, description: '', minRequirement: '' },
-      DET: { status: false, description: '', minRequirement: '' }
-    },
-    StandardizeRequirement: {
-      SAT: { status: false, description: '', minRequirement: '' },
-      ACT: { status: false, description: '', minRequirement: '' },
-      GRE: { status: false, description: '', minRequirement: '' },
-      GMAT: { status: false, description: '', minRequirement: '' }
-    },
+    // LanguageRequirements: {
+    //   PTE: { status: false, description: '', minRequirement: '' },
+    //   TOFFL: { status: false, description: '', minRequirement: '' },
+    //   IELTS: { status: false, description: '', minRequirement: '' },
+    //   DET: { status: false, description: '', minRequirement: '' }
+    // },
+    // StandardizeRequirement: {
+    //   SAT: { status: false, description: '', minRequirement: '' },
+    //   ACT: { status: false, description: '', minRequirement: '' },
+    //   GRE: { status: false, description: '', minRequirement: '' },
+    //   GMAT: { status: false, description: '', minRequirement: '' }
+    // },
     broucherURL: ""
   });
   const handlecancell = (e) => {
+    const confirmCancel = window.confirm("Are you sure you want to cancel without submitting the form?");
     e.stopPropagation();
-    handleClose();
+    if(confirmCancel){
+      handleClose();
+    }
   }
+
+
+
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
     console.log(name, value, type, files);
@@ -276,23 +282,26 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     try {
       if (
         formValues.ProgramName !== '' &&
-        formValues.CampusLife !== '' &&
+        // formValues.CampusLife !== '' &&
         formValues.Eligibility !== '' &&
         formValues.University !== '' &&
         formValues.WebsiteURL !== '' &&
-        formValues.CampusLife !== '' &&
         formValues.Location !== '' &&
         formValues.Duration !== '' &&
         formValues.Category !== '' &&
         formValues.Intake.date !== '' &&
         formValues.Intake.expiresAt !== '' &&
-        formValues.languageRequire.english && // Checkbox check (true or false)
-        formValues.languageRequire.no_any_preference && // Checkbox check (true or false)
-        formValues.languageRequire.motherTongue && // Checkbox check (true or false)
+        (
+          formValues.languageRequire.english === true ||
+          formValues.languageRequire.no_any_preference === true ||
+          formValues.languageRequire.motherTongue === true
+        ) &&
         formValues.languageRequire.Duration !== ''
+        
       ) {
+        console.log(formValues,"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
         const res = await createCourse(formValues).unwrap();
-        console.log(formValues, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
+        console.log(res, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
 
         dispatch(AddCourse({ ...res }));
         handleClose();
@@ -622,7 +631,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
             </div>
           </div>
 
-          <div>
+          {/* <div>
             <DialogContentText>Campus Life</DialogContentText>
             <TextEditor
               // id={`sectionDescription${index}`}
@@ -633,7 +642,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
               onChange={(e)=>{setFormValues((prev)=>({...prev,CampusLife:e.target.value}))}}
               className="mb-2"
             />
-          </div>
+          </div> */}
 
           <div>
             <DialogContentText>Eligibility</DialogContentText>

@@ -9,6 +9,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Filter2Sharp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 const Program = [
   'High School',
   'UG Diploma/Certificate/Associate Degree',
@@ -76,11 +77,12 @@ const AllCourseDetailed = () => {
   const [universities, setUniversities] = useState([]);
   const [courses, setCourses] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const { singleCourse } = useSelector((state) => state.course);
   const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
   const [fetchCountries] = useCountryFetchMutation();
   const [fetchProvinces] = useFetchProvinceMutation();
   const [fetchUniversities] = useFetchUniversityMutation();
+console.log(singleCourse.broucherURL, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
   useEffect(() => {
     const getCountries = async () => {
@@ -150,6 +152,9 @@ const AllCourseDetailed = () => {
         console.error('Error fetching universities:', error);
       }
     }
+  };
+  const openBrochure = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleSearch = async () => {
@@ -271,7 +276,7 @@ const AllCourseDetailed = () => {
                 className="mr-2"
               />
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block mb-2 font-semibold">Language Requirement</label>
               <input
                 type="text"
@@ -281,8 +286,8 @@ const AllCourseDetailed = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="e.g., IELTS, TOEFL"
               />
-            </div>
-            <div className="mb-4">
+            </div> */}
+            {/* <div className="mb-4">
               <label className="block mb-2 font-semibold">Standardized Requirement</label>
               <input
                 type="text"
@@ -292,7 +297,7 @@ const AllCourseDetailed = () => {
                 className="w-full p-2 border border-gray-300 rounded"
                 placeholder="e.g., GRE, GMAT"
               />
-            </div>
+            </div> */}
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Country</label>
               <select
@@ -535,7 +540,7 @@ const AllCourseDetailed = () => {
                     </StyledWrapper>
 
                     <StyledWrapper1 className="w-full md:w-auto">
-                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
+                      <button   onClick={() => openBrochure(singleCourse?.broucherURL) } className="button w-full md:w-auto">
                         Download Brochure
                       </button>
                     </StyledWrapper1>
