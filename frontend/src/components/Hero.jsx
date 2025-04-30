@@ -13,11 +13,13 @@ import WhyChoseUs from './Public/WhyChoseUs';
 import WebinarSection from './Public/WebinarSection';
 import MediaSection from './Public/MediaSection';
 import VideoCards from './Public/VideoCards';
+import CarouselForm from './Public/CarouselForm';
 const Hero = () => {
   return (
     <div>
        <Carousel />
         <CourseFinder />
+        <CarouselForm/>
         <WhyChoseUs />
         <CountriesSection />
         <CourseSection />

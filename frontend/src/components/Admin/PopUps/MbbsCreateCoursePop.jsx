@@ -282,7 +282,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     try {
       if (
         formValues.ProgramName !== '' &&
-        // formValues.CampusLife !== '' &&
+        formValues.Country !== '' &&
         formValues.Eligibility !== '' &&
         formValues.University !== '' &&
         formValues.WebsiteURL !== '' &&
@@ -304,7 +304,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
         console.log(res, "sssssssssssssssssssssssssssssssssssssssssssssssssssssssssss");
 
         dispatch(AddCourse({ ...res }));
-        handleClose();
+        // handleClose();
       } else {
         toast.error('Please fill in all required fields.');
       }

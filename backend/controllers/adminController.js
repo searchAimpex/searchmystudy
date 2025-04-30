@@ -751,6 +751,7 @@ const createUniversity = asyncHandler(async (req, res) => {
 
   const createdUniversity = await university.save();
 
+  console.log(university.Country.name, "/////////////////////////////////////////////////");
   console.log(createdUniversity, "/////////////////////////////////////////////////");
 
   res.status(201).json(createdUniversity);

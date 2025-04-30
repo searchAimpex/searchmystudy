@@ -101,10 +101,12 @@ const AllCourseDetailed = () => {
 
     const fetchInitialCourses = async () => {
       try {
-        console.log("fitlers", filters)
-        const result = await AllCourse(filters).unwrap();
+       
+        const result = await AllCourse().unwrap();
         if (Array.isArray(result)) {
           setCourses(result);
+          console.log(result,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -117,6 +119,7 @@ const AllCourseDetailed = () => {
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
   console.log("course", courses)
+  console.log("fitlers", filters)
 
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
@@ -262,6 +265,10 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
+            
+
+            
+            
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Category</label>
               <select
@@ -289,6 +296,9 @@ const AllCourseDetailed = () => {
               />
             </div> */}
 
+
+
+            
 
 
             <div className="mb-4">
@@ -426,6 +436,8 @@ const AllCourseDetailed = () => {
                   <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">{course?.University?.name}</h1>
                   <hr className="mb-3" />
 
+
+                  
                   <div className="flex flex-col md:flex-row justify-between gap-4">
                     {/* Left Info */}
                     <div className="flex-1 space-y-2 text-sm sm:text-base">
@@ -436,7 +448,11 @@ const AllCourseDetailed = () => {
                       <p><span className="font-semibold">Level:</span> {course?.ProgramLevel}</p>
                       {course?.University?.ECFMG && <p><span className="font-semibold">ECFMG:</span> Approved</p>}
                       {course?.University?.MCI && <p><span className="font-semibold">MCI:</span> Approved</p>}
+
+                     
                     </div>
+
+                    
 
                     {/* Right Info */}
                     <div className="flex-1 space-y-2 text-sm sm:text-base">
@@ -459,7 +475,10 @@ const AllCourseDetailed = () => {
                           ))}
                         </div>
                       </div>
+
+                      
                     </div>
+                    
                   </div>
 
                   <hr className="my-3" />
