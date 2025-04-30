@@ -63,7 +63,7 @@ console.log(countryData,"sssssssssssssssssssssssssssssssssssssssssssssssssssssss
         description: countryData.description || '',
         ECFMG:countryData.ECFMG || '',
         MCI:countryData.MCI || '',
-        ECFMG:countryData.ECFMG || '',
+        // ECFMG:countryData.ECFMG || '',
         sections: countryData.sections || [{ title: '', description: '', url: '' }],
         eligiblity: countryData.eligiblity || ['', '', '', '', '', '', ''],
         faq: countryData.faq || [{ question: '', answer: '' }],

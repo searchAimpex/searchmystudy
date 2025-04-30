@@ -154,7 +154,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     University: '',
     Eligibility: '',
     WebsiteURL: '',
-    CampusLife: '',
+    // CampusLife: '',
     Location: '',
     Duration: '',
     Category: '',
