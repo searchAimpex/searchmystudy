@@ -132,7 +132,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
   const onSubmit = async () => {
     const res = await createCountry(formValues).unwrap();
     dispatch(AddCountry({ ...res }));
-    onClose();
+    // onClose();
   };
 
   const handleCancelled = (e) => {

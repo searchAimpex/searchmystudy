@@ -343,7 +343,7 @@ export default function CreateCoursePop({ open, handleClose }) {
           {/* Intake */}
           {Array.isArray(formValues?.Intake) && formValues?.Intake?.map((intake, index) => (
             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-              <FormControlLabel
+              {/* <FormControlLabel
                 control={
                   <Switch
                     checked={intake.status}
@@ -358,7 +358,7 @@ export default function CreateCoursePop({ open, handleClose }) {
                   />
                 }
                 label="Status"
-              />
+              /> */}
               <div className="w-full sm:w-1/2 md:w-1/3 px-2">
                 <label
                   htmlFor={`Intake-${index}-date`}

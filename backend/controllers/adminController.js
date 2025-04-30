@@ -739,7 +739,7 @@ const createUniversity = asyncHandler(async (req, res) => {
     sections: req.body.sections,
     // eligiblity: req.body.eligiblity,
     Province: provinceId,
-    Country: country._id,
+    Country: country,
     logo: req.body.logo,
     campusLife: req.body.campusLife,
     MCI:req.body.MCI,
