@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import ChecklistRtlSharpIcon from '@mui/icons-material/ChecklistRtlSharp';
 import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 import VolunteerActivismSharpIcon from '@mui/icons-material/VolunteerActivismSharp';
@@ -88,6 +88,8 @@ export default function CourseDetailed() {
   };
 
   const aboutUniversity = stripHtml(singleCourse?.University?.description || "No university description available.");
+
+  const unilink = stripHtml(singleCourse?.University?.UniLink || "No university link available.");
   return (
     <motion.div
 
@@ -385,6 +387,13 @@ export default function CourseDetailed() {
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
                       {aboutUniversity}
+                      <Link
+                        to={unilink}
+                        className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
+                        style={{borderRadius:"20px"}}
+                      >
+                        Explore University
+                      </Link>
                       {/* //////////////////////////////////////////////////////////// */}
                     </p>
                   </div>

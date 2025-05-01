@@ -13,6 +13,18 @@ const homeLeadSchema = mongoose.Schema(
         email:{
             type:String,
             default:""
+        },
+        country:{
+            type:String,
+            require:true
+        },
+        countryCode:{
+            type:String,
+            // require:true
+        },
+        message:{
+            type:String,
+            required:true
         }
     },
     {

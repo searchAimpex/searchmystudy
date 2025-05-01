@@ -14,13 +14,19 @@ const webinarSchema = mongoose.Schema(
             type:String,
             default:""
         },
-        day: {
+        weekday: {
             type: String,
-            
+            required : true
         },
-        time:{
+        timeStart:{
             type:String,
-            default:""
+            default:"",
+            required : true
+        },
+        timeEnd:{
+            type:String,
+            default:"",
+            required : true
         }
     },
     {

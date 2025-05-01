@@ -3,7 +3,8 @@ import { useAllWebinarMutation } from '../../slices/adminApiSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { FetchWebinar } from '../../slices/webinarSlice';
 import { motion } from 'framer-motion';
-
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 export default function WebinarSection() {
     const dispatch = useDispatch();
     const { webinar } = useSelector(state => state.webinar);
@@ -14,6 +15,7 @@ export default function WebinarSection() {
             try {
                 const result = await AllWebinar().unwrap();
                 dispatch(FetchWebinar(result));
+                console.log(result, "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             } catch (error) {
                 console.error('Failed to fetch webinars:', error);
             }
@@ -40,7 +42,7 @@ export default function WebinarSection() {
             </motion.div>
 
             {/* Webinars Grid */}
-            <div className="flex flex-wrap justify-center items-center w-full">
+            <div className="flex flex-wrap justify-center items-center border-2 border-red-500 ">
                 {webinar.map((items, index) => (
                     <motion.div
                         key={items._id}
@@ -54,22 +56,50 @@ export default function WebinarSection() {
                         <img
                             src={items.imageURL}
                             alt="webinar"
-                            className="w-[270px] h-[300px] md:h-[320px] rounded-lg"
+                            className="w-[270px] h-[200px] md:h-[280px] rounded-lg"
                         />
 
+
+                        <div className="mt-3 w-full">
+                            <p className="text-lg  font-semibold capitalize">{items.title}</p>
+                        </div>
+
+
                         <div className="flex flex-wrap sm:flex-nowrap items-start w-full gap-2 mt-3">
-                            <p className="text-sm font-bold text-white bg-blue-main px-3 py-2 rounded-lg">{items.date}</p>
-                            <p className="text-sm font-bold text-black bg-gray-200 px-3 py-2 rounded-lg">
-                                {items.day} {items.time}
+                            <p className="text-l  text-gray-700">
+                                <DateRangeIcon fontSize="small"  className='mb-1 mr-1 text-blue-main' />
+                                {new Date(items.date).toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                })}
                             </p>
+
+
+                            <p className="text-sm text-gold-main font-bold ">
+                               &#x2022; {items.weekday}
+                            </p>
+
+
                         </div>
 
-                        <div className="mt-3 w-full">
-                            <p className="text-lg font-bold text-blue-main capitalize">{items.title}</p>
+                        <div className="flex flex-wrap sm:flex-nowrap items-start w-full gap-2 mt-3">
+
+
+
+                            <p className="text-sm   text-gray-700">
+                            <AccessTimeIcon fontSize='small' className='mb-1 mr-1 text-blue-main '/>{items.timeStart} AM
+                                &nbsp;&minus;&nbsp;
+                                {items.timeEnd} PM
+                            </p>
+
+
                         </div>
 
+
+
                         <div className="mt-3 w-full">
-                            <button className="bg-gold-main w-full text-base font-bold border border-blue-main p-3 rounded-lg hover:bg-blue-main hover:text-white transition">
+                            <button className="w-full text-base font-bold border border-blue-main p-3 rounded-lg hover:bg-blue-main hover:text-white transition">
                                 REGISTER
                             </button>
                         </div>

@@ -1042,14 +1042,15 @@ const getWebinars = asyncHandler(async (req, res) => {
 // @route   POST /api/webinars
 // @access  Public
 const createWebinar = asyncHandler(async (req, res) => {
-  const { title, imageURL, date, day, time } = req.body;
+  const { title, imageURL, date,weekday,timeStart,timeEnd } = req.body;
 
   const webinar = new Webinar({
     title,
     imageURL,
     date,
-    day,
-    time,
+    weekday,
+    timeStart,
+    timeEnd,
   });
 
   const createdWebinar = await webinar.save();
@@ -1235,17 +1236,69 @@ const deleteLead  =asyncHandler(async (req, res) => {
 // @route   POST /api/lead
 // @access  Public
 const createHomeLead = asyncHandler(async (req, res) => {
-  const { name, phoneNo, email } = req.body;
-
+  const { name, phoneNo, email,country,message,countryCode } = req.body;
+  console.log(req.body,"------------------------------------------------------");
+  
   const lead = new HomeLead({
       name,
       phoneNo,
+      countryCode,
       email,
+      country,
+      message
   });
 
   const createdLead = await lead.save();
   res.status(201).json(createdLead);
 });
+
+
+// const createHomeLead = asyncHandler(async (req, res) => {
+//   const { name, phoneNo, email, country, message } = req.body;
+
+//   const lead = new HomeLead({
+//     name,
+//     phoneNo,
+//     email,
+//     country,
+//     message,
+//   });
+
+  // const createdLead = await lead.save();
+
+  // // Set up nodemailer
+  // const transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: process.env.EMAIL_USER,      // your email
+  //     pass: process.env.EMAIL_PASS,      // your app password
+  //   },
+  // });
+
+  // const mailOptions = {
+  //   from: `"New Lead" <${process.env.EMAIL_USER}>`,
+  //   to: 'yourdestination@example.com', // recipient's email
+  //   subject: 'New Lead Submitted',
+  //   html: `
+  //     <h2>New Lead Details</h2>
+  //     <p><strong>Name:</strong> ${name}</p>
+  //     <p><strong>Phone:</strong> ${phoneNo}</p>
+  //     <p><strong>Email:</strong> ${email}</p>
+  //     <p><strong>Country:</strong> ${country}</p>
+  //     <p><strong>Message:</strong> ${message}</p>
+  //   `,
+  // };
+
+  // Send the email
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     console.log('Email sent successfully');
+//   } catch (err) {
+//     console.error('Email error:', err);
+//   }
+
+//   res.status(201).json(createdLead);
+// });
 // @desc    Get all leads
 // @route   GET /api/lead
 // @access  Public

@@ -397,12 +397,6 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
               sx={{ flex: '1 1 30%' }}
             />
 
-
-
-
-
-
-
             <TextField
               id="Location"
               name="Location"

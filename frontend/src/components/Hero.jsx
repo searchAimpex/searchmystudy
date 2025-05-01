@@ -33,7 +33,7 @@ const Hero = () => {
         <VideoCards />
         <WebinarSection />
         <MediaSection />
-        <ContactSection />
+        {/* <ContactSection /> */}
 
     </div>
   );
