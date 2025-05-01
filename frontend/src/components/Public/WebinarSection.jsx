@@ -42,7 +42,7 @@ export default function WebinarSection() {
             </motion.div>
 
             {/* Webinars Grid */}
-            <div className="flex flex-wrap justify-center items-center border-2 border-red-500 ">
+            <div className="flex flex-wrap justify-center items-center ">
                 {webinar.map((items, index) => (
                     <motion.div
                         key={items._id}
@@ -53,11 +53,19 @@ export default function WebinarSection() {
                         viewport={{ once: true, amount: 0.3 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
-                        <img
-                            src={items.imageURL}
-                            alt="webinar"
-                            className="w-[270px] h-[200px] md:h-[280px] rounded-lg"
-                        />
+                        <div className="relative w-[270px] h-[200px] md:h-[280px] rounded-lg overflow-hidden">
+                            <img
+                                src={items.imageURL}
+                                alt="webinar"
+                                className="w-full h-full object-cover rounded-lg"
+                            />
+
+                            <div className="absolute bottom-0 left-0 bg-black bg-opacity-60 text-white p-2 w-full">
+                                <p className="font-semibold">Shadab Shaikh</p>
+                                <p className="text-sm">Developer, NodeJs</p>
+                            </div>
+                        </div>
+
 
 
                         <div className="mt-3 w-full">
@@ -67,7 +75,7 @@ export default function WebinarSection() {
 
                         <div className="flex flex-wrap sm:flex-nowrap items-start w-full gap-2 mt-3">
                             <p className="text-l  text-gray-700">
-                                <DateRangeIcon fontSize="small"  className='mb-1 mr-1 text-blue-main' />
+                                <DateRangeIcon fontSize="small" className='mb-1 mr-1 text-blue-main' />
                                 {new Date(items.date).toLocaleDateString('en-US', {
                                     year: 'numeric',
                                     month: 'short',
@@ -77,7 +85,7 @@ export default function WebinarSection() {
 
 
                             <p className="text-sm text-gold-main font-bold ">
-                               &#x2022; {items.weekday}
+                                &#x2022; {items.weekday}
                             </p>
 
 
@@ -88,7 +96,7 @@ export default function WebinarSection() {
 
 
                             <p className="text-sm   text-gray-700">
-                            <AccessTimeIcon fontSize='small' className='mb-1 mr-1 text-blue-main '/>{items.timeStart} AM
+                                <AccessTimeIcon fontSize='small' className='mb-1 mr-1 text-blue-main ' />{items.timeStart} AM
                                 &nbsp;&minus;&nbsp;
                                 {items.timeEnd} PM
                             </p>
