@@ -387,13 +387,14 @@ export default function CourseDetailed() {
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
                       {aboutUniversity}
-                      <Link
-                        to={unilink}
-                        className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
-                        style={{borderRadius:"20px"}}
-                      >
-                        Explore University
-                      </Link>
+                        <Link
+                          to={unilink}
+                          target='_blank'
+                          className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
+                          style={{borderRadius:"20px"}}
+                        >
+                          Explore University
+                        </Link>
                       {/* //////////////////////////////////////////////////////////// */}
                     </p>
                   </div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useFetchOneUniversityMutation } from '../../slices/adminApiSlice';
 import { FetchOneUniversitys } from '../../slices/universitySlice';
 import Loader from '../../components/Loader';
@@ -86,6 +86,9 @@ export default function UniversityDetailed() {
     if (isLoading) {
         return <Loader />;
     }
+    const cleanedDescription = singleUniversity.description?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No description available.';
+    const cleanedCampusLife = singleUniversity.campusLife?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No campus life information available.';
+    const cleanedHostel = singleUniversity.hostel?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No hostel information available.';
 
     return (
         <div className='mx-[200px]'>
@@ -191,9 +194,16 @@ export default function UniversityDetailed() {
                                     About the University
                                 </Typography>
                                 <Typography variant="body1">
-                                    {singleUniversity.description || 'No description available.'}
-                                    
+{cleanedDescription}                      
                                 </Typography>
+                                <Link
+                        to={singleUniversity.UniLink}
+                        target='_blank'
+                        className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
+                        style={{borderRadius:"20px"}}
+                      >
+                        Explore University
+                      </Link>
                             </Box>
                         </Box>
                     </TabPanel>
@@ -217,10 +227,10 @@ export default function UniversityDetailed() {
                                 <strong>Fees:</strong> {singleUniversity?.fees || 'N/A'}
                             </Typography>
                             <Typography variant="body1">
-                                <strong>Campus Life:</strong> {singleUniversity.campusLife}
+                                <strong>Campus Life:</strong> {cleanedCampusLife}
                             </Typography>
                             <Typography variant="body1">
-                                <strong>Hostel:</strong> {singleUniversity.hostel}
+                                <strong>Hostel:</strong> {cleanedHostel}
                             </Typography>
                         </Box>
                     </TabPanel>
