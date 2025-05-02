@@ -192,6 +192,7 @@ export default function UniversityDetailed() {
                                 </Typography>
                                 <Typography variant="body1">
                                     {singleUniversity.description || 'No description available.'}
+                                    
                                 </Typography>
                             </Box>
                         </Box>

@@ -23,13 +23,10 @@ const Hero = () => {
         <WhyChoseUs />
         <CountriesSection />
         <CourseSection />
-
         <ServiceSection />
         <AboutUsSection />
-
         <CounsellorSection />
         <TestmonialSection />
-
         <VideoCards />
         <WebinarSection />
         <MediaSection />

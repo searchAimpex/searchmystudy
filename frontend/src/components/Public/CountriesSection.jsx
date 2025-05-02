@@ -68,19 +68,19 @@ function CountriesSection() {
         </motion.div>
 
         {/* Grid of Countries */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-10 m-auto" style={{ width: "95%" }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mt-10 m-auto" style={{ width: "95%" }}>
           {displayedCountries.map((item, index) => (
             <motion.div
               key={item._id}
               onClick={() => navigate(`/country/${item._id}`)}
-              className="shadow-xl group relative cursor-pointer h-[120px] w-[95%] mx-4 bg-white shadow-md flex flex-col items-center justify-center overflow-hidden transition-all duration-300"
+              className="border rounded-lg  shadow-xl group relative cursor-pointer h-[105px]  bg-white shadow-md flex flex-col items-center justify-center overflow-hidden transition-all duration-300"
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Circle Overlay */}
-              <div className="absolute w-[70px] h-[70px] bg-[#dfdfdf] rounded-full top-[20px] left-[15px] z-0 transition-transform duration-500 scale-100 group-hover:scale-[10]"></div>
+              <div className=" absolute w-[70px] h-[70px] bg-[#dfdfdf] rounded-full top-[20px] left-[10px] z-0 transition-transform duration-500 scale-100 group-hover:scale-[10]"></div>
 
               <div className='flex w-[95%] justify-between'>
                 {/* Flag Image */}
@@ -95,7 +95,7 @@ function CountriesSection() {
                 {/* Country Info */}
                 <div className="relative z-10 mt-6 text-center">
                   <p className="text-lg font-bold text-gray-700">{item.name}</p>
-                  <p className="text-xs text-gray-500 mt-1">{item.bullet}</p>
+                  <p className="text-sm text-gray-500 mt-1">{item.bullet}</p>
                 </div>
               </div>
             </motion.div>
@@ -103,7 +103,7 @@ function CountriesSection() {
         </div>
 
         {/* View All Countries Button */}
-        {!showAll && countries.length > 8 && (
+        {!showAll && countries.length > 15 && (
          <button
          style={{ backgroundColor: 'transparent', color: 'black' }}
          onClick={handleToggleCountries}

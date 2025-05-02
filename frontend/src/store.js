@@ -63,6 +63,7 @@ const store = configureStore({
     file:fileReducer,
     video:videoReducer,
     component: componentReducer
+    
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

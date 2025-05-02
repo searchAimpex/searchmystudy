@@ -2,6 +2,14 @@ import mongoose from 'mongoose';
 
 const webinarSchema = mongoose.Schema(
     {
+        trainer_name:{
+            type:String,
+            required:true
+        },
+        trainer_profession:{
+            type:String,
+            // required:true
+        },
         title:{
             type:String,
             required:true

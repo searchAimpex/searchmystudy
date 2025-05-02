@@ -28,6 +28,8 @@ import Transaction from '../models/transactionModel.js';
 import Nav from '../models/navModel.js';
 import Files from '../models/fileModel.js';
 import Video from '../models/videoModel.js';
+import nodemailer from 'nodemailer';
+
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -1041,10 +1043,14 @@ const getWebinars = asyncHandler(async (req, res) => {
 // @desc    Create a new webinar
 // @route   POST /api/webinars
 // @access  Public
+
+
 const createWebinar = asyncHandler(async (req, res) => {
-  const { title, imageURL, date,weekday,timeStart,timeEnd } = req.body;
+  const { trainer_name,trainer_profession,title, imageURL, date,weekday,timeStart,timeEnd } = req.body;
 
   const webinar = new Webinar({
+    trainer_name,
+    trainer_profession,
     title,
     imageURL,
     date,
@@ -1058,6 +1064,65 @@ const createWebinar = asyncHandler(async (req, res) => {
 });
 
 
+
+const webinar_sendEmail = asyncHandler(async (req, res) => {
+  const { name, email,number,state,country } = req.body;
+  console.log(req.body,"//////////////////////////////////////////////////////////////////////////////////////");
+  
+
+  if (!email || !name) {
+    return res.status(400).json({ message: 'Name and email are required' });
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    }
+  });
+
+  // Email for the registered user
+  const userMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    replyTo: 'support@searchmystudy.com',
+    subject: 'Webinar Registration Confirmation',
+    html: `
+      <p>Hello ${name},</p>
+      <p>Thank you for registering for our webinar. We're excited to have you join us.</p>
+      <p><strong>Zoom Link:</strong> <a href="https://zoom.us/your-meeting-link">Join Webinar</a></p>
+      <p>Best regards,<br>Webinar Team</p>
+    `
+  };
+
+  // Email for internal admin/staff
+  const adminMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'searchmystudy@gmail.com',
+    subject: `New Webinar Registration - ${name}`,
+    html: `
+      <p><strong>New webinar registration:</strong></p>
+      <p><strong>Name:<strong/> ${name}</p>
+      <p><strong>Email Address:<strong/> ${email}</p>
+      <p><strong>Phone number:<strong/> ${number}</p>
+      <p><strong>State:<strong/> ${state}</p>
+      <p><strong>Country:<strong/> ${country}</p>
+      <p>Registration received at: ${new Date().toLocaleString()}</p>
+    `
+  };
+
+  try {
+    // Send both emails
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
+
+    res.status(200).json({ message: 'Emails sent successfully' });
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ message: 'Failed to send emails' });
+  }
+});
 
 
 // @desc    Get a single webinar by ID
@@ -2577,7 +2642,7 @@ export {
     createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince ,
     getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
     getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,
-    getWebinars,createWebinar,getWebinarById,updateWebinar,deleteWebinar,
+    getWebinars,createWebinar,getWebinarById,webinar_sendEmail,updateWebinar,deleteWebinar,
     getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,getCoursesForIndiaMedical,
     createLead,getLead,deleteLead,GetOneLead,
     createHomeLead, getLeads, deleteHomeLead,

@@ -485,7 +485,7 @@ const AllCourseDetailed = () => {
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                    <StyledWrapper className="w-full md:w-auto">
+                  <StyledWrapper className="w-full md:w-auto">
                       <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full">
                         View Details
                       </button>

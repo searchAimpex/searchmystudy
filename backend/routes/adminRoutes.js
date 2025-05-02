@@ -81,7 +81,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createVideo,
       getVideo,
       deleteVideo,
-      getAllCountries
+      getAllCountries,
+      webinar_sendEmail
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -164,10 +165,15 @@ router.route('/webinar')
   .get(getWebinars)
   .post(createWebinar);
 
+router.route('/webinar/register')
+  .post(webinar_sendEmail);
+
 router.route('/webinar/:id')
   .get(getWebinarById)
   .put(updateWebinar)
   .delete(deleteWebinar);
+
+// router.route.('',webinar_sendEmail)
 
 /*************** WEBINAR ROUTES **********************/
 

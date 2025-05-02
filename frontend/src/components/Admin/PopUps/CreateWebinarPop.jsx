@@ -17,6 +17,8 @@ const storage = getStorage(app);
 
 function CreateWebinarPop({ open, handleClose }) {
   const [formValues, setFormValues] = useState({
+    trainer_name: '',
+    trainer_profession: '',
     title: '',
     weekday: '',
     date: '',
@@ -30,8 +32,8 @@ function CreateWebinarPop({ open, handleClose }) {
   const dispatch = useDispatch();
 
   const validateForm = () => {
-    const { title, weekday, date, timeStart, timeEnd, imageFile } = formValues;
-    if (title && weekday && date && timeStart && timeEnd && imageValid) {
+    const { trainer_name, trainer_profession, title, weekday, date, timeStart, timeEnd, imageFile } = formValues;
+    if (trainer_name && trainer_profession && title && weekday && date && timeStart && timeEnd && imageValid) {
       setIsValid(true);
     } else {
       setIsValid(false);
@@ -101,6 +103,8 @@ function CreateWebinarPop({ open, handleClose }) {
       if (formValues.imageFile) {
         const imageURL = await uploadImage(formValues.imageFile);
         const webinarData = {
+          trainer_name: formValues.trainer_name,
+          trainer_profession: formValues.trainer_profession,
           title: formValues.title,
           weekday: formValues.weekday,
           date: formValues.date,
@@ -143,6 +147,33 @@ function CreateWebinarPop({ open, handleClose }) {
           }}
         >
           {/* Title */}
+          <TextField
+            id="trainer_name"
+            name="trainer_name"
+            label="Trainer Name"
+            variant="standard"
+            value={formValues.trainer_name}
+            onChange={handleChange}
+            error={!formValues.trainer_name}
+            helperText={!formValues.trainer_name && 'Trainer Name is required'}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            id="trainer_profession"
+            name="trainer_profession"
+            label="Trainer Profession"
+            variant="standard"
+            value={formValues.trainer_profession}
+            onChange={handleChange}
+            error={!formValues.trainer_profession}
+            // helperText={!formValues.trainer_profession && 'Trainer Profession is required'}
+            fullWidth
+            margin="normal"
+          />
+
+
           <TextField
             id="title"
             name="title"

@@ -25,12 +25,13 @@ const carouselItems = [
 ];
 
 function CarouselForm() {
+  
   const [Formvalues, setFormvalues] = useState({
     name: "",
     phoneNo: "",
-    countryCode:"",
+    countryCode:"+91",
     email: "",
-    country: "",
+    country: "India",
     message: ""
   })
   const dispatch = useDispatch();
@@ -154,7 +155,7 @@ function CarouselForm() {
                 <option value="+33">France (+33)</option>
                 <option value="+49">Germany (+49)</option>
                 <option value="+30">Greece (+30)</option>
-                <option value="+91">India (+91)</option>
+                <option value="+91" selected>India (+91)</option>
                 <option value="+62">Indonesia (+62)</option>
                 <option value="+98">Iran (+98)</option>
                 <option value="+964">Iraq (+964)</option>
