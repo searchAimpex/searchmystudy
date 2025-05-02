@@ -367,23 +367,23 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
 
 
             {/* country  */}
-            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
-              <InputLabel id="University-label">University</InputLabel>
-              <Select
-                labelId="University-label"
-                id="University"
-                name="University"
-                value={formValues.University}
-                onChange={handleChange}
-                label="University"
-              >
-                {university?.map((uni) => (
-                  <MenuItem key={uni?.id} value={uni?._id}>
-                    {uni?.name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+              <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+                <InputLabel id="University-label">University</InputLabel>
+                <Select
+                  labelId="University-label"
+                  id="University"
+                  name="University"
+                  value={formValues.University}
+                  onChange={handleChange}
+                  label="University"
+                >
+                  {university?.map((uni) => (
+                    <MenuItem key={uni?.id} value={uni?._id}>
+                      {uni?.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
 
 
             <TextField
