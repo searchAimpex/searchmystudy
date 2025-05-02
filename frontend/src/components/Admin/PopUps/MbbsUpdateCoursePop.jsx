@@ -26,10 +26,12 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { useFetchProvinceMutation, useFetchUniversityMutation, useUpdateCourseOneMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
+import { useCountryAllFetchMutation, useFetchProvinceMutation, useFetchUniversityMutation, useUpdateCourseOneMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
 import { toast } from 'react-toastify';
 import { FetchProvinces } from '../../../slices/provinceSlice';
 import { FetchUniversitys } from '../../../slices/universitySlice';
+import TextEditor from '../TextEditor';
+import { FetchCountry } from '../../../slices/countrySlice.js';
 
 const storage = getStorage(app);
 const levels = ['High School', 'UG Diploma/Certificate/Associate Degree', 'UG', 'PG Diploma', 'PG', 'UG+PG(Accelerated) Degree', 'PhD', 'Foundation', 'Short Term Program', 'Pathway Program', 'Twiming Program(UG)', 'Twiming Program(PG)', 'Online Program/Distance Learning'];
@@ -46,13 +48,37 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
   const [fetchProvinces] = useFetchProvinceMutation();
   const [fetchUniversity] = useFetchUniversityMutation();
   const [updateCourse, { isSuccess }] = useUpdateCourseOneMutation();
-
+  const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
+  const [countries, setCountries] = useState([])
+  const [formValues, setFormValues] = useState(() => ({
+    ProgramName: courseData?.ProgramName || '',
+    University: courseData?.University?._id || '',
+    Country: courseData?.University.Country || '',
+    Eligibility: courseData?.University?.eligiblity || '',
+    WebsiteURL: courseData?.WebsiteURL || '',
+    Location: courseData?.Location || '',
+    Duration: courseData?.Duration || '',
+    Category: courseData?.Category || '',
+    Fees: courseData?.Fees || 0,
+    Intake: courseData?.Intake || [{ status: true, date: '', expiresAt: '' }],
+    Scholarships: courseData?.Scholarships || false,
+    ProgramLevel: courseData?.ProgramLevel || '',
+    broucherURL: ""
+  }));
+  console.log("fix", formValues)
+  // Update form values when courseData changes
+  // const [CountryId, setCountryId] = useState(courseData.University,_id)
   // Fetch universities on component mount
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const result = await fetchUniversity().unwrap();
+        // const filteredUniversities = result.filter(
+        //   (university) => university.Country === `${courseData?.University?._id}`
+        // );
         dispatch(FetchUniversitys(result));
+        console.log("Filtered Universitieswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww:", filteredUniversities);
       } catch (error) {
         console.error('Failed to fetch universities:', error);
       }
@@ -64,43 +90,22 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await fetchProvinces().unwrap();
-        dispatch(FetchProvinces(result));
+        // const result = await fetchProvinces().unwrap();
+        // dispatch(FetchProvinces(result));
+        const result1 = await CountryAllFetch().unwrap();
+        dispatch(FetchCountry(result1));
+        setCountries(result1)
       } catch (error) {
         console.error('Failed to fetch provinces:', error);
       }
     };
     fetchData();
-  }, [fetchProvinces, dispatch]);
+  }, [CountryAllFetch, dispatch]);
+
+  console.log(courseData, "++++++++++++++++++++++++++++++++++++++++++++");
 
   // Initialize form values with course data
-  const [formValues, setFormValues] = useState(() => ({
-    ProgramName: courseData?.ProgramName || '',
-    University: courseData?.University || '',
-    WebsiteURL: courseData?.WebsiteURL || '',
-    Location: courseData?.Location || '',
-    Duration: courseData?.Duration || '',
-    Category: courseData?.Category || '',
-    Fees: courseData?.Fees || 0,
-    Intake: courseData?.Intake || [{ status: true, date: '',expiresAt:'' }],
-    Scholarships: courseData?.Scholarships || false,
-    ProgramLevel: courseData?.ProgramLevel || '',
-    LanguageRequirements: courseData?.LanguageRequirements || {
-      PTE: { status: false, description: '', minRequirement: '' },
-      TOFFL: { status: false, description: '', minRequirement: '' },
-      IELTS: { status: false, description: '', minRequirement: '' },
-      DET: { status: false, description: '', minRequirement: '' },
-    },
-    StandardizeRequirement: courseData?.StandardizeRequirement || {
-      SAT: { status: false, description: '', minRequirement: '' },
-      ACT: { status: false, description: '', minRequirement: '' },
-      GRE: { status: false, description: '', minRequirement: '' },
-      GMAT: { status: false, description: '', minRequirement: '' },
-    },
-    broucherURL:""
-  }));
-  console.log("fix",formValues)
-  // Update form values when courseData changes
+
   useEffect(() => {
     setFormValues(prev => ({
       ...prev,
@@ -111,7 +116,8 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
   // Handle input changes
   const handleChange = async (event) => {
     const { name, value, type, files } = event.target;
-
+    console.log(name, value, type, files);
+    
     if (type === 'file') {
       const file = files[0];
       if (file) {
@@ -166,8 +172,10 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
         id: courseData._id,
         raw: formValues
       }
+      console.log(data,"-----------------------------------------------------------");
       await updateCourse(data).unwrap();
-    
+      
+
       handleClose();
     } catch (error) {
       console.error('Failed to update course:', error);
@@ -207,7 +215,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               onChange={handleChange}
               sx={{ flex: '1 1 30%' }}
             />
-           
+
             <TextField
               id="WebsiteURL"
               name="WebsiteURL"
@@ -226,6 +234,56 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               onChange={handleChange}
               sx={{ flex: '1 1 30%' }}
             />
+
+            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+              <InputLabel id="University-label">University</InputLabel>
+              <Select
+                labelId="University-label"
+                id="University"
+                name="University"
+                value={courseData?.University?._id}
+                onChange={handleChange}
+                label="University"
+              >
+                {university?.map((uni) => (
+                  <MenuItem key={uni?.id} value={uni?._id}>
+                    {uni?.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+              <InputLabel id="Country-label">Country</InputLabel>
+              <Select
+                labelId="Country-label"
+                id="Country"
+                name="Country"
+                value={courseData?.University?.Country}
+                onChange={handleChange}
+                label="Country"
+              >
+                {countries?.map((uni) => (
+                  <MenuItem key={uni?.id} value={uni?._id}>
+                    {uni?.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* <div>
+              <DialogContentText>Eligibility</DialogContentText>
+              <TextEditor
+                // id={`sectionDescription${index}`}
+                // name={`sections.${index}.description`}
+                // label="Description"
+                variant="standard"
+                value={courseData?.University?.eligiblity}
+                // onChange={handleChange}
+                onChange={(e)=>{setFormValues((prev)=>({...prev,Eligibility:e.target.value}))}}
+                className="mb-2"
+              />
+            </div> */}
+
             <FormControl variant="standard" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="ProgramLevel-label">Program Level</InputLabel>
               <Select
@@ -243,6 +301,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                 ))}
               </Select>
             </FormControl>
+
             <TextField
               id="Duration"
               name="Duration"
@@ -272,7 +331,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               className="mb-2"
               sx={{ flex: '1 1 30%' }}
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={
                 <Switch
                   checked={formValues.Scholarships}
@@ -281,7 +340,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                 />
               }
               label="Scholarships Available"
-            />
+            /> */}
           </Box>
 
           {/* Intake Section */}
@@ -294,7 +353,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                 <Box key={index} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                   <TextField
                     id={`intake-date-${index}`}
-                    type = 'date'
+                    type='date'
                     label="Intake Date"
                     variant="standard"
                     value={intake.date}
@@ -303,11 +362,11 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                       shrink: true,
                     }}
                   />
-                    <TextField
+                  <TextField
                     id={`intake-expiresAt-${index}`}
                     label="Expire Date"
                     variant="standard"
-                    type = 'date'
+                    type='date'
                     value={intake?.expiresAt?.split('T')[0]}
                     onChange={(e) => handleIntakeChange(index, 'expiresAt', e.target.value)}
                     InputLabelProps={{
@@ -334,101 +393,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
             </AccordionDetails>
           </Accordion>
 
-          {/* Language Requirements Section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Language Requirements</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {Object.keys(formValues.LanguageRequirements).map(lang => (
-                <Box key={lang} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  <TextField
-                    id={lang}
-                    name={lang}
-                    label={lang}
-                    variant="standard"
-                    value={formValues.LanguageRequirements[lang].minRequirement}
-                    onChange={(e) => setFormValues(prev => ({
-                      ...prev,
-                      LanguageRequirements: {
-                        ...prev.LanguageRequirements,
-                        [lang]: {
-                          ...prev.LanguageRequirements[lang],
-                          minRequirement: e.target.value,
-                        },
-                      },
-                    }))}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formValues.LanguageRequirements[lang].status}
-                        onChange={(e) => setFormValues(prev => ({
-                          ...prev,
-                          LanguageRequirements: {
-                            ...prev.LanguageRequirements,
-                            [lang]: {
-                              ...prev.LanguageRequirements[lang],
-                              status: e.target.checked,
-                            },
-                          },
-                        }))}
-                      />
-                    }
-                    label="Required"
-                  />
-                </Box>
-              ))}
-            </AccordionDetails>
-          </Accordion>
 
-          {/* Standardized Requirements Section */}
-          <Accordion>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>Standardized Requirements</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {Object.keys(formValues.StandardizeRequirement).map(test => (
-                <Box key={test} sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  <TextField
-                    id={test}
-                    name={test}
-                    label={test}
-                    variant="standard"
-                    value={formValues.StandardizeRequirement[test].minRequirement}
-                    onChange={(e) => setFormValues(prev => ({
-                      ...prev,
-                      StandardizeRequirement: {
-                        ...prev.StandardizeRequirement,
-                        [test]: {
-                          ...prev.StandardizeRequirement[test],
-                          minRequirement: e.target.value,
-                        },
-                      },
-                    }))}
-                  />
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        checked={formValues.StandardizeRequirement[test].status}
-                        onChange={(e) => setFormValues(prev => ({
-                          ...prev,
-                          StandardizeRequirement: {
-                            ...prev.StandardizeRequirement,
-                            [test]: {
-                              ...prev.StandardizeRequirement[test],
-                              status: e.target.checked,
-                            },
-                          },
-                        }))}
-                      />
-                    }
-                    label="Required"
-                  />
-                </Box>
-              ))}
-            </AccordionDetails>
-          </Accordion>
         </Box>
       </DialogContent>
       <DialogActions>
