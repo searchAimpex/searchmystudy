@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -29,7 +29,9 @@ export default function MbbsCountryDetailed() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showAll, setShowAll] = useState(false);
 
+  // Slice the universities to show only the first 10 if `showAll` is false
   const { singleCountry, countries } = useSelector((state) => state.country);
   const { university } = useSelector((state) => state.university);
   console.log(singleCountry, "=============================================");
@@ -74,6 +76,7 @@ export default function MbbsCountryDetailed() {
       scrollRef.current.scrollBy({ top: 100, behavior: "smooth" });
     }
   };
+  const universitiesToDisplay = showAll ? university : university.slice(0, 10);
 
   return (
     <div className="bg-gray-100 text-white">
@@ -264,15 +267,14 @@ export default function MbbsCountryDetailed() {
       </div>
 
 
+      <div>
       <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-        {university.map((uni) => (
+        {universitiesToDisplay.map((uni) => (
           <Link
             to={`/university/${uni._id}`}
             key={uni._id}
             className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
           >
-            {/* {console.log(uni,"------------------------------------------")
-            } */}
             <div
               style={{ backgroundImage: `url(${uni.heroURL})` }}
               className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
@@ -292,6 +294,18 @@ export default function MbbsCountryDetailed() {
           </Link>
         ))}
       </div>
+
+      {university.length > 10 && !showAll && (
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => setShowAll(true)}
+            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+          >
+            Explore More
+          </button>
+        </div>
+      )}
+    </div>
 
         <div>
         <motion.div

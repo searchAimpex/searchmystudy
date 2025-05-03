@@ -44,7 +44,10 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
   const dispatch = useDispatch();
   const { provinces } = useSelector(state => state.province);
   const { university } = useSelector(state => state.university);
+// const [university, setuniversity] = useState()
 
+  // console.log(courseData,"//////////////////////////////////////////////////////////////");
+  
   const [fetchProvinces] = useFetchProvinceMutation();
   const [fetchUniversity] = useFetchUniversityMutation();
   const [updateCourse, { isSuccess }] = useUpdateCourseOneMutation();
@@ -53,8 +56,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
   const [formValues, setFormValues] = useState(() => ({
     ProgramName: courseData?.ProgramName || '',
     University: courseData?.University?._id || '',
-    Country: courseData?.University.Country || '',
-    Eligibility: courseData?.University?.eligiblity || '',
+    Eligibility: courseData?.Eligibility || '',
     WebsiteURL: courseData?.WebsiteURL || '',
     Location: courseData?.Location || '',
     Duration: courseData?.Duration || '',
@@ -63,46 +65,32 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
     Intake: courseData?.Intake || [{ status: true, date: '', expiresAt: '' }],
     Scholarships: courseData?.Scholarships || false,
     ProgramLevel: courseData?.ProgramLevel || '',
+    languageRequire: courseData?.languageRequire || '',
     broucherURL: ""
   }));
-  console.log("fix", formValues)
+  console.log("+++++++++++++++++++++++++++++++////////////////////////", courseData)
   // Update form values when courseData changes
   // const [CountryId, setCountryId] = useState(courseData.University,_id)
   // Fetch universities on component mount
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await fetchUniversity().unwrap();
-        // const filteredUniversities = result.filter(
-        //   (university) => university.Country === `${courseData?.University?._id}`
-        // );
-        dispatch(FetchUniversitys(result));
-        console.log("Filtered Universitieswwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww:", filteredUniversities);
-      } catch (error) {
-        console.error('Failed to fetch universities:', error);
-      }
-    };
-    fetchData();
-  }, [fetchUniversity, dispatch]);
-
+  
   // Fetch provinces on component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         // const result = await fetchProvinces().unwrap();
-        // dispatch(FetchProvinces(result));
+        // dispatch(FetchProvinces(result));        
         const result1 = await CountryAllFetch().unwrap();
         dispatch(FetchCountry(result1));
         setCountries(result1)
+        console.log(result1,"++++++++++++++++++++++++++++++++++++");
       } catch (error) {
         console.error('Failed to fetch provinces:', error);
       }
     };
     fetchData();
-  }, [CountryAllFetch, dispatch]);
-
-  console.log(courseData, "++++++++++++++++++++++++++++++++++++++++++++");
+  }, [CountryAllFetch,fetchUniversity, dispatch]);
+// 
+  // console.log(courseData, "++++++++++++++++++++++++++++++++++++++++++++");
 
   // Initialize form values with course data
 
@@ -188,6 +176,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
       toast.success('Course Updated Successfully');
     }
   }, [isSuccess]);
+// console.log(courseData?.Eligibility,"\\\\\\\\\\\\\\\\\\\\\\\\\\|||||||||||||||||||||||||");
 
   return (
     <Dialog maxWidth='xl' fullWidth open={open} onClose={handleClose}>
@@ -235,7 +224,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               sx={{ flex: '1 1 30%' }}
             />
 
-            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+            {/* <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="University-label">University</InputLabel>
               <Select
                 labelId="University-label"
@@ -251,9 +240,9 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
+            </FormControl> */}
 
-            <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+            {/* <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="Country-label">Country</InputLabel>
               <Select
                 labelId="Country-label"
@@ -269,20 +258,96 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
                   </MenuItem>
                 ))}
               </Select>
-            </FormControl>
-            {/* <div>
+            </FormControl> */}
+
+              <div>
+                        <div className='py-2'>
+                          <DialogContentText>Language Requirement</DialogContentText>
+                        </div>
+            
+                        <div className="flex my-2 space-x-10">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="english"
+                              name="language"
+                              value="English"
+                              className="mr-2"
+                              checked={formValues.languageRequire?.english || false} 
+                              onChange={(e) => {
+                                setFormValues((prev) => ({
+                                  ...prev,
+                                  languageRequire: {
+                                    ...prev.languageRequire, // Preserve existing languageRequire fields
+                                    english: e.target.checked  // Update the 'english' field
+                                  }
+                                }));
+                              }} />
+                            <label htmlFor="english">  <DialogContentText>English</DialogContentText></label>
+                          </div>
+            
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="No_any_Preference"
+                              name="language"
+                              value="No_any_Preference"
+                              checked={formValues.languageRequire?.no_any_preference || false} // Controlled checked state
+                              className="mr-2"
+                              onChange={(e) => {
+                                setFormValues((prev) => ({
+                                  ...prev,
+                                  languageRequire: {
+                                    ...prev.languageRequire, // Preserve existing languageRequire fields
+                                    no_any_preference: e.target.checked  // Update the 'english' field
+                                  }
+                                }));
+                              }}
+                            />
+                            <label htmlFor="No_any_Preference">  <DialogContentText>No any Preference</DialogContentText></label>
+                          </div>
+            
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="motherTongue"
+                              name="language"
+                              value="motherTongue"
+                              checked={formValues.languageRequire?.motherTongue || false} // Controlled checked state
+                              className="mr-2"
+                              onChange={(e) => {
+                                setFormValues((prev) => ({
+                                  ...prev,
+                                  languageRequire: {
+                                    ...prev.languageRequire, // Preserve existing languageRequire fields
+                                    motherTongue: e.target.checked  // Update the 'english' field
+                                  }
+                                }));
+                              }}
+                            />
+                            <label htmlFor="motherTongue">  <DialogContentText>Mother Tongue</DialogContentText></label>
+                          </div>
+                        </div>
+                      </div>
+
+            <div>
               <DialogContentText>Eligibility</DialogContentText>
               <TextEditor
                 // id={`sectionDescription${index}`}
                 // name={`sections.${index}.description`}
                 // label="Description"
                 variant="standard"
-                value={courseData?.University?.eligiblity}
+                value={formValues.Eligibility}
+
                 // onChange={handleChange}
-                onChange={(e)=>{setFormValues((prev)=>({...prev,Eligibility:e.target.value}))}}
-                className="mb-2"
+                onChange={(e) =>
+                  setFormValues((prev) => ({
+                    ...prev,
+                    Eligibility: e.target.value,
+                  }))
+                }                className="mb-2"
               />
-            </div> */}
+            </div>
 
             <FormControl variant="standard" sx={{ flex: '1 1 30%' }}>
               <InputLabel id="ProgramLevel-label">Program Level</InputLabel>

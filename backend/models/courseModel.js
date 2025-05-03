@@ -12,11 +12,7 @@ const courseSchema = mongoose.Schema(
             ref: 'University',
             required: true,
         },
-        Country:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'University',
-            required: true,
-        },
+   
         WebsiteURL: {
             type: String,
             required: true

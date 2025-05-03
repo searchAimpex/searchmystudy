@@ -101,7 +101,8 @@ function CreateWebinarPop({ open, handleClose }) {
   const onSubmit = async () => {
     try {
       if (formValues.imageFile) {
-        const imageURL = await uploadImage(formValues.imageFile);
+        const imageURL1 = await uploadImage(formValues.imageFile);
+  
         const webinarData = {
           trainer_name: formValues.trainer_name,
           trainer_profession: formValues.trainer_profession,
@@ -110,11 +111,11 @@ function CreateWebinarPop({ open, handleClose }) {
           date: formValues.date,
           timeStart: formValues.timeStart,
           timeEnd: formValues.timeEnd,
-          imageURL,
+          imageURL:imageURL1,
         };
-
-        const res = await CreateWebinar(webinarData).unwrap();
-        dispatch(CreateWebinar({ ...res })); // Store webinar in Redux
+        // setFormValues((prev)=>({...prev,imageFile:imageURL}))
+        // ✅ Call the mutation once and don't dispatch again
+        await CreateWebinar(webinarData).unwrap();
         handleClose(); // Close the dialog after submission
         toast.success('Webinar Added Successfully');
       } else {
@@ -122,9 +123,10 @@ function CreateWebinarPop({ open, handleClose }) {
       }
     } catch (error) {
       console.error('Error adding webinar:', error);
-      toast.error('Failed to add webinar');
+      toast.error('All fields are required!');
     }
   };
+  
 
   useEffect(() => {
     if (isSuccess) {

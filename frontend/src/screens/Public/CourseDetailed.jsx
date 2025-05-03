@@ -40,7 +40,13 @@ export default function CourseDetailed() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const handleModalOpen = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
-  const EligibilityText = singleCourse.Eligibility?.replace(/^<p>|<\/p>$/g, '');
+
+  const EligibilityText = singleCourse.Eligibility
+    ?.replace(/<\/p>/g, '\n')
+    .replace(/<li>/g, '• ')
+    .replace(/<\/li>/g, '\n')
+    .replace(/<[^>]+>/g, '') // Remove remaining tags
+    .trim();
   // const hostel = singleCourse.University.hostel?.replace(/^<p>|<\/p>$/g, '');
   useEffect(() => {
     setsinglecourses(singleCourse)
@@ -387,14 +393,14 @@ export default function CourseDetailed() {
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
                       {aboutUniversity}
-                        <Link
-                          to={unilink}
-                          target='_blank'
-                          className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
-                          style={{borderRadius:"20px"}}
-                        >
-                          Explore University
-                        </Link>
+                      <Link
+                        to={unilink}
+                        target='_blank'
+                        className="mt-4 flex align-center w-[200px] mx-auto justify-center inline-block px-4 py-2 bg-gold-main text-white  hover:bg-gold-400 transition font-semibold"
+                        style={{ borderRadius: "20px" }}
+                      >
+                        Explore University
+                      </Link>
                       {/* //////////////////////////////////////////////////////////// */}
                     </p>
                   </div>
@@ -497,7 +503,23 @@ export default function CourseDetailed() {
 
 
               <TabPanel value={tabValue} index={2}>
-                {EligibilityText ? <span>{EligibilityText}</span> : 'Not available'}
+                {EligibilityText ? (
+                  <div>
+                    {/* Extract description and bullet points */}
+                    <p>{EligibilityText.split('•')[0]}</p>
+                    <ul className="list-disc ml-5">
+                      {EligibilityText
+                        .split('•')
+                        .slice(1) // Skip the first paragraph part
+                        .map((point, idx) => (
+                          <li key={idx}>{point.trim()}</li>
+                        ))}
+                    </ul>
+                  </div>
+                ) : (
+                  'Not available'
+                )}
+
 
 
               </TabPanel>
@@ -505,7 +527,22 @@ export default function CourseDetailed() {
 
               <TabPanel value={tabValue} index={3}>
                 <Box>
-                  {campusLifee ? <span>{campusLifee}</span> : 'Not available'}
+                  {campusLifee ? (
+                    <div>
+                      <p>{campusLifee.split('•')[0]}</p>
+                      <ul className="list-disc ml-5">
+                        {campusLifee
+                          .split('•')
+                          .slice(1)
+                          .map((point, idx) => (
+                            <li key={idx}>{point.trim()}</li>
+                          ))}
+                      </ul>
+                    </div>
+                  ) : (
+                    'Not available'
+                  )}
+
 
 
                 </Box>
@@ -516,7 +553,22 @@ export default function CourseDetailed() {
             {/* <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" /> */}
 
             <TabPanel value={tabValue} index={4}>
-              {hostel ? <span>{hostel}</span> : 'Not available'}
+              {hostel ? (
+                <div>
+                  <p>{hostel.split('•')[0]}</p>
+                  <ul className="list-disc ml-5">
+                    {hostel
+                      .split('•')
+                      .slice(1)
+                      .map((point, idx) => (
+                        <li key={idx}>{point.trim()}</li>
+                      ))}
+                  </ul>
+                </div>
+              ) : (
+                'Not available'
+              )}
+
 
             </TabPanel>
 

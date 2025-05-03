@@ -237,7 +237,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
     useEffect(() => {
         // Check if all required images are valid
         const allImagesValid = Object.values(imageValidations).every(Boolean);
-        setIsFormValid(allImagesValid && formValues.name && formValues.eligiblity);
+        setIsFormValid(allImagesValid && formValues.name );
     }, [imageValidations, formValues]);
 
     return (
@@ -365,7 +365,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                         </Select>
                     </FormControl>
 
-                    <TextEditor
+                    {/* <TextEditor
                         id="eligiblity"
                         name="description"
                         label="Eligibility"
@@ -376,7 +376,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
                            eligiblity: e.target.value
                           }))}
                         className="mb-2"
-                    />
+                    /> */}
                     {/* <TextField
                         id="eligiblity"
                         name="eligiblity"
