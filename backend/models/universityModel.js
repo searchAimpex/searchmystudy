@@ -4,7 +4,9 @@ const universitySchema = mongoose.Schema(
     {
         name:{
             type:String,
-            required:true
+            required:true,
+            unique:true
+
         },
         bannerURL:{
             type:String,

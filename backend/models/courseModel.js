@@ -69,7 +69,7 @@ const courseSchema = mongoose.Schema(
                     type: Boolean
                 },
                 date: {
-                    type: Date,
+                    type: String,
                     required: true
                 },
                 expiresAt: {

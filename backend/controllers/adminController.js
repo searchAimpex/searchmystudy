@@ -436,9 +436,17 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
-  console.log(req.body.MCI,"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  const { name, bannerURL, description, sections, mbbsAbroad, flagURL, elegiblity, bullet, faq, MbbsSections } = req.body;
 
+  // Check if country with the same name already exists
+  const existingCountry = await Country.findOne({ name });
+
+  if (existingCountry) {
+    // If country already exists, return an error message
+    return res.status(400).json({ message: 'Country with this name already exists.' });
+  }
+
+  // If no existing country, create a new one
   const country = new Country({
     name,
     bannerURL,
@@ -449,10 +457,13 @@ const createCountry = asyncHandler(async (req, res) => {
     elegiblity,
     bullet,
     faq,
-    MbbsSections
+    MbbsSections,
   });
-  
+
+  // Save the new country to the database
   const createdCountry = await country.save();
+
+  // Send back the created country
   res.status(201).json(createdCountry);
 });
 
@@ -719,48 +730,60 @@ const getUniversityById = asyncHandler(async (req, res) => {
 const createUniversity = asyncHandler(async (req, res) => {
   console.log(req.body.Province, "-------------");
 
-  // Handle Province correctly
-  let provinceId = null;
-  if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length === 0) {
-    provinceId = null; // If empty array, set to null
-  } else {
-    provinceId = req.body.Province; // Otherwise keep the value
+  // Check if a university with the same name already exists
+  const existingUniversity = await University.findOne({ name: req.body.name });
+  
+  if (existingUniversity) {
+    return res.status(400).json({ message: 'University with this name already exists.' });
   }
 
+  // Handle Province correctly (null if empty array)
+  let provinceId = null;
+  if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length === 0) {
+    provinceId = null;  // If empty array, set to null
+  } else if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length > 0) {
+    // If province is an array and has elements, assign it
+    provinceId = req.body.Province;
+  }
+
+  // Find the country by its ID
   const country = await Country.findById(req.body.Country);
   if (!country) {
     return res.status(400).json({ message: 'Invalid country ID' });
   }
+
+  // Generate a random grade
   const grades = ["A+", "A", "A++"];
   const randomGrade = grades[Math.floor(Math.random() * grades.length)];
 
+  // Create the university document
   const university = new University({
     name: req.body.name,
     bannerURL: req.body.bannerURL,
     heroURL: req.body.heroURL,
     description: req.body.description,
     sections: req.body.sections,
-    // eligiblity: req.body.eligiblity,
     Province: provinceId,
-    grade:randomGrade,
-    Country: country,
+    grade: randomGrade,
+    Country: country._id,  // Pass the country ID (not the entire country object)
     logo: req.body.logo,
     campusLife: req.body.campusLife,
-    MCI:req.body.MCI,
-    ECFMG:req.body.ECFMG,
+    MCI: req.body.MCI,
+    ECFMG: req.body.ECFMG,
     hostel: req.body.hostel,
     rank: req.body.rank,
     UniLink: req.body.UniLink,
   });
 
+  // Save the created university
   const createdUniversity = await university.save();
 
   console.log(university.Country.name, "/////////////////////////////////////////////////");
   console.log(createdUniversity, "/////////////////////////////////////////////////");
 
+  // Respond with the created university data
   res.status(201).json(createdUniversity);
 });
-;
 
 // @desc    Update a university
 // @route   PUT /universities/:id
