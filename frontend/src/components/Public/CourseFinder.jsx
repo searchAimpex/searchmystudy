@@ -124,3 +124,4 @@ export default function CourseFinder() {
     </div>
   );
 }
+
