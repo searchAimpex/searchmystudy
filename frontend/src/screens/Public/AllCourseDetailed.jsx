@@ -9,7 +9,6 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Filter2Sharp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
 const Program = [
   'High School',
   'UG Diploma/Certificate/Associate Degree',
@@ -77,18 +76,16 @@ const AllCourseDetailed = () => {
   const [universities, setUniversities] = useState([]);
   const [courses, setCourses] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
-  const { singleCourse } = useSelector((state) => state.course);
+
   const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
   const [fetchCountries] = useCountryFetchMutation();
   const [fetchProvinces] = useFetchProvinceMutation();
   const [fetchUniversities] = useFetchUniversityMutation();
-  // console.log(singleCourse.broucherURL, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
   useEffect(() => {
     const getCountries = async () => {
       try {
         const result = await fetchCountries().unwrap();
-        
         if (Array.isArray(result)) {
           setCountries(result);
         } else {
@@ -101,12 +98,10 @@ const AllCourseDetailed = () => {
 
     const fetchInitialCourses = async () => {
       try {
-       
-        const result = await AllCourse().unwrap();
+        console.log("fitlers", filters)
+        const result = await AllCourse(filters).unwrap();
         if (Array.isArray(result)) {
           setCourses(result);
-          console.log(result,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-          
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -119,8 +114,6 @@ const AllCourseDetailed = () => {
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
   console.log("course", courses)
-  console.log("fitlers", filters)
-
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newFilters = {
@@ -128,19 +121,14 @@ const AllCourseDetailed = () => {
       [name]: type === 'checkbox' ? checked : value,
     };
     setFilters(newFilters);
-  
-    // Log the selected country
-    console.log('Country selected:', value);
-    console.log('Updated filters:', newFilters);
-  
+
     if (name === 'country') {
       try {
-        // Fetch provinces based on the selected country
         const result = await fetchProvinces({ country: value }).unwrap();
         if (Array.isArray(result)) {
           setProvinces(result);
-          setFilters({ ...newFilters, province: '', university: '' }); // Reset province and university filters
-          setUniversities([]); // Clear universities as well
+          setFilters({ ...newFilters, province: '', university: '' });
+          setUniversities([]);
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -148,14 +136,13 @@ const AllCourseDetailed = () => {
         console.error('Error fetching provinces:', error);
       }
     }
-  
+
     if (name === 'province') {
       try {
-        // Fetch universities based on the selected province
         const result = await fetchUniversities({ province: value }).unwrap();
         if (Array.isArray(result)) {
           setUniversities(result);
-          setFilters({ ...newFilters, university: '' }); // Reset university filter
+          setFilters({ ...newFilters, university: '' });
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -163,13 +150,6 @@ const AllCourseDetailed = () => {
         console.error('Error fetching universities:', error);
       }
     }
-  };
-  
-
-
-
-  const openBrochure = (url) => {
-    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleSearch = async () => {
@@ -265,10 +245,6 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
-            
-
-            
-            
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Category</label>
               <select
@@ -295,12 +271,28 @@ const AllCourseDetailed = () => {
                 className="mr-2"
               />
             </div> */}
-
-
-
-            
-
-
+            {/* <div className="mb-4">
+              <label className="block mb-2 font-semibold">Language Requirement</label>
+              <input
+                type="text"
+                name="languageRequirement"
+                value={filters.languageRequirement}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="e.g., IELTS, TOEFL"
+              />
+            </div> */}
+            {/* <div className="mb-4">
+              <label className="block mb-2 font-semibold">Standardized Requirement</label>
+              <input
+                type="text"
+                name="standardizeRequirement"
+                value={filters.standardizeRequirement}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="e.g., GRE, GMAT"
+              />
+            </div> */}
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Country</label>
               <select
@@ -317,31 +309,6 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
-
-
-
-            {/* <div className="mb-4">
-              <label className="block mb-2 font-semibold">Language Requirement</label>
-              <input
-                type="text"
-                name="languageRequirement"
-                value={filters.languageRequirement}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="e.g., IELTS, TOEFL"
-              />
-            </div> 
-            {/* <div className="mb-4">
-              <label className="block mb-2 font-semibold">Standardized Requirement</label>
-              <input
-                type="text"
-                name="standardizeRequirement"
-                value={filters.standardizeRequirement}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="e.g., GRE, GMAT"
-              />
-            </div> */}
             {/* {filters.country && (
               <div className="mb-4">
                 <label className="block mb-2 font-semibold">Province</label>
@@ -506,7 +473,6 @@ const AllCourseDetailed = () => {
           </div>
         )}
       </div>
-
 
     </div>
   );
