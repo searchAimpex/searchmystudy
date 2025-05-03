@@ -9,6 +9,7 @@ import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { Filter2Sharp } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 const Program = [
   'High School',
   'UG Diploma/Certificate/Associate Degree',
@@ -76,16 +77,18 @@ const AllCourseDetailed = () => {
   const [universities, setUniversities] = useState([]);
   const [courses, setCourses] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
-
+  const { singleCourse } = useSelector((state) => state.course);
   const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
   const [fetchCountries] = useCountryFetchMutation();
   const [fetchProvinces] = useFetchProvinceMutation();
   const [fetchUniversities] = useFetchUniversityMutation();
+  // console.log(singleCourse.broucherURL, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
 
   useEffect(() => {
     const getCountries = async () => {
       try {
         const result = await fetchCountries().unwrap();
+        
         if (Array.isArray(result)) {
           setCountries(result);
         } else {
@@ -98,10 +101,12 @@ const AllCourseDetailed = () => {
 
     const fetchInitialCourses = async () => {
       try {
-        console.log("fitlers", filters)
-        const result = await AllCourse(filters).unwrap();
+       
+        const result = await AllCourse().unwrap();
         if (Array.isArray(result)) {
           setCourses(result);
+          console.log(result,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+          
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -114,6 +119,8 @@ const AllCourseDetailed = () => {
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
   console.log("course", courses)
+  console.log("fitlers", filters)
+
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newFilters = {
@@ -121,14 +128,19 @@ const AllCourseDetailed = () => {
       [name]: type === 'checkbox' ? checked : value,
     };
     setFilters(newFilters);
-
+  
+    // Log the selected country
+    console.log('Country selected:', value);
+    console.log('Updated filters:', newFilters);
+  
     if (name === 'country') {
       try {
+        // Fetch provinces based on the selected country
         const result = await fetchProvinces({ country: value }).unwrap();
         if (Array.isArray(result)) {
           setProvinces(result);
-          setFilters({ ...newFilters, province: '', university: '' });
-          setUniversities([]);
+          setFilters({ ...newFilters, province: '', university: '' }); // Reset province and university filters
+          setUniversities([]); // Clear universities as well
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -136,13 +148,14 @@ const AllCourseDetailed = () => {
         console.error('Error fetching provinces:', error);
       }
     }
-
+  
     if (name === 'province') {
       try {
+        // Fetch universities based on the selected province
         const result = await fetchUniversities({ province: value }).unwrap();
         if (Array.isArray(result)) {
           setUniversities(result);
-          setFilters({ ...newFilters, university: '' });
+          setFilters({ ...newFilters, university: '' }); // Reset university filter
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -150,6 +163,13 @@ const AllCourseDetailed = () => {
         console.error('Error fetching universities:', error);
       }
     }
+  };
+  
+
+
+
+  const openBrochure = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleSearch = async () => {
@@ -245,6 +265,10 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
+            
+
+            
+            
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Category</label>
               <select
@@ -261,7 +285,7 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
-            <div className="mb-4">
+            {/* <div className="mb-4">
               <label className="block mb-2 font-semibold">Scholarships</label>
               <input
                 type="checkbox"
@@ -270,29 +294,13 @@ const AllCourseDetailed = () => {
                 onChange={handleFilterChange}
                 className="mr-2"
               />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 font-semibold">Language Requirement</label>
-              <input
-                type="text"
-                name="languageRequirement"
-                value={filters.languageRequirement}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="e.g., IELTS, TOEFL"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-2 font-semibold">Standardized Requirement</label>
-              <input
-                type="text"
-                name="standardizeRequirement"
-                value={filters.standardizeRequirement}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                placeholder="e.g., GRE, GMAT"
-              />
-            </div>
+            </div> */}
+
+
+
+            
+
+
             <div className="mb-4">
               <label className="block mb-2 font-semibold">Country</label>
               <select
@@ -309,6 +317,31 @@ const AllCourseDetailed = () => {
                 ))}
               </select>
             </div>
+
+
+
+            {/* <div className="mb-4">
+              <label className="block mb-2 font-semibold">Language Requirement</label>
+              <input
+                type="text"
+                name="languageRequirement"
+                value={filters.languageRequirement}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="e.g., IELTS, TOEFL"
+              />
+            </div> 
+            {/* <div className="mb-4">
+              <label className="block mb-2 font-semibold">Standardized Requirement</label>
+              <input
+                type="text"
+                name="standardizeRequirement"
+                value={filters.standardizeRequirement}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                placeholder="e.g., GRE, GMAT"
+              />
+            </div> */}
             {/* {filters.country && (
               <div className="mb-4">
                 <label className="block mb-2 font-semibold">Province</label>
@@ -360,163 +393,120 @@ const AllCourseDetailed = () => {
         )}
       </div>
 
-      <div className="w-full lg:w-3/4 ">
+      <div className="w-full lg:w-3/4 px-2">
         {isLoading ? (
           <p>Loading...</p>
         ) : isError ? (
           <p className="text-red-600">Error loading courses</p>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
             {courses.map((course) => (
               <div
                 key={course._id}
-                className="bg-white flex flex-col md:flex-row  gap-4 rounded-lg "
-                style={{
-                  boxShadow:
-                    '4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(0, 0, 0, 0.1)',
-                }}
+                className="bg-white flex flex-col md:flex-row gap-4 rounded-lg shadow-md overflow-hidden"
               >
                 {/* Image Section */}
                 <div className="w-full md:w-[45%] relative flex justify-center items-center">
-                  <div className="relative w-full  w-full h-[100%] ">
-                    {/* Hero Image */}
+                  <div className="relative w-full h-[250px] md:h-full">
                     <img
-                      className="object-cover w-full h-[100%]"
+                      className="object-cover w-full h-full"
                       src={course.University.heroURL}
                       alt={course.University.name}
                     />
-
-                    {/* Black Overlay */}
-                    <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10"></div>
-
+                    <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10" />
                   </div>
 
-                  {/* Logo */}
                   <img
-                    className="absolute top-2 right-2 w-[60px] h-[60px] sm:w-[70px] sm:h-[70px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
+                    className="absolute top-2 right-2 w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
                     src={course.University.logo}
                     alt={course.University.name}
                   />
 
-                  {/* Type Badge */}
                   <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-xs sm:text-sm font-semibold rounded-lg z-20">
                     {course.University.type}
                   </div>
 
-                  {/* Admission Badge */}
-                  <div className="absolute bottom-2 left-2 px-2 py-1  text-green-500 font-bold text-2xl shadow z-20">
-                    Admission open
+                  <div className="absolute bottom-2 left-2 px-2 py-1 text-green-500 font-bold text-lg sm:text-xl z-20">
+                    Admission Open
                   </div>
                 </div>
 
                 {/* Details Section */}
-                <div className="flex flex-col w-full ">
-                  <h1 className="text-lg md:text-2xl my-2 font-bold">
-                    {course?.University?.name}
-                  </h1>
-                  <hr />
+                <div className="flex flex-col w-full px-2 sm:px-4 py-2">
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold mb-2">{course?.University?.name}</h1>
+                  <hr className="mb-3" />
 
-                  {/* Program Info */}
-                  <div className="flex flex-col md:flex-row m-2 justify-between gap-6">
-                    {/* Left Column */}
-                    <div className="flex-1 space-y-2">
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Program Type:</span>
-                        <span>{course?.University?.type}</span>
-                      </div>
 
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Program:</span>
-                        <span>{course?.ProgramName}</span>
-                      </div>
+                  
+                  <div className="flex flex-col md:flex-row justify-between gap-4">
+                    {/* Left Info */}
+                    <div className="flex-1 space-y-2 text-sm sm:text-base">
+                      <p><span className="font-semibold">Program Type:</span> {course?.University?.type}</p>
+                      <p><span className="font-semibold">Program:</span> {course?.ProgramName}</p>
+                      <p><span className="font-semibold">Category:</span> {course?.Category}</p>
+                      <p><span className="font-semibold">Fees:</span> {course?.Fees}</p>
+                      <p><span className="font-semibold">Level:</span> {course?.ProgramLevel}</p>
+                      {course?.University?.ECFMG && <p><span className="font-semibold">ECFMG:</span> Approved</p>}
+                      {course?.University?.MCI && <p><span className="font-semibold">MCI:</span> Approved</p>}
 
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Category:</span>
-                        <span>{course?.Category}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Fees:</span>
-                        <span>{course?.Fees} INR</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Level:</span>
-                        <span>{course?.ProgramLevel}</span>
-                      </div>
+                     
                     </div>
 
-                    {/* Right Column */}
-                    <div className="flex-1 space-y-2 ">
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Grade:</span>
-                        <span>{course?.University?.grade}</span>
-                      </div>
+                    
 
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Intake:</span>
-                        <span> {new Date(course?.Intake[0].date).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })} - {new Date(course?.Intake[0].expiresAt).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        })}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2">
-                        <span className="font-semibold">Duration:</span>
-                        <span>{course?.Duration}</span>
-                      </div>
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                        {/* Star Rating */}
-                        <span className="font-semibold">Location:</span>
-                        <span>  {course?.Location}</span>
-
-                      </div>
-
-
-                      <div className="text-sm sm:text-base flex flex-wrap gap-2 items-center">
-                        {/* Star Rating */}
+                    {/* Right Info */}
+                    <div className="flex-1 space-y-2 text-sm sm:text-base">
+                      <p><span className="font-semibold">Grade:</span> {course?.University?.grade}</p>
+                      <p>
+                        <span className="font-semibold">Intake:</span> {
+                          new Date(course?.Intake[0]?.date).toLocaleDateString('en-GB', {
+                            month: 'short', year: 'numeric'
+                          })
+                        }
+                      </p>
+                      <p><span className="font-semibold">Duration:</span> {course?.Duration}</p>
+                      <p><span className="font-semibold">Location:</span> {course?.Location}</p>
+                       <p><span className="font-semibold">Country:</span> {course?.Duration}</p>
+                      <div className="flex items-center gap-1">
                         <span className="font-semibold">Rating:</span>
-                        <div className="flex text-yellow-500">
-
+                        <div className="text-yellow-500">
                           {Array.from({ length: course?.University?.rank || 0 }).map((_, i) => (
                             <span key={i}>★</span>
                           ))}
                         </div>
                       </div>
 
-
-
+                      
                     </div>
+                    
                   </div>
 
-                  <hr />
-                  {/* Location & Button */}
-                  <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3 pt-2 my-6 w-full">
-                    <StyledWrapper className="w-full md:w-auto">
-                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
+                  <hr className="my-3" />
+
+                  {/* CTA Buttons */}
+                  <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
+                  <StyledWrapper className="w-full md:w-auto">
+                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full">
                         View Details
                       </button>
                     </StyledWrapper>
 
                     <StyledWrapper1 className="w-full md:w-auto">
-                      <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full md:w-auto">
+                      <button
+                        onClick={() => openBrochure(singleCourse?.broucherURL)}
+                        className="button w-full"
+                      >
                         Download Brochure
                       </button>
                     </StyledWrapper1>
                   </div>
-
                 </div>
               </div>
             ))}
           </div>
         )}
       </div>
+
 
     </div>
   );
