@@ -130,6 +130,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
   };
 
   const onSubmit = async () => {
+try {
   if(formValues.name !== "" && formValues.bannerURL !== "" && formValues.bullet !== "" && formValues.mbbsAbroad !== "" ){
     const res = await createCountry(formValues).unwrap();
     dispatch(AddCountry({ ...res }));
@@ -138,6 +139,9 @@ function MbbsCreateCountryPopup({ open, onClose }) {
     toast.error("All fields are required");
     
   }
+} catch (error) {
+  toast.error(error.data.message)
+}
   };
 
   const handleCancelled = (e) => {

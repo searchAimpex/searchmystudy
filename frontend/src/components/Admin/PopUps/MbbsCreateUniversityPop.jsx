@@ -58,7 +58,7 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         hostel: '',
         type: 'Public',
         MCI: '',
-        ECFMG: '',
+        ECFMG: null,
         rank: 0,
         UniLink: '',
         Course: [],
@@ -220,7 +220,9 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
             console.log(res,"resresresresssssssssssssssssssssssssssssssssssssss");
             // handleClose();
         } catch (error) {
-            console.error('Failed to create university:', error);
+            console.log(error);
+            
+            toast.error( error.data.message);
         }
     };
 

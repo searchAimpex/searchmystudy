@@ -160,7 +160,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
     Category: '',
     Fees: 0,
     Intake: [{ status: true, date: '', expiresAt: new Date() }],
-    Scholarships: false,
+    Scholarships: true,
     ProgramLevel: '',
     languageRequire: {
       english: '',
@@ -460,22 +460,7 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
           {/* Intake */}
           {Array.isArray(formValues?.Intake) && formValues?.Intake?.map((intake, index) => (
             <Box key={index} sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={intake.status}
-                    onChange={(e) => {
-                      const updatedIntake = [...formValues.Intake];
-                      updatedIntake[index].status = e.target.checked;
-                      setFormValues((prevValues) => ({
-                        ...prevValues,
-                        Intake: updatedIntake
-                      }));
-                    }}
-                  />
-                }
-                label="Status"
-              />
+              
               <div className="w-full sm:w-1/2 md:w-1/3 px-2">
                 <label
                   htmlFor={`Intake-${index}-date`}
@@ -484,9 +469,10 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
                   Start Date
                 </label>
                 <TextField
-                  id={`Intake-${index}-date`}
-                  type="date"
+                  id="intake"
+                  // type="date"
                   variant="standard"
+                  // label="Ex"
                   fullWidth
                   value={intake.date}
                   onChange={(e) => {
