@@ -90,8 +90,9 @@ export default function MbbsCountryDetailed() {
         <img
           src={singleCountry?.bannerURL}
           alt="Country Banner"
-          className="w-full h-[250px] sm:h-[350px] md:h-[450px] object-cover"
+          className="w-full h-[250px] sm:h-[350px] md:h-[550px] object-cover object-left"
         />
+
       </motion.div>
 
       <div className="flex flex-col lg:flex-row p-4 gap-6">
@@ -141,9 +142,10 @@ export default function MbbsCountryDetailed() {
                         <div className="relative">
                           <div
                             ref={scrollRef}
-                            className="hello h-[300px] overflow-y-scroll overflow-x-hidden scrollbar-hide text-black px-3"
+                            className="prose prose-sm hello h-[300px] overflow-y-scroll overflow-x-hidden scrollbar-hide text-black px-3"
                             dangerouslySetInnerHTML={{ __html: truncateText(section.description, 110) }}
                           />
+
 
                           <button
                             onClick={scrollDown}
@@ -268,71 +270,71 @@ export default function MbbsCountryDetailed() {
 
 
       <div>
-      <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
-        {universitiesToDisplay.map((uni) => (
-          <Link
-            to={`/university/${uni._id}`}
-            key={uni._id}
-            className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
-          >
-            <div
-              style={{ backgroundImage: `url(${uni.heroURL})` }}
-              className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
-            />
-            <div
-              className="w-[95px] h-[95px] border-2 border-white rounded-full mt-[80px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
-              style={{ backgroundImage: `url(${uni.logo})` }}
-            />
-            <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
-              <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg leading-tight">
-                {uni.name}
-              </span>
-              <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg text-white">
-                {singleCountry?.name}
-              </span>
-            </div>
-          </Link>
-        ))}
+        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-4">
+          {universitiesToDisplay.map((uni) => (
+            <Link
+              to={`/university/${uni._id}`}
+              key={uni._id}
+              className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
+            >
+              <div
+                style={{ backgroundImage: `url(${uni.heroURL})` }}
+                className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
+              />
+              <div
+                className="w-[95px] h-[95px] border-2 border-white rounded-full mt-[80px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
+                style={{ backgroundImage: `url(${uni.logo})` }}
+              />
+              <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
+                <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg leading-tight">
+                  {uni.name}
+                </span>
+                <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg text-white">
+                  {singleCountry?.name}
+                </span>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {university.length > 10 && !showAll && (
+          <div className="flex justify-center mt-4">
+            <button
+              onClick={() => setShowAll(true)}
+              className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
+            >
+              Explore More
+            </button>
+          </div>
+        )}
       </div>
 
-      {university.length > 10 && !showAll && (
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => setShowAll(true)}
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg hover:bg-blue-600 transition"
-          >
-            Explore More
-          </button>
-        </div>
-      )}
-    </div>
-
-        <div>
+      <div>
         <motion.div
-        ref={refFaq}
-        className="max-w-7xl mx-auto px-4 my-20"
-        initial={{ opacity: 0, }}
-        animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 1 }}
-      >
-        <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
-          Frequently Asked Questions
-        </h2>
-        {singleCountry?.faq?.map((faqItem, index) => (
-          <Accordion key={index} className='my-3'>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon className="text-white" />}
-              sx={{ bgcolor: '#003366', color: 'white' }}
-            >
-              <Typography className="font-bold">{faqItem.question}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>{faqItem.answer}</Typography>
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </motion.div>
-        </div>
+          ref={refFaq}
+          className="max-w-7xl mx-auto px-4 my-20"
+          initial={{ opacity: 0, }}
+          animate={inViewFaq ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1 }}
+        >
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-blue-main mb-6">
+            Frequently Asked Questions
+          </h2>
+          {singleCountry?.faq?.map((faqItem, index) => (
+            <Accordion key={index} className='my-3'>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon className="text-white" />}
+                sx={{ bgcolor: '#003366', color: 'white' }}
+              >
+                <Typography className="font-bold">{faqItem.question}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Typography>{faqItem.answer}</Typography>
+              </AccordionDetails>
+            </Accordion>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }

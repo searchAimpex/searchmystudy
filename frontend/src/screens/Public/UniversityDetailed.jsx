@@ -146,7 +146,11 @@ export default function UniversityDetailed() {
                             </div>
                             <div>
                                 <Typography variant="h6" fontWeight="bold">About the University</Typography>
-                                <Typography>{cleanedDescription}</Typography>
+                                <div
+                                    className="prose max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: singleUniversity.description }}
+                                />
+
                                 <Link to={singleUniversity.UniLink} target="_blank" className="mt-4 inline-block px-4 py-2 bg-gold-main text-white hover:bg-gold-400 transition rounded-full text-center">
                                     Explore University
                                 </Link>
@@ -158,8 +162,15 @@ export default function UniversityDetailed() {
                         <Box className="space-y-4">
                             <Typography variant="h5" fontWeight="bold"> Campus Life & Hostel</Typography>
                             {/* <Typography><strong>Fees:</strong> {singleUniversity?.fees || 'N/A'}</Typography> */}
-                            <Typography><strong>Campus Life:</strong> {cleanedCampusLife}</Typography>
-                            <Typography><strong>Hostel:</strong> {cleanedHostel}</Typography>
+                            <div
+                                className="prose max-w-none"
+                                dangerouslySetInnerHTML={{ __html: singleUniversity.campusLife }}
+                            />
+
+                            <Typography><strong>Hostel:</strong> <div
+                                className="prose max-w-none"
+                                dangerouslySetInnerHTML={{ __html: singleUniversity.campusLife }}
+                            /> </Typography>
                         </Box>
                     </TabPanel>
 

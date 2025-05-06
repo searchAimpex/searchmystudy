@@ -53,14 +53,14 @@ export default function CourseDetailed() {
   }, [singleCourse])
   console.log(singlecourses, "----------------------------------------------------------");
 
-  const Eligibility = singlecourses.Eligibility?.replace(/^<p>|<\/p>$/g, '');
-  const campusLifee = singlecourses?.University?.campusLife
-    ? singlecourses.University.campusLife.replace(/^<p>|<\/p>$/g, '')
-    : 'Not available';
+  // const Eligibility = singlecourses.Eligibility?.replace(/^<p>|<\/p>$/g, '');
+  // const campusLifee = singlecourses?.University?.campusLife
+  //   ? singlecourses.University.campusLife.replace(/^<p>|<\/p>$/g, '')
+  //   : 'Not available';
 
-  const hostel = singlecourses?.University?.hostel
-    ? singlecourses.University.hostel.replace(/^<p>|<\/p>$/g, '')
-    : 'Not available';
+  // const hostel = singlecourses?.University?.hostel
+  //   ? singlecourses.University.hostel.replace(/^<p>|<\/p>$/g, '')
+  //   : 'Not available';
 
 
   useEffect(() => {
@@ -503,23 +503,10 @@ export default function CourseDetailed() {
 
 
               <TabPanel value={tabValue} index={2}>
-                {EligibilityText ? (
-                  <div>
-                    {/* Extract description and bullet points */}
-                    <p>{EligibilityText.split('•')[0]}</p>
-                    <ul className="list-disc ml-5">
-                      {EligibilityText
-                        .split('•')
-                        .slice(1) // Skip the first paragraph part
-                        .map((point, idx) => (
-                          <li key={idx}>{point.trim()}</li>
-                        ))}
-                    </ul>
-                  </div>
-                ) : (
-                  'Not available'
-                )}
-
+              <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: singleCourse.Eligibility }}
+                  />
 
 
               </TabPanel>
@@ -527,21 +514,10 @@ export default function CourseDetailed() {
 
               <TabPanel value={tabValue} index={3}>
                 <Box>
-                  {campusLifee ? (
-                    <div>
-                      <p>{campusLifee.split('•')[0]}</p>
-                      <ul className="list-disc ml-5">
-                        {campusLifee
-                          .split('•')
-                          .slice(1)
-                          .map((point, idx) => (
-                            <li key={idx}>{point.trim()}</li>
-                          ))}
-                      </ul>
-                    </div>
-                  ) : (
-                    'Not available'
-                  )}
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: singlecourses?.University?.campusLife }}
+                  />
 
 
 
@@ -553,22 +529,10 @@ export default function CourseDetailed() {
             {/* <Tab label="Hostel" icon={<SchoolIcon />} iconPosition="start" /> */}
 
             <TabPanel value={tabValue} index={4}>
-              {hostel ? (
-                <div>
-                  <p>{hostel.split('•')[0]}</p>
-                  <ul className="list-disc ml-5">
-                    {hostel
-                      .split('•')
-                      .slice(1)
-                      .map((point, idx) => (
-                        <li key={idx}>{point.trim()}</li>
-                      ))}
-                  </ul>
-                </div>
-              ) : (
-                'Not available'
-              )}
-
+            <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{ __html: singlecourses?.University?.hostel }}
+                  />
 
             </TabPanel>
 

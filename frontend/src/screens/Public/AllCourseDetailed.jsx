@@ -114,32 +114,21 @@ const AllCourseDetailed = () => {
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
   console.log("course", courses)
+ 
+
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
+  
     const newFilters = {
       ...filters,
       [name]: type === 'checkbox' ? checked : value,
     };
     setFilters(newFilters);
-
+  
+    // If country changes, fetch universities directly based on country
     if (name === 'country') {
       try {
-        const result = await fetchProvinces({ country: value }).unwrap();
-        if (Array.isArray(result)) {
-          setProvinces(result);
-          setFilters({ ...newFilters, province: '', university: '' });
-          setUniversities([]);
-        } else {
-          console.error('Expected an array but got:', result);
-        }
-      } catch (error) {
-        console.error('Error fetching provinces:', error);
-      }
-    }
-
-    if (name === 'province') {
-      try {
-        const result = await fetchUniversities({ province: value }).unwrap();
+        const result = await fetchUniversities({ country: value }).unwrap();
         if (Array.isArray(result)) {
           setUniversities(result);
           setFilters({ ...newFilters, university: '' });
@@ -151,6 +140,7 @@ const AllCourseDetailed = () => {
       }
     }
   };
+  
 
   const handleSearch = async () => {
     try {
@@ -311,24 +301,6 @@ const AllCourseDetailed = () => {
             </div>
             {/* {filters.country && (
               <div className="mb-4">
-                <label className="block mb-2 font-semibold">Province</label>
-                <select
-                  name="province"
-                  value={filters.province}
-                  onChange={handleFilterChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="">Select Province</option>
-                  {provinces.map((province) => (
-                    <option key={province} value={province.name}>
-                      {province.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )} */}
-            {/* {filters.province && (
-              <div className="mb-4">
                 <label className="block mb-2 font-semibold">University</label>
                 <select
                   name="university"
@@ -338,19 +310,15 @@ const AllCourseDetailed = () => {
                 >
                   <option value="">Select University</option>
                   {universities.map((university) => (
-                    <option key={university} value={university._id}>
-                      {university.name
-                      
-                      
-                      }
+                    <option key={university._id} value={university._id}>
+                      {university.name}
                     </option>
                   ))}
                 </select>
               </div>
             )} */}
+
             <div className="mb-4">
-
-
               <StyledWrapper1>
                 <button onClick={handleSearch} className="button w-[100%]">  Search
                 </button>
@@ -382,7 +350,6 @@ const AllCourseDetailed = () => {
                     />
                     <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10" />
                   </div>
-
                   <img
                     className="absolute top-2 right-2 w-[50px] h-[50px] sm:w-[60px] sm:h-[60px] rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
                     src={course.University.logo}
@@ -404,7 +371,7 @@ const AllCourseDetailed = () => {
                   <hr className="mb-3" />
 
 
-                  
+
                   <div className="flex flex-col md:flex-row justify-between gap-4">
                     {/* Left Info */}
                     <div className="flex-1 space-y-2 text-sm sm:text-base">
@@ -416,10 +383,10 @@ const AllCourseDetailed = () => {
                       {course?.University?.ECFMG && <p><span className="font-semibold">ECFMG:</span> Approved</p>}
                       {course?.University?.MCI && <p><span className="font-semibold">MCI:</span> Approved</p>}
 
-                     
+
                     </div>
 
-                    
+
 
                     {/* Right Info */}
                     <div className="flex-1 space-y-2 text-sm sm:text-base">
@@ -433,7 +400,7 @@ const AllCourseDetailed = () => {
                       </p>
                       <p><span className="font-semibold">Duration:</span> {course?.Duration}</p>
                       <p><span className="font-semibold">Location:</span> {course?.Location}</p>
-                       <p><span className="font-semibold">Country:</span> {course?.Duration}</p>
+                      <p><span className="font-semibold">Country:</span> {course?.University?.Country?.name}</p>
                       <div className="flex items-center gap-1">
                         <span className="font-semibold">Rating:</span>
                         <div className="text-yellow-500">
@@ -443,16 +410,16 @@ const AllCourseDetailed = () => {
                         </div>
                       </div>
 
-                      
+
                     </div>
-                    
+
                   </div>
 
                   <hr className="my-3" />
 
                   {/* CTA Buttons */}
                   <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-                  <StyledWrapper className="w-full md:w-auto">
+                    <StyledWrapper className="w-full md:w-auto">
                       <button onClick={() => navigate(`/course/${course._id}`)} className="button w-full">
                         View Details
                       </button>
@@ -481,7 +448,7 @@ const AllCourseDetailed = () => {
 
 };
 export default AllCourseDetailed;
-  const StyledWrapper = styled.div`
+const StyledWrapper = styled.div`
   .button {
   --color: #db7e19 ;
   padding: 0.5em 1.3em;

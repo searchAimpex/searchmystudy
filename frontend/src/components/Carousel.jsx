@@ -117,7 +117,7 @@ const Carousel = ({ interval = 5000 }) => {
   };
 
   return (
-    <div className='relative w-ful   md:h-[400px]  overflow-hidden'>
+    <div className='relative w-ful   md:h-[600px]  overflow-hidden'>
       {/* Carousel Section */}
       <div className="relative w-full h-full overflow-hidden [@media(max-width:320px)]:h-[250px]">
         <div
@@ -138,8 +138,7 @@ const Carousel = ({ interval = 5000 }) => {
                 src={slide.image}
                 alt={`Slide ${index}`}
                 className={`
-    w-full
-    h-[470px]                      // default height
+                          // default height
     object-cover
     ${currentIndex === index ? 'zoom-animation' : ''}
     object-center
@@ -149,7 +148,7 @@ const Carousel = ({ interval = 5000 }) => {
               />
 
               {/* Content Box */}
-              <div className="res absolute top-[10px] right-[20px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
+              <div className="res absolute top-[50px] right-[50px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
                 <h2 className="text-2xl font-bold text-gold-main mb-2">{slide.heading}</h2>
                 <h4 className="text-xl font-semibold text-blue-main ">{slide.paragraph}</h4 >
 

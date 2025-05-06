@@ -62,7 +62,7 @@ export default function CourseFinder() {
   };
 
   return (
-    <div className='rounded-3xl relative bottom-[50px] pb-5 bg-white mx-auto my-8 w-[90%] md:w-[80%] shadow-[0_0_12px_#0004]'>
+    <div className='rounded-3xl relative bottom-[90px] pb-5 bg-white mx-auto my-8 w-[90%] md:w-[80%] shadow-[0_0_12px_#0004]'>
       <div className='flex flex-col p-5 justify-center items-center'>
         <div className="flex flex-wrap gap-x-2 gap-y-1 text-center justify-center">
           <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-main">Find</span>
