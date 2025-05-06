@@ -100,6 +100,8 @@ const AllCourseDetailed = () => {
       try {
         console.log("fitlers", filters)
         const result = await AllCourse(filters).unwrap();
+        console.log(result,"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        
         if (Array.isArray(result)) {
           setCourses(result);
         } else {
