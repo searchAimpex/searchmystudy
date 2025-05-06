@@ -933,103 +933,41 @@ const deleteCourse = asyncHandler(async (req, res) => {
 // @access  Public
 const getCourses = asyncHandler(async (req, res) => {
   try {
-    const {
-      country,
-      province,
-      university,
-      programLevel,
-      category,
-      scholarships,
-      languageRequirement,
-      standardizeRequirement,
-    } = req.query;
-
+    const { country, programLevel, category } = req.query;
     let filter = {};
 
-    // Filter by Country
     if (country) {
-      // Fetch provinces related to the country
-      const provinces = await Province.find({ Country: country }).select('_id');
-      const provinceIds = provinces.map(province => province._id);
+      // Step 1: Find all universities in the selected country
+      const universities = await University.find({ Country: country }).select('_id');
+      const universityIds = universities.map((u) => u._id);
 
-      // Fetch universities related to the provinces
-      const universities = await University.find({ Province: { $in: provinceIds } }).select('_id');
-      const universityIds = universities.map(university => university._id);
-
-      // Filter courses by the universities in the country
+      // Step 2: Filter courses by those university IDs
       filter.University = { $in: universityIds };
     }
 
-    // Filter by Province
-    if (province) {
-      // Fetch universities related to the province
-      const universities = await University.find({ Province: province }).select('_id');
-      const universityIds = universities.map(university => university._id);
-
-      // Filter courses by the universities in the province
-      filter.University = { $in: universityIds };
-    }
-
-    // Filter by University
-    if (university) {
-      filter.University = university;
-    }
-
-    // Filter by Program Level
+    // Step 3: Apply additional filters
     if (programLevel) {
       filter.ProgramLevel = programLevel;
     }
 
-    // Filter by Category
     if (category) {
       filter.Category = category;
     }
 
-    // Filter by Scholarships
-    if (scholarships) {
-      filter.Scholarships = scholarships === 'true';
-    }
-
-    // Filter by Language Requirements
-    if (languageRequirement) {
-      const languageReqArray = languageRequirement.split(',');
-      const languageReqFilter = {};
-      languageReqArray.forEach((lang) => {
-        languageReqFilter[`LanguageRequirements.${lang}.status`] = true;
-      });
-      filter = { ...filter, ...languageReqFilter };
-    }
-
-    // Filter by Standardized Requirements
-    if (standardizeRequirement) {
-      const standardizeReqArray = standardizeRequirement.split(',');
-      const standardizeReqFilter = {};
-      standardizeReqArray.forEach((test) => {
-        standardizeReqFilter[`StandardizeRequirement.${test}.status`] = true;
-      });
-      filter = { ...filter, ...standardizeReqFilter };
-    }
-
-    console.log("Constructed Filter:", filter);
-
-    // Fetch courses based on the constructed filter
+    // Step 4: Fetch filtered courses with university and country populated
     const courses = await Course.find(filter)
       .populate({
         path: 'University',
         populate: {
-          path: 'Province',
-          populate: {
-            path: 'Country',
-          },
+          path: 'Country',
         },
-      })
-      .exec();
-
+      });
+      console.log(courses,"---------------------------------------------");
+      
     res.status(200).json(courses);
-    console.log("Courses Found:", courses);
   } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 
