@@ -962,7 +962,7 @@ const getCourses = asyncHandler(async (req, res) => {
           path: 'Country',
         },
       });
-      console.log(courses,"---------------------------------------------");
+      console.log(filter,"---------------------------------------------");
       
     res.status(200).json(courses);
   } catch (error) {
