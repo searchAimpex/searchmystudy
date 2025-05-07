@@ -19,6 +19,8 @@ import FormImage from '../../assets/FormImage.png';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import "./mbbs.css"
+import { set } from 'mongoose';
+import { useStepContext } from '@mui/material';
 const truncateText = (text, maxWords = 250) => {
   if (!text) return '';
   const words = text.split(' ');
@@ -45,7 +47,8 @@ export default function MbbsCountryDetailed() {
   const [refSections, inViewSections] = useInView({ triggerOnce: true });
   const [refProvinces, inViewProvinces] = useInView({ triggerOnce: true });
   const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
-
+  const [universitiesToDisplay, setuniversitiesToDisplay] = useState([])
+  // const [uni, setUni] = useState()
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -60,6 +63,8 @@ export default function MbbsCountryDetailed() {
         const filteredUniversities = allUniversities.filter(
           (uni) => uni.Country === countryDetails._id
         );
+        setuniversitiesToDisplay(filteredUniversities)
+        console.log(universitiesToDisplay,"))))))))))))))))))))))))))))))))))))))))))))))))");
         dispatch(FetchUniversitys(filteredUniversities));
       } catch (error) {
         console.error('Failed to fetch data:', error);
@@ -67,7 +72,7 @@ export default function MbbsCountryDetailed() {
     };
 
     fetchData();
-  }, [id, dispatch, CountryFetch, CountryFetchOne, FetchUniversity]);
+  }, [id,setuniversitiesToDisplay, dispatch, CountryFetch, CountryFetchOne, FetchUniversity]);
 
   const scrollRef = useRef(null); // ✅ hooks must be on top, directly.
 
@@ -76,8 +81,7 @@ export default function MbbsCountryDetailed() {
       scrollRef.current.scrollBy({ top: 100, behavior: "smooth" });
     }
   };
-  const universitiesToDisplay = showAll ? university : university.slice(0, 10);
-
+  // const universitiesToDisplay = showAll ? university : university.slice(0, 10);
   return (
     <div className="bg-gray-100 text-white">
       {/* Banner */}
@@ -278,7 +282,7 @@ export default function MbbsCountryDetailed() {
               className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
             >
               <div
-                style={{ backgroundImage: `url(${uni.heroURL})` }}
+                style={{ backgroundImage: `url(${uni.bannerURL})` }}
                 className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
               />
               <div

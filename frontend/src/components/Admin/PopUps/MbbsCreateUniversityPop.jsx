@@ -212,19 +212,50 @@ export default function MbbsCreateUniversityPop({ open, handleClose }) {
         }));
     };
 
-    const onSubmit = async () => {
-        try {
-            console.log(formValues,"lllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-            const res = await createUniversity(formValues).unwrap();
-            dispatch(AddUniversity({ ...res }));
-            console.log(res,"resresresresssssssssssssssssssssssssssssssssssssss");
-            // handleClose();
-        } catch (error) {
-            console.log(error);
-            
-            toast.error( error.data.message);
-        }
-    };
+   const onSubmit = async () => {
+    // Inline validation
+    const errors = [];
+
+    if (!formValues.name.trim()) errors.push('University name is required.');
+    if (!formValues.bannerURL.trim()) errors.push('Banner URL is required.');
+    // if (!formValues.Province) errors.push('Province must be selected.');
+    if (!formValues.heroURL.trim()) errors.push('Hero URL is required.');
+    if (!formValues.Country.trim()) errors.push('Country is required.');
+    if (!formValues.description.trim()) errors.push('Description is required.');
+    if (!formValues.logo.trim()) errors.push('Logo URL is required.');
+    if (!formValues.campusLife.trim()) errors.push('Campus Life description is required.');
+    if (!formValues.hostel.trim()) errors.push('Hostel information is required.');
+    if (!formValues.type.trim()) errors.push('University type is required.');
+    if (formValues.rank === null || formValues.rank === '' || isNaN(formValues.rank)) errors.push('Valid rank is required.');
+    if (!formValues.UniLink.trim()) errors.push('University website link is required.');
+    // if (!Array.isArray(formValues.Course) || formValues.Course.length === 0) {
+    //     errors.push('At least one course must be added.');
+    // }
+
+    // formValues.sections.forEach((section, index) => {
+    //     if (!section.title.trim() || !section.description.trim() || !section.url.trim()) {
+    //         errors.push(`All fields are required in section ${index + 1}.`);
+    //     }
+    // });
+
+    // Show all validation errors and stop submission
+    if (errors.length > 0) {
+        errors.forEach(err => toast.error(err));
+        return;
+    }
+
+    try {
+        console.log(formValues, "Submitting university data...");
+        const res = await createUniversity(formValues).unwrap();
+        dispatch(AddUniversity({ ...res }));
+        console.log(res, "University created successfully");
+        // handleClose();
+    } catch (error) {
+        console.log(error);
+        toast.error(error?.data?.message || "An error occurred");
+    }
+};
+
 
     useEffect(() => {
         if (isSuccess) {
