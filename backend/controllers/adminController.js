@@ -7,6 +7,9 @@ import Blog from '../models/blogModel.js';
 import Country from '../models/countryModel.js';
 import Province from '../models/provinceModel.js';
 import University from '../models/universityModel.js';
+import mongoose from 'mongoose'; // ✅ ES module-compatible
+
+
 import Course from '../models/courseModel.js';
 import Webinar from '../models/webinarsModel.js';
 import Media from '../models/mediaModel.js';
@@ -931,40 +934,60 @@ const deleteCourse = asyncHandler(async (req, res) => {
 // @desc    GET FILTER DATA
 // @route   GET /course/All
 // @access  Public
+
+
 const getCourses = asyncHandler(async (req, res) => {
   try {
     const { country, programLevel, category } = req.query;
     let filter = {};
 
-    if (country) {
-      // Step 1: Find all universities in the selected country
-      const universities = await University.find({ Country: country }).select('_id');
-      const universityIds = universities.map((u) => u._id);
+    console.log(req.query, "-----------------/////////////////////////////////////");
 
-      // Step 2: Filter courses by those university IDs
+    // Filter by country via University
+    if (country) {
+      const universities = await University.find({
+        Country: new mongoose.Types.ObjectId(country),
+      }).select('_id');
+    
+      const universityIds = universities.map((u) => u._id);
+    
+      if (universityIds.length === 0) {
+        return res.status(200).json([]);
+      }
+    
       filter.University = { $in: universityIds };
     }
+    
 
-    // Step 3: Apply additional filters
+    // Filter by Category and ProgramLevel
+    if (category) {
+      filter.Category = category;
+    }
     if (programLevel) {
       filter.ProgramLevel = programLevel;
     }
 
-    if (category) {
-      filter.Category = category;
-    }
+    // Fetch courses with populated University and nested Country
+    const courses = await Course.find(filter).populate({
+      path: 'University',
+      populate: {
+        path: 'Country',
+      },
+    });
 
-    // Step 4: Fetch filtered courses with university and country populated
-    const courses = await Course.find(filter)
-      .populate({
-        path: 'University',
-        populate: {
-          path: 'Country',
-        },
-      });
-      console.log(filter,"---------------------------------------------");
-      
-    res.status(200).json(courses);
+    // Clean unwanted fields
+    const cleanedCourses = courses.map((course) => {
+      const obj = course.toObject();
+
+      if (!obj.province) delete obj.province;
+      if (obj.scholarships === 'false') delete obj.scholarships;
+      if (!obj.languageRequirement) delete obj.languageRequirement;
+      if (!obj.standardizeRequirement) delete obj.standardizeRequirement;
+
+      return obj;
+    });
+
+    res.status(200).json(cleanedCourses);
   } catch (error) {
     console.error('Error fetching courses:', error);
     res.status(500).json({ message: 'Server Error' });
