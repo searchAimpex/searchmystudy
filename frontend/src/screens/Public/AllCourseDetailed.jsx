@@ -62,13 +62,13 @@ const AllCourseDetailed = () => {
   const state = location.state;
   const [filters, setFilters] = useState({
     country: state.filters.country || '',
-    province: '',
-    university: '',
+    // province: '',
+    // university: '',
     programLevel: state.filters.category || '',
     category: state.filters.level || '',
-    scholarships: false,
-    languageRequirement: '',
-    standardizeRequirement: '',
+    // scholarships: false,
+    // languageRequirement: '',
+    // standardizeRequirement: '',
   });
 
   // console.log("state",state)

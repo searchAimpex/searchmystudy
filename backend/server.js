@@ -11,7 +11,7 @@ import adminRoutes from './routes/adminRoutes.js'
 import cron from 'node-cron';
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5001;
 connectDB();
 const app = express();
 
