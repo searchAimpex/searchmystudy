@@ -138,7 +138,9 @@ export default function MbbsCountryDetailed() {
                       {section.title}
                     </h2>
                     <div
-                      className={`flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} items-center `}
+                      className={`flex flex-col md:flex-row items-center `}
+
+                      // className={`flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} items-center `}
                     >
                       <motion.div
                         className="md:w-1/2 "
@@ -158,7 +160,7 @@ export default function MbbsCountryDetailed() {
                             onClick={scrollDown}
                             className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm bg-gold-main text-white p-2 rounded-full shadow-lg animate-bounce"
                           >
-                            Click to now more
+                            Scroll Up   ↑
                           </button>
                         </div>
                       </motion.div>
