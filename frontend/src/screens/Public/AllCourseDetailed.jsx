@@ -123,7 +123,11 @@ useEffect(() => {
        
         const result = await AllCourse().unwrap();
         if (Array.isArray(result)) {
+<<<<<<< HEAD
           // setCourses(result);
+=======
+          setCourses(result);
+>>>>>>> de8225d5c85fa7dd1cfb0f276c964eafc90a6669
           console.log(result,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           
         } else {
@@ -140,7 +144,60 @@ useEffect(() => {
   console.log("course", courses)
   console.log("fitlers", filters)
 
+<<<<<<< HEAD
 
+=======
+  const handleFilterChange = async (e) => {
+    const { name, value, type, checked } = e.target;
+    const newFilters = {
+      ...filters,
+      [name]: type === 'checkbox' ? checked : value,
+    };
+    setFilters(newFilters);
+  
+    // Log the selected country
+    console.log('Country selected:', value);
+    console.log('Updated filters:', newFilters);
+  
+    if (name === 'country') {
+      try {
+        // Fetch provinces based on the selected country
+        const result = await fetchProvinces({ country: value }).unwrap();
+        if (Array.isArray(result)) {
+          setProvinces(result);
+          setFilters({ ...newFilters, province: '', university: '' }); // Reset province and university filters
+          setUniversities([]); // Clear universities as well
+        } else {
+          console.error('Expected an array but got:', result);
+        }
+      } catch (error) {
+        console.error('Error fetching provinces:', error);
+      }
+    }
+  
+    if (name === 'province') {
+      try {
+        // Fetch universities based on the selected province
+        const result = await fetchUniversities({ province: value }).unwrap();
+        if (Array.isArray(result)) {
+          setUniversities(result);
+          setFilters({ ...newFilters, university: '' }); // Reset university filter
+        } else {
+          console.error('Expected an array but got:', result);
+        }
+      } catch (error) {
+        console.error('Error fetching universities:', error);
+      }
+    }
+  };
+  
+
+
+
+  const openBrochure = (url) => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+>>>>>>> de8225d5c85fa7dd1cfb0f276c964eafc90a6669
 
 
    const handleSearch = async () => {
@@ -498,7 +555,11 @@ useEffect(() => {
                       </p>
                       <p><span className="font-semibold">Duration:</span> {course?.Duration}</p>
                       <p><span className="font-semibold">Location:</span> {course?.Location}</p>
+<<<<<<< HEAD
                        <p><span className="font-semibold">Country:</span> {course?.University?.Country?.name}</p>
+=======
+                       <p><span className="font-semibold">Country:</span> {course?.Duration}</p>
+>>>>>>> de8225d5c85fa7dd1cfb0f276c964eafc90a6669
                       <div className="flex items-center gap-1">
                         <span className="font-semibold">Rating:</span>
                         <div className="text-yellow-500">
