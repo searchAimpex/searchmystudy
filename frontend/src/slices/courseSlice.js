@@ -25,6 +25,9 @@ const initialState = {
         FetchOneCourses:(state,action)=>{
             state.singleCourse = action.payload
         },
+        FetchCourseByUniversity:(state,action)=>{
+          state.singleCourse = action.payload
+        },
         FetchedLinked: (state,action)=>{
           state.fetchedLinks = action.payload;
         }

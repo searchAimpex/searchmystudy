@@ -887,9 +887,6 @@ console.log(createdCourse,"cccccccccccccccccccccccccccccccccccccc+++++++++++++++
   res.status(201).json(createdCourse);
 });
 
-// @desc    Update a course
-// @route   PUT /courses/:id
-// @access  Public
 const updateCourse = asyncHandler(async (req, res) => {
   const { ProgramName,Eligibility, WebsiteURL,languageRequire, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements,Category } = req.body;
 

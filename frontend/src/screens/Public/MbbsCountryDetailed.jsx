@@ -83,7 +83,7 @@ export default function MbbsCountryDetailed() {
   };
   // const universitiesToDisplay = showAll ? university : university.slice(0, 10);
   return (
-    <div className="bg-gray-100 text-white">
+    <div className=" text-white">
       {/* Banner */}
       <motion.div
         ref={refBanner}
@@ -166,7 +166,7 @@ export default function MbbsCountryDetailed() {
                       </motion.div>
 
                       <motion.div
-                        className="md:w-1/2 p-4"
+                        className="md:w-1/2 "
                         initial={{ opacity: 0, x: isReversed ? -100 : 100 }}
                         animate={inViewSections ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 1 }}
@@ -289,7 +289,7 @@ export default function MbbsCountryDetailed() {
               className="cursor-pointer relative w-full h-[250px] bg-white rounded-2xl overflow-hidden shadow-lg group text-center"
             >
               <div
-                style={{ backgroundImage: `url(${uni.bannerURL})` }}
+                style={{ backgroundImage: `url(${uni.heroURL})` }}
                 className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
               />
               <div
@@ -297,10 +297,10 @@ export default function MbbsCountryDetailed() {
                 style={{ backgroundImage: `url(${uni.logo})` }}
               />
               <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
-                <span className="font-semibold bg-gold-main px-3 py-1 rounded-lg text-white text-lg leading-tight">
+                <span className="font-semibold bg-gold-main px-3 py-1  text-white text-l leading-tight">
                   {uni.name}
                 </span>
-                <span className="font-semibold bg-blue-main px-3 py-1 rounded-lg text-white">
+                <span className="font-semibold bg-blue-main px-3 py-1  text-white">
                   {singleCountry?.name}
                 </span>
               </div>
