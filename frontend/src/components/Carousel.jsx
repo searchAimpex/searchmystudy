@@ -117,7 +117,7 @@ const Carousel = ({ interval = 5000 }) => {
   };
 
   return (
-    <div className='relative w-ful   md:h-[600px]  overflow-hidden'>
+    <div className='relative w-full   overflow-hidden'>
       {/* Carousel Section */}
       <div className="relative w-full h-full overflow-hidden [@media(max-width:320px)]:h-[250px]">
         <div
@@ -148,22 +148,22 @@ const Carousel = ({ interval = 5000 }) => {
               />
 
               {/* Content Box */}
-              <div className="res absolute top-[50px] right-[50px] text-white w-[470px] shadow-xl rounded-[15px] p-6 bg-white rounded">
-                <h2 className="text-2xl font-bold text-gold-main mb-2">{slide.heading}</h2>
+              <div className="res absolute top-[50px] right-[50px] text-white w-[400px] shadow-xl rounded-[15px] p-6 bg-white rounded">
+                <h2 className="text-xl font-bold text-gold-main mb-2">{slide.heading}</h2>
                 <h4 className="text-xl font-semibold text-blue-main ">{slide.paragraph}</h4 >
 
-                Flags
-                <div className="flex gap-2 flex-wrap">
+                {/* Flags */}
+                <div className="flex flex-wrap">
                   {slide.flags.map((flag, idx) => (
-                    <div key={idx} className="group flex  my-4 flex-col items-center  mx-4 cursor-pointer">
+                    <div key={idx} className="group flex  flex-col items-center  mx-4 cursor-pointer">
                       <a href="">
                         <img
                           src={flag.src}
                           alt={flag.name}
                           title={flag.name}
-                          className="w-[80px] h-[55px] shadow-xl object-cover rounded-sm border-[5px] border-gold-main transition-transform duration-300 group-hover:scale-110"
+                          className="w-[70px] h-[45px] shadow-xl mt-4 object-cover rounded-sm border-[5px] border-gold-main transition-transform duration-300 group-hover:scale-110"
                         />
-                        <p className="text-lg text-center text-black font-medium group-hover:text-red-500 transition-colors duration-300">
+                        <p className="text-sm text-center text-black font-medium group-hover:text-red-500 transition-colors duration-300">
                           {flag.name}
                         </p>
                       </a>
@@ -175,7 +175,7 @@ const Carousel = ({ interval = 5000 }) => {
           ))}
         </div>
         {/* Dots */}
-        <div className="absolute bottom-10 sm:bottom-12 md:bottom-16 left-1/2 transform -translate-x-1/2 flex gap-1 sm:gap-2">
+        <div className="absolute bottom-10 sm:bottom-12 md:bottom-20 left-1/2 transform -translate-x-1/2 flex gap-1 sm:gap-2">
           {carousel.map((_, index) => (
             <div
               key={index}

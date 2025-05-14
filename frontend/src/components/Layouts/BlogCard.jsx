@@ -1,50 +1,55 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import EditIcon from '@mui/icons-material/Edit';
 const BlogCard = ({ blog }) => {
     const navigate = useNavigate();
-
+    // console.log(blog.content,"???????????????????????????????????");
+    
+    const getTruncatedContent = (text, maxChars = 500) => {
+        if (!text) return '';
+        return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+    };
     return (
-        <div onClick={() => navigate(`/blog/${blog._id}`)} className="p-4 cursor-pointer border  shadow-lg rounded-lg flex flex-col">
-            <div className="w-full rounded-lg overflow-hidden">
-                <div className="w-full h-[250px] relative overflow-hidden rounded-lg">
-                    <img
-                        src={blog?.thumbnailURL}
-                        alt={blog?.title}
-                        className="w-full h-full object-cover rounded-lg"
-                    />
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden rounded-lg">
-                        <div className="shine-bar"></div>
+        <div
+            onClick={() => navigate(`/blog/${blog._id}`)}
+            className="cursor-pointer shadow-lg rounded-xl overflow-hidden flex flex-col md:flex-row bg-white hover:shadow-2xl transition-shadow duration-300 "
+            // className=''
+        >
+            {/* Thumbnail */}
+            <div className=" h-64 md:h-auto relative">
+                <img
+                    src={blog?.thumbnailURL}
+                    alt={blog?.title}
+                    className="w-[500px] h-[250px] "
+                />
+                <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
+                    <div className="shine-bar"></div>
+                </div>
+            </div>
+
+            {/* Content */}
+            <div className=" md:w-[100%] pl-5 pr-1   ">
+                <h1 className="font-semibold text-xl md:text-xl text-black hover:text-red-500  transition-colors duration-200 mb-2 line-clamp-2">
+                    {blog?.title}
+                </h1>
+                <p className="text-l  text-gray-700 mb-3">
+                    {getTruncatedContent(blog?.content)}
+                </p>
+
+                <div className='flex gap-20'>
+                    <div className='flex'>
+                        <DateRangeIcon className='text-gold-main '  />
+                        <p className='text-sm mt-[2px] ml-1 text-gold-main'>Feb 5,2025</p>
+                    </div>
+
+                    <div className='flex'>
+                        <EditIcon className='text-gold-main '  />
+                        <p className='text-sm mt-[2px] ml-1 text-gold-main'>Feb 5,2025</p>
                     </div>
                 </div>
 
             </div>
-            <div className=" flex flex-col justify-between space-y-6 flex-grow">
-                <div className="flex-grow">
-                    <p >
-                        {blog?.title?.split(" ").slice(0, 50).join(" ")}
-                        {blog?.title?.split(" ").length > 50 && "..."}
-
-
-                        {(blog?.title?.split(" ").length > 50 || blog?.content?.split(" ").length > 100) && (
-                            <div className="font-semibold">
-                                <button
-                                    onClick={() => navigate(`/blog/${blog._id}`)}
-                                    className='mx-[-18px]'
-                                    style={{ backgroundColor: 'transparent', color: '#db7e19 ' }}
-                                >
-                                    Read More
-                                </button>
-                            </div>
-                        )}
-                    </p>
-
-
-                </div>
-
-
-            </div>
-
         </div>
     );
 };
