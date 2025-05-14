@@ -388,13 +388,13 @@ export default function PublicNavBar() {
                                             <div className="w-4 h-4 left-7 absolute mt-1 bg-white rotate-45"></div>
                                         </div>
                                         <div className="  myshadow bg-white w-[500px] p-5
-                                            grid grid-cols-3 gap-6">
+                                            grid grid-cols-3 ">
                                             {link.sublinks?.map((sublink, index) => (
                                                 <div key={index}>
-                                                    <li className="font-semibold text-x text-gray-600 my-2.5">
+                                                    <li className="font-semibold text-x text-gray-600 ">
                                                         <Link
                                                             to={sublink.link}
-                                                            className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row"
+                                                            className="hover:bg-blue-100  border-b p-2 m-1   space-x-2 flex flex-row"
                                                         >
                                                             <img
                                                                 className="object-contained h-[25px] w-[25px]"

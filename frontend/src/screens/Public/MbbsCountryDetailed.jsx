@@ -91,11 +91,14 @@ export default function MbbsCountryDetailed() {
         animate={inViewBanner ? { opacity: 1 } : {}}
         transition={{ duration: 1 }}
       >
-        <img
-          src={singleCountry?.bannerURL}
-          alt="Country Banner"
-          className="w-full h-[250px] sm:h-[350px] md:h-[550px] object-cover object-left"
-        />
+<div className="w-full h-[200px] sm:h-[100%] md:h-[100%] lg:h-[100%] overflow-hidden">
+  <img
+    src={singleCountry?.bannerURL}
+    alt="Country Banner"
+    className="w-full h-full object-cover object-center"
+  />
+</div>
+
 
       </motion.div>
 
@@ -122,7 +125,7 @@ export default function MbbsCountryDetailed() {
           {singleCountry?.sections?.length > 0 && (
             <motion.div
               ref={refSections}
-              className="max-w-7xl mx-auto mt-12 space-y-16"
+              className="max-w-7xl  mx-auto mt-12 space-y-16"
               initial={{ opacity: 0 }}
               animate={inViewSections ? { opacity: 1 } : {}}
               transition={{ duration: 1 }}
@@ -131,14 +134,16 @@ export default function MbbsCountryDetailed() {
                 const isReversed = index % 2 === 0;
                 return (
                   <div key={section._id}>
-                    <h2 className="text-2xl sm:text-3xl font-bold text-blue-main mb-4">
+                    <h2 className="text-2xl  sm:text-3xl font-bold text-blue-main mb-4">
                       {section.title}
                     </h2>
                     <div
-                      className={`flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} items-center gap-4`}
+                      className={`flex flex-col md:flex-row items-center `}
+
+                      // className={`flex flex-col md:flex-row ${isReversed ? 'md:flex-row-reverse' : ''} items-center `}
                     >
                       <motion.div
-                        className="md:w-1/2"
+                        className="md:w-1/2 "
                         initial={{ opacity: 0, x: isReversed ? 100 : -100 }}
                         animate={inViewSections ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 1 }}
@@ -146,7 +151,7 @@ export default function MbbsCountryDetailed() {
                         <div className="relative">
                           <div
                             ref={scrollRef}
-                            className="prose prose-sm hello h-[300px] overflow-y-scroll overflow-x-hidden scrollbar-hide text-black px-3"
+                            className="prose  prose-sm hello h-[300px] overflow-y-scroll overflow-x-hidden scrollbar-hide text-black "
                             dangerouslySetInnerHTML={{ __html: truncateText(section.description, 110) }}
                           />
 
@@ -155,7 +160,7 @@ export default function MbbsCountryDetailed() {
                             onClick={scrollDown}
                             className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-sm bg-gold-main text-white p-2 rounded-full shadow-lg animate-bounce"
                           >
-                            Click to now more
+                            Scroll Up   ↑
                           </button>
                         </div>
                       </motion.div>
@@ -166,12 +171,14 @@ export default function MbbsCountryDetailed() {
                         animate={inViewSections ? { opacity: 1, x: 0 } : {}}
                         transition={{ duration: 1 }}
                       >
-                        <motion.img
+
+                        <img src={section.url}  alt={section.title}   className="w-230 h-100  "/>
+                        {/* <motion.img
                           src={section.url}
                           alt={section.title}
-                          className="w-full h-80 object-cover rounded-lg shadow-lg"
+                          className="w-230 h-100  "
                           whileHover={{ scale: 1.05 }}
-                        />
+                        /> */}
                       </motion.div>
                     </div>
                   </div>
