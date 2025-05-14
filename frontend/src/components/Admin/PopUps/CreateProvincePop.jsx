@@ -137,6 +137,8 @@ export default function CreateProvincePop({ open, handleClose }) {
   const onSubmit = async () => {
     try {
       const res = await createProvince(formValues).unwrap();
+      console.log(res,"-------------------------------------------------------------");
+      
       dispatch(AddProvince(res));
       handleClose();
       toast.success('Province Added Successfully');

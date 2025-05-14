@@ -2,6 +2,14 @@ import mongoose from 'mongoose';
 
 const webinarSchema = mongoose.Schema(
     {
+        trainer_name:{
+            type:String,
+            required:true
+        },
+        trainer_profession:{
+            type:String,
+            // required:true
+        },
         title:{
             type:String,
             required:true
@@ -14,13 +22,19 @@ const webinarSchema = mongoose.Schema(
             type:String,
             default:""
         },
-        day: {
+        weekday: {
             type: String,
-            
+            required : true
         },
-        time:{
+        timeStart:{
             type:String,
-            default:""
+            default:"",
+            required : true
+        },
+        timeEnd:{
+            type:String,
+            default:"",
+            required : true
         }
     },
     {

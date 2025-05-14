@@ -295,6 +295,13 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body:data
             }),
         }),
+        sendWebinarLinkToMail:builder.mutation({
+            query:(data)=>({
+                url:`${USERS_URL}/webinar/register`,
+                method:'POST',
+                body:data
+            }),
+        }),
         CreateMedia: builder.mutation({
             query:(data)=>({
                 url: `${USERS_URL}/media`,
@@ -669,7 +676,7 @@ export const {useCreateBannerMutation,useGetAllBannerMutation,useDeleteBannerMut
     useCreateProvinceMutation,useFetchProvinceMutation,useDeleteProvinceMutation,useFetchOneProvinceMutation,useUpdateProvinceMutation,
     useCreateUniversityMutation,useFetchUniversityMutation,useDeleteUniversityMutation,useFetchOneUniversityMutation,useUpdateUniversityMutation,
     useCreateCourseMutation,useFetchCourseMutation,useFetchOneCourseMutation,useAllCourseMutation,useDeleteCourseMutation, useLinkFetchMutation,useUpdateCourseOneMutation,
-    usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,
+    usePostWebinarMutation,useAllWebinarMutation,useDeleteWebinarMutation,useCreateWebinarMutation,useSendWebinarLinkToMailMutation,
     useCreateMediaMutation,useFetchMediaMutation,useDeleteMediaMutation,
     useCounsellerCreateLeadMutation,useCounsellerFetchLeadMutation,useCounsellerDeleteLeadMutation,
     useCreateLeadMutation,useGetLeadMutation,useHomeLeadDeleteMutation,

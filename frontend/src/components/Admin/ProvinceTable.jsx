@@ -197,6 +197,8 @@ function ProvinceTable() {
         const fetchData = async () => {
             try {
                 const result = await FetchProvince().unwrap();
+                console.log(result,"+/+/+/+/+/+/+/+/+/+/+/+/+/+/+/+/+/+/+");
+                
                 const result1 = await CountryFetch().unwrap();
                 dispatch(FetchCountry(result1));
                 dispatch(FetchProvinces(result));

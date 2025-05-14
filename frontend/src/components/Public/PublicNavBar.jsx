@@ -37,15 +37,15 @@ const initialLinks = [
         name: "RESOURCES",
         submenu: true,
         sublinks: [
-            { name: "ABOUT US", link: "/aboutus", path: "/aboutus",flagURL:about },
-            { name: "BLOG", link: "/blog", path: "/blog" ,flagURL:blog},
-            { name: "CONTACT US", link: "/contactus", path: "/contactus",flagURL:contact },
+            { name: "ABOUT US", link: "/aboutus", path: "/aboutus", flagURL: about },
+            { name: "BLOG", link: "/blog", path: "/blog", flagURL: blog },
+            { name: "CONTACT US", link: "/contactus", path: "/contactus", flagURL: contact },
         ]
     }, {
         name: "MEDICAL STUDY IN ABROAD",
         submenu: true,
         sublinks: [
-            
+
         ]
     },
     {
@@ -108,7 +108,7 @@ const initialLinks = [
         path: '/country'
     },
 
-    { name: "SERVICE", link: "/services", path: "/services" },
+    // { name: "SERVICE.", link: "/services", path: "/services" },
 
 ];
 
@@ -167,8 +167,8 @@ export default function PublicNavBar() {
 
                 const countryResult = await CountryFetch().unwrap();
                 dispatch(FetchCountry(countryResult));
-                console.log(countryResult,"///////////////////////////////////////");
-                
+                console.log(countryResult, "///////////////////////////////////////");
+
 
                 const linkResult = await LinkFetch().unwrap();
                 dispatch(FetchedLinked(linkResult));
@@ -187,15 +187,15 @@ export default function PublicNavBar() {
                         return {
                             ...link,
                             sublinks: countryResult
-                              .filter(country => country.hasOwnProperty('mbbsAbroad') && country.mbbsAbroad == false)
-                              .map(country => ({
-                                name: country.name,
-                                link: `/country/${country._id}`,
-                                flagURL: country.flagURL
-                              }))
-                          };
-                          
-                    }else if(link.name === "MEDICAL STUDY IN ABROAD"){
+                                .filter(country => country.hasOwnProperty('mbbsAbroad') && country.mbbsAbroad == false)
+                                .map(country => ({
+                                    name: country.name,
+                                    link: `/country/${country._id}`,
+                                    flagURL: country.flagURL
+                                }))
+                        };
+
+                    } else if (link.name === "MEDICAL STUDY IN ABROAD") {
                         return {
                             ...link,
                             sublinks: linkResult.map(item => ({
@@ -204,8 +204,8 @@ export default function PublicNavBar() {
                                 flagURL: item.flagURL ? item?.flagURL : "https://i.imgur.com/0L7BLOw.png"
                             }))
                         };
-                    } 
-                    else if (link.name === "MEDICAL STUDY") { 
+                    }
+                    else if (link.name === "MEDICAL STUDY") {
                         const updatedTabs = link.tabs.map(tab => {
                             if (tab.name === "ABROAD") {
                                 return {
@@ -336,33 +336,18 @@ export default function PublicNavBar() {
                         </IconButton>
                     </div>
 
-                        <ul className="hidden md:flex">
-                            {menuLinks?.map((link, index) => (
-                                <li
-                                    key={link.name}
-                                    className="relative flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none">
-                                    {link.path ? (
-                                        <Link to={link.path}>
-                                            <h1
-                                                className="text-sm text-text-color flex justify-start items-center group"
-                                                onClick={() => {
-                                                    heading !== link.name ? setHeading(link.name) : setHeading("");
-                                                    setSubHeading("");
-                                                }}
-                                            >
-                                                {link.name}
-                                                <span className="text-sm md:hidden inline flex items-center">
-                                                {heading === link.name ? <ExpandMore /> : <ExpandLess />}
-                                            </span>
-                                            <span className="text-sm md:block hidden group-hover:rotate-180">
-                                                {link?.submenu && <ExpandLess />}
-                                            </span>
-                                            
-                                            </h1>
-                                        </Link>
-                                    ) : (
+                    <ul className="hidden md:flex">
+                        <li>  <Link to="/"  className="font-semibold text-gold-main relative flex items-center text-left md:cursor-pointer group px-4  first:border-none  mt-2">HOME</Link> </li>
+                        <li>  <Link to="/services" className="relative flex items-center text-left text-gray-600 md:cursor-pointer group px-4  border-l  border-gray-200 h-[100%] ">SERVICE</Link> </li>
+
+                        {menuLinks?.map((link, index) => (
+                            <li
+                                key={link.name}
+                                className="relative text-text-color flex items-center text-left md:cursor-pointer group px-4 border-l border-500 first:border-none">
+                                {link.path ? (
+                                    <Link to={link.path}>
                                         <h1
-                                            className="py-2 text-sm text-text-color flex justify-start items-center group"
+                                            className="text-sm text-text-color flex justify-start items-center group"
                                             onClick={() => {
                                                 heading !== link.name ? setHeading(link.name) : setHeading("");
                                                 setSubHeading("");
@@ -375,73 +360,92 @@ export default function PublicNavBar() {
                                             <span className="text-sm md:block hidden group-hover:rotate-180">
                                                 {link?.submenu && <ExpandLess />}
                                             </span>
+
                                         </h1>
-                                    )}
+                                    </Link>
+                                ) : (
+                                    <h1
+                                        className="py-2 text-sm text-text-color flex justify-start items-center group"
+                                        onClick={() => {
+                                            heading !== link.name ? setHeading(link.name) : setHeading("");
+                                            setSubHeading("");
+                                        }}
+                                    >
+                                        {link.name}
+                                        <span className="text-sm md:hidden inline flex items-center">
+                                            {heading === link.name ? <ExpandMore /> : <ExpandLess />}
+                                        </span>
+                                        <span className="text-sm md:block hidden group-hover:rotate-180">
+                                            {link?.submenu && <ExpandLess />}
+                                        </span>
+                                    </h1>
+                                )}
 
-                                    {/* Submenu */}
-                                    {link?.submenu && (
-                                        <div className=" absolute top-7  mx-12  hidden w-[800px] z-[50] group-hover:md:block hover:md:block">
-                                            <div className="py-3">
-                                                <div className="w-4 h-4 left-7 absolute mt-1 bg-white rotate-45"></div>
-                                            </div>
-                                            <div className="  myshadow bg-white w-[500px] p-5
-                                            grid grid-cols-3 gap-6">
-                                                {link.sublinks?.map((sublink, index) => (
-                                                    <div key={index}>
-                                                        <li className="font-semibold text-x text-gray-600 my-2.5">
-                                                            <Link
-                                                                to={sublink.link}
-                                                                className="hover:bg-blue-100 rounded-md p-2 space-x-2 flex flex-row"
-                                                            >
-                                                                <img
-                                                                    className="object-contained h-[25px] w-[25px]"
-                                                                    src={sublink?.flagURL}
-                                                                />
-                                                                <h5>{sublink?.name}</h5>
-                                                                
-                                                                
-                                                            </Link>
-                                                        </li>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                {/* Submenu */}
+                                {link?.submenu && (
+                                    <div className=" absolute top-7  mx-12  hidden w-[800px] z-[50] group-hover:md:block hover:md:block">
+                                        <div className="py-3">
+                                            <div className="w-4 h-4 left-7 absolute mt-1 bg-white rotate-45"></div>
                                         </div>
-                                    )}
-
-                                    {/* Special MEDICAL STUDY submenu */}
-                                    {link.name === "MEDICAL STUDY" && (
-                                        <div style={{ border: "0px solid red" }} className="myshadow absolute top-12 my-1 mx-9 hidden w-[800px] z-[50] bg-white group-hover:md:block hover:md:block">
-                                            <Tabs
-                                                value={tabValue}
-                                                onChange={handleTabChange}
-                                                aria-label="medical tabs"
-                                                className="p-5 space-between"
-                                            >
-                                                {link.tabs.map((tab, index) => (
-                                                    <Tab className="text-xs font-bold" key={index} label={tab.name} />
-                                                ))}
-                                            </Tabs>
-                                            <div className="p-5 grid grid-cols-4 gap-4">
-                                                {link.tabs[tabValue]?.sublinks.map((sublink, index) => (
-                                                    <div key={index}>
-                                                        <li className="text-xs hover:bg-blue-100 p-2 rounded-md text-gray-600 my-2.5">
-                                                            <Link to={sublink.link} className="flex space-x-2 flex-row">
+                                        <div className="  myshadow bg-white w-[500px] p-5
+                                            grid grid-cols-3 ">
+                                            {link.sublinks?.map((sublink, index) => (
+                                                <div key={index}>
+                                                    <li className="font-semibold text-x text-gray-600 ">
+                                                        <Link
+                                                            to={sublink.link}
+                                                            className="hover:bg-blue-100  border-b p-2 m-1   space-x-2 flex flex-row"
+                                                        >
                                                             <img
-                                                                    className="object-contained h-[25px] w-[25px]"
-                                                                    src={sublink?.flagURL}
-                                                                />
-                                                                <span>{sublink?.name}</span>
-                                                                
-                                                            </Link>
-                                                        </li>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                                                className="object-contained h-[25px] w-[25px]"
+                                                                src={sublink?.flagURL}
+                                                            />
+                                                            <h5>{sublink?.name}</h5>
+
+
+                                                        </Link>
+                                                    </li>
+                                                    
+                                                </div>
+                                            ))}
                                         </div>
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
+                                    </div>
+                                )}
+
+                                {/* Special MEDICAL STUDY submenu */}
+                                {link.name === "MEDICAL STUDY" && (
+                                    <div style={{ border: "0px solid red" }} className="myshadow absolute top-12 my-1 mx-9 hidden w-[800px] z-[50] bg-white group-hover:md:block hover:md:block">
+                                        <Tabs
+                                            value={tabValue}
+                                            onChange={handleTabChange}
+                                            aria-label="medical tabs"
+                                            className="p-5 space-between"
+                                        >
+                                            {link.tabs.map((tab, index) => (
+                                                <Tab className="text-xs font-bold" key={index} label={tab.name} />
+                                            ))}
+                                        </Tabs>
+                                        <div className="p-5 grid grid-cols-4 gap-4">
+                                            {link.tabs[tabValue]?.sublinks.map((sublink, index) => (
+                                                <div key={index}>
+                                                    <li className="text-xs hover:bg-blue-100 p-2 rounded-md text-gray-600 my-2.5">
+                                                        <Link to={sublink.link} className="flex space-x-2 flex-row">
+                                                            <img
+                                                                className="object-contained h-[25px] w-[25px]"
+                                                                src={sublink?.flagURL}
+                                                            />
+                                                            <span>{sublink?.name}</span>
+
+                                                        </Link>
+                                                    </li>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </li>
+                        ))}
+                    </ul>
 
 
                     {/* Login Button */}
@@ -453,83 +457,73 @@ export default function PublicNavBar() {
                 </div>
 
                 {/* Mobile Drawer Menu */}
-               {/* Mobile Drawer Menu */}
-               <Drawer anchor="left" open={isOpen} onClose={() => setIsOpen(false)}>
-  <div className="flex justify-end p-2">
-    <IconButton onClick={() => setIsOpen(false)}>
-      <Close />
-    </IconButton>
-  </div>
+                {/* Mobile Drawer Menu */}
+                <Drawer anchor="left" open={isOpen} onClose={() => setIsOpen(false)}>
+                    <div className="flex justify-between items-center px-4 py-3">
+                        <h2 className="text-lg font-semibold">Menu</h2>
+                        <IconButton onClick={() => setIsOpen(false)}>
+                            <Close />
+                        </IconButton>
+                    </div>
 
-  <div className="p-4 w-[250px]">
-    {menuLinks?.map((link, index) => (
-      <Accordion
-        key={index}
-        expanded={expanded === index}
-        onChange={handleAccordionToggle(index)}
-      >
-        <AccordionSummary
-          expandIcon={expanded === index ? <ExpandLess /> : <ExpandMore />}
-        >
-          <Typography>{link.name}</Typography>
-        </AccordionSummary>
+                    <div className="p-4 w-[280px] space-y-2">
+                        <div><Link onClick={() => setIsOpen(false)} to="/" className="pl-4 font-semibold">HOME</Link></div>
+                        {menuLinks?.map((link, index) => (
+                            link.submenu ? (
+                                <Accordion
+                                    key={index}
+                                    expanded={expanded === index}
+                                    onChange={handleAccordionToggle(index)}
+                                    disableGutters
+                                    elevation={0}
+                                    square
+                                    sx={{
+                                        backgroundColor: 'transparent',
+                                        boxShadow: 'none',
+                                        '&::before': { display: 'none' },
+                                    }}
+                                >
+                                    <AccordionSummary
+                                        expandIcon={expanded === index ? <ExpandLess /> : <ExpandMore />}
+                                        className="text-sm font-medium px-1"
+                                    >
+                                        {link.name}
+                                    </AccordionSummary>
 
-        <AccordionDetails>
-          {/* MEDICAL STUDY with Tabs */}
-          {link.name === "MEDICAL STUDY" ? (
-            <>
-              <Tabs
-                value={tabValue}
-                onChange={(e, newValue) => setTabValue(newValue)}
-                variant="scrollable"
-                scrollButtons="auto"
-              >
-                {link.tabs.map((tab, i) => (
-                  <Tab key={i} label={tab.name} />
-                ))}
-              </Tabs>
+                                    <AccordionDetails className="space-y-1 pl-2">
+                                        {link.sublinks?.map((sublink, i) => (
+                                            <Link
+                                                key={i}
+                                                to={sublink.link}
+                                                className="flex items-center gap-2 px-2 py-1 hover:bg-gray-100 rounded-md text-sm transition"
+                                                onClick={() => setIsOpen(false)}
+                                            >
+                                                <img
+                                                    src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
+                                                    alt="flag"
+                                                    className="h-5 w-5 object-cover rounded-full"
+                                                />
+                                                <span>{sublink.name}</span>
+                                            </Link>
+                                        ))}
+                                    </AccordionDetails>
+                                </Accordion>
+                            ) : (
+                                <Link
+                                    key={index}
+                                    to={link.link || link.path || "/"}
+                                    className="block px-2 py-2 text-sm font-medium hover:bg-gray-100 rounded-md transition"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    {link.name}
+                                </Link>
+                            )
+                        ))}
+                         <div><Link to="/services" onClick={() => setIsOpen(false)} className="pl-4 font-semibold">SERVICE</Link></div>
+                    </div>
+                </Drawer>
 
-              <div className="mt-3">
-                {link.tabs[tabValue]?.sublinks?.map((sublink, i) => (
-                  <Link
-                    key={i}
-                    to={sublink.link}
-                    className="flex items-center gap-2 py-1 text-sm"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <img
-                      src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
-                      alt="flag"
-                      className="h-[20px] w-[20px] object-contain rounded"
-                    />
-                    <span>{sublink.name}</span>
-                  </Link>
-                ))}
-              </div>
-            </>
-          ) : (
-            // Other Links with Submenu
-            link.sublinks?.map((sublink, i) => (
-              <Link
-                key={i}
-                to={sublink.link}
-                className="flex items-center gap-2 py-1 text-sm"
-                onClick={() => setIsOpen(false)}
-              >
-                <img
-                  src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
-                  alt="flag"
-                  className="h-[20px] w-[20px] object-contain rounded"
-                />
-                <span>{sublink.name}</span>
-              </Link>
-            ))
-          )}
-        </AccordionDetails>
-      </Accordion>
-    ))}
-  </div>
-</Drawer>
+
 
             </div>
             {/* Counselling Modal */}

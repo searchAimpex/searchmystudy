@@ -17,27 +17,30 @@ const storage = getStorage(app);
 
 function CreateWebinarPop({ open, handleClose }) {
   const [formValues, setFormValues] = useState({
+    trainer_name: '',
+    trainer_profession: '',
     title: '',
-    imageFile: null,
+    weekday: '',
     date: '',
-    day: '',
-    time: '',
+    timeStart: '',
+    timeEnd: '',
+    imageFile: null,
   });
   const [isValid, setIsValid] = useState(false);
-  const [imageValid, setImageValid] = useState(false); // For image validation
+  const [imageValid, setImageValid] = useState(false);
   const [CreateWebinar, { isSuccess }] = useCreateWebinarMutation();
   const dispatch = useDispatch();
 
   const validateForm = () => {
-    const { title, date, day, time, imageFile } = formValues;
-    // All fields must be filled and the image must be valid
-    if (title && date && day && time && imageFile && imageValid) {
+    const { trainer_name, trainer_profession, title, weekday, date, timeStart, timeEnd, imageFile } = formValues;
+    if (trainer_name && trainer_profession && title && weekday && date && timeStart && timeEnd && imageValid) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
   };
 
+  // Handle input changes
   const handleChange = (event) => {
     const { name, value, type, files } = event.target;
 
@@ -57,6 +60,7 @@ function CreateWebinarPop({ open, handleClose }) {
     validateForm(); // Validate the form after every change
   };
 
+  // Image upload function
   const uploadImage = async (file) => {
     const storageRef = ref(storage, `webinars/${file.name}`);
     await uploadBytes(storageRef, file);
@@ -64,7 +68,7 @@ function CreateWebinarPop({ open, handleClose }) {
     return url;
   };
 
-  // Function to validate image dimensions
+  // Validate image dimensions (310x250)
   const validateImage = (file) => {
     const img = new Image();
     const reader = new FileReader();
@@ -74,39 +78,44 @@ function CreateWebinarPop({ open, handleClose }) {
     };
 
     img.onload = () => {
-      if (img.height >= 250 && img.width >= 310) {
-        setImageValid(true); // Enable submit button if image is valid
+      if (img.width === 310 && img.height === 250) {
+        setImageValid(true); // Image is valid
         toast.success('Valid image uploaded!');
       } else {
-        setImageValid(false); // Disable submit button if image is invalid
+        setImageValid(false); // Image is invalid
         toast.error('Image dimensions must be 310x250 pixels.');
       }
-      validateForm(); // Call validation to check the entire form
+      validateForm(); // Revalidate the form
     };
 
     img.onerror = () => {
       setImageValid(false);
       toast.error('Invalid image file.');
-      validateForm();
+      validateForm(); // Revalidate the form
     };
 
     reader.readAsDataURL(file);
   };
 
+  // Submit the form
   const onSubmit = async () => {
     try {
       if (formValues.imageFile) {
-        const imageURL = await uploadImage(formValues.imageFile);
+        const imageURL1 = await uploadImage(formValues.imageFile);
+  
         const webinarData = {
+          trainer_name: formValues.trainer_name,
+          trainer_profession: formValues.trainer_profession,
           title: formValues.title,
+          weekday: formValues.weekday,
           date: formValues.date,
-          day: formValues.day,
-          time: formValues.time,
-          imageURL,
+          timeStart: formValues.timeStart,
+          timeEnd: formValues.timeEnd,
+          imageURL:imageURL1,
         };
-
-        const res = await CreateWebinar(webinarData).unwrap();
-        dispatch(CreateWebinar({ ...res })); // Add action creator for adding the webinar to Redux store
+        // setFormValues((prev)=>({...prev,imageFile:imageURL}))
+        // ✅ Call the mutation once and don't dispatch again
+        await CreateWebinar(webinarData).unwrap();
         handleClose(); // Close the dialog after submission
         toast.success('Webinar Added Successfully');
       } else {
@@ -114,9 +123,10 @@ function CreateWebinarPop({ open, handleClose }) {
       }
     } catch (error) {
       console.error('Error adding webinar:', error);
-      toast.error('Failed to add webinar');
+      toast.error('All fields are required!');
     }
   };
+  
 
   useEffect(() => {
     if (isSuccess) {
@@ -125,61 +135,122 @@ function CreateWebinarPop({ open, handleClose }) {
   }, [isSuccess]);
 
   return (
-    <div>
-      <Dialog fullWidth={true} open={open} onClose={handleClose}>
-        <DialogTitle>Add Webinar</DialogTitle>
-        <DialogContent>
-          <DialogContentText>You can add a webinar.</DialogContentText>
-          <Box
-            noValidate
-            component="form"
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              m: 'auto',
-              width: 'fit-content',
-            }}
-          >
+    <Dialog fullWidth={true} open={open} onClose={handleClose}>
+      <DialogTitle>Add Webinar</DialogTitle>
+      <DialogContent>
+        <DialogContentText>You can add a webinar.</DialogContentText>
+        <Box
+          component="form"
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            m: 'auto',
+            width: 'fit-content',
+          }}
+        >
+          {/* Title */}
+          <TextField
+            id="trainer_name"
+            name="trainer_name"
+            label="Trainer Name"
+            variant="standard"
+            value={formValues.trainer_name}
+            onChange={handleChange}
+            error={!formValues.trainer_name}
+            helperText={!formValues.trainer_name && 'Trainer Name is required'}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            id="trainer_profession"
+            name="trainer_profession"
+            label="Trainer Profession"
+            variant="standard"
+            value={formValues.trainer_profession}
+            onChange={handleChange}
+            error={!formValues.trainer_profession}
+            // helperText={!formValues.trainer_profession && 'Trainer Profession is required'}
+            fullWidth
+            margin="normal"
+          />
+
+
+          <TextField
+            id="title"
+            name="title"
+            label="Title"
+            variant="standard"
+            value={formValues.title}
+            onChange={handleChange}
+            error={!formValues.title}
+            helperText={!formValues.title && 'Title is required'}
+            fullWidth
+            margin="normal"
+          />
+
+          {/* Weekday */}
+          <TextField
+            id="weekday"
+            name="weekday"
+            label="Weekday"
+            variant="standard"
+            value={formValues.weekday}
+            onChange={handleChange}
+            error={!formValues.weekday}
+            helperText={!formValues.weekday && 'Weekday is required'}
+            fullWidth
+            margin="normal"
+          />
+
+          {/* Date */}
+          <TextField
+            id="date"
+            name="date"
+            label="Select Date"
+            type="date"
+            variant="standard"
+            value={formValues.date}
+            onChange={handleChange}
+            error={!formValues.date}
+            className="w-full"
+            InputLabelProps={{ shrink: true }}
+            margin="normal"
+          />
+
+          {/* Time Start and End */}
+          <div className="w-full flex flex-col sm:flex-row mt-4 gap-4">
             <TextField
-              id="title"
-              name="title"
-              label="Title"
+              id="timeStart"
+              name="timeStart"
+              label="Start Time"
+              type="time"
               variant="standard"
-              value={formValues.title}
+              value={formValues.timeStart}
               onChange={handleChange}
-              error={!formValues.title}
-              helperText={!formValues.title && 'Title is required'}
+              error={!formValues.timeStart}
+              className="w-full"
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
             />
+
             <TextField
-              id="date"
-              name="date"
-              label="Date"
+              id="timeEnd"
+              name="timeEnd"
+              label="End Time"
+              type="time"
               variant="standard"
-              value={formValues.date}
+              value={formValues.timeEnd}
               onChange={handleChange}
-              error={!formValues.date}
-              helperText={!formValues.date && 'Date is required'}
+              error={!formValues.timeEnd}
+              className="w-full"
+              InputLabelProps={{ shrink: true }}
+              margin="normal"
             />
-            <TextField
-              id="day"
-              name="day"
-              label="Day"
-              variant="standard"
-              value={formValues.day}
-              onChange={handleChange}
-              error={!formValues.day}
-              helperText={!formValues.day && 'Day is required'}
-            />
-            <TextField
-              id="time"
-              name="time"
-              label="Time"
-              variant="standard"
-              value={formValues.time}
-              onChange={handleChange}
-              error={!formValues.time}
-              helperText={!formValues.time && 'Time is required'}
-            />
+          </div>
+
+          {/* Image File */}
+          <div className="mt-4">
             <TextField
               id="imageFile"
               name="imageFile"
@@ -189,20 +260,20 @@ function CreateWebinarPop({ open, handleClose }) {
               onChange={handleChange}
               InputLabelProps={{ shrink: true }}
               error={!formValues.imageFile || !imageValid}
-              helperText={(!formValues.imageFile || !imageValid) && 'Valid image (310x250 px) is required'}
+              fullWidth
+              margin="normal"
             />
-            <p className='text-red-300 text-sm'>Image should be 310*250 px</p>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          {/* Disable submit button until form is valid */}
-          <Button onClick={onSubmit} disabled={!isValid}>
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+            <p className="text-red-300 text-sm">Image should be 310x250 px</p>
+          </div>
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={onSubmit} >
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 

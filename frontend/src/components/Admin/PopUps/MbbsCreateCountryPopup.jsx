@@ -130,9 +130,18 @@ function MbbsCreateCountryPopup({ open, onClose }) {
   };
 
   const onSubmit = async () => {
+try {
+  if(formValues.name !== "" && formValues.bannerURL !== "" && formValues.bullet !== "" && formValues.mbbsAbroad !== "" ){
     const res = await createCountry(formValues).unwrap();
     dispatch(AddCountry({ ...res }));
-    onClose();
+    // onClose();
+  }else{
+    toast.error("All fields are required");
+    
+  }
+} catch (error) {
+  toast.error(error.data.message)
+}
   };
 
   const handleCancelled = (e) => {
@@ -256,6 +265,7 @@ function MbbsCreateCountryPopup({ open, onClose }) {
             onChange={handleChange}
             className="mb-2"
           />
+          <p  className="text-red-300 text-sm font-bold">Only 200 hundered words are allowed.</p>
 
           {/* Sections */}
           {formValues.sections.map((section, index) => (

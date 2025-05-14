@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 
 function WhyChoseUs() {
   return (
-    <div className='bg-[#E2ECF4]'>
+    <div className='bg-[#E2ECF4] my-[130px]'>
       <div className='py-10 px-5 flex flex-col space-y-6'>
         <div className='flex flex-col items-center space-y-3'>
 

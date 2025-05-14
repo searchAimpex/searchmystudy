@@ -7,6 +7,9 @@ import Blog from '../models/blogModel.js';
 import Country from '../models/countryModel.js';
 import Province from '../models/provinceModel.js';
 import University from '../models/universityModel.js';
+import mongoose from 'mongoose'; // ✅ ES module-compatible
+
+
 import Course from '../models/courseModel.js';
 import Webinar from '../models/webinarsModel.js';
 import Media from '../models/mediaModel.js';
@@ -28,6 +31,8 @@ import Transaction from '../models/transactionModel.js';
 import Nav from '../models/navModel.js';
 import Files from '../models/fileModel.js';
 import Video from '../models/videoModel.js';
+import nodemailer from 'nodemailer';
+
 // @desc    Admin user & 
 // @route   POST /api/admin/CreateBanner
 // @access  Admin 
@@ -434,26 +439,34 @@ const deleteBlog = asyncHandler(async (req, res) => {
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections,mbbsAbroad, flagURL,elegiblity,bullet ,faq,MbbsSections} = req.body;
+  const { name, bannerURL, description, sections, mbbsAbroad, flagURL, elegiblity, bullet, faq, MbbsSections } = req.body;
 
+  // Check if country with the same name already exists
+  const existingCountry = await Country.findOne({ name });
+
+  if (existingCountry) {
+    // If country already exists, return an error message
+    return res.status(400).json({ message: 'Country with this name already exists.' });
+  }
+
+  // If no existing country, create a new one
   const country = new Country({
     name,
     bannerURL,
     description,
-
     sections,
     mbbsAbroad,
     flagURL,
     elegiblity,
     bullet,
     faq,
-    MbbsSections
-    
+    MbbsSections,
   });
-  console.log(country,"+++++++++++++++++++++");
-  
 
+  // Save the new country to the database
   const createdCountry = await country.save();
+
+  // Send back the created country
   res.status(201).json(createdCountry);
 });
 
@@ -477,14 +490,33 @@ const getAllCountries = asyncHandler(async (req, res) => {
 // @desc    Get single country
 // @route   GET /countries/:id
 // @access  Public
+// const getCountryById = asyncHandler(async (req, res) => {
+//   const country = await Country.findById(req.params.id).populate('Province')
+//   console.log("country",country)
+//   if (country) {
+//     res.json(country);
+//   } else {
+//     res.status(404);
+//     throw new Error('Country not found');
+//   }
+// });
 const getCountryById = asyncHandler(async (req, res) => {
-  const country = await Country.findById(req.params.id).populate('Province')
-  console.log("country",country)
-  if (country) {
-    res.json(country);
-  } else {
-    res.status(404);
-    throw new Error('Country not found');
+  try {
+    const country = await Country.findById(req.params.id);
+    
+    // Check if the Province field exists, and only then populate it
+    if (country) {
+      if (country.Province) {
+        await country.populate('Province'); // Populate Province if it exists
+      }
+      console.log("country", country);
+      res.json(country);
+    } else {
+      res.status(404).json({ message: 'Country not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
   }
 });
 
@@ -571,18 +603,25 @@ const deleteCountry = asyncHandler(async (req, res) => {
 // @access  Public
 const createProvince = asyncHandler(async (req, res) => {
 
-  const country = await Country.findOne({_id:req.body.Country})
-  if (!country) {
-    return res.status(404).json({ message: 'Country not found' });
-  }
-  console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
-  console.log(req.body);
-  const province = new Province(req.body);
-  const a = await province.save();
-
+  const country = await Country.findById(req.body.Country)
   
+  // const province = await Province.findById(req.body.Province)
+  console.log("country", country)
+  // province.University.push(createdUniversity._id)
+  // await province.save();
+  // if (!country) {
+  //   return res.status(404).json({ message: 'Country not found' });
+  // }
+  // console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+  // console.log(req.body);
+  const province = new Province({...req.body,Country:country});
+  console.log(province,"+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  
+  await province.save();
+
   country.Province.push(province._id)
   country.save();
+
   res.status(201).json(province);
 });
 
@@ -615,6 +654,8 @@ const createProvince = asyncHandler(async (req, res) => {
 // @access  Public
 const getAllProvinces = asyncHandler(async (req, res) => {
   const provinces = await Province.find().populate('Country');
+  console.log(provinces,"+*+*+*+*+*+*+*+*+*+*+***+*+**+*+*+***+*+*+*+*+*+");
+  
   res.status(200).json(provinces);
 });
 
@@ -690,27 +731,60 @@ const getUniversityById = asyncHandler(async (req, res) => {
 // @route   POST /universities
 // @access  Private/Admin
 const createUniversity = asyncHandler(async (req, res) => {
-    const university = new University({
-    name:req.body.name,
-    bannerURL:req.body.bannerURL,
-    heroURL:req.body.heroURL,
-    description:req.body.description,
-    sections:req.body.sections,
-    eligiblity:req.body.eligiblity,
-    Province:req.body.Province,
-    logo:req.body.logo,
-    campusLife:req.body.campusLife ,
-    hostel:req.body.hostel,
-    rank:req.body.rank,
-    UniLink:req.body.UniLink
+  console.log(req.body.Province, "-------------");
+
+  // Check if a university with the same name already exists
+  const existingUniversity = await University.findOne({ name: req.body.name });
+  
+  if (existingUniversity) {
+    return res.status(400).json({ message: 'University with this name already exists.' });
+  }
+
+  // Handle Province correctly (null if empty array)
+  let provinceId = null;
+  if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length === 0) {
+    provinceId = null;  // If empty array, set to null
+  } else if (req.body.Province && Array.isArray(req.body.Province) && req.body.Province.length > 0) {
+    // If province is an array and has elements, assign it
+    provinceId = req.body.Province;
+  }
+
+  // Find the country by its ID
+  const country = await Country.findById(req.body.Country);
+  if (!country) {
+    return res.status(400).json({ message: 'Invalid country ID' });
+  }
+
+  // Generate a random grade
+  const grades = ["A+", "A", "A++"];
+  const randomGrade = grades[Math.floor(Math.random() * grades.length)];
+
+  // Create the university document
+  const university = new University({
+    name: req.body.name,
+    bannerURL: req.body.bannerURL,
+    heroURL: req.body.heroURL,
+    description: req.body.description,
+    sections: req.body.sections,
+    Province: provinceId,
+    grade: randomGrade,
+    Country: country._id,  // Pass the country ID (not the entire country object)
+    logo: req.body.logo,
+    campusLife: req.body.campusLife,
+    MCI: req.body.MCI,
+    ECFMG: req.body.ECFMG,
+    hostel: req.body.hostel,
+    rank: req.body.rank,
+    UniLink: req.body.UniLink,
   });
 
+  // Save the created university
   const createdUniversity = await university.save();
-  // const province = await Province.findById(createdUniversity.Province)
-  // console.log("province", province)
-  // province.University.push(createdUniversity._id)
-  // await province.save();
-  
+
+  console.log(university.Country.name, "/////////////////////////////////////////////////");
+  console.log(createdUniversity, "/////////////////////////////////////////////////");
+
+  // Respond with the created university data
   res.status(201).json(createdUniversity);
 });
 
@@ -782,52 +856,59 @@ const getCourseById = asyncHandler(async (req, res) => {
 // @route   POST /courses
 // @access  Public
 const createCourse = asyncHandler(async (req, res) => {
+const sanitizeBoolean = (val) => val === true || val === 'true';
 
   // let tareekh = new Date()
-
-
+  const university = await University.findById(req.body.University)
+  // university.Course.push(createdCourse._id)
+  // await university.save()
+  console.log(req.body.languageRequire,"||||||||||||||||||||||||||||||||||||||||||");
+  
   const course = new Course({
-    ProgramName :req.body.ProgramName,
-    University:req.body.University,
-    WebsiteURL:req.body.WebsiteURL,
-    Location:req.body.Location,
-    Duration:req.body.Duration,
-    Intake:req.body.Intake,
-    Scholarships:req.body.Scholarships,
-    ProgramLevel:req.body.ProgramLevel,
-    LanguageRequirements:req.body.LanguageRequirements,
-    StandardizeRequirement:req.body.StandardizeRequirement,
-    Category:req.body.Category,
-    Fees:req.body.Fees,
-    broucherURL:req.body.broucherURL
-  });
-
+  ProgramName: req.body.ProgramName,
+  University: university,
+  Eligibility: req.body.Eligibility,
+  WebsiteURL: req.body.WebsiteURL,
+  Location: req.body.Location,
+  Duration: req.body.Duration,
+  Intake: req.body.Intake,
+  Scholarships: sanitizeBoolean(req.body.Scholarships),
+  ProgramLevel: req.body.ProgramLevel,
+  languageRequire: {
+    english: sanitizeBoolean(req.body.languageRequire?.english),
+    no_any_preference: sanitizeBoolean(req.body.languageRequire?.no_any_preference),
+    motherTongue: sanitizeBoolean(req.body.languageRequire?.motherTongue),
+  },
+  LanguageRequirements: req.body.LanguageRequirements,
+  StandardizeRequirement: req.body.StandardizeRequirement,
+  Category: req.body.Category,
+  Fees: req.body.Fees,
+  broucherURL: req.body.broucherURL,
+});
+  
   const createdCourse = await course.save();
-  const university = await University.findById(createdCourse.University)
-  university.Course.push(createdCourse._id)
-  await university.save()
+
+console.log(createdCourse,"cccccccccccccccccccccccccccccccccccccc++++++++++++++++++++++++++++");
 
   res.status(201).json(createdCourse);
 });
 
-// @desc    Update a course
-// @route   PUT /courses/:id
-// @access  Public
 const updateCourse = asyncHandler(async (req, res) => {
-  const { ProgramName, WebsiteURL, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements, StandardizeRequirement,Category } = req.body;
+  const { ProgramName,Eligibility, WebsiteURL,languageRequire, broucherURL, Location, Duration, Intake, Scholarships, ProgramLevel, LanguageRequirements,Category } = req.body;
 
   const course = await Course.findById(req.params.id);
 
   if (course) {
     course.ProgramName = ProgramName;
     course.WebsiteURL = WebsiteURL;
+    course.Eligibility = Eligibility;
     course.Location = Location;
     course.Duration = Duration;
     course.Intake = Intake;
     course.Scholarships = Scholarships;
     course.ProgramLevel = ProgramLevel;
-    course.LanguageRequirements = LanguageRequirements;
-    course.StandardizeRequirement = StandardizeRequirement;
+    course.languageRequire = languageRequire;
+    // course.StandardizeRequirement = StandardizeRequirement;
     course.Category = Category;
     course.broucherURL = broucherURL;
 
@@ -856,105 +937,63 @@ const deleteCourse = asyncHandler(async (req, res) => {
 // @desc    GET FILTER DATA
 // @route   GET /course/All
 // @access  Public
+
+
 const getCourses = asyncHandler(async (req, res) => {
   try {
-    const {
-      country,
-      province,
-      university,
-      programLevel,
-      category,
-      scholarships,
-      languageRequirement,
-      standardizeRequirement,
-    } = req.query;
-
+    const { country, programLevel, category } = req.query;
     let filter = {};
 
-    // Filter by Country
+    console.log(req.query, "-----------------/////////////////////////////////////");
+
+    // Filter by country via University
     if (country) {
-      // Fetch provinces related to the country
-      const provinces = await Province.find({ Country: country }).select('_id');
-      const provinceIds = provinces.map(province => province._id);
-
-      // Fetch universities related to the provinces
-      const universities = await University.find({ Province: { $in: provinceIds } }).select('_id');
-      const universityIds = universities.map(university => university._id);
-
-      // Filter courses by the universities in the country
+      const universities = await University.find({
+        Country: new mongoose.Types.ObjectId(country),
+      }).select('_id');
+    
+      const universityIds = universities.map((u) => u._id);
+    
+      if (universityIds.length === 0) {
+        return res.status(200).json([]);
+      }
+    
       filter.University = { $in: universityIds };
     }
+    
 
-    // Filter by Province
-    if (province) {
-      // Fetch universities related to the province
-      const universities = await University.find({ Province: province }).select('_id');
-      const universityIds = universities.map(university => university._id);
-
-      // Filter courses by the universities in the province
-      filter.University = { $in: universityIds };
+    // Filter by Category and ProgramLevel
+    if (category) {
+      filter.Category = category;
     }
-
-    // Filter by University
-    if (university) {
-      filter.University = university;
-    }
-
-    // Filter by Program Level
     if (programLevel) {
       filter.ProgramLevel = programLevel;
     }
 
-    // Filter by Category
-    if (category) {
-      filter.Category = category;
-    }
+    // Fetch courses with populated University and nested Country
+    const courses = await Course.find(filter).populate({
+      path: 'University',
+      populate: {
+        path: 'Country',
+      },
+    });
 
-    // Filter by Scholarships
-    if (scholarships) {
-      filter.Scholarships = scholarships === 'true';
-    }
+    // Clean unwanted fields
+    const cleanedCourses = courses.map((course) => {
+      const obj = course.toObject();
 
-    // Filter by Language Requirements
-    if (languageRequirement) {
-      const languageReqArray = languageRequirement.split(',');
-      const languageReqFilter = {};
-      languageReqArray.forEach((lang) => {
-        languageReqFilter[`LanguageRequirements.${lang}.status`] = true;
-      });
-      filter = { ...filter, ...languageReqFilter };
-    }
+      if (!obj.province) delete obj.province;
+      if (obj.scholarships === 'false') delete obj.scholarships;
+      if (!obj.languageRequirement) delete obj.languageRequirement;
+      if (!obj.standardizeRequirement) delete obj.standardizeRequirement;
 
-    // Filter by Standardized Requirements
-    if (standardizeRequirement) {
-      const standardizeReqArray = standardizeRequirement.split(',');
-      const standardizeReqFilter = {};
-      standardizeReqArray.forEach((test) => {
-        standardizeReqFilter[`StandardizeRequirement.${test}.status`] = true;
-      });
-      filter = { ...filter, ...standardizeReqFilter };
-    }
+      return obj;
+    });
 
-    console.log("Constructed Filter:", filter);
-
-    // Fetch courses based on the constructed filter
-    const courses = await Course.find(filter)
-      .populate({
-        path: 'University',
-        populate: {
-          path: 'Province',
-          populate: {
-            path: 'Country',
-          },
-        },
-      })
-      .exec();
-
-    res.status(200).json(courses);
-    console.log("Courses Found:", courses);
+    res.status(200).json(cleanedCourses);
   } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({ message: error.message });
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 
@@ -994,22 +1033,107 @@ const getWebinars = asyncHandler(async (req, res) => {
 // @desc    Create a new webinar
 // @route   POST /api/webinars
 // @access  Public
+
+
+// const createWebinar = asyncHandler (async (req,res)=>{
+//   try {
+//     console.log(req.body,"//ssss///////////////////////////////")
+//   } catch (error) {
+//     res.send(error)
+//   }
+// })
+
 const createWebinar = asyncHandler(async (req, res) => {
-  const { title, imageURL, date, day, time } = req.body;
+  console.log(req.body, "++++++++++++++++++++++++++//////$$$$$$$$$&&&&&&&&&&&///");
+  // console.log();  // Log to check incoming request data
+
+  const { trainer_name, trainer_profession, title, imageURL, date, weekday, timeStart, timeEnd } = req.body;
+
+  if (!trainer_name || !trainer_profession || !title || !imageURL || !date || !weekday || !timeStart || !timeEnd) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
 
   const webinar = new Webinar({
+    trainer_name,
+    trainer_profession,
     title,
     imageURL,
     date,
-    day,
-    time,
+    weekday,
+    timeStart,
+    timeEnd,
   });
 
-  const createdWebinar = await webinar.save();
-  res.status(201).json(createdWebinar);
+  
+  try {
+    const createdWebinar = await webinar.save();
+    res.status(201).json(createdWebinar);
+  } catch (error) {
+    console.error("Error saving webinar:", error);
+    res.status(500).json({ message: "Failed to create webinar", error: error.message });
+  }
 });
 
 
+
+const webinar_sendEmail = asyncHandler(async (req, res) => {
+  const { name, email,number,state,country } = req.body;
+  console.log(req.body,"//////////////////////////////////////////////////////////////////////////////////////");
+  
+
+  if (!email || !name) {
+    return res.status(400).json({ message: 'Name and email are required' });
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    }
+  });
+
+  // Email for the registered user
+  const userMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    replyTo: 'support@searchmystudy.com',
+    subject: 'Webinar Registration Confirmation',
+    html: `
+      <p>Hello ${name},</p>
+      <p>Thank you for registering for our webinar. We're excited to have you join us.</p>
+      <p><strong>Zoom Link:</strong> <a href="https://zoom.us/your-meeting-link">Join Webinar</a></p>
+      <p>Best regards,<br>Webinar Team</p>
+    `
+  };
+
+  // Email for internal admin/staff
+  const adminMailOptions = {
+    from: process.env.EMAIL_USER,
+    to: 'searchmystudy@gmail.com',
+    subject: `New Webinar Registration - ${name}`,
+    html: `
+      <p><strong>New webinar registration:</strong></p>
+      <p><strong>Name:<strong/> ${name}</p>
+      <p><strong>Email Address:<strong/> ${email}</p>
+      <p><strong>Phone number:<strong/> ${number}</p>
+      <p><strong>State:<strong/> ${state}</p>
+      <p><strong>Country:<strong/> ${country}</p>
+      <p>Registration received at: ${new Date().toLocaleString()}</p>
+    `
+  };
+
+  try {
+    // Send both emails
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
+
+    res.status(200).json({ message: 'Emails sent successfully' });
+  } catch (error) {
+    console.error('Error sending emails:', error);
+    res.status(500).json({ message: 'Failed to send emails' });
+  }
+});
 
 
 // @desc    Get a single webinar by ID
@@ -1188,17 +1312,69 @@ const deleteLead  =asyncHandler(async (req, res) => {
 // @route   POST /api/lead
 // @access  Public
 const createHomeLead = asyncHandler(async (req, res) => {
-  const { name, phoneNo, email } = req.body;
-
+  const { name, phoneNo, email,country,message,countryCode } = req.body;
+  console.log(req.body,"------------------------------------------------------");
+  
   const lead = new HomeLead({
       name,
       phoneNo,
+      countryCode,
       email,
+      country,
+      message
   });
 
   const createdLead = await lead.save();
   res.status(201).json(createdLead);
 });
+
+
+// const createHomeLead = asyncHandler(async (req, res) => {
+//   const { name, phoneNo, email, country, message } = req.body;
+
+//   const lead = new HomeLead({
+//     name,
+//     phoneNo,
+//     email,
+//     country,
+//     message,
+//   });
+
+  // const createdLead = await lead.save();
+
+  // // Set up nodemailer
+  // const transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: process.env.EMAIL_USER,      // your email
+  //     pass: process.env.EMAIL_PASS,      // your app password
+  //   },
+  // });
+
+  // const mailOptions = {
+  //   from: `"New Lead" <${process.env.EMAIL_USER}>`,
+  //   to: 'yourdestination@example.com', // recipient's email
+  //   subject: 'New Lead Submitted',
+  //   html: `
+  //     <h2>New Lead Details</h2>
+  //     <p><strong>Name:</strong> ${name}</p>
+  //     <p><strong>Phone:</strong> ${phoneNo}</p>
+  //     <p><strong>Email:</strong> ${email}</p>
+  //     <p><strong>Country:</strong> ${country}</p>
+  //     <p><strong>Message:</strong> ${message}</p>
+  //   `,
+  // };
+
+  // Send the email
+//   try {
+//     await transporter.sendMail(mailOptions);
+//     console.log('Email sent successfully');
+//   } catch (err) {
+//     console.error('Email error:', err);
+//   }
+
+//   res.status(201).json(createdLead);
+// });
 // @desc    Get all leads
 // @route   GET /api/lead
 // @access  Public
@@ -2477,7 +2653,7 @@ export {
     createProvince, getAllProvinces, getProvinceById, updateProvince, deleteProvince ,
     getAllUniversities,deleteUniversity,updateUniversity,createUniversity,getUniversityById,
     getAllCourses,getCourseById,createCourse,updateCourse,deleteCourse,getCourses,
-    getWebinars,createWebinar,getWebinarById,updateWebinar,deleteWebinar,
+    getWebinars,createWebinar,getWebinarById,webinar_sendEmail,updateWebinar,deleteWebinar,
     getMediaItems,createMediaItem,getMediaItemById,updateMediaItem,deleteMediaItem,getCoursesForIndiaMedical,
     createLead,getLead,deleteLead,GetOneLead,
     createHomeLead, getLeads, deleteHomeLead,

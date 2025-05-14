@@ -13,6 +13,7 @@
   "author": "Bhuvnesh shaily",
   "license": "MIT",
   "dependencies": {
+    "@tailwindcss/typography": "^0.5.16",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -21,7 +22,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.1"
   },
   "devDependencies": {
     "concurrently": "^8.0.1",

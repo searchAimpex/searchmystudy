@@ -32,6 +32,9 @@ import UpdateUniversityPop from './PopUps/UpdateUniversityPop.jsx';
 import { FetchCountry } from '../../slices/countrySlice.js';
 import { Card, CardContent, MenuItem, Pagination } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import MbbsCreateUniversityPop from './PopUps/MbbsCreateUniversityPop.jsx';
+import MbbsUpdateCountryPop from './PopUps/MbbsUpdateCountryPop.jsx';
+import MbbsUpdateUniversityPop from './PopUps/MbbsUpdateUniversityPop.jsx';
 
 const headCells = [
     { id: 'name', numeric: false, disablePadding: false, label: 'Name' },
@@ -134,6 +137,8 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete }) {
+    console.log(selectedRow,"-----------------------------------------------");
+    
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
     const [viewBannerOpen, setViewBannerOpen] = React.useState(false);
@@ -204,12 +209,12 @@ function EnhancedTableToolbar({ numSelected, selectedRow, onViewBanner, onDelete
                     >
                         Create
                     </button>
-                    <CreateUniversityPop open={open} handleClose={handleClose} />
+                    <MbbsCreateUniversityPop open={open} handleClose={handleClose} />
                     
                </div>
             )}
             <ImageViewPop open={viewBannerOpen} handleClose={handleViewBannerClose} imageURL={selectedRow?.flagURL || ''} />
-            <UpdateUniversityPop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} initialData = {selectedRow}/>
+            <MbbsUpdateUniversityPop open = {viewUpdateOpen} handleClose={handleViewUpdateClose} initialData = {selectedRow} />
 
         </Box>
     );

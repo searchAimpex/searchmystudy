@@ -245,7 +245,18 @@ function CourseTable() {
     const [selectedCountry, setSelectedCountry] = useState('all');
     const [selectedProvince, setSelectedProvince] = useState('all');
     const [selectedUniversity, setSelectedUniversity] = useState('all');
-    console.log("university",university)
+
+    // Add handlers for filter changes
+    const handleCountryChange = (e) => {
+        setSelectedCountry(e.target.value);
+        setSelectedProvince('all'); // Reset province when country changes
+        setSelectedUniversity('all'); // Reset university when country changes
+    };
+
+    const handleProvinceChange = (e) => {
+        setSelectedProvince(e.target.value);
+        setSelectedUniversity('all'); // Reset university when province changes
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -328,9 +339,10 @@ function CourseTable() {
 
     // Filtered Services
     const filteredServices = services?.filter(service => {
-        const matchesProvince = selectedProvince === 'all' || service?.University?.Province === selectedProvince ;
+        const matchesCountry = selectedCountry === 'all' || service?.Country === selectedCountry;
+        const matchesProvince = selectedProvince === 'all' || service?.University?.Province === selectedProvince;
         const matchesUniversity = selectedUniversity === 'all' || service?.University?._id === selectedUniversity;
-        return  matchesProvince && matchesUniversity;
+        return matchesCountry && matchesProvince && matchesUniversity;
     });
     console.log("course",selectedCountry)
     console.log("Country",selectedProvince)
@@ -350,7 +362,7 @@ function CourseTable() {
                         variant="outlined"
                         size="sm"
                         value={selectedCountry}
-                        onChange={(e) => setSelectedCountry(e.target.value)}
+                        onChange={handleCountryChange}
                     >
                         <option value="all">All Countries</option>
                         {countries?.map(country => (
@@ -368,7 +380,7 @@ function CourseTable() {
                         variant="outlined"
                         size="sm"
                         value={selectedProvince}
-                        onChange={(e) => setSelectedProvince(e.target.value)}
+                        onChange={handleProvinceChange}
                     >
                         <option value="all">All Provinces</option>
                         {province?.filter(p => p?.Country?._id === selectedCountry)?.map(p => (

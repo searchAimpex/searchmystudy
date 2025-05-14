@@ -17,37 +17,45 @@ import {
     Select,
     FormControl,
     InputLabel,
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { app } from '../../../firebase'; // Adjust the import path accordingly
-import { useUpdateUniversityMutation, useFetchProvinceMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
+import { useUpdateUniversityMutation, useFetchProvinceMutation, useCountryAllFetchMutation, useCountryFetchOneMutation } from '../../../slices/adminApiSlice'; // Adjust the slice accordingly
 import { toast } from 'react-toastify';
 import { FetchProvinces } from '../../../slices/provinceSlice';
 import TextEditor from '../TextEditor';
+import { FetchCountry } from '../../../slices/countrySlice.js';
+import { FetchOneCountry } from '../../../slices/countrySlice.js';
 
 const storage = getStorage(app);
 
-export default function UpdateUniversityPop({ open, handleClose, initialData }) {
+export default function MbbsUpdateUniversityPop({ open, handleClose, initialData }) {
     const dispatch = useDispatch();
-    
-    console.log(initialData,"++++++++++++++++++++++++++++++++++++++++++++++");
-    
     const { province } = useSelector((state) => state.province);
     const [FetchProvince] = useFetchProvinceMutation();
-    console.log("imnital data",initialData)
-  const [previewImages, setPreviewImages] = useState({
-    banner: '',
-    flag: '',
-    sectionImages: [],
-  });
+    console.log("imnital data", initialData)
+    const [countries, setCountries] = useState([])
+    const [CountryAllFetch, { isLoading }] = useCountryAllFetchMutation();
+    const [CountryFetchOne, { isProcess }] = useCountryFetchOneMutation();
+    
+    const [previewImages, setPreviewImages] = useState({
+        banner: '',
+        flag: '',
+        sectionImages: [],
+    });
+
+    // console.log(initialData.Country, "+++++++++++++++++++++++++++++++++++++++");
+
     // State for form values and image validation
     const [formValues, setFormValues] = useState(initialData || {
         name: '',
         bannerURL: '',
         heroURL: '',
         description: '',
-        grade: 'A',
+        grade: 'A+',
         rating: '5',
         sections: [{ title: '', description: '', url: '' }],
         eligiblity: '',
@@ -60,7 +68,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
         UniLink: '',
         Course: [],
     });
-    console.log("form data",formValues)
+    console.log("form data", formValues)
 
 
 
@@ -68,39 +76,38 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
 
 
     useEffect(() => {
-        if (initialData ) {
-          setFormValues({
-            name: initialData.name || '',
-            bannerURL: initialData.bannerURL || '',
-            heroURL: initialData.heroURL || '',
-            description: initialData.description || '',
-            grade: initialData.grade || 'A',
-            rating: initialData.rating || '5',
-            sections: initialData.sections || [{ title: '', description: '', url: '' }],
-            eligiblity: initialData.eligiblity || '',
-            logo: initialData.logo || '',
-            Province: initialData.Province || '',
-            campusLife: initialData.campusLife || '',
-            hostel: initialData.hostel || '',
-            type: initialData.type || 'Public',
-            rank: initialData.rank || 0,
-            UniLink: initialData.UniLink || '',
-            Course: initialData.Course || [],
-          });
-      
-          setPreviewImages({
-            banner: initialData.bannerURL || '',
-            hero: initialData.heroURL || '',
-            logo: initialData.logo || '',
-            sectionImages: initialData.sections?.map(sec => sec.url) || [],
-          });
+        if (initialData) {
+            setFormValues({
+                name: initialData.name || '',
+                bannerURL: initialData.bannerURL || '',
+                heroURL: initialData.heroURL || '',
+                description: initialData.description || '',
+                grade: initialData.grade || 'A',
+                rating: initialData.rating || '5',
+                sections: initialData.sections || [{ title: '', description: '', url: '' }],
+                eligiblity: initialData.eligiblity || '',
+                logo: initialData.logo || '',
+                Province: initialData.Province || '',
+                campusLife: initialData.campusLife || '',
+                hostel: initialData.hostel || '',
+                type: initialData.type || 'Public',
+                rank: initialData.rank || 0,
+                UniLink: initialData.UniLink || '',
+                Course: initialData.Course || [],
+            });
+            setPreviewImages({
+                banner: initialData.bannerURL || '',
+                hero: initialData.heroURL || '',
+                logo: initialData.logo || '',
+                sectionImages: initialData.sections?.map(sec => sec.url) || [],
+            });
         }
-      }, [initialData]);
+    }, [initialData]);
 
-      
 
-   
-    
+
+
+
 
 
     const [imageValidations, setImageValidations] = useState({
@@ -111,19 +118,36 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
 
     const [isFormValid, setIsFormValid] = useState(false);
     const [updateUniversity, { isSuccess }] = useUpdateUniversityMutation();
-
+    const [countryName , setcountryName] = useState("")
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await FetchProvince().unwrap();
                 dispatch(FetchProvinces(result));
+
+
+                const resultforsidebar = await CountryAllFetch().unwrap();
+                // const filtered = resultforsidebar.filter(country => country.mbbsAbroad === true);
+                dispatch(FetchCountry(resultforsidebar));
+                setCountries(resultforsidebar)
+                console.log(resultforsidebar, "************************************************")
+                
+                // console.log(initialData.Country,"/*/*/*/*/*/*/*/*/*/*/*/*/*/**//*/*/*/*/*/*/*/");
+                
+                const countryById = await CountryFetchOne(initialData.Country).unwrap();
+                dispatch(FetchOneCountry(countryById));
+                setcountryName(countryById.name)
+
+                console.log(countryName,"*********************************-----------------------");
+                
+
+
             } catch (error) {
                 console.error('Failed to fetch provinces:', error);
             }
         };
         fetchData();
     }, [FetchProvince, dispatch]);
-
 
 
 
@@ -237,9 +261,9 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
 
     const onSubmit = async () => {
         try {
-            const data =  { 
-                id:initialData._id,
-                raw:formValues
+            const data = {
+                id: initialData._id,
+                raw: formValues
             }
             const res = await updateUniversity(data).unwrap();
             handleClose();
@@ -261,7 +285,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
 
     return (
         <Dialog fullWidth='xl' open={open} onClose={handleClose}>
-            <DialogTitle className='text-white bg-custom-primary font-bold'>Update University</DialogTitle>
+            <DialogTitle className='text-white bg-custom-primary font-bold'>Update MBBS University</DialogTitle>
             <DialogContent>
                 <div className='py-2'>
                     <DialogContentText>You can update the university details.</DialogContentText>
@@ -290,7 +314,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Banner Image"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
 
                     <TextField
                         id="heroURL"
@@ -302,7 +326,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Hero Image"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-1200px h-500px</span>
 
                     <TextField
                         id="logo"
@@ -314,7 +338,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         className="mb-2"
                         label="Logo"
                     />
-                                        <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
+                    <span className='text-red-300 text-sm font-bold'>Image should be w-150px h-150px</span>
 
                     <TextEditor
                         id="description"
@@ -366,6 +390,59 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         </Accordion>
                     ))}
                     <Button onClick={addSection}>Add Section</Button>
+
+
+                    <FormControl variant="standard" fullWidth className="mb-2">
+                        <InputLabel id="Country-label">Country</InputLabel>
+                        <Select
+                            labelId="Country-label"
+                            id="country"
+                            name="Country"
+                            value={countryName}
+                            onChange={handleChange}
+                        >
+                            {countries.map((prov) => (
+                                <MenuItem key={prov.id} value={prov._id}>{prov.name}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+
+                    {/* MCI Approved */}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                // checked={formValues.MCIApproved}  // Will be true or false
+                                onChange={(e) => {
+                                    setFormValues((prev) => ({
+                                        ...prev,
+                                        MCI: e.target.checked // Update the state with checked value
+                                    }));
+                                }}
+
+                                name="MCIApproved"  // Will update formValues.MCIApproved
+                            />
+                        }
+                        label="MCI Approved"
+                    />
+
+                    {/* ECFMG Approved */}
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={formValues.ECFMGApproved}  // Will be true or false
+                                onChange={(e) => {
+                                    setFormValues((prev) => ({
+                                        ...prev,
+                                        ECFMG: e.target.checked // Update the state with checked value
+                                    }));
+                                }}  // Update the state with checked value
+                                name="ECFMGApproved"  // Will update formValues.ECFMGApproved
+                            />
+                        }
+                        label="ECFMG Approved"
+                    />
+
+
                     <TextField
                         id="eligiblity"
                         name="eligiblity"
@@ -375,7 +452,7 @@ export default function UpdateUniversityPop({ open, handleClose, initialData }) 
                         onChange={handleChange}
                         className="mb-2"
                     />
-                  
+
                 </Box>
             </DialogContent>
             <DialogActions>

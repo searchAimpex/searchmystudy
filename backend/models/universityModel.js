@@ -4,7 +4,9 @@ const universitySchema = mongoose.Schema(
     {
         name:{
             type:String,
-            required:true
+            required:true,
+            unique:true
+
         },
         bannerURL:{
             type:String,
@@ -33,24 +35,25 @@ const universitySchema = mongoose.Schema(
             url: String
             }
         ], 
-        eligiblity: {
-            type:String,
-            default:""
-        },    
+        
+        // eligiblity: {
+        //     type:String,
+        //     default:""
+        // },    
         logo: {
             type: String,
             default: 'https://via.placeholder.com/150x150.png'
         },
         Province: { 
-            type: String,
-            // ref: 'Province',
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Province',
+            required: false,  // optional field
+        }, 
+        Country: { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Country',
             // required: true,
         },   
-        // Province: { 
-        //     type: mongoose.Schema.Types.ObjectId,
-        //     ref: 'Province',
-        //     required: true,
-        // },   
         Course: [
             {
             type: mongoose.Schema.Types.ObjectId,
@@ -64,6 +67,14 @@ const universitySchema = mongoose.Schema(
         hostel : {
             type: String,
             default: ''
+        },
+        MCI:{
+            type:Boolean,
+            default:false
+        },
+        ECFMG:{
+            type:Boolean,
+            default:false
         },
         type:{
             type: String,

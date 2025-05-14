@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useFetchOneUniversityMutation } from '../../slices/adminApiSlice';
+import { Link, useParams } from 'react-router-dom';
+import { useAllCourseMutation, useFetchOneCourseMutation, useFetchOneUniversityMutation } from '../../slices/adminApiSlice';
 import { FetchOneUniversitys } from '../../slices/universitySlice';
 import Loader from '../../components/Loader';
 import { Accordion, AccordionDetails, AccordionSummary, Box, Tab, Tabs, Typography } from '@mui/material';
@@ -14,7 +14,6 @@ import { Star, StarBorder } from '@mui/icons-material';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
-
     return (
         <AnimatePresence mode="wait">
             {value === index && (
@@ -27,7 +26,7 @@ function TabPanel(props) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.5 }}
-                    className="border p-4 rounded-lg bg-white shadow-sm"
+                    className="md:border md:p-4 rounded-lg bg-white shadow-sm"
                 >
                     <Box>
                         {children}
@@ -38,19 +37,13 @@ function TabPanel(props) {
     );
 }
 
-
 const renderStars = (grade) => {
-    const totalStars = 5; // Total number of stars
-    const filledStars = Math.round(grade); // Number of filled stars based on grade
-
+    const totalStars = 5;
+    const filledStars = Math.round(grade);
     return (
         <div className='flex items-center'>
             {[...Array(totalStars)].map((_, index) => (
-                index < filledStars ? (
-                    <Star key={index} color="primary" />
-                ) : (
-                    <StarBorder key={index} color="primary" />
-                )
+                index < filledStars ? <Star key={index} color="primary" /> : <StarBorder key={index} color="primary" />
             ))}
         </div>
     );
@@ -60,20 +53,29 @@ export default function UniversityDetailed() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const [tabValue, setTabValue] = React.useState(0);
-
-    const navigate = useNavigate();
     const [FetchOneUniversity, { isLoading }] = useFetchOneUniversityMutation();
+    const [FetchOneCourseByUniversity, { isloading }] = useAllCourseMutation();
     const { singleUniversity } = useSelector((state) => state.university);
-
-    const handleTabChange = (event, newValue) => {
-        setTabValue(newValue);
-    };
-
+    const [courseByUnivesity, setcourseByUnivesity] = useState()
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const result = await FetchOneUniversity(id).unwrap();
                 dispatch(FetchOneUniversitys(result));
+                // console.log(id, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
+
+                const courseData = await FetchOneCourseByUniversity().unwrap();
+
+                // If `courseData` is an array of courses:
+                const filteredCourses = courseData.filter(
+                    (course) => course?.University?._id === id
+                );
+
+                console.log(filteredCourses, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Filtered Courses");
+                setcourseByUnivesity(filteredCourses)
+
+
             } catch (error) {
                 console.error('Failed to fetch university:', error);
             }
@@ -81,168 +83,144 @@ export default function UniversityDetailed() {
         fetchData();
     }, [id, dispatch, FetchOneUniversity]);
 
-    if (isLoading) {
-        return <Loader />;
-    }
+    if (isLoading) return <Loader />;
+
+    const cleanedDescription = singleUniversity.description?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No description available.';
+    const cleanedCampusLife = singleUniversity.campusLife?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No campus life information available.';
+    const cleanedHostel = singleUniversity.hostel?.replace(/<p>/g, '').replace(/<\/p>/g, '') || 'No hostel information available.';
 
     return (
-        <div className='mx-[200px]'>
-            <div className='flex flex-col space-y-20'>
+        <div className=' py-10'>
+            <div className='flex flex-col space-y-10 md:space-y-20'>
                 <div className='relative'>
-                    {/* Rounded Banner Image */}
-                    <motion.img 
-                        src={singleUniversity.bannerURL} 
-                        className='w-full h-[400px] rounded-lg object-cover' 
-                        alt='University Banner' 
+                    <motion.img
+                        src={singleUniversity.bannerURL}
+                        className='w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[400px] rounded-lg object-cover'
+                        alt='University Banner'
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.8 }}
                     />
 
-                    {/* Logo, University Name, and Province Name */}
-                    <motion.div 
-                        className='absolute bottom-[-75px] left-4 flex items-center space-x-4'
+                    <motion.div
+                        className='absolute bottom-[-75px] left-4 flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0 sm:mt-[75px]'
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.5, duration: 0.5 }}
                     >
-                        <div className='bg-white rounded-full border'>
-                            <img src={singleUniversity.logo} className='w-[150px] h-[150px] rounded-full border-4 border-white object-cover' alt='University Logo' />
+                        <div className='rounded-full'>
+                            <img
+                                src={singleUniversity.logo}
+                                className='w-[100px] sm:w-[120px] md:w-[150px] h-[100px] sm:h-[120px] md:h-[150px] rounded-full  object-cover'
+                                alt='University Logo'
+                            />
                         </div>
-                        <div className='text-white mt-[75px]'>
-                            <h2 className='text-2xl text-black font-bold'>{singleUniversity.name}</h2>
-                            <div className='flex flex-row mt-2 items-center'>
-                                <div className='rounded-full w-[60px] h-[60px] flex items-center border-r p-2'>
-                                    <img className='object-cover rounded-full' src={singleUniversity?.Province?.Country?.flagURL} alt="Country Flag"/>
-                                </div>
-                                <div className='p-2 border-r'>
-                                    <span className='text-lg text-black'>{singleUniversity?.Province?.Country.name}</span>
-                                </div>
-                                <div className='p-2'>
-                                    <span className='text-lg text-black'>{singleUniversity?.Province?.name}</span>
-                                </div>
+
+                        <div className='text-black sm:ml-4'>
+                            <h2 className='text-sm sm:text-2xl md:text-3xl md:mt-[100px] font-bold'>{singleUniversity.name}</h2>
+                            <div className='flex flex-wrap mt-2 items-center text-sm sm:text-base'>
+                                {/* <div className='rounded-full w-[40px] sm:w-[50px] md:w-[60px] h-[40px] sm:h-[50px] md:h-[60px] flex items-center border-r p-2'>
+                                    <img className='object-cover rounded-full' src={singleUniversity?.Province?.Country?.flagURL} alt="Country Flag" />
+                                </div> */}
+                                <div className='p-2 border-r'>{singleUniversity?.Province?.Country.name}</div>
+                                {/* <div className='p-2'>{singleUniversity?.Province?.name}</div> */}
                             </div>
                         </div>
                     </motion.div>
                 </div>
 
-                {/* Tabs Section */}
-                <Box>
-                    <Tabs
-                        value={tabValue}
-                        onChange={handleTabChange}
-                        aria-label="university tabs"
-                        className="mb-4"
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="fullWidth"
-                        centered
-                    >
-                        <Tab label="Overview" icon={<InfoIcon />} iconPosition="start" />
-                        <Tab label="Fees & Campus Life" icon={<SchoolIcon />} iconPosition="start" />
-                        <Tab label="Eligibility" icon={<CategoryIcon />} iconPosition="start" />
-                    </Tabs>
 
-                    {/* Overview Tab */}
-                    <TabPanel value={tabValue} index={0}>
-                        <Box
-                            sx={{
-                                padding: 4,
-                                borderRadius: 2,
-                                boxShadow: 1,
-                                backgroundColor: 'background.paper',
-                                maxWidth: 800,
-                                margin: '0 auto',
-                            }}
+                <div className='flex border w-[100%] space-x-2'>
+                    {/* Tabs */}
+                    <Box className="py-12 w-[75%]">
+                        <Tabs
+                            value={tabValue}
+                            onChange={(e, val) => setTabValue(val)}
+                            aria-label="university tabs"
+                            className="mb-4"
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="scrollable"
+                            scrollButtons="auto"
+                            allowScrollButtonsMobile
                         >
-                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                Overview
-                            </Typography>
-                            {/* Display information in a row */}
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: 2,
-                                }}
+                            <Tab label="Overview" icon={<InfoIcon />} iconPosition="start" />
+                            <Tab label=" Campus Life & Hostel" icon={<SchoolIcon />} iconPosition="start" />
+                            {/* <Tab label="Hostel" icon={<CategoryIcon />} iconPosition="start" /> */}
+                        </Tabs>
+
+                        <TabPanel value={tabValue} index={0}>
+                            <Box className="space-y-4">
+                                <Typography variant="h5" fontWeight="bold">Overview</Typography>
+                                <div className='flex flex-wrap justify-between gap-4'>
+                                    <Typography><strong>Grade:</strong> {singleUniversity.grade}</Typography>
+                                    <Typography variant="body1" className="flex items-center gap-2">
+                                        <strong>Rating:</strong>
+                                        {renderStars(singleUniversity.rank)}
+                                    </Typography>
+                                    <Typography><strong>Type:</strong> {singleUniversity.type}</Typography>
+                                </div>
+                                <div>
+                                    <Typography variant="h6" fontWeight="bold">About the University</Typography>
+                                    <div
+                                        className="prose max-w-none"
+                                        dangerouslySetInnerHTML={{ __html: singleUniversity.description }}
+                                    />
+
+                                    <Link to={singleUniversity.UniLink} target="_blank" className="mt-4 inline-block px-4 py-2 bg-gold-main text-white hover:bg-gold-400 transition rounded-full text-center">
+                                        Explore University
+                                    </Link>
+                                </div>
+                            </Box>
+                        </TabPanel>
+
+                        <TabPanel value={tabValue} index={1}>
+                            <Box className="space-y-4">
+                                <Typography variant="h5" fontWeight="bold"> Campus Life & Hostel</Typography>
+                                {/* <Typography><strong>Fees:</strong> {singleUniversity?.fees || 'N/A'}</Typography> */}
+                                <div
+                                    className="prose max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: singleUniversity.campusLife }}
+                                />
+
+                                <Typography><strong>Hostel:</strong> <div
+                                    className="prose max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: singleUniversity.campusLife }}
+                                /> </Typography>
+                            </Box>
+                        </TabPanel>
+
+                        <TabPanel value={tabValue} index={2}>
+                            <Box className="space-y-4">
+                                <Typography variant="h5" fontWeight="bold">Eligibility</Typography>
+                                <Typography>{singleUniversity.eligiblity || 'Not available'}</Typography>
+                            </Box>
+                        </TabPanel>
+                    </Box>
+
+
+                    <div className="w-full max-w-xs p-4 bg-white  rounded-xl  space-y-4">
+                        <h2 className="text-2xl font-semibold text-gray-800 mb-2"><span className='text-blue-main'>Courses</span > <span className='text-gold-main'>Offered</span> </h2>
+
+                        {courseByUnivesity?.map((course, index) => (
+                            <div
+                                key={index}
+                                className="flex items-center space-x-3 border rounded-lg p-3 shadow-sm"
                             >
-                                 <Typography variant="body1">
-                                    <strong>Grade:</strong>{singleUniversity.grade}
-                                   
-                                </Typography>
-                                <Typography variant="body1">
-                                    <strong>Rank:</strong> {singleUniversity.rank}
-                                </Typography>
-                                <Typography variant="body1">
-                                    <strong>Rating</strong>
-                                    {renderStars(singleUniversity.rating)}
-                                </Typography>
-                                <Typography variant="body1">
-                                    <strong>Type:</strong> {singleUniversity.type}
-                                </Typography>
-                            </Box>
+                                <img
+                                    src={course?.University?.bannerURL}
+                                    alt={course?.ProgramName}
+                                    className="w-14 h-14 rounded-full object-cover border"
+                                />
+                                <div className="flex flex-col">
+                                    <p className="text-sm font-medium text-gray-700">{course?.ProgramName}</p>
 
-                            {/* Section for university description */}
-                            <Box sx={{ marginTop: 4 }}>
-                                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                    About the University
-                                </Typography>
-                                <Typography variant="body1">
-                                    {singleUniversity.description || 'No description available.'}
-                                </Typography>
-                            </Box>
-                        </Box>
-                    </TabPanel>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
 
-                    {/* Fees & Campus Life Tab */}
-                    <TabPanel value={tabValue} index={1}>
-                        <Box
-                            sx={{
-                                padding: 4,
-                                borderRadius: 2,
-                                boxShadow: 1,
-                                backgroundColor: 'background.paper',
-                                maxWidth: 800,
-                                margin: '0 auto',
-                            }}
-                        >
-                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                Fees & Campus Life
-                            </Typography>
-                            <Typography variant="body1">
-                                <strong>Fees:</strong> {singleUniversity?.fees || 'N/A'}
-                            </Typography>
-                            <Typography variant="body1">
-                                <strong>Campus Life:</strong> {singleUniversity.campusLife}
-                            </Typography>
-                            <Typography variant="body1">
-                                <strong>Hostel:</strong> {singleUniversity.hostel}
-                            </Typography>
-                        </Box>
-                    </TabPanel>
-
-                    {/* Eligibility Tab */}
-                    <TabPanel value={tabValue} index={2}>
-                        <Box
-                            sx={{
-                                padding: 4,
-                                borderRadius: 2,
-                                boxShadow: 1,
-                                backgroundColor: 'background.paper',
-                                maxWidth: 800,
-                                margin: '0 auto',
-                            }}
-                        >
-                            <Typography variant="h5" component="h2" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                Eligibility
-                            </Typography>
-                            <Typography variant="body1">
-                                {singleUniversity.eligiblity}
-                            </Typography>
-                        </Box>
-                    </TabPanel>
-                </Box>
+                </div>
             </div>
         </div>
     );

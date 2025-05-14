@@ -60,6 +60,7 @@ export default {
         },
       });
     },
-    require('tailwind-scrollbar-hide') // Add this plugin
+    require('tailwind-scrollbar-hide'), // Add this plugin
+    require('@tailwindcss/typography')
   ],
 }

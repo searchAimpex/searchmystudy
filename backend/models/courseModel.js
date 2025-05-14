@@ -12,10 +12,12 @@ const courseSchema = mongoose.Schema(
             ref: 'University',
             required: true,
         },
+   
         WebsiteURL: {
             type: String,
             required: true
         },
+        
         Location: {
             type: String,
             required: true
@@ -64,8 +66,7 @@ const courseSchema = mongoose.Schema(
         Intake: [
             {
                 status: {
-                    type: Boolean,
-                    required: true  
+                    type: Boolean
                 },
                 date: {
                     type: String,
@@ -87,127 +88,145 @@ const courseSchema = mongoose.Schema(
             required: true,
             enum: ['High School', 'UG Diploma/Cerificate/Associate Degree', 'UG', 'PG Diploma', 'PG','UG+PG(Accelerated)Degree','PhD','Foundation','Short Term Program','Pathway Program','Twiming Program(UG)','Twiming Program(PG)','Online Programe/Distance Learning'], // Define your enum values here
         },
-        LanguageRequirements: {
-            PTE: {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-
+        languageRequire:{
+            english:{
+                type:Boolean,
+              
             },
-            TOFFL:{
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-
+            no_any_preference:{
+                type:Boolean,
+               
             },
-            IELTS: {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-            },
-            DET:{
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
+            motherTongue:{
+                type:Boolean,
+               
             }
         },
-        StandardizeRequirement:{
-            SAT : {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-            },
-            ACT : {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-            },
-            GRE : {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-            },
-            GMAT : {
-                status: {
-                    type: Boolean,
-                    required: false
-                },
-                description: {
-                    type: String,
-                    required: false
-                },
-                minRequirement : {
-                    type: String,
-                    required: false
-                }
-            }
+        // LanguageRequirements: {
+        //     PTE: {
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
 
+        //     },
+        //     TOFFL:{
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
+
+        //     },
+        //     IELTS: {
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
+        //     },
+        //     DET:{
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
+        //     }
+        // },
+        Eligibility:{
+            type:String,
+            required:true
         },
+        // StandardizeRequirement:{
+        //     SAT : {
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
+        //     },
+            // ACT : {
+            //     status: {
+            //         type: Boolean,
+            //         required: false
+            //     },
+            //     description: {
+            //         type: String,
+            //         required: false
+            //     },
+            //     minRequirement : {
+            //         type: String,
+            //         required: false
+            //     }
+            // },
+            // GRE : {
+            //     status: {
+            //         type: Boolean,
+            //         required: false
+            //     },
+            //     description: {
+            //         type: String,
+            //         required: false
+            //     },
+            //     minRequirement : {
+            //         type: String,
+            //         required: false
+            //     }
+        //     },
+        //     GMAT : {
+        //         status: {
+        //             type: Boolean,
+        //             required: false
+        //         },
+        //         description: {
+        //             type: String,
+        //             required: false
+        //         },
+        //         minRequirement : {
+        //             type: String,
+        //             required: false
+        //         }
+        //     }
+
+        // },
         Fees: {
-            type: Number,
+            type: String,
             default:0
         }
     },

@@ -52,13 +52,7 @@ export default function ContactUsForm() {
       <div className="w-full lg:w-1/2 flex flex-col space-y-5">
         <span className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-main">Leave Us A Message</span>
         
-        <input
-          className="w-full p-3 rounded-md border border-blue-main text-sm sm:text-base"
-          type="text"
-          placeholder="Your Name..."
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+     
         <input
           className="w-full p-3 rounded-md border border-blue-main text-sm sm:text-base"
           type="email"
