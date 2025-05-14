@@ -57,9 +57,12 @@ const categories = [
 ];
 
 const AllCourseDetailed = () => {
+  const [courses, setCourses] = useState([]);
   const navigate = useNavigate()
   const location = useLocation();
   const state = location.state;
+  
+
   const [filters, setFilters] = useState({
     country: state.filters.country || '',
     // province: '',
@@ -71,11 +74,27 @@ const AllCourseDetailed = () => {
     // standardizeRequirement: '',
   });
 
+useEffect(() => {
+  const fetchCourses = async () => {
+    try {
+      const result = await AllCourse(filters).unwrap();
+      if (Array.isArray(result)) {
+        setCourses(result);
+      } else {
+        console.error('Expected an array but got:', result);
+      }
+    } catch (error) {
+      console.error('Error fetching courses:', error);
+    }
+  };
+
+  fetchCourses();
+}, []); // empty dependency array = run once on mount
+
   // console.log("state",state)
   const [countries, setCountries] = useState([]);
   const [provinces, setProvinces] = useState([]);
   const [universities, setUniversities] = useState([]);
-  const [courses, setCourses] = useState([]);
   const [isExpanded, setIsExpanded] = useState(true);
   const { singleCourse } = useSelector((state) => state.course);
   const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
@@ -104,7 +123,7 @@ const AllCourseDetailed = () => {
        
         const result = await AllCourse().unwrap();
         if (Array.isArray(result)) {
-          setCourses(result);
+          // setCourses(result);
           console.log(result,"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
           
         } else {
@@ -121,6 +140,25 @@ const AllCourseDetailed = () => {
   console.log("course", courses)
   console.log("fitlers", filters)
 
+
+
+
+   const handleSearch = async () => {
+    try {
+      const result = await AllCourse(filters).unwrap();
+      console.log("my results------------", result)
+      if (Array.isArray(result)) {
+        setCourses(result);
+      } else {
+        console.error('Expected an array but got:', result);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
+  };
+
+
+
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
     const newFilters = {
@@ -128,11 +166,17 @@ const AllCourseDetailed = () => {
       [name]: type === 'checkbox' ? checked : value,
     };
     setFilters(newFilters);
-  
+     const result = await AllCourse(newFilters).unwrap();
+     console.log(result,"****************************************************");
+     
+      if (Array.isArray(result)) {
+        setCourses(result);
+      }
     // Log the selected country
     console.log('Country selected:', value);
     console.log('Updated filters:', newFilters);
   
+    // handleSearch()
     // if (name === 'country') {
     //   try {
     //     // Fetch provinces based on the selected country
@@ -172,19 +216,7 @@ const AllCourseDetailed = () => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
-  const handleSearch = async () => {
-    try {
-      const result = await AllCourse(filters).unwrap();
-      console.log("my results------------", result)
-      if (Array.isArray(result)) {
-        setCourses(result);
-      } else {
-        console.error('Expected an array but got:', result);
-      }
-    } catch (error) {
-      console.error('Error during search:', error);
-    }
-  };
+ 
 
   const renderLanguageRequirements = (requirements) => {
     if (!requirements) {
@@ -466,7 +498,7 @@ const AllCourseDetailed = () => {
                       </p>
                       <p><span className="font-semibold">Duration:</span> {course?.Duration}</p>
                       <p><span className="font-semibold">Location:</span> {course?.Location}</p>
-                       <p><span className="font-semibold">Country:</span> {course?.Duration}</p>
+                       <p><span className="font-semibold">Country:</span> {course?.University?.Country?.name}</p>
                       <div className="flex items-center gap-1">
                         <span className="font-semibold">Rating:</span>
                         <div className="text-yellow-500">

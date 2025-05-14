@@ -331,12 +331,7 @@ export default function CourseDetailed() {
                                   {singleCourse.Intake.map((intakeItem, index) => (
                                     <tr key={intakeItem._id || index} className="border-t">
                                       <td className="px-6 py-2">
-                                        {intakeItem?.date
-                                          ? new Date(intakeItem.date).toLocaleDateString('en-GB', {
-                                            month: 'long',
-                                            year: 'numeric',
-                                          })
-                                          : "N/A"}
+                                        {intakeItem?.date}
                                       </td>
                                       <td className="px-6 py-4">
                                         {intakeItem?.expiresAt

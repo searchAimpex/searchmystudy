@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCountryFetchMutation } from '../../slices/adminApiSlice';
+import { useAllCourseMutation, useCountryFetchMutation } from '../../slices/adminApiSlice';
 import { toast } from 'react-toastify';
 
 const Categories = [
@@ -19,9 +19,11 @@ const Levels = [
 ];
 
 export default function CourseFinder() {
+    const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
+      const [courses, setCourses] = useState([]);
   const [filters, setFilters] = useState({
     category: '',
-    level: '',
+    programLevel: '',
     country: ''
   });
   const [countries, setCountries] = useState([]);
@@ -52,14 +54,30 @@ export default function CourseFinder() {
     }));
   };
 
-  const handleSearch = () => {
-    const { category, level, country } = filters;
-    if (category && level) {
-      navigate('/course/all', { state: { filters } });
-    } else {
-      toast.error("category and level are required.");
+
+    const handleSearch = async () => {
+    try {
+      const result = await AllCourse(filters).unwrap();
+      console.log("my results------------", filters)
+      if (Array.isArray(result)) {
+        setCourses(result);
+ navigate('/course/all', { state: { filters } });
+      } else {
+        console.error('Expected an array but got:', result);
+      }
+    } catch (error) {
+      console.error('Error during search:', error);
     }
   };
+
+  // const handleSearch = () => {
+  //   const { category, level, country } = filters;
+  //   if (category && level) {
+  //     navigate('/course/all', { state: { filters } });
+  //   } else {
+  //     toast.error("category and level are required.");
+  //   }
+  // };
 
   return (
     <div className='rounded-3xl relative bottom-[90px] pb-5 bg-white mx-auto my-8 w-[90%] md:w-[80%] shadow-[0_0_12px_#0004]'>

@@ -291,11 +291,6 @@ export default function MbbsCreateCoursePop({ open, handleClose }) {
         formValues.Category !== '' &&
         formValues.Intake.date !== '' &&
         formValues.Intake.expiresAt !== '' &&
-        // (
-          // formValues.languageRequire.english === true ||
-          // formValues.languageRequire.no_any_preference === true ||
-          // formValues.languageRequire.motherTongue === true
-        // ) &&
         formValues.languageRequire.Duration !== ''
         
       ) {

@@ -91,15 +91,15 @@ const courseSchema = mongoose.Schema(
         languageRequire:{
             english:{
                 type:Boolean,
-                default:false
+              
             },
             no_any_preference:{
                 type:Boolean,
-                default:false
+               
             },
             motherTongue:{
                 type:Boolean,
-                default:false
+               
             }
         },
         // LanguageRequirements: {

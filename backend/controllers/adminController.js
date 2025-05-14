@@ -856,29 +856,35 @@ const getCourseById = asyncHandler(async (req, res) => {
 // @route   POST /courses
 // @access  Public
 const createCourse = asyncHandler(async (req, res) => {
+const sanitizeBoolean = (val) => val === true || val === 'true';
 
   // let tareekh = new Date()
   const university = await University.findById(req.body.University)
   // university.Course.push(createdCourse._id)
   // await university.save()
+  console.log(req.body.languageRequire,"||||||||||||||||||||||||||||||||||||||||||");
   
   const course = new Course({
-    ProgramName :req.body.ProgramName,
-    University:university,
-    Eligibility:req.body.Eligibility,
-    WebsiteURL:req.body.WebsiteURL,
-    Location:req.body.Location,
-    Duration:req.body.Duration,
-    Intake:req.body.Intake,
-    Scholarships:req.body.Scholarships,
-    ProgramLevel:req.body.ProgramLevel,
-    languageRequire:req.body.languageRequire,
-    LanguageRequirements:req.body.LanguageRequirements,
-    StandardizeRequirement:req.body.StandardizeRequirement,
-    Category:req.body.Category,
-    Fees:req.body.Fees,
-    broucherURL:req.body.broucherURL
-  });
+  ProgramName: req.body.ProgramName,
+  University: university,
+  Eligibility: req.body.Eligibility,
+  WebsiteURL: req.body.WebsiteURL,
+  Location: req.body.Location,
+  Duration: req.body.Duration,
+  Intake: req.body.Intake,
+  Scholarships: sanitizeBoolean(req.body.Scholarships),
+  ProgramLevel: req.body.ProgramLevel,
+  languageRequire: {
+    english: sanitizeBoolean(req.body.languageRequire?.english),
+    no_any_preference: sanitizeBoolean(req.body.languageRequire?.no_any_preference),
+    motherTongue: sanitizeBoolean(req.body.languageRequire?.motherTongue),
+  },
+  LanguageRequirements: req.body.LanguageRequirements,
+  StandardizeRequirement: req.body.StandardizeRequirement,
+  Category: req.body.Category,
+  Fees: req.body.Fees,
+  broucherURL: req.body.broucherURL,
+});
   
   const createdCourse = await course.save();
 
