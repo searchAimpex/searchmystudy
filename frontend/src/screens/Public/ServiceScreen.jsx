@@ -292,7 +292,7 @@ export default function ServiceScreen() {
                 {/* Recent Blogs Section */}
                 <div className='flex flex-col space-y-8'>
                     <div className='flex flex-row space-x-4 items-center mb-6'>
-                        <span className='text-4xl md:text-5xl font-extrabold text-blue-main'>Recent</span>
+                        <span className='text-4xl md:text-52xl font-extrabold text-blue-main'>Recent</span>
                         <span className='text-4xl md:text-5xl font-extrabold text-gold-main'>Blogs</span>
                     </div>
                     {recentBlogs.map((blog, index) => (
