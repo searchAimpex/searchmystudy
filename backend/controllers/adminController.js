@@ -366,6 +366,24 @@ const deleteCounsellor = async (req, res) => {
 const createBlog = asyncHandler(async (req, res) => {
   const { title, bannerURL, content, thumbnailURL } = req.body;
 
+  // Field-wise validation
+  if (!title || title.trim() === "") {
+    return res.status(400).json({ message: "Title is required." });
+  }
+
+  if (!bannerURL || bannerURL.trim() === "") {
+    return res.status(400).json({ message: "Banner URL is required." });
+  }
+
+  if (!content || content.trim() === "") {
+    return res.status(400).json({ message: "Content is required." });
+  }
+
+  if (!thumbnailURL || thumbnailURL.trim() === "") {
+    return res.status(400).json({ message: "Thumbnail URL is required." });
+  }
+
+  // Create new blog
   const blog = new Blog({
     title,
     bannerURL,

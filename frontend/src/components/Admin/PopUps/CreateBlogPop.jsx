@@ -109,22 +109,24 @@ const CreateBlogPop = ({ open, handleClose }) => {
 
   const onSubmit = async () => {
     try {
+      console.log(formValues);
+      
       const res = await CreateBlog(formValues).unwrap();
-      dispatch(AddBlog(res));
-      handleClose();
-      setFormValues({
-        title: '',
-        content: '',
-        bannerURL: '',
-        thumbnailURL: '',
-      });
-      setUploads({
-        banner: { progress: 0, preview: null, name: '', loading: false },
-        thumbnail: { progress: 0, preview: null, name: '', loading: false },
-      });
-      setWordCount(0);
+      // dispatch(AddBlog(res));
+      // handleClose();
+      // setFormValues({
+      //   title: '',
+      //   content: '',
+      //   bannerURL: '',
+      //   thumbnailURL: '',
+      // });
+      // setUploads({
+      //   banner: { progress: 0, preview: null, name: '', loading: false },
+      //   thumbnail: { progress: 0, preview: null, name: '', loading: false },
+      // });
+      // setWordCount(0);
     } catch (error) {
-      toast.error('Failed to create blog');
+      toast.error(error.data.message);
     }
   };
 
@@ -258,24 +260,21 @@ const CreateBlogPop = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={12} md={6}>
               <FileUploadCard type="thumbnail" label="Upload Thumbnail Image" />
+                <p className='text-red-300 mt-3 font-bold'>Image size should be 500 x 250px</p>
             </Grid>
           </Grid>
+              <p className='text-red-300 mt-3 font-bold'>Image size should be 1500 x 50 0px</p>
 
           <Box sx={{ flex: 1, minHeight: '400px' }}>
             <FormLabel sx={{ display: 'block', mb: 1 }}>Content</FormLabel>
             <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, height: '100%' }}>
-              <TextEditor 
-                popupData={formValues.content} 
-                setPopUpData={(value) => {
-                  const wc = countWords(value);
-                  if (wc <= maxWords) {
-                    setFormValues(prev => ({ ...prev, content: value }));
-                    setWordCount(wc);
-                  } else {
-                    toast.warn(`Word limit exceeded! Max ${maxWords} words allowed.`);
-                  }
-                }}
-              />
+                 <TextEditor
+  value={formValues.content}
+  onChange={(value) => {
+    setFormValues(prev => ({ ...prev, content: value.target.value }));
+    // setWordCount(countWords(value));
+  }}
+/>
             </Box>
             <Box sx={{ textAlign: 'right', mt: 1, fontSize: '0.9rem' }}>
               {wordCount} / {maxWords} words
