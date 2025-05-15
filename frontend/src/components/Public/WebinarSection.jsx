@@ -189,69 +189,65 @@ function PopUp({ isModalOpen, handleModalClose }) {
 
     return (
         <Modal open={isModalOpen} onClose={handleModalClose}>
-            <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                className="absolute left-[35%] top-[30%] p-6 rounded-lg bg-white shadow-2xl w-[90%] max-w-md"
-            >
-                <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Apply for the Webinar</Typography>
-                    <span onClick={handleModalClose} className="cursor-pointer hover:text-red-500">X</span>
-                </Box>
-
-                <form  className="space-y-4">
-                    <input
-                        type="text"
-                        placeholder="Full Name"
-                        // value={name}
-                        onChange={(e) => setData((prev)=>({...prev, name:e.target.value}))}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        required
-                    />
-                    <input
-                        type="email"
-                        placeholder="Email Address"
-                        // value={email}
-                        onChange={(e) => setData((prev)=>({...prev, email:e.target.value}))}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="Phone Number"
-                        // value={phoneNo}
-                        onChange={(e) => setData((prev)=>({...prev, number:e.target.value}))}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        required
-                    />
-
-                    <input
-                        type="text"
-                        placeholder="State"
-                        // value={phoneNo}
-                        onChange={(e) => setData((prev)=>({...prev, state:e.target.value}))}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        required
-                    />
-                    
-                    <input
-                        type="text"
-                        placeholder="Country"
-                        // value={phoneNo}
-                        onChange={(e) => setData((prev)=>({...prev, country:e.target.value}))}
-                        className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                        required
-                    />
-               
-                    <Button onClick={sendWebinarToEmail} type="submit" variant="contained" color="primary" fullWidth disabled={isLoading}>
-                        {isLoading ? 'Submitting...' : 'Submit Application'}
-                    </Button>
-                </form>
-
-                {isError && <Typography color="error" mt={2}>{error?.data?.message || 'Something went wrong. Please try again.'}</Typography>}
-            </motion.div>
-        </Modal>
+        <div className="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-md p-6 rounded-lg bg-white shadow-2xl"
+          >
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Apply for the Webinar</Typography>
+              <span onClick={handleModalClose} className="cursor-pointer hover:text-red-500">X</span>
+            </Box>
+      
+            <form className="space-y-4">
+              <input
+                type="text"
+                placeholder="Full Name"
+                onChange={(e) => setData((prev) => ({ ...prev, name: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              />
+              <input
+                type="email"
+                placeholder="Email Address"
+                onChange={(e) => setData((prev) => ({ ...prev, email: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Phone Number"
+                onChange={(e) => setData((prev) => ({ ...prev, number: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              />
+              <input
+                type="text"
+                placeholder="State"
+                onChange={(e) => setData((prev) => ({ ...prev, state: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Country"
+                onChange={(e) => setData((prev) => ({ ...prev, country: e.target.value }))}
+                className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                required
+              />
+      
+              <Button onClick={sendWebinarToEmail} type="submit" variant="contained" color="primary" fullWidth disabled={isLoading}>
+                {isLoading ? 'Submitting...' : 'Submit Application'}
+              </Button>
+            </form>
+      
+            {isError && <Typography color="error" mt={2}>{error?.data?.message || 'Something went wrong. Please try again.'}</Typography>}
+          </motion.div>
+        </div>
+      </Modal>
+      
     );
 }
 

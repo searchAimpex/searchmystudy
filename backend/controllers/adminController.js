@@ -1112,12 +1112,47 @@ const webinar_sendEmail = asyncHandler(async (req, res) => {
     sender: { name: 'SearchMyStudy', email: verifiedSenderEmail },
     subject: 'Webinar Registration Confirmation',
     htmlContent: `
-      <p>Hello ${name},</p>
-      <p>Thank you for registering for our webinar. We're excited to have you join us.</p>
-      <p><strong>Zoom Link:</strong> <a href="https://zoom.us/your-meeting-link">Join Webinar</a></p>
-      <p>Best regards,<br>Webinar Team</p>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f2f2f2; padding: 30px;">
+        <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 30px; border-radius: 10px; border: 1px solid #e0e0e0;">
+          <div style="text-align: center; margin-bottom: 30px;">
+            <h1 style="color: #003366; font-size: 24px;">Search<span style="color: #DAA520;">My</span>Study</h1>
+          </div>
+  
+          <h2 style="color: #003366;">Hello ${name},</h2>
+          <p style="font-size: 16px; color: #444444; line-height: 1.6;">
+            Thank you for registering for our <strong>exclusive webinar</strong>! We're excited to have you with us.
+          </p>
+  
+          <div style="background-color: #fdf7e3; border-left: 5px solid #DAA520; padding: 20px; margin: 20px 0; border-radius: 8px;">
+            <p style="margin: 0; font-size: 15px; color: #333;">
+              <strong>Webinar Topic:</strong> Study Abroad Guidance<br>
+              <strong>Date:</strong> May 25, 2025<br>
+              <strong>Time:</strong> 5:00 PM IST<br>
+            </p>
+            <a href="https://zoom.us/your-meeting-link" target="_blank" style="display: inline-block; margin-top: 15px; padding: 12px 25px; background-color: #003366; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              Join Webinar
+            </a>
+          </div>
+  
+          <p style="font-size: 15px; color: #555555;">Need help? Just reply to this email—we’re here for you.</p>
+  
+          <p style="margin-top: 40px; color: #666666; font-size: 14px;">
+            Best regards,<br>
+            <strong style="color: #003366;">Webinar Team</strong><br>
+            <span style="color: #DAA520;">SearchMyStudy</span>
+          </p>
+  
+          <hr style="margin: 40px 0; border: none; border-top: 1px solid #e0e0e0;">
+  
+          <p style="text-align: center; font-size: 12px; color: #999999;">
+            © 2025 SearchMyStudy. All rights reserved.<br>
+            <a href="https://searchmystudy.com" target="_blank" style="color: #999999; text-decoration: none;">Visit our website</a>
+          </p>
+        </div>
+      </div>
     `
   };
+  
 
   // Email to the admin to notify about new registration
   const sendAdminEmail = {
@@ -1140,13 +1175,13 @@ const webinar_sendEmail = asyncHandler(async (req, res) => {
     await apiInstance.sendTransacEmail(sendUserEmail);
     await apiInstance.sendTransacEmail(sendAdminEmail);
 
-    console.log("Sending email to user:", sendUserEmail,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-console.log("Sending email to admin:", sendAdminEmail,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///");
+//     console.log("Sending email to user:", sendUserEmail,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+// console.log("Sending email to admin:", sendAdminEmail,"<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<///");
 
-    res.status(200).json({ message: 'Emails sent successfully using Brevo' });
+    res.status(200).json({ message: 'Emails sent successfully.' });
   } catch (error) {
     console.error('Brevo error:', error.response?.body || error);
-    res.status(500).json({ message: 'Failed to send emails via Brevo' });
+    res.status(500).json({ message: 'Failed to send email.y' });
   }
 });
 
