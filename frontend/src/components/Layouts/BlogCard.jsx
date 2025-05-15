@@ -13,14 +13,14 @@ const BlogCard = ({ blog }) => {
     return (
         <div
             onClick={() => navigate(`/blog/${blog._id}`)}
-            className="cursor-pointer shadow-lg rounded-xl overflow-hidden flex flex-col md:flex-row bg-white hover:shadow-2xl transition-shadow duration-300 "
+            className="cursor-pointer shadow-lg rounded-xl h-[300px] overflow-hidden flex flex-col  md:flex-row bg-white hover:shadow-2xl transition-shadow duration-300 "
         // className=''
         >
             {/* Thumbnail */}
             <div className=" h-64 md:h-auto relative">
                 <img
                     src={blog?.thumbnailURL}
-                    alt={blog?.title}
+                    alt="Loading..."
                     className="w-[500px] h-[100%] "
                 />
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
@@ -29,7 +29,7 @@ const BlogCard = ({ blog }) => {
             </div>
 
             {/* Content */}
-            <div className=" md:w-[100%] pl-5 pr-1   ">
+            <div className=" md:w-[100%] pl-5 pr-1  mt-3 ">
                 <h1 className="font-semibold text-xl md:text-xl text-black hover:text-red-500  transition-colors duration-200 mb-2 line-clamp-2">
                     {blog?.title}
                 </h1>
@@ -42,7 +42,7 @@ const BlogCard = ({ blog }) => {
                     <span onClick={() => navigate(`/blog/${blog._id}`)} className='font-semibold hover:text-gold-main'> konw more</span>
                 </p>
 
-                <div className='flex gap-20'>
+                <div className='flex gap-20 mt-8'>
                     <div className='flex'>
                         <DateRangeIcon className='text-gold-main ' />
                         <p className='text-sm mt-[2px] ml-1 text-gold-main'>Feb 5,2025</p>

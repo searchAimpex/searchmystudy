@@ -12,7 +12,7 @@ import {
 } from '../../slices/adminApiSlice';
 import { FetchOneCountry, FetchCountry } from '../../slices/countrySlice';
 import { FetchUniversitys } from '../../slices/universitySlice';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+  import { useNavigate, useParams, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
 import UniversityLogo from '../../assets/UniversityLogo.png';
 import FormImage from '../../assets/FormImage.png';

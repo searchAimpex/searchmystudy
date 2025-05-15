@@ -263,7 +263,7 @@ const CreateBlogPop = ({ open, handleClose }) => {
                 <p className='text-red-300 mt-3 font-bold'>Image size should be 500 x 250px</p>
             </Grid>
           </Grid>
-              <p className='text-red-300 mt-3 font-bold'>Image size should be 1500 x 50 0px</p>
+              <p className='text-red-300 mt-3 font-bold'>Image size should be 1200 x 600px</p>
 
           <Box sx={{ flex: 1, minHeight: '400px' }}>
             <FormLabel sx={{ display: 'block', mb: 1 }}>Content</FormLabel>
