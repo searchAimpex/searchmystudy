@@ -45,7 +45,7 @@ const BlogCard = ({ blog }) => {
                 <div className='flex gap-20 mt-8'>
                     <div className='flex'>
                         <DateRangeIcon className='text-gold-main ' />
-                        <p className='text-sm mt-[2px] ml-1 text-gold-main'>Feb 5,2025</p>
+                        <p className='text-sm mt-[2px] ml-1 text-gold-main'>{blog.date}</p>
                     </div>
 
                     <div className='flex'>

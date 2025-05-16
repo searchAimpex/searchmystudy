@@ -3,11 +3,13 @@ import ServiceHero from '../../assets/ServiceHero.png';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import HowItWorks from '../../assets/HowItWorks.png';
 import CheckBoxRoundedIcon from '@mui/icons-material/CheckBoxRounded';
-import { Accordion, AccordionDetails, AccordionSummary, Typography } from '@mui/material';
-import { PlayCircle } from '@mui/icons-material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Typography } from '@mui/material';
+import { Padding, PlayCircle } from '@mui/icons-material';
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFetchBlogMutation } from '../../slices/adminApiSlice';
+import { Box } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const conselling = [
     {
@@ -88,6 +90,20 @@ You are provided regular updates and assistance about the transaction. Our forex
         logo: <CheckBoxRoundedIcon />
     },
 ];
+
+
+const indiaCourses = [
+    { name: "MBBS", link: "/mbbsindia", path: "/mbbsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "MD", link: "/mdindia", path: "/mdindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "BAMS", link: "/bamsindia", path: "/bamsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "BHMS", link: "/bhmsindia", path: "/bhmsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "BDS", link: "/bdsindia", path: "/bdsindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "NURSING", link: "/nursingindia", path: "/nursingindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "PHARMACY", link: "/pharmacyindia", path: "/pharmacyindia", flagURL: "https://imgur.com/0L7BLOw.png" },
+    { name: "Bv Sc", link: "/bvScindia", path: "/bvScindia", flagURL: "https://imgur.com/0L7BLOw.png" }
+];
+
+
 const recentBlogs = [
     {
         title: "How to Apply for a Student Visa",
@@ -265,7 +281,7 @@ export default function ServiceScreen() {
 
                     {/* Card Grid */}
                     <div >
-                        {conselling.map((item, index) => {
+                        {conselling.slice(0,7).map((item, index) => {
                             const isExpanded = selectedCardIndex === index;
                             const words = item.description.split(' ');
                             const shouldTruncate = words.length > 50;
@@ -302,11 +318,11 @@ export default function ServiceScreen() {
 
                                         {shouldTruncate && (
                                             <button
-                                                style={{ backgroundColor: 'transparent' }}
+                                                // style={{ backgroundColor: 'transparent' }}
                                                 onClick={() =>
                                                     setSelectedCardIndex(isExpanded ? null : index)
                                                 }
-                                                className='font-semibold text-black mt-2  text-sm hover:text-[#db7e19] transition-colors duration-300'
+                                                className='font-semibold  bg-gold-main mt-2  text-sm transition-colors duration-300'
                                             >
                                                 {isExpanded ? 'Show Less' : 'Know More'}
                                             </button>
@@ -385,6 +401,25 @@ export default function ServiceScreen() {
                             </div>
                         ))}
                     </div>
+
+                        <h1 className='font-bold text-2xl mb-2' > <span className='text-blue-main '>Medical Study In</span><span className='text-gold-main'> India</span></h1>
+                    <div className='bg-white p-3 shadow-lg rounded-lg'>
+                        {indiaCourses.map((course, index) => (
+                            <Link to={course.link} underline="hover" key={index} sx={{ display: 'flex', alignItems: 'center', gap: 1, }}>
+                                {/* <Avatar src={course.flagURL} alt="India Flag" sx={{ width: 24, height: 24 }} /> */}
+                                <Typography
+                                    variant="body1"
+                                    className="pt-2 text-gold-main  hover:text-blue-main transition-colors duration-200"
+                                >
+                                    {course.name}
+                                </Typography>
+                            </Link>
+                        ))}
+                    </div>
+
+
+
+
                 </div>
             </div>
 
@@ -432,7 +467,7 @@ export default function ServiceScreen() {
                     </div>
                 </div>
                 <div className='md:w-1/2 mt-8 md:mt-0'>
-                    <img className='w-full h-auto object-cover rounded-lg shadow-lg' src={HowItWorks} alt="How It Works" />
+                    <img className='w-full h-auto object-cover rounded-lg' src={HowItWorks} alt="How It Works" />
                 </div>
             </div>
 

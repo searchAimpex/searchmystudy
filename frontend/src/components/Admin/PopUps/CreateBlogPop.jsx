@@ -26,12 +26,15 @@ import TextEditor from '../TextEditor';
 const storage = getStorage(app);
 
 const CreateBlogPop = ({ open, handleClose }) => {
+  // const[date,setDate] = useState("")
   const [formValues, setFormValues] = useState({
     title: '',
     content: '',
+    date,
     bannerURL: '',
     thumbnailURL: '',
   });
+
 
   const [uploads, setUploads] = useState({
     banner: { progress: 0, preview: null, name: '', loading: false },
@@ -110,7 +113,7 @@ const CreateBlogPop = ({ open, handleClose }) => {
   const onSubmit = async () => {
     try {
       console.log(formValues);
-      
+
       const res = await CreateBlog(formValues).unwrap();
       // dispatch(AddBlog(res));
       // handleClose();
@@ -219,8 +222,8 @@ const CreateBlogPop = ({ open, handleClose }) => {
   );
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={handleClose}
       maxWidth="lg"
       fullWidth
@@ -232,9 +235,9 @@ const CreateBlogPop = ({ open, handleClose }) => {
         }
       }}
     >
-      <DialogTitle sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
+      <DialogTitle sx={{
+        display: 'flex',
+        alignItems: 'center',
         gap: 1,
         borderBottom: 1,
         borderColor: 'divider',
@@ -260,39 +263,55 @@ const CreateBlogPop = ({ open, handleClose }) => {
             </Grid>
             <Grid item xs={12} md={6}>
               <FileUploadCard type="thumbnail" label="Upload Thumbnail Image" />
-                <p className='text-red-300 mt-3 font-bold'>Image size should be 500 x 250px</p>
+              <p className='text-red-300 mt-3 font-bold'>Image size should be 500 x 250px</p>
             </Grid>
           </Grid>
-              <p className='text-red-300 mt-3 font-bold'>Image size should be 1200 x 600px</p>
+          <p className='text-red-300 mt-3 font-bold'>Image size should be 1200 x 600px</p>
 
           <Box sx={{ flex: 1, minHeight: '400px' }}>
             <FormLabel sx={{ display: 'block', mb: 1 }}>Content</FormLabel>
             <Box sx={{ border: 1, borderColor: 'divider', borderRadius: 1, height: '100%' }}>
-                 <TextEditor
-  value={formValues.content}
-  onChange={(value) => {
-    setFormValues(prev => ({ ...prev, content: value.target.value }));
-    // setWordCount(countWords(value));
-  }}
-/>
+              <TextEditor
+                value={formValues.content}
+                onChange={(value) => {
+                  setFormValues(prev => ({ ...prev, content: value.target.value }));
+                  // setWordCount(countWords(value));
+                }}
+              />
             </Box>
             <Box sx={{ textAlign: 'right', mt: 1, fontSize: '0.9rem' }}>
               {wordCount} / {maxWords} words
             </Box>
           </Box>
+
+          <div class="w-64">
+            <label for="date" class="block mb-2 text-sm font-medium text-gray-700">
+              Select a date
+            </label>
+            <input
+        type="date"
+        id="date"
+        name="date"
+        value={date}
+        onChange={(e) => setFormValues((prev)=>({...prev,date:e.target.value}))}
+        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+      />
+          </div>
+
+
         </Box>
       </DialogContent>
-      <DialogActions sx={{ 
-        borderTop: 1, 
+      <DialogActions sx={{
+        borderTop: 1,
         borderColor: 'divider',
         p: 2,
-        gap: 1 
+        gap: 1
       }}>
         <Button variant="outlined" onClick={handleClose}>
           Cancel
         </Button>
-        <Button 
-          variant="contained" 
+        <Button
+          variant="contained"
           onClick={onSubmit}
           disabled={wordCount > maxWords}
         >
