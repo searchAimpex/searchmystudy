@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Typography, IconButton, useTheme, Card, CardContent, CardHeader, Accordion, AccordionSummary, AccordionDetails } from "@mui/material";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AboutImage from "../../assets/AboutImage.png";
+import image from "../../assets/BannerService-e90bab99.png"
+import poster from "../../assets/Red and Yellow Abstract Study Abroad Facebook Post.JPG"
+import { useCountryAllFetchMutation, useFetchBlogMutation } from '../../slices/adminApiSlice';
 
-
-
+import { FetchBlogs } from '../../slices/blogSlice';
 const faq = [
   {
     question: 'Is MBBS in India provides medical education of good quality?',
@@ -57,6 +59,30 @@ const MbbsIndia = () => {
   const [bookmarks, setBookmarks] = React.useState({});
   const theme = useTheme();
 
+  const [FetchBlog] = useFetchBlogMutation();
+
+  const [blog, setblog]  = useState()
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await FetchBlog().unwrap(); // assuming this is an API call that returns { data: [...] }
+  
+        console.log(response, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        
+        // dispatch(FetchBlogs(response.data)); // Dispatching the blog data to Redux or context
+        setblog(response); // Setting it in local state
+      } catch (error) {
+        console.error('Failed to fetch data', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  const getTruncatedContent = (text, maxChars = 50) => {
+    if (!text) return '';
+    return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+  };
+
   React.useEffect(() => {
     setExpanded(0);
   }, []);
@@ -86,13 +112,13 @@ const MbbsIndia = () => {
           <table className="min-w-full border-collapse">
             <thead>
               <tr>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">State or Union Territory</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Government Colleges</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Government Seats</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Private Colleges</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Private Seats</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Total Colleges</th>
-                <th className="border-b-2 border-gray-300 p-2 text-left bg-blue-100">Total Number of Seats</th>
+                <th className="border-b-2 border-gray-300 p-2 text-white text-left bg-gold-main">State or Union Territory</th>
+                <th className="border-b-2 border-gray-300 p-2 text-white text-left bg-gold-main">Government Colleges</th>
+                <th className="border-b-2 border-gray-300 p-2 text-left text-white bg-gold-main">Government Seats</th>
+                <th className="border-b-2 border-gray-300 p-2 text-left text-white bg-gold-main">Private Colleges</th>
+                <th className="border-b-2 border-gray-300 p-2 text-left text-white bg-gold-main">Private Seats</th>
+                <th className="border-b-2 border-gray-300 p-2 text-left text-white bg-gold-main">Total Colleges</th>
+                <th className="border-b-2 border-gray-300 p-2 text-left text-white bg-gold-main">Total Number of Seats</th>
               </tr>
             </thead>
             <tbody>
@@ -421,7 +447,7 @@ const MbbsIndia = () => {
                 <td className="border-b border-gray-300 p-2">12</td>
                 <td className="border-b border-gray-300 p-2">2090</td>
               </tr>
-              <tr className="hover:bg-blue-50 transition-colors duration-200">
+              <tr className="hover:bg-gold-50 transition-colors duration-200">
                 <td className="border-b border-gray-300 p-2">West Bengal</td>
                 <td className="border-b border-gray-300 p-2">15</td>
                 <td className="border-b border-gray-300 p-2">2330</td>
@@ -440,204 +466,417 @@ const MbbsIndia = () => {
     {
       title: "MBBS in India at a Glance",
       content: (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="bg-blue-100 shadow-lg">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 ">
+          <Card
+            className="bg-yellow-100 border border-yellow-300 rounded-lg
+                     transform transition-transform duration-300 hover:scale-105 
+                     animate-fadeIn"
+          >
             <CardHeader
               title="Key Information"
-              className="bg-blue-200"
+              className="bg-yellow-400 text-yellow-900 font-semibold text-xl rounded-t-lg p-4
+                       transition-shadow duration-300 cursor-default"
             />
-            <CardContent>
-              <ul className="list-disc pl-5 text-lg text-gray-700">
-                <li><strong>Intake:</strong> September</li>
-                <li><strong>Minimum Percentage:</strong> 60% in PCB for General, 40% for SC/ST and Reserve Categories</li>
-                <li><strong>NEET:</strong> Yes With Qualifying Marks</li>
-                <li><strong>IELTS / TOEFL:</strong> Not Required</li>
-                <li><strong>Processing Time:</strong> 45-60 Days</li>
-                <li><strong>Lowest Fees:</strong> 4,00,000 INR Per Year (Pvt. Colleges)</li>
-                <li><strong>Maximum Fees:</strong> 15,00,000 INR Per Year (Pvt. Colleges)</li>
-                <li><strong>Living Cost:</strong> 7500 INR Per Month</li>
-                <li><strong>Duration:</strong> 4.5 Years</li>
-                <li><strong>Medium:</strong> English, Hindi and Regional</li>
-                <li><strong>Top Universities:</strong> All Government University</li>
-                <li><strong>Recognition:</strong> NMC and WHO approved</li>
+            <CardContent className="p-6">
+              <ul className="list-disc pl-6 space-y-3 text-yellow-900 text-base leading-relaxed">
+                {[
+                  "Intake: September",
+                  "Minimum Percentage: 60% in PCB for General, 40% for SC/ST and Reserve Categories",
+                  "NEET: Yes With Qualifying Marks",
+                  "IELTS / TOEFL: Not Required",
+                  "Processing Time: 45-60 Days",
+                  "Lowest Fees: 4,00,000 INR Per Year (Pvt. Colleges)",
+                  "Maximum Fees: 15,00,000 INR Per Year (Pvt. Colleges)",
+                  "Living Cost: 7500 INR Per Month",
+                  "Duration: 4.5 Years",
+                  "Medium: English, Hindi and Regional",
+                  "Top Universities: All Government University",
+                  "Recognition: NMC and WHO approved",
+                ].map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="hover:animate-bounce cursor-pointer transition-transform duration-300"
+                  >
+                    <strong>{item.split(":")[0]}:</strong>{item.split(":").slice(1).join(":")}
+                  </li>
+                ))}
               </ul>
             </CardContent>
           </Card>
-          <Card className="bg-blue-100 shadow-lg">
+
+          <Card
+            className="bg-blue-100 border border-blue-300 rounded-lg shadow-md
+                     transform transition-transform duration-300 hover:scale-105 hover:shadow-xl
+                     animate-fadeIn"
+          >
             <CardHeader
               title="Eligibility Criteria"
-              className="bg-blue-200"
+              className="bg-blue-400 text-blue-900 font-semibold text-xl rounded-t-lg p-4
+                       transition-shadow duration-300 cursor-default"
             />
-            <CardContent>
-              <ul className="list-disc pl-5 text-lg text-gray-700">
-                <li>The candidate must be of 17 years of age at the time of MBBS admission in India.</li>
-                <li>The candidate must not exceed the age of 25 years.</li>
-                <li>The medical candidate needs to score 50% marks in 12th grade for general category students. Reserved category candidates must achieve a minimum of 40%.</li>
-                <li>A medical candidate must have the primary subjects in 12th grade should be Physics, Chemistry, and Biology.</li>
-                <li>To get admission to India Medical College, students need to clear the NEET entrance test with a good score.</li>
-              </ul>
+            <CardContent className="p-6">
+              <ol className="list-decimal pl-6 space-y-3 text-blue-900 text-base leading-relaxed">
+                {[
+                  "The candidate must be of 17 years of age at the time of MBBS admission in India.",
+                  "The candidate must not exceed the age of 25 years.",
+                  "The medical candidate needs to score 50% marks in 12th grade for general category students. Reserved category candidates must achieve a minimum of 40%.",
+                  "A medical candidate must have the primary subjects in 12th grade should be Physics, Chemistry, and Biology.",
+                  "To get admission to India Medical College, students need to clear the NEET entrance test with a good score.",
+                ].map((item, idx) => (
+                  <li
+                    key={idx}
+                    className="hover:animate-bounce cursor-pointer transition-transform duration-300"
+                  >
+                    {item}
+                  </li>
+                ))}
+              </ol>
             </CardContent>
           </Card>
         </div>
+
       ),
     },
     {
       title: 'Recognition of Indian Medical Universities',
       content: (
-        <ul className="list-disc pl-5">
-          <li>National Medical Commission (NMC)</li>
-          <li>World Health Organization (WHO)</li>
-          <li>United Nations Educational, Scientific and Cultural Organization (UNESCO)</li>
+        <ul className="list-decimal list-inside space-y-3  text-gray-800 text-lg ">
+          <li className="flex items-center gap-3 hover:text-gold-main transition-colors duration-300 cursor-pointer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+            </svg>
+            National Medical Commission (NMC)
+          </li>
+          <li className="flex items-center gap-3 hover:text-gold-main transition-colors duration-300 cursor-pointer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+            </svg>
+            World Health Organization (WHO)
+          </li>
+          <li className="flex items-center gap-3 hover:text-gold-main transition-colors duration-300 cursor-pointer">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+            </svg>
+            United Nations Educational, Scientific and Cultural Organization (UNESCO)
+          </li>
         </ul>
       ),
     },
     {
       title: 'Documents Required for MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>Valid mark sheets of class 10th and 12th</li>
-          <li>NEET scorecard</li>
-          <li>School transfer certificate, code of conduct certificate, medical certificate, health check-up certificate, and no criminal record certificate</li>
-          <li>Passport and passport-size photocopies</li>
-          <li>Caste certificate (if applicable)</li>
-          <li>Parents’ bank statement showing ability to pay fees</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'Valid mark sheets of class 10th and 12th',
+            'NEET scorecard',
+            'School transfer certificate, code of conduct certificate, medical certificate, health check-up certificate, and no criminal record certificate',
+            'Passport and passport-size photocopies',
+            'Caste certificate (if applicable)',
+            'Parents’ bank statement showing ability to pay fees',
+          ].map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
       ),
     },
     {
       title: 'Process of Admission for MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>Complete Class XII with Physics, Chemistry, and Biology</li>
-          <li>Qualify NEET for MBBS admission</li>
-          <li>Appear for counseling</li>
-          <li>Other exams like AIIMS and JIPMER may also be required</li>
-          <li>Entrance exams for AIIMS</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg    ">
+          {[
+            'Complete Class XII with Physics, Chemistry, and Biology',
+            'Qualify NEET for MBBS admission',
+            'Appear for counseling',
+            'Other exams like AIIMS and JIPMER may also be required',
+            'Entrance exams for AIIMS',
+          ].map((step, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{step}</span>
+            </li>
+          ))}
         </ul>
       ),
     },
     {
       title: 'Imperative Dates for MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>NEET Entrance Test: National Eligibility cum Entrance Test</li>
-          <li>AIIMS Entrance Test: Entrance exam for All India Institute of Medical Sciences</li>
-          <li>JIPMER Entrance Test: Jawaharlal Institute of PG Medical Education and Research</li>
-          <li>Application period: June and July</li>
-          <li>Academic year starts in September or October</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'NEET Entrance Test: National Eligibility cum Entrance Test',
+            'AIIMS Entrance Test: Entrance exam for All India Institute of Medical Sciences',
+            'JIPMER Entrance Test: Jawaharlal Institute of PG Medical Education and Research',
+            'Application period: June and July',
+            'Academic year starts in September or October',
+          ].map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5  text-green-500  mt-1 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
       ),
-    },
+    }
+    ,
     {
       title: 'Advantages of MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>India ranks among top medical education facilities worldwide</li>
-          <li>Exposure to tropical and rare diseases</li>
-          <li>Real-life experience during internships</li>
-          <li>State-funded medical universities in every state</li>
-          <li>Indian MBBS degree accepted globally</li>
-          <li>No requirement for IELTS or TOEFL</li>
-          <li>Increasing demand for doctors in India</li>
-          <li>Access to modern medical technologies</li>
-          <li>Excellent postgraduate and specialization opportunities</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'India ranks among top medical education facilities worldwide',
+            'Exposure to tropical and rare diseases',
+            'Real-life experience during internships',
+            'State-funded medical universities in every state',
+            'Indian MBBS degree accepted globally',
+            'No requirement for IELTS or TOEFL',
+            'Increasing demand for doctors in India',
+            'Access to modern medical technologies',
+            'Excellent postgraduate and specialization opportunities',
+          ].map((advantage, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{advantage}</span>
+            </li>
+          ))}
         </ul>
       ),
     },
     {
       title: 'Teaching Methodology Adopted for MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>Academic year begins in September</li>
-          <li>English is the medium of instruction</li>
-          <li>Local languages are also used; Hindi is commonly known</li>
-          <li>NMC lists medical colleges offering English-medium education</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'Academic year begins in September',
+            'English is the medium of instruction',
+            'Local languages are also used; Hindi is commonly known',
+            'NMC lists medical colleges offering English-medium education',
+          ].map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
       ),
     },
     {
       title: 'Disadvantages of MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>Limited seats in government colleges; excellent NEET results required</li>
-          <li>Limited global exposure</li>
-          <li>Mandatory entrance exams; difficulty if not cleared</li>
-          <li>High fees in private medical colleges</li>
-          <li>Additional donations or capitation fees in private colleges</li>
-          <li>Limited opportunity to explore new cultures or languages</li>
-          <li>Infrastructure in Indian universities may be less compared to abroad</li>
-          <li>High demand and limited seats in government medical colleges</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'Limited seats in government colleges; excellent NEET results required',
+            'Limited global exposure',
+            'Mandatory entrance exams; difficulty if not cleared',
+            'High fees in private medical colleges',
+            'Additional donations or capitation fees in private colleges',
+            'Limited opportunity to explore new cultures or languages',
+            'Infrastructure in Indian universities may be less compared to abroad',
+            'High demand and limited seats in government medical colleges',
+          ].map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-3 w-3 text-green-500 mt-2 flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
       ),
-    },
+    }
+    ,
     {
       title: 'Economical MBBS in India',
       content: (
-        <ul className="list-disc pl-5">
-          <li>Economical if NEET is cleared; private college fees range from 50 to 60 lakhs</li>
-          <li>Abroad universities may offer more economical options</li>
-          <li>Fees structure may vary for NRI students</li>
-          <li>Contact Indian Embassy for detailed information</li>
-          <li>Insurance costs: 5,000 to 15,000 INR/year</li>
-          <li>Medical check-up: 20,000 to 30,000 INR/year</li>
-          <li>Food expenses: 10,000 to 20,000 INR/year</li>
-          <li>Hostel fees: 70,000 to 1,00,000 INR/year</li>
+        <ul className="list-none pl-0 space-y-3 text-gray-800 text-base sm:text-lg ">
+          {[
+            'Economical if NEET is cleared; private college fees range from 50 to 60 lakhs',
+            'Abroad universities may offer more economical options',
+            'Fees structure may vary for NRI students',
+            'Contact Indian Embassy for detailed information',
+            'Insurance costs: 5,000 to 15,000 INR/year',
+            'Medical check-up: 20,000 to 30,000 INR/year',
+            'Food expenses: 10,000 to 20,000 INR/year',
+            'Hostel fees: 70,000 to 1,00,000 INR/year',
+          ].map((item, index) => (
+            <li
+              key={index}
+              className="flex items-start gap-3 hover:text-gold-main transition-colors duration-300"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-green-500 mt-1  flex-shrink-0"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2l4 -4" />
+              </svg>
+              <span>{item}</span>
+            </li>
+          ))}
         </ul>
       ),
-    },
+    }
+    ,
     {
       title: 'Syllabus for MBBS in India',
       content: (
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
-            <tr>
-              <th className="border px-4 py-2">Year</th>
-              <th className="border px-4 py-2">Semesters</th>
-              <th className="border px-4 py-2">Subjects Covered</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border px-4 py-2">Phase I</td>
-              <td className="border px-4 py-2">1ST – 2ND Semester</td>
-              <td className="border px-4 py-2">
-                Pre-Clinical Subjects – Human Anatomy, Biochemistry, Physiology, Bio-Physics, Biochemistry, Introduction to Community Medicine Humanities
-              </td>
-            </tr>
-            <tr>
-              <td className="border px-4 py-2">Phase II</td>
-              <td className="border px-4 py-2">3rd, 4th & 5th Semester</td>
-              <td className="border px-4 py-2">
-                Para-clinical and Clinical subjects – Community Medicine, Forensic Medicine, Clinical postings in wards, OPDs, Pathology, Pharmacology, Microbiology
-              </td>
-            </tr>
-            <tr>
-              <td className="border px-4 py-2">Phase III</td>
-              <td className="border px-4 py-2">6th – 9th Semester</td>
-              <td className="border px-4 py-2">
-                Continuation of clinical subjects – Community Medicine, Obstetrics and Gynaecology, Medicine and Allied subjects (Psychiatry, Dermatology), Surgery and Allied subjects (Anesthesiology, ENT, Ophthalmology, Orthopedics), Paediatrics, Clinical Postings
-              </td>
-            </tr>
-            <tr>
-              <td className="border px-4 py-2">Internship</td>
-              <td className="border px-4 py-2"></td>
-              <td className="border px-4 py-2">
-                Community Medicine, Surgery including Orthopaedics, Medicine, Welfare Planning, Paediatric, Obstetrics/Gynaecology including Family, Ophthalmology, Otorhinolaryngology, Casualty
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div className="overflow-x-auto shadow-lg rounded-xl border border-gray-200 bg-white">
+          <table className="min-w-full divide-y divide-gray-200 text-left text-gray-700 text-sm sm:text-base">
+            <thead className="bg-blue-100">
+              <tr>
+                <th className="px-4 py-3 font-semibold">Year</th>
+                <th className="px-4 py-3 font-semibold">Semesters</th>
+                <th className="px-4 py-3 font-semibold">Subjects Covered</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              <tr className="hover:bg-blue-50 transition duration-300">
+                <td className="px-4 py-3 font-semibold">Phase I</td>
+                <td className="px-4 py-3 ">1ST – 2ND Semester</td>
+                <td className="px-4 py-3">
+                  Pre-Clinical Subjects – Human Anatomy, Biochemistry, Physiology, Bio-Physics, Introduction to Community Medicine, Humanities
+                </td>
+              </tr>
+              <tr className="hover:bg-blue-50 transition duration-300">
+                <td className="px-4 py-3 font-semibold">Phase II</td>
+                <td className="px-4 py-3">3rd, 4th & 5th Semester</td>
+                <td className="px-4 py-3">
+                  Para-clinical and Clinical subjects – Community Medicine, Forensic Medicine, Clinical postings in wards, OPDs, Pathology, Pharmacology, Microbiology
+                </td>
+              </tr>
+              <tr className="hover:bg-blue-50 transition duration-300">
+                <td className="px-4 py-3 font-semibold">Phase III</td>
+                <td className="px-4 py-3">6th – 9th Semester</td>
+                <td className="px-4 py-3">
+                  Continuation of clinical subjects – Community Medicine, Obstetrics and Gynaecology, Medicine and Allied subjects (Psychiatry, Dermatology), Surgery and Allied subjects (Anesthesiology, ENT, Ophthalmology, Orthopedics), Paediatrics, Clinical Postings
+                </td>
+              </tr>
+              <tr className="hover:bg-blue-50 transition duration-300">
+                <td className="px-4 py-3 font-semibold">Internship</td>
+                <td className="px-4 py-3">—</td>
+                <td className="px-4 py-3">
+                  Community Medicine, Surgery including Orthopaedics, Medicine, Welfare Planning, Paediatrics, Obstetrics/Gynaecology including Family, Ophthalmology, Otorhinolaryngology, Casualty
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       ),
-    },
+    }
+
   ];
 
   return (
     <div className=" mx-auto ">
       {/* Hero Section */}
-      <section className=" flex flex-col md:flex-row items-center bg-blue-200 ">
+      <section className="relative flex flex-col md:flex-row items-center h-[200px] bg-blue-200 overflow-hidden">
+        {/* Background Image */}
+        <img
+          src={image}  // replace with your image URL
+          alt="Background"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+        />
+
         {/* Left Side: Text Content */}
         <motion.div
-          className="flex-1 text-center md:text-left mb-8 md:mb-0"
+          className="flex-1 text-center md:text-left mb-8 md:mb-0 relative z-10 px-4"
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -650,73 +889,77 @@ const MbbsIndia = () => {
           >
             MBBS Admission In India
           </motion.h1>
-          <motion.h2
-            className="mt-4 text-xl sm:text-2xl md:text-xl pl-2 text-gray-700"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-          >
-            MBBS in India is one of the highly preferred courses by medical aspirants worldwide. The strong education structure, sincere professors, and top-hole medical universities in India are paving the way for success. To secure admission for MBBS courses in India, the aspirants are required to appear in NEET.
-          </motion.h2>
-
-
           <div className="flex">
-            <button className="mt-6 bg-gold-main" >
+            <button className="mt-6 bg-gold-main px-4 py-2 rounded">
               Get Free Counselling
             </button>
 
-            <div className=" pt-5 pl-2">
-              <span className="font-semibold text-gray-600  ">Call now </span><br />
+            <div className="pt-5 pl-2 text-white">
+              <span className="font-semibold">Call now </span>
+              <br />
               +91 8400770308
             </div>
           </div>
         </motion.div>
-        {/* Right Side: Image */}
+
+        {/* Right Side: Image (empty or you can add something here) */}
         <motion.div
-          className="flex-1 w-full md:w-1/2 flex items-center justify-center"
+          className="flex-1 w-full md:w-1/2 flex items-center justify-center relative z-10"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
         >
-          <img src={AboutImage} alt="MBBS in India" className="w-full h-auto" />
+          {/* Optional content */}
         </motion.div>
       </section>
 
+
       {/* Expandable Sections */}
       <div className="flex flex-col md:flex-row mx-auto space-y-6 md:space-x-6 md:space-y-0">
-        <section className="mt-12 w-full md:w-2/3">
+        <section className="mt-5 w-full w-2/3">
+            <div className="mt-12">
+              <img className="shadow-lg w-[900px] ml-2 h-[600px]" src={poster} alt="" />
+            </div>
           <div className="mb-10 flex items-center justify-center">
-            <Card>
-              <CardHeader
+
+            <div>
+              <h1 className="pl-4 text-5xl text-gold-main font-semibold mt-12"> <span className="text-blue-main">MBBS In</span> India</h1>
+              {/* <CardHeader
                 title="MBBS in India?"
                 subheader="UG Counselling Seat Quota Distribution by MCC or DGHS"
                 className="text-blue-main text-center"
-              />
+              /> */}
               <CardContent>
-                <p className="text-lg text-gray-700">
+                <p className="text-gray-700 text-lg">
                   MBBS in India is one of the highly preferred courses by medical aspirants worldwide. The strong education structure, sincere professors, and top-hole medical universities in India are paving the way for success. To secure admission for MBBS courses in India, the aspirants are required to appear in NEET. A healthy and peaceful environment in India helps the students to acquire knowledge more quickly. MBBS in India demands a student to get at least 50% in the 10+2 examinations. The duration of MBBS courses in India is of 5.5 years. The first 4.5 years is allotted for the classroom training, and the rest is for the internship course. If you are thinking of earning an MBBS degree from a recognized university, India is a great choice. WHO, NMC, and UNESCO approve all the top medical colleges in India. To apply for MBBS courses in India, the aspirants are advised to pay keen attention to the critical dates. In India, the academic year for MBBS courses starts in September or October, and students can start applying in June and July. </p>
-                <p className="mt-4 text-lg text-gray-700">
+                {/* <p className="mt-4  text-gray-700">
                   A healthy and peaceful environment in India helps the students to acquire knowledge more quickly. MBBS in India demands a student to get at least 50% in the 10+2 examinations. The duration of MBBS courses in India is 5.5 years.
-                </p>
+                </p> */}
               </CardContent>
-            </Card>
+            </div>
           </div>
 
-         {/* Toggleable Sections */}
-{sections.map((section, index) => (
-  <div
-    key={index}
-    className="mb-8 rounded-xl bg-white px-6"
-  >
-    {/* Section Title */}
-    <h2 className="text-3xl  font-bold text-blue-main pb-3">
-      {section.title}
-    </h2>
+          {/* Toggleable Sections */}
+          {sections.map((section, index) => (
+            <div
+              key={index}
+              className="mb-8 rounded-xl bg-white px-6"
+            >
+              {/* Section Title */}
+              <h2 className="text-3xl font-bold pb-3">
+                <span className="text-blue-main">
+                  {section.title.split(' ').slice(0, 3).join(' ')}
+                </span>{' '}
+                <span className="text-gold-main">
+                  {section.title.split(' ').slice(3).join(' ')}
+                </span>
+              </h2>
 
-    {/* Section Content */}
-    <div className="overflow-x-auto custom-list">{section.content}</div>
-  </div>
-))}
+
+              {/* Section Content */}
+              <div className="overflow-x-auto custom-list">{section.content}</div>
+            </div>
+          ))}
 
 
 
@@ -774,14 +1017,23 @@ const MbbsIndia = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl text-blue-main font-semibold mb-4">Recent Blogs</h2>
             <ul className="space-y-4">
-              {blogs.map((blog, index) => (
-                <li key={index} className="border-b pb-4">
-                  <a href={blog.link} className="text-lg font-semibold text-blue-600 hover:underline">
-                    {blog.title}
-                  </a>
-                  <p className="text-gray-600 mt-2">{blog.description}</p>
-                </li>
-              ))}
+            {blog?.slice(0, 7).map((blog) => (
+            <div
+              onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex gap-3 pb-2'>
+              <img
+                src={blog.thumbnailURL}
+                className='rounded-xl w-[90px] h-[85px] object-cover'
+                alt={blog.title}
+              />
+              <div className='flex flex-col'>
+                <p className='text-sm text-gold-main font-semibold'>Feb 28, 2025</p>
+                <div
+                  className="prose max-w-none text-sm pt-1 text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: getTruncatedContent(blog?.content) }}
+                />
+              </div>
+            </div>
+          ))}
             </ul>
           </div>
 
