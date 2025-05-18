@@ -10,6 +10,9 @@ const blogSchema = mongoose.Schema(
             type:String,
             required:true
         },
+        date:{
+            type:String
+        },
         content:{
             type:String,
             default:""

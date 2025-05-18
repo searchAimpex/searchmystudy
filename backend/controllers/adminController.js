@@ -364,7 +364,7 @@ const deleteCounsellor = async (req, res) => {
 // @route   POST /api/blogs
 // @access  Public
 const createBlog = asyncHandler(async (req, res) => {
-  const { title, bannerURL, content, thumbnailURL } = req.body;
+  const { title, bannerURL, content, thumbnailURL,date } = req.body;
 
   // Field-wise validation
   if (!title || title.trim() === "") {
@@ -383,11 +383,16 @@ const createBlog = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Thumbnail URL is required." });
   }
 
+  if (!date || date.trim() === "") {
+    return res.status(400).json({ message: "Date is required." });
+  }
+
   // Create new blog
   const blog = new Blog({
     title,
     bannerURL,
     content,
+    date,
     thumbnailURL,
   });
 
