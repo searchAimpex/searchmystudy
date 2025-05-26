@@ -30,7 +30,7 @@ const CreateBlogPop = ({ open, handleClose }) => {
   const [formValues, setFormValues] = useState({
     title: '',
     content: '',
-    date,
+    date: '',
     bannerURL: '',
     thumbnailURL: '',
   });
@@ -289,13 +289,13 @@ const CreateBlogPop = ({ open, handleClose }) => {
               Select a date
             </label>
             <input
-        type="date"
-        id="date"
-        name="date"
-        value={date}
-        onChange={(e) => setFormValues((prev)=>({...prev,date:e.target.value}))}
-        className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
-      />
+              type="date"
+              id="date"
+              name="date"
+              // value={date}
+              onChange={(e) => setFormValues((prev) => ({ ...prev, date: e.target.value }))}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+            />
           </div>
 
 
