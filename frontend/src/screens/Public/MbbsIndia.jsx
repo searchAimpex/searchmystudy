@@ -5,7 +5,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import AboutImage from "../../assets/AboutImage.png";
 import image from "../../assets/BannerService-e90bab99.png"
-import poster from "../../assets/Red and Yellow Abstract Study Abroad Facebook Post.JPG"
+import poster from "../../assets/Red_and_Yellow_Abstract_Study_Abroad_Facebook_Post.JPG"
 import { useCountryAllFetchMutation, useFetchBlogMutation } from '../../slices/adminApiSlice';
 
 import { FetchBlogs } from '../../slices/blogSlice';
