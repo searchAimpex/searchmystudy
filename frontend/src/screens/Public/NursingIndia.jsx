@@ -8,11 +8,14 @@ import educationImage from '../../assets/LoginHero.png';
 import detailsImage from '../../assets/LoginHero.png';
 import eligibilityImage from '../../assets/LoginHero.png';
 import bannerImage from '../../assets/BannerService.png'; // Add banner image path
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1 },
+const fadeInUp = {
+  initial: { opacity: 0, y: 40 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.6 } }
 };
+
 
 const slideIn = {
   hidden: { opacity: 0, y: 50 },
@@ -41,7 +44,7 @@ const NursingIndia = () => {
   const detailsRef = useRef(null);
   const eligibilityRef = useRef(null);
   const faqRef = useRef(null);
-
+  const { singleCountry, countries } = useSelector((state) => state.country);
   const overviewControls = useAnimation();
   const courseControls = useAnimation();
   const educationControls = useAnimation();
@@ -49,225 +52,196 @@ const NursingIndia = () => {
   const eligibilityControls = useAnimation();
   const faqControls = useAnimation();
 
-  const handleScroll = () => {
-    const options = { threshold: 0.2 };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          switch (entry.target) {
-            case overviewRef.current:
-              overviewControls.start('visible');
-              break;
-            case courseRef.current:
-              courseControls.start('visible');
-              break;
-            case educationRef.current:
-              educationControls.start('visible');
-              break;
-            case detailsRef.current:
-              detailsControls.start('visible');
-              break;
-            case eligibilityRef.current:
-              eligibilityControls.start('visible');
-              break;
-            case faqRef.current:
-              faqControls.start('visible');
-              break;
-            default:
-              break;
-          }
-        }
-      });
-    }, options);
-
-    observer.observe(overviewRef.current);
-    observer.observe(courseRef.current);
-    observer.observe(educationRef.current);
-    observer.observe(detailsRef.current);
-    observer.observe(eligibilityRef.current);
-    observer.observe(faqRef.current);
-  };
-
-  useEffect(() => {
-    handleScroll();
-    window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
   return (
-    <div className="bg-gray-50">
-      {/* Banner Section */}
-      <div className="relative">
-        <img src={bannerImage} alt="Banner" className="w-full h-64 object-cover" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-t from-black via-transparent to-transparent">
-          <Typography variant="h2" className="text-white font-bold text-center p-4">
-            Elevate Your Nursing Career
-          </Typography>
-          <button className="mt-4 px-6 py-2 bg-blue-main text-white rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
-            Get Started
-          </button>
+   <div className=' bg-gray-50'>
+     <div className=' w-[100%] flex bg-gray-50' >
+
+      <div className='w-[75%]'>
+        <div className="space-y-24 px-2 ">
+
+          {/* Section 1 */}
+          <motion.div
+            className="flex flex-col md:flex-row items-center"
+            {...fadeInUp}
+          >
+            <div className="md:w-1/2 space-y-4">
+              <h2 className="text-3xl font-bold text-blue-main">B.SC <span className='text-gold-main'>(Nursing)</span></h2>
+              <p className="text-lg text-gray-700">
+                Bachelor of Nursing (B.Sc. in Nursing) is an undergraduate course that trains students in general nursing practices. The programme focuses on mastering various aspects of paramedical studies.
+              </p>
+            </div>
+            <div className="md:w-1/2 flex m-5 ">
+              <img
+                src='https://cdn.dribbble.com/userupload/5146251/file/original-3286ea0b2e4beb67efc8ef54b5b5be83.jpg?resize=400x0'
+                // src="https://universityexpert.co.in/wp-content/uploads/2023/05/6113-07761948en_Masterfile-removebg-preview.png"
+                alt="Why BHMS"
+                className="ml-20 w-[300px] hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </motion.div>
+
+          {/* Section 2 */}
+          <motion.div
+            className="flex "
+            {...fadeInUp}
+          >
+            <div className="  ">
+              <img
+                src='https://cdn.dribbble.com/userupload/5146251/file/original-3286ea0b2e4beb67efc8ef54b5b5be83.jpg?resize=400x0'
+                alt="Required Documents"
+                className="w-[900px]  hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="ml-10">
+              <h2 className="text-3xl  font-bold text-blue-main">Nursing <span className="text-gold-main">Course</span></h2>
+              <p className="text-lg text-gray-700">
+                We are India’s most trusted and fastest growing Admission Consulting Company. Our innovative and exclusively designed counselling programs help you accomplish your dream to become a Nurser.
+              </p>
+              <ul className="list-disc list-inside text-lg text-gray-700 ">
+                <li>Class 12th mark sheet with Physics, Chemistry, Biology, and English.</li>
+                <li>Qualifying exam score report and completion certificate.</li>
+                <li>Valid NEET scorecard and rank.</li>
+                <li>Caste certificate for SC/ST/OBC candidates (if applicable).</li>
+                <li>Student visa for foreign nationals.</li>
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* Section 3 */}
+          <motion.div
+            className="flex flex-col md:flex-row items-center gap-10"
+            {...fadeInUp}
+          >
+            <div className=" space-y-4">
+              <h2 className="text-3xl font-bold text-blue-main">About Nursing <span className="text-gold-main">Education</span></h2>
+              <p className="text-lg text-gray-700 w-[500px]">
+                Nursing education involves practical training provided to students with the purpose to prepare them for their future duties as nursing care professionals. Clinical education is provided to nursing students by experienced teachers and medical professionals.
+              </p>
+            </div>
+            <div className="">
+              <img
+                src='https://cdn.dribbble.com/userupload/5146251/file/original-3286ea0b2e4beb67efc8ef54b5b5be83.jpg?resize=400x0'
+                alt="Education"
+                className="w-[300px] hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </motion.div>
+
+          {/* Section 4: Eligibility */}
+          <motion.div
+            className="flex flex-col md:flex-row items-center gap-10"
+            {...fadeInUp}
+          >
+            <div className="md:w-1/2 flex justify-center">
+              <img
+                src="https://universityexpert.co.in/wp-content/uploads/2023/05/6113-07761948en_Masterfile-removebg-preview.png"
+                alt="Eligibility"
+                className="w-[300px] hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="md:w-1/2 space-y-6 p-6 rounded-lg ">
+              <h2 className="text-3xl font-bold text-blue-main">Admission <span className="text-gold-main">Eligibility Criteria</span></h2>
+              <ul className="list-disc list-inside text-gray-700 space-y-3 text-lg">
+                <li><strong>Minimum Age:</strong> Must be 17+ years by 31st December of the admission year.</li>
+                <li>
+                  <strong>Minimum Education:</strong>
+                  <ul className="list-disc ml-6 mt-2">
+                    <li>10+2 with Science (PCB) & English, 50% aggregate marks from a recognized board.</li>
+                  </ul>
+                </li>
+                <li><strong>Medical Fitness:</strong> Candidate must be medically fit.</li>
+                <li><strong>Open School:</strong> NIOS students need at least 50% in 10+2 Science.</li>
+                <li><strong>Admission Frequency:</strong> Once per year only.</li>
+              </ul>
+            </div>
+          </motion.div>
+
+     
         </div>
       </div>
 
-      <Container className="p-8">
-        {/* Header Section */}
-        <Typography variant="h3" gutterBottom className="text-blue-main font-bold text-center mb-6">
-          B.Sc Nursing
-        </Typography>
+      <div className='w-[25%] '>
+        <div className="w-full mt-4 space-y-6">
+          <form className="bg-white  rounded-lg border-gold-main shadow-xl p-4">
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name</label>
+              <input id="name" type="text" placeholder="Enter your name"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">Email</label>
+              <input id="email" type="email" placeholder="Enter your email"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">Phone</label>
+              <input id="phone" type="tel" placeholder="Enter your phone number"
+                className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-main" />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-main text-white font-bold py-2 px-4 rounded-md hover:bg-blue-dark transition duration-300"
+            >
+              Submit
+            </button>
+          </form>
 
-        {/* Overview Section */}
-        <motion.div
-          ref={overviewRef}
-          initial="hidden"
-          animate={overviewControls}
-          variants={slideIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Card elevation={5} className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <CardHeader title="Overview" className="bg-blue-main text-white" />
-            <CardContent>
-              <img src={nursingImage} alt="Nursing" className="w-full h-auto rounded-lg mb-4" />
-              <Typography variant="body1">
-                Bachelor of Nursing (B.Sc. in Nursing) is an undergraduate course that trains students in general nursing practices. The programme focuses on mastering various aspects of paramedical studies.
-              </Typography>
-            </CardContent>
-          </Card>
-        </motion.div>
+          <div>
+            <p className="text-blue-main font-bold text-2xl text-center">Top countries for MBBS</p>
+            <div className="rounded-xl my-4 space-y-4 px-2">
+              {countries.map((country) => (
+                <Link
+                  to={`/MbbsCountryDetailed/${country._id}`}
+                  key={country._id}
+                  className="flex items-center gap-4 p-2 bg-white rounded-xl shadow-md border hover:border-gold-main hover:bg-gold-main-100 group"
+                >
+                  <img
+                    src={country.flagURL}
+                    className="w-14 h-14 rounded-full border-2 border-red-200 shadow-sm group-hover:scale-105 transition-transform"
+                    alt={country.name}
+                  />
+                  <p className="text-xl font-semibold text-gray-800 group-hover:text-gold-main">
+                    {country.name}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-        {/* Nursing Course Section */}
-        <motion.div
-          ref={courseRef}
-          initial="hidden"
-          animate={courseControls}
-          variants={slideIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Card elevation={5} className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <CardHeader title="Nursing Course" className="bg-blue-main text-white" />
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <img src={courseImage} alt="Nursing Course" className="w-full h-auto rounded-lg" />
-                </Grid>
-                <Grid item xs={12} md={6} className="flex flex-col justify-center">
-                  <Typography variant="body1" className="mb-2">
-                    We are India’s most trusted and fastest growing Admission Consulting Company. Our innovative and exclusively designed counselling programs help you accomplish your dream to become a Nurse.
-                    Our exclusively designed smart counselling process has made us a force to reckon with in the highly competitive industry.
-                    With our commendable track record in such a short span of time, University Expert has become the most sought after consulting firm for medical admissions in India through NEET UG & NEET PG aspirants. With the help of our associates, we are able to extend our support to medical aspirants across Mumbai, Delhi, Bangalore, Kolkata, Chennai, Lucknow, Patna, Ranchi, Chandigarh, Jaipur, Dehradun, Ahmedabad, Bhubaneshwar, Raipur, Bhopal, Gurgaon, Indore, Nagpur, and Guwahati.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* About Nursing Education Section */}
-        <motion.div
-          ref={educationRef}
-          initial="hidden"
-          animate={educationControls}
-          variants={slideIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Card elevation={5} className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <CardHeader title="About Nursing Education" className="bg-blue-main text-white" />
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <img src={educationImage} alt="Nursing Education" className="w-full h-auto rounded-lg" />
-                </Grid>
-                <Grid item xs={12} md={6} className="flex flex-col justify-center">
-                  <Typography variant="body1">
-                    Nursing education involves practical training provided to students with the purpose to prepare them for their future duties as nursing care professionals. To apply skills to practice settings, clinical experiences are important for the students mentioned that approximately 50% of any nursing curriculum is dedicated to clinical education. This clinical education is provided to nursing students by experienced college teachers, nursing preceptors and other medical professionals who are qualified in this educational task, use many techniques to organize students’ clinical experiences and supervision.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* B.Sc Nursing Details Section */}
-        <motion.div
-          ref={detailsRef}
-          initial="hidden"
-          animate={detailsControls}
-          variants={slideIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Card elevation={5} className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <CardHeader title="B.Sc Nursing Details" className="bg-blue-main text-white" />
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <img src={detailsImage} alt="Nursing Details" className="w-full h-auto rounded-lg" />
-                </Grid>
-                <Grid item xs={12} md={6} className="flex flex-col justify-center">
-                  <Typography variant="body1"><strong>Duration:</strong> 4 years</Typography>
-                  <Typography variant="body1"><strong>Eligibility:</strong> 10+2 with science subjects</Typography>
-                  <Typography variant="body1"><strong>Mode:</strong> Full-time</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Eligibility Criteria Section */}
-        <motion.div
-          ref={eligibilityRef}
-          initial="hidden"
-          animate={eligibilityControls}
-          variants={slideIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Card elevation={5} className="rounded-lg shadow-xl hover:shadow-2xl transition-shadow duration-300">
-            <CardHeader title="Eligibility Criteria" className="bg-blue-main text-white" />
-            <CardContent>
-              <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
-                  <img src={eligibilityImage} alt="Eligibility Criteria" className="w-full h-auto rounded-lg" />
-                </Grid>
-                <Grid item xs={12} md={6} className="flex flex-col justify-center">
-                  <Typography variant="body1">
-                    To be eligible for B.Sc Nursing, candidates generally need to have completed their 10+2 education with science subjects (Physics, Chemistry, and Biology). Additionally, certain institutions may have specific requirements or entrance exams.
-                  </Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* FAQs Section */}
-        <motion.div
-          ref={faqRef}
-          initial="hidden"
-          animate={faqControls}
-          variants={fadeIn}
-          transition={{ duration: 0.8 }}
-          className="mb-6"
-        >
-          <Typography variant="h4" gutterBottom className="text-blue-main font-bold text-center mb-6">
-            Frequently Asked Questions
-          </Typography>
-          {faqList.map((faq, index) => (
-            <Accordion key={index} className="mb-4 border-none rounded-lg shadow-sm">
-              <AccordionSummary expandIcon={<ExpandMoreIcon />} className="bg-blue-main text-white">
-                <Typography variant="body1">{faq.question}</Typography>
-              </AccordionSummary>
-              <AccordionDetails className="bg-gray-100 p-4 rounded-b-lg">
-                <Typography variant="body2">{faq.answer}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
-        </motion.div>
-      </Container>
     </div>
+         <motion.div
+            className="flex justify-center bg-gray-50 mt-10 items-center gap-10"
+            {...fadeInUp}
+          >
+
+            <div className="w-full md:w-1/2 p-4 sm:p-6 md:p-8 text-center space-y-4">
+              <p className="text-gold-main text-sm sm:text-base font-semibold">Contact Us</p>
+
+              <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-main">
+                Don't Hesitate to Contact Us for Any Information
+              </h2>
+
+              <p className="text-gold-main text-sm sm:text-base font-medium">
+                Call us on this number for immediate support
+              </p>
+
+              <button className="mt-4 bg-blue-main text-white px-6 py-2 rounded-full hover:bg-blue-700 transition duration-300">
+                Make Appointment
+              </button>
+            </div>
+
+
+            <div className="md:w-1/2 flex justify-center">
+              <img
+                src='https://universityexpert.co.in/wp-content/uploads/2023/05/depositphotos_140637986-stock-photo-woman-talking-by-telephone.webp'
+                alt="Education"
+                className="w-[500px] hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </motion.div>
+   </div>
   );
 };
 

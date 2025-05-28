@@ -55,144 +55,218 @@ const MdIndia = () => {
   return (
     <div className="">
       {/* Hero Section */}
-      <section className="relative flex flex-col lg:flex-row items-center space-x-10 bg-gradient-to-r from-blue-300 via-blue-400 to-blue-200 py-8 md:px-12 lg:px-24 overflow-hidden shadow-lg rounded-lg">
-        {/* Left Side: Image */}
+      <section
+        className="relative bg-cover bg-center bg-no-repeat py-16 md:py-24 px-4 sm:px-10 lg:px-24"
+        style={{
+          backgroundImage: "url('https://medical.universityexpert.co.in/wp-content/uploads/2023/05/MD-MS-2023.jpg')",
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+
         <motion.div
-          className="flex-1 w-full lg:w-1/2 flex items-center justify-center mb-8 lg:mb-0"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="relative z-10 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
         >
-          <img src={MdIndiaImage} alt="MD in India" className="w-full h-auto rounded-lg" />
-        </motion.div>
-        {/* Right Side: Text Content */}
-        <motion.div
-          className="flex-1 text-center lg:text-left"
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-        >
-          <motion.h1
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-md"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          {/* Text Content */}
+          <motion.div
+            className="text-center lg:text-left text-white flex-1"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            MD in India
-          </motion.h1>
-          <motion.h2
-            className="mt-4 text-xl md:text-2xl lg:text-3xl font-semibold text-gray-100 drop-shadow-sm"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight drop-shadow-lg">
+              MD in India
+            </h1>
+            <p className="mt-6 text-lg md:text-xl lg:text-2xl font-medium text-gray-200 drop-shadow">
+              Get Guidance From Experts Who Will Lead You To Your Dreams. <br />
+              For Studying in Abroad – Contact Us Today.
+            </p>
+            <div className="mt-8">
+              <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-md transition">
+                Contact an Expert
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Optional: Image Card or Statistic Block */}
+          <motion.div
+            className="flex-1 w-full max-w-md lg:max-w-lg"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
           >
-            Advance Your Medical Career
-          </motion.h2>
+            <div className="bg-white bg-opacity-10 backdrop-blur-md p-6 rounded-2xl border border-white border-opacity-20 shadow-lg text-white text-center">
+              <h3 className="text-xl font-semibold mb-2">Why Choose MD in India?</h3>
+              <p className="text-sm text-gray-200">
+                Top-ranked institutions, affordable fees, and recognized degrees.
+              </p>
+            </div>
+          </motion.div>
         </motion.div>
       </section>
 
-      {/* Two-Column Section */}
-      <section className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-8 px-4 sm:px-8 lg:px-24">
-        {/* Content Column */}
-        <motion.div className="space-y-10" initial="hidden" animate="visible" variants={sectionVariants}>
-          {/* About Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="About MD/MS in India" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" className="leading-relaxed text-gray-600">
-                MD/MS in India is one of the most prominent career options for students looking to pursue a postgraduate medical course in India. MD stands for Doctor of Medicine and it involves 3-year clinical training in the field of Medicine. MS stands for Master of Surgery and it involves 3-year clinical training in the field of Surgery.
-              </Typography>
-            </CardContent>
-          </Card>
+      <section className="mt-12 ">
+        {/* About Section */}
+        <div className="mb-8 p-6 bg-white ">
+          <div className="flex">
+            <p className="text-gray-700 text-xl mr-10 w-[600px] leading-relaxed">
+              <h2 className=" font-bold text-blue-main  text-4xl mb-4">About <span className="text-gold-main">MD/MS </span>in India</h2>
+              MD/MS in India is one of the most prominent career options for the student’s looking to pursue, Post-graduation Medical course In INDIA. MD stands for Doctor of Medicine and it involves 3-year Clinical training in the field of Medicine while doing MD students get specialty training to treat patients/diseases through non-surgical procedures i.e. with Medicines only.
+            </p>
+            <img className="w-[500px] shadow-lg rounded-lg" src="https://medical.universityexpert.co.in/wp-content/uploads/2023/05/NEET-PG-2023.jpg" alt="" />
+          </div>
+        </div>
 
-          {/* Branches Available Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="Branches Available in MD/MS" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <ul className="list-disc list-inside space-y-2">
+        <div className="mb-8 p-6 bg-white ">
+          <div className="flex">
+            <p className="text-gray-700 text-xl mr-10 w-[600px] leading-relaxed">
+              <h2 className=" font-bold text-blue-main  text-4xl mb-4"> <span className="text-gold-main">MD/MS </span>admission in India</h2>
+              {/* MD/MS in India is one of the most prominent career options for the student’s looking to pursue, Post-graduation Medical course In INDIA. MD stands for Doctor of Medicine and it involves 3-year Clinical training in the field of Medicine while doing MD students get specialty training to treat patients/diseases through non-surgical procedures i.e. with Medicines only. */}
+              To get admission to MD/MS in INDIA an aspirant has to qualify the NEET-PG entrance test conducted by NBE every year. To apply for NEET-PG the aspirants must have permanent or Provisional registration with MCI and have completed his/her MBBS degree from MCI recognizes medical college/institute with a 1-year compulsory internship. After successfully qualifying the NEET-PG entrance test the students have to go through the Central level and state level NEET-PG counseling.To get admission to MD/MS in INDIA an aspirant has to qualify the NEET-PG entrance test conducted by NBE every year. To apply for NEET-PG the aspirants must have permanent or Provisional registration with MCI and have completed his/her MBBS degree from MCI recognizes medical college/institute with a 1-year compulsory internship. After successfully qualifying the NEET-PG entrance test the students have to go through the Central level and state level NEET-PG counseling.
+              <ul className="list-disc text-base md:text-lg mt-4 list-inside space-y-2 text-gray-700">
                 {branches?.map((branch, index) => (
-                  <li key={index} className="text-gray-600">{branch}</li>
+                  <li key={index}>{branch}</li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
+            </p>
 
-          {/* States Offering MD/MS */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="MD/MS Colleges and Institutes by State" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <ul className="list-disc list-inside space-y-2">
+
+            <img className="w-[500px] h-full shadow-lg rounded-lg" src="https://medical.universityexpert.co.in/wp-content/uploads/2023/05/NEET-PG-2023.jpg" alt="" />
+
+          </div>
+        </div>
+
+        <div className="mb-8 p-6 bg-white ">
+          <div className="flex">
+            <p className="text-gray-700 text-xl mr-10 w-[600px] leading-relaxed">
+              <h2 className=" font-bold text-blue-main  text-4xl mb-4">MD/MS  <span className="text-gold-main">Colleges and Institutes </span>by state</h2>
+              MD/MS in India is one of the most prominent career options for the student’s looking to pursue, Post-graduation Medical course In INDIA. MD stands for Doctor of Medicine and it involves 3-year Clinical training in the field of Medicine while doing MD students get specialty training to treat patients/diseases through non-surgical procedures i.e. with Medicines only.
+              <ul className="list-disc mt-5 list-inside space-y-2 text-gray-700">
                 {states?.map((state, index) => (
-                  <li key={index} className="text-gray-600">{state}</li>
+                  <li key={index}>{state}</li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
+            </p>
 
-          {/* Admission Information */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="MD / MS Admission in India" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" className="leading-relaxed text-gray-600">
-                To get admission to MD/MS in India, an aspirant must qualify for the NEET-PG entrance test conducted by NBE every year. After qualifying, students undergo Central and State level NEET-PG counseling.
-              </Typography>
-            </CardContent>
-          </Card>
+            <img className="w-[500px] h-full shadow-lg rounded-lg" src="https://medical.universityexpert.co.in/wp-content/uploads/2023/05/NEET-PG-2023.jpg" alt="" />
 
-          {/* How to Apply Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="How to Apply for MD/MS in India" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <Typography variant="body2" color="textSecondary" className="leading-relaxed text-gray-600">
-                Candidates with a valid MBBS degree recognized by the MCI can apply for the MD/MS course after clearing the NEET-PG exam, conducted online by NBE across India.
-              </Typography>
-            </CardContent>
-          </Card>
-        </motion.div>
+          </div>
+        </div>
 
-        {/* Sidebar Column */}
-        <motion.div className="space-y-10" initial="hidden" animate="visible" variants={sectionVariants}>
-          {/* FAQ Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="Frequently Asked Questions" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              {faq?.map((item, index) => (
-                <Accordion key={index}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`panel${index}-content`} id={`panel${index}-header`}>
-                    <Typography variant="subtitle1" className="font-medium text-gray-700">
-                      {item.question}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <Typography variant="body2" className="text-gray-600">
-                      {item.answer}
-                    </Typography>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
-            </CardContent>
-          </Card>
+        {/* States Offering */}
+        {/* <div className="mb-8 p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-4">MD/MS Colleges and Institutes by State</h2>
 
-          {/* Blog Section */}
-          <Card className="bg-white shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardHeader title="Recent Blogs" className="text-blue-main flex items-center justify-center" />
-            <CardContent>
-              <ul className="space-y-4">
-                {blogs.map((blog, index) => (
-                  <li key={index}>
-                    <Typography variant="h6" className="font-semibold text-blue-600 hover:underline cursor-pointer">
-                      {blog.title}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" className="leading-relaxed text-gray-600">
-                      {blog.description}
-                    </Typography>
-                  </li>
+          <ul className="list-disc list-inside space-y-2 text-gray-700">
+            {states?.map((state, index) => (
+              <li key={index}>{state}</li>
+            ))}
+          </ul>
+        </div> */}
+
+        {/* Admission Info */}
+        {/* <div className="mb-8 p-6 bg-white ">
+          <h2 className="text-4xl font-bold text-blue-main mb-4">MD / MS <span className="text-gold-main">Admission in India</span></h2>
+          <p className="text-gray-700 leading-relaxed">
+            To get admission to MD/MS in India, an aspirant must qualify for the NEET-PG entrance test conducted by NBE every year.
+            After qualifying, students undergo Central and State level NEET-PG counseling.
+          </p>
+        </div> */}
+
+
+        <div className="mb-8 p-6 bg-white ">
+          <div className="flex">
+            <p className="text-gray-700 text-xl mr-10 w-[600px] leading-relaxed">
+              <h2 className=" font-bold text-blue-main  text-4xl mb-4">How to Apply for   <span className="text-gold-main">MD/MS in India </span></h2>
+              Candidates who have a valid MBBS or equivalent degree from India or other countries, which is recognized by MCI (Medical Council of India) can apply for the MD/MS course.
+              Candidates must have cleared the Common Entrance Test NEET -PG (National Eligibility cum Entrance Test) for Medical Postgraduate Courses (MD/MS/PG -Diploma). NEET-PG exam is conducted by NBE in online mode throughout India.
+              <ul className="list-disc mt-5 list-inside space-y-2 text-gray-700">
+                <h2 className=" font-bold text-blue-main  text-xl mb-4">MD MS | Colleges and institutes <span className="text-gold-main">IN STATES OF INDIA</span></h2>
+
+                {states?.map((state, index) => (
+                  <li key={index}>{state}</li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
-        </motion.div>
+
+              <div className="">
+                <h2 className="text-xl  font-bold text-blue-main mb-4 mt-5">
+                  Branches Available in <span className="text-gold-main">MD/MS</span>
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-gray-700 text-base md:text-lg">
+                  {[
+                    "MD (Obstetrics and Gynecology)",
+                    "MD (Tuberculosis And Respiratory Diseases)",
+                    "MD (Psychiatry)",
+                    "MD (Dermatology)",
+                    "MD (Radio Diagnosis)",
+                    "MD (Pediatrics)",
+                    "MD (General Medicine)",
+                    "MD (Anesthesia)",
+                    "MD (Pharmacology)",
+                    "MD (Pathology)",
+                    "MD (Physiology)",
+                    "MS (General Surgery)",
+                    "MS (Orthopedics)",
+                    "MS (Ear Nose Throat)",
+                    "MS (Ophthalmology)",
+                    "MD (Forensic)",
+                    "MD (Radiology)",
+                    "MDS",
+                  ].map((branch, index) => (
+                    <p key={index} className="font-semibold">
+                      {branch}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+            </p>
+
+            <img className="w-[500px] h-full shadow-lg rounded-lg" src="https://medical.universityexpert.co.in/wp-content/uploads/2023/05/NEET-PG-2023.jpg" alt="" />
+
+          </div>
+        </div>
+        {/* How to Apply */}
+        {/* <div className="mb-8 p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-4">How to Apply for MD/MS in India</h2>
+          <p className="text-gray-700 leading-relaxed">
+           Candidates who have a valid MBBS or equivalent degree from India or other countries, which is recognized by MCI (Medical Council of India) can apply for the MD/MS course.
+           Candidates must have cleared the Common Entrance Test NEET -PG (National Eligibility cum Entrance Test) for Medical Postgraduate Courses (MD/MS/PG -Diploma). NEET-PG exam is conducted by NBE in online mode throughout India.
+          </p>
+        </div> */}
+
+        {/* Sidebar: FAQs */}
+        <div className="mb-8 p-6 bg-white rounded-lg ">
+          <h2 className="text-4xl font-bold text-blue-main mb-4">Frequently <span className="text-gold-main">Asked Questions</span></h2>
+          <div className="space-y-4">
+            {faq?.map((item, index) => (
+              <details key={index} className="text-2xl border border-gray-200 rounded-lg p-4">
+                <summary className="cursor-pointer font-semibold text-gray-800">{item.question}</summary>
+                <p className="mt-2 text-gray-700">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+
+        {/* Sidebar: Blogs */}
+        {/* <div className="p-6 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
+          <h2 className="text-2xl font-bold text-blue-600 text-center mb-4">Recent Blogs</h2>
+          <ul className="space-y-4">
+            {blogs?.map((blog, index) => (
+              <li key={index}>
+                <h3 className="text-lg font-semibold text-blue-600 hover:underline cursor-pointer">
+                  {blog.title}
+                </h3>
+                <p className="text-gray-700">{blog.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div> */}
       </section>
+
     </div>
   );
 };
