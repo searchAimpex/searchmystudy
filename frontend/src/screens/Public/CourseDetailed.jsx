@@ -93,7 +93,7 @@ export default function CourseDetailed() {
     return div.textContent || div.innerText || '';
   };
 
-  const aboutUniversity = stripHtml(singleCourse?.University?.description || "No university description available.");
+  // const aboutUniversity = stripHtml(singleCourse?.University?.description || "No university description available.");
 
   const unilink = stripHtml(singleCourse?.University?.UniLink || "No university link available.");
   return (
@@ -387,7 +387,13 @@ export default function CourseDetailed() {
                   <div className="px-4 ">
                     <h3 className="font-semibold text-2xl px-2 mb-2">About University</h3>
                     <p className="text-gray-600 px-3  ">
-                      {aboutUniversity}
+                      {/* {aboutUniversity} */}
+
+                          <div
+                                        className="prose max-w-none"
+                                        dangerouslySetInnerHTML={{ __html: singleCourse?.University?.description }}
+                                    />
+
                       <Link
                         to={unilink}
                         target='_blank'

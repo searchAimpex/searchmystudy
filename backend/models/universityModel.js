@@ -77,8 +77,7 @@ const universitySchema = mongoose.Schema(
             default:false
         },
         type:{
-            type: String,
-            default: 'Public'
+            type: String
         },
         rank: {
             type: Number,

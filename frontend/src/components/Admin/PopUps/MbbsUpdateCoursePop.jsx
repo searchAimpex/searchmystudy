@@ -367,6 +367,28 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               </Select>
             </FormControl>
 
+
+        <FormControl variant="standard" className="mb-2" sx={{ flex: '1 1 30%' }}>
+              <InputLabel id="Category-label">Category</InputLabel>
+              <Select
+                labelId="Category-label"
+                id="Category"
+                name="Category"
+                value={formValues.Category}
+                onChange={handleChange}
+                label="Category"
+              >{
+                  categories.map((item) => {
+                    return (
+                      <MenuItem value={item}>{item}</MenuItem>
+
+                    )
+                  })}
+              </Select>
+            </FormControl>
+
+
+            
             <TextField
               id="Duration"
               name="Duration"
@@ -376,6 +398,7 @@ export default function MbbsUpdateCoursePop({ open, handleClose, courseData }) {
               onChange={handleChange}
               sx={{ flex: '1 1 30%' }}
             />
+            {/* <label htmlFor="">fees</label> */}
             <TextField
               id="Fees"
               name="Fees"

@@ -410,36 +410,38 @@ function UniversityTable() {
                     rowCount={filteredServices?.length}
                 />
                 <tbody>
-                    {currentPageData?.map((row, index) => {
-                            const isItemSelected = isSelected(row?._id);
-                            const labelId = `enhanced-table-checkbox-${index}`;
-                            return (
-                                <tr
-                                    hover
-                                    onClick={(event) => handleClick(event, row?._id)}
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    key={row?._id}
-                                    selected={isItemSelected}
-                                >
-                                    <td>
-                                        <Checkbox
-                                            color={isItemSelected ? 'primary' : 'neutral'}
-                                            checked={isItemSelected}
-                                            slotProps={{ input: { 'aria-labelledby': labelId } }}
-                                            sx={{ verticalAlign: 'sub' }}
-                                        />
-                                    </td>
-                                    <td id={labelId}>{row?.name}</td>
-                                    <td> {province?.find((c) => c?._id === row?.Province?._id)?.name} </td>
-                                    <td> {countries?.find((c) => c?._id === row?.Country)?.name} </td>
+                  {currentPageData
+  ?.filter((row) => row?.Province !== null) // ✅ Filter rows with non-null Province
+  .map((row, index) => {
+    const isItemSelected = isSelected(row?._id);
+    const labelId = `enhanced-table-checkbox-${index}`;
 
-                                    <td>{row?.createdAt?.split('T')[0]}</td>
-                                    <td>{row?.updatedAt?.split('T')[0]}</td>
-                                </tr>
-                            );
-                        })}
+    return (
+      <tr
+        onClick={(event) => handleClick(event, row?._id)}
+        role="checkbox"
+        aria-checked={isItemSelected}
+        tabIndex={-1}
+        key={row?._id}
+        selected={isItemSelected}
+      >
+        <td>
+          <Checkbox
+            color={isItemSelected ? 'primary' : 'neutral'}
+            checked={isItemSelected}
+            slotProps={{ input: { 'aria-labelledby': labelId } }}
+            sx={{ verticalAlign: 'sub' }}
+          />
+        </td>
+        <td id={labelId}>{row?.name}</td>
+        <td>{province?.find((c) => c?._id === row?.Province?._id)?.name}</td>
+        <td>{countries?.find((c) => c?._id === row?.Country)?.name}</td>
+        <td>{row?.createdAt?.split('T')[0]}</td>
+        <td>{row?.updatedAt?.split('T')[0]}</td>
+      </tr>
+    );
+  })}
+
                  
                 </tbody>
             </Table>

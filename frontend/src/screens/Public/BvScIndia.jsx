@@ -55,7 +55,7 @@ const BvScIndia = () => {
   ];
 
   return (
-    <Container maxWidth="lg" className="py-8 px-4 sm:px-6 lg:px-12">
+    <div className=" mx-auto ">
       {/* Hero Section */}
       <motion.div
         initial="hidden"
@@ -63,88 +63,74 @@ const BvScIndia = () => {
         exit="exit"
         variants={pageVariants}
         transition={{ duration: 0.8 }}
-        className="relative w-full mb-12"
+        className="relative w-full "
       >
         <img
           src={bvScImage}
           alt="Bachelor of Veterinary Sciences & Animal Husbandry"
-          className="object-cover w-full h-64 sm:h-72 md:h-80 lg:h-[28rem] xl:h-[32rem] rounded-xl shadow-lg"
+          className=" w-full h-[250px]"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-300 to-green-100 opacity-60 rounded-xl" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-300 to-green-100 opacity-60 " />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white px-4 sm:px-6 md:px-12 lg:px-20 space-y-4 sm:space-y-6">
-          <Typography
-            variant="p"
-            className="text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md"
-          >
+          <p className="text-lg sm:text-xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md">
             Bachelor in Veterinary Sciences & Animal Husbandry
-          </Typography>
-
-          <Typography
-            variant="p"
-            className="text-sm sm:text-base md:text-lg lg:text-2xl font-light drop-shadow-sm"
-          >
+          </p>
+          <p className="text-sm sm:text-base md:text-lg lg:text-2xl font-light drop-shadow-sm">
             A comprehensive 5½ years program for aspiring veterinarians.
-          </Typography>
-
+          </p>
         </div>
       </motion.div>
 
       {/* About Section */}
-      <Grid container spacing={6} className="mb-12">
-        <Grid item xs={12} md={8}>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div className="md:col-span-2 px-4">
           <motion.div
             initial="hidden"
             whileInView="visible"
             variants={sectionVariants}
             transition={{ duration: 0.8 }}
           >
- <Typography
-            variant="p"
-            className="text-3xl sm:text-2xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md mb-6 text-blue-main"
-          >
-          About B.V.Sc & AH
-          </Typography>
-            {/* <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">About B.V.Sc & AH</Typography> */}
-            <Typography variant="body1" className="text-base md:text-lg mb-6 leading-relaxed">
+            <h2 className="text-3xl sm:text-2xl md:text-2xl lg:text-4xl xl:text-4xl font-bold drop-shadow-md mb-6 text-blue-main mt-4">
+              About <span className='text-gold-main'>B.V.Sc & AH</span>
+            </h2>
+            <p className="text-base md:text-lg mb-6 leading-relaxed">
               Bachelor in Veterinary Sciences & Animal Husbandry (B.V.Sc. & A.H.) is a 5½ years undergraduate program under the medical discipline. It focuses on the study of medical diagnostics and treatment of animal diseases. The course includes subjects like Veterinary Anatomy, Histology, Physiology, Biochemistry, Pharmacology, and Toxicology.
-            </Typography>
-            <Typography variant="body1" className="text-base md:text-lg mb-6 leading-relaxed">
+            </p>
+            <p className="text-base md:text-lg mb-6 leading-relaxed">
               Eligibility: Students must have passed 10+2 with Physics, Chemistry, Biology, and English, with a minimum of 50% marks. The minimum age required is 19 years. NEET is the entrance exam required for admission.
-            </Typography>
+            </p>
           </motion.div>
-        </Grid>
-        <Grid item xs={12} md={4} className="hidden md:block">
-          <Card className="p-6 shadow-lg rounded-lg">
-            <CardContent>
-              <Typography variant="h6" className="font-semibold mb-4">Interested in Studying B.V.Sc & AH?</Typography>
-              <Typography variant="body1" className="mb-4">
-                Get expert guidance and counseling to help you make an informed decision about pursuing a career in veterinary sciences.
-              </Typography>
-              <Button variant="contained" color="primary" className="w-full">Contact Us</Button>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+        </div>
+        <div className="hidden md:block">
+          <div className="p-6 shadow-lg rounded-lg bg-white">
+            <h3 className="text-lg font-semibold mb-4">Interested in Studying B.V.Sc & AH?</h3>
+            <p className="mb-4">
+              Get expert guidance and counseling to help you make an informed decision about pursuing a career in veterinary sciences.
+            </p>
+            <button className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 transition">Contact Us</button>
+          </div>
+        </div>
+      </div>
 
       {/* Course Details Section */}
-      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Course Details</Typography>
-      <Grid container spacing={6} className="mb-12">
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6" className="text-xl font-semibold mb-4">Course Highlights</Typography>
-          <Typography variant="body1" className="mb-4 text-sm sm:text-base">
-            <strong>Course Level:</strong> Bachelor in Veterinary Sciences & Animal Husbandry<br />
-            <strong>Duration:</strong> 5.5 Years<br />
-            <strong>Eligibility:</strong> Passed 10+2 with Physics, Biology, Chemistry, and English<br />
-            <strong>Examination Type:</strong> Entrance Exams or Merit<br />
-            <strong>Course Fee:</strong> Up to INR 15,000 to 1 Lakh per annum<br />
-            <strong>Average Salary:</strong> INR 5 LPA – INR 8 Lacs per annum<br />
-            <strong>Top Recruiting Companies:</strong> Government and Private sectors<br />
-            <strong>Course Mode:</strong> Full time
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h6" className="text-xl font-semibold mb-4">Specializations</Typography>
-          <Typography variant="body1" className="mb-4 text-sm sm:text-base">
+      <h2 className="text-2xl md:text-4xl font-bold mb-6 text-blue-main px-4">Course Details</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 px-4">
+        <div>
+          <h3 className="text-xl font-semibold mb-4 text-gold-main">Course Highlights</h3>
+          <p className="mb-4 text-sm sm:text-base">
+            <strong className='text-blue-main'>Course Level:</strong> Bachelor in Veterinary Sciences & Animal Husbandry<br />
+            <strong className='text-blue-main'>Duration:</strong> 5.5 Years<br />
+            <strong className='text-blue-main'>Eligibility:</strong> Passed 10+2 with Physics, Biology, Chemistry, and English<br />
+            <strong className='text-blue-main'>Examination Type:</strong> Entrance Exams or Merit<br />
+            <strong className='text-blue-main'>Course Fee:</strong> Up to INR 15,000 to 1 Lakh per annum<br />
+            <strong className='text-blue-main'>Average Salary:</strong> INR 5 LPA – INR 8 Lacs per annum<br />
+            <strong className='text-blue-main'>Top Recruiting Companies:</strong> Government and Private sectors<br />
+            <strong className='text-blue-main'>Course Mode:</strong> Full time
+          </p>
+        </div>
+        <div>
+          <h3 className="text-xl font-semibold mb-4 text-gold-main">Specializations</h3>
+          <p className="mb-4 text-sm sm:text-base">
             - Animal Genetics and Breeding<br />
             - Veterinary Microbiology<br />
             - Veterinary Surgery & Radiology<br />
@@ -153,90 +139,184 @@ const BvScIndia = () => {
             - Livestock Production and Management<br />
             - Veterinary Medicine, Public Health & Hygiene<br />
             - Veterinary Pathology
-          </Typography>
-        </Grid>
-      </Grid>
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <h3 className="text-3xl font-bold mb-4  px-4 bg-blue-main text-gold-main p-4"><span className='text-gold-main'>Bachelor in Veterinary Science & Animal</span>  Husbandry Course details Highlights</h3>
+       <table class="w-full border border-gray-300 text-left text-sm sm:text-base">
+  <tbody>
+    <tr class="bg-gray-100">
+      <th class="border px-4 py-2 font-semibold">Course Level</th>
+      <td class="border px-4 py-2">Bachelor in Veterinary Sciences &amp; Animal Husbandry</td>
+    </tr>
+    <tr>
+      <th class="border px-4 py-2">Duration</th>
+      <td class="border px-4 py-2">5.5 years</td>
+    </tr>
+    <tr class="bg-gray-100">
+      <th class="border px-4 py-2">Eligibility</th>
+      <td class="border px-4 py-2">Passed 10+2 from a recognized board with Physics, Biology, Chemistry and English</td>
+    </tr>
+    <tr>
+      <th class="border px-4 py-2">Examination Type</th>
+      <td class="border px-4 py-2">Either by Entrance Exams or by Merit</td>
+    </tr>
+    <tr class="bg-gray-100">
+      <th class="border px-4 py-2">Job Roles</th>
+      <td class="border px-4 py-2">
+        Veterinary Doctor, Veterinary Research Scientist, Animal Breeders, Veterinary Officers, Veterinary Surgeon, Junior Veterinary Doctor, Food Safety and Inspection Veterinarian, Food Animal Veterinarians, Companion Animal Veterinarians etc.
+      </td>
+    </tr>
+    <tr>
+      <th class="border px-4 py-2">Course Fee</th>
+      <td class="border px-4 py-2">Up to INR 15,000 to 1 lakh per annum</td>
+    </tr>
+    <tr class="bg-gray-100">
+      <th class="border px-4 py-2">Average Salary</th>
+      <td class="border px-4 py-2">INR 5 LPA – INR 8 Lacs per annum</td>
+    </tr>
+    <tr>
+      <th class="border px-4 py-2">Top Recruiting Companies</th>
+      <td class="border px-4 py-2">Govt and Private sector</td>
+    </tr>
+    <tr class="bg-gray-100">
+      <th class="border px-4 py-2">Course Mode</th>
+      <td class="border px-4 py-2">Full time</td>
+    </tr>
+  </tbody>
+</table>
+
+      </div>
+
+
+
+
 
       {/* Documents Required Section */}
-      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Documents Required</Typography>
-      <Grid container spacing={6} className="mb-12">
+      <h2 className="text-2xl md:text-4xl font-bold mb-6 text-blue-main px-4 mt-10">Documents <span className='text-gold-main'>Required</span></h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {documentsRequired.map((doc, index) => (
-          <Grid item xs={12} md={4} key={index}>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              variants={sectionVariants}
-              transition={{ duration: 0.8 }}
-            >
-              <Card elevation={3} className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
-                <Typography variant="body1" className="text-sm sm:text-base">{doc}</Typography>
-              </Card>
-            </motion.div>
-          </Grid>
+          <motion.div
+            key={index}
+            initial="hidden"
+            whileInView="visible"
+            variants={sectionVariants}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all bg-white">
+              <p className="text-sm sm:text-base text-blue-main font-semibold">{doc}</p>
+            </div>
+          </motion.div>
         ))}
-      </Grid>
+      </div>
+
+
+      <div>
+        <h3 className="text-3xl font-bold mb-4 text-gold-main px-4"><span className='text-blue-main'>BVSc Veterinary Pathology: </span> Eligibility Criteria</h3>
+        <p className="mb-4 text-sm sm:text-base px-4">
+          Aspiring Veterinary candidates are required to fulfill the minimum criteria listed below to be eligible to apply for the course.      </p>
+      </div>
+
+      <div className="mb-8 px-4">
+        {/* <h3 className="text-lg font-semibold mb-4 text-gold-main">Eligibility Criteria</h3> */}
+        <ul className="list-disc list-inside space-y-2 text-sm sm:text-base">
+          <li>Candidates must complete their 10+2 level of education from the science stream from a recognized university or board.</li>
+          <li>Candidates must score a minimum aggregate of 50% (45% for SC/ST candidates) in their board examinations.</li>
+          <li>Candidates must appear for the necessary entrance examinations.</li>
+          <li>Candidates must appear for the entrance admission of the B.V.Sc institute they are targeting.</li>
+        </ul>
+      </div>
+
+        <div>
+        <h3 className="text-3xl font-bold mb-4 text-gold-main px-4"><span className='text-blue-main'>Bachelor of Veterinary Science </span>(BVSc) Specialisations</h3>
+        <p className="mb-4 text-sm sm:text-base px-4">
+Here is the list of Bachelor of Veterinary Science (BVSc) Specialisations: </p>     </div>
+
+      <div className="mb-8 px-4">
+        {/* <h3 className="text-lg font-semibold mb-4 text-gold-main">Eligibility Criteria</h3> */}
+         <ul className="list-disc list-inside space-y-2 text-sm sm:text-base">
+    <li>BVSc Animal Genetics and Breeding</li>
+    <li>BVSc Veterinary Microbiology</li>
+    <li>BVSc Veterinary Surgery & Radiology</li>
+    <li>BVSc Veterinary Surgery and Radiology</li>
+    <li>BVSc Animal Production & Management</li>
+    <li>BVSc Animal Nutrition</li>
+    <li>BVSc Livestock Production and Management</li>
+    <li>BVSc Veterinary Medicine, Public Health & Hygiene</li>
+    <li>BVSc Veterinary Pathology</li>
+  </ul>
+      </div>
+
+
+
+      
+
+
 
       {/* Admission Process Section */}
-      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Admission Process</Typography>
-      <Grid container spacing={6} className="mb-12">
-        {admissionProcess.map((step, index) => (
-          <Grid item xs={12} key={index}>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              variants={sectionVariants}
-              transition={{ duration: 0.8 }}
-            >
-              <Typography variant="body1" className="mb-2 text-sm sm:text-base">{step}</Typography>
-            </motion.div>
-          </Grid>
-        ))}
-      </Grid>
+      <h2 className="text-2xl md:text-4xl font-bold mb-6 px-4 text-blue-main">Admission <span className='text-gold-main'>Process</span></h2>
+      <div className="space-y-4 mb-12 px-4">
+      
+<ul className="list-disc list-inside space-y-2">
+  {admissionProcess.map((step, index) => (
+    <motion.li
+      key={index}
+      className="text-sm sm:text-base"
+      initial="hidden"
+      whileInView="visible"
+      variants={sectionVariants}
+      transition={{ duration: 0.8 }}
+    >
+      {step}
+    </motion.li>
+  ))}
+</ul>
 
-      {/* Top B.V.Sc Colleges Section */}
-      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Top B.V.Sc Colleges in India</Typography>
-      <Grid container spacing={6} className="mb-12">
+      </div>
+
+      {/* Top Colleges Section */}
+      <h2 className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Top B.V.Sc <span className='text-gold-main'>Colleges in India</span></h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
         {bvscColleges.map((college, index) => (
-          <Grid item xs={12} md={4} key={index}>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              variants={sectionVariants}
-              transition={{ duration: 0.8 }}
-            >
-              <Card elevation={3} className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
-                <Typography variant="h6" className="font-semibold">{college.name}</Typography>
-                <Typography variant="body2" className="text-gray-600">{college.location}</Typography>
-              </Card>
-            </motion.div>
-          </Grid>
+          <motion.div
+            key={index}
+            initial="hidden"
+            whileInView="visible"
+            variants={sectionVariants}
+            transition={{ duration: 0.8 }}
+          >
+            <div className="p-4 rounded-lg text-center shadow-md hover:shadow-lg transition-all bg-white">
+              <h3 className="font-semibold">{college.name}</h3>
+              <p className="text-gray-600">{college.location}</p>
+            </div>
+          </motion.div>
         ))}
-      </Grid>
+      </div>
 
       {/* FAQ Section */}
-      <Typography variant="h2" className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Frequently Asked Questions (FAQs)</Typography>
-      <Grid container spacing={6} className="mb-12">
+      <h2 className="text-2xl md:text-4xl font-bold mb-6 text-blue-main">Frequently Asked <span className='text-gold-main'>Questions  (FAQs)</span></h2>
+      <div className="space-y-4 mb-12">
         {faqData.map((faq, index) => (
-          <Grid item xs={12} key={index}>
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              variants={sectionVariants}
-              transition={{ duration: 0.8 }}
-            >
-              <Accordion>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography variant="h6" className="font-semibold text-sm sm:text-base">{faq.question}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography variant="body1" className="text-sm sm:text-base">{faq.answer}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            </motion.div>
-          </Grid>
+          <motion.div
+            key={index}
+            initial="hidden"
+            whileInView="visible"
+            variants={sectionVariants}
+            transition={{ duration: 0.8 }}
+          >
+            <details className="bg-white p-4 rounded-lg shadow-md">
+              <summary className="font-semibold cursor-pointer text-sm sm:text-base">
+                {faq.question}
+              </summary>
+              <p className="mt-2 text-sm sm:text-base">{faq.answer}</p>
+            </details>
+          </motion.div>
         ))}
-      </Grid>
-    </Container>
+      </div>
+    </div>
+
   );
 
 };

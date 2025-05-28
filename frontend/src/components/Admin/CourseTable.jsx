@@ -424,6 +424,7 @@ function CourseTable() {
                     rowCount={filteredServices?.length}
                 />
                 <tbody>
+                    {/* {console.log(filteredServices,"---------------------------")}
                     {stableSort(filteredServices, getComparator(order, orderBy))
                         ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         ?.map((row, index) => {
@@ -460,7 +461,7 @@ function CourseTable() {
                         <tr style={{ height: 53 * emptyRows }}>
                             <td colSpan={6} />
                         </tr>
-                    )}
+                    )} */}
                 </tbody>
             </Table>
 
