@@ -68,7 +68,7 @@ const BhmsIndia = () => {
                 How to Get Admission in <span className="text-gold-main">Top BHMS College?</span>
               </h1>
               <p className="text-base leading-relaxed text-xl">
-              BHMS in India is recognized by the Central Council of Homeopathy (CCH) and accredited by the National Accreditation Board for Hospitals & Healthcare Providers (NABH). BHMS courses are offered by many reputed colleges and universities in India. BHMS colleges in India use various admission processes to select students for their BHMS programs. BHMS colleges offer a wide range of academic and professional programs which prepare students for successful careers in homeopathy. BHMS colleges also provide ample opportunities for research and development in homeopathy. BHMS Admission in India provides opportunity to get admission into good BHMS colleges, which offer good placement options after successful completion of the course. There are many reasons why parents want their children to get admission in top BHMS colleges. The main reason is that they want their children to get the best education and career opportunities. BHMS colleges in India offer quality education and career growth opportunities. They provide good infrastructure and facilities for students. These colleges also have a good placement record. </p>
+                BHMS in India is recognized by the Central Council of Homeopathy (CCH) and accredited by the National Accreditation Board for Hospitals & Healthcare Providers (NABH). BHMS courses are offered by many reputed colleges and universities in India. BHMS colleges in India use various admission processes to select students for their BHMS programs. BHMS colleges offer a wide range of academic and professional programs which prepare students for successful careers in homeopathy. BHMS colleges also provide ample opportunities for research and development in homeopathy. BHMS Admission in India provides opportunity to get admission into good BHMS colleges, which offer good placement options after successful completion of the course. There are many reasons why parents want their children to get admission in top BHMS colleges. The main reason is that they want their children to get the best education and career opportunities. BHMS colleges in India offer quality education and career growth opportunities. They provide good infrastructure and facilities for students. These colleges also have a good placement record. </p>
             </div>
           </motion.div>
 
@@ -84,25 +84,25 @@ const BhmsIndia = () => {
               </h3>
               <p className="text-base text-xl mb-2">You must provide specific documentation to enroll in BHMS:</p>
               <ul className="list-disc text-lg list-inside space-y-2 ml-5">
-    <li>
-      The candidate must have passed Class 12th or a comparable exam in Physics,
-      Chemistry, Biology/Biotechnology, and English.
-    </li>
-    <li>
-      They must submit their qualifying exam score report and proof of completion.
-      Students who are taking their final year examinations can also apply, but they must
-      submit the necessary paperwork later.
-    </li>
-    <li>A valid NEET scorecard and rank.</li>
-    <li>
-      Candidates who fall under the SC, ST, or OBC categories are required to submit a
-      caste certificate issued by an appropriate body.
-    </li>
-    <li>
-      Finally, international nationals must apply for a student visa at the Indian consulate
-      there.
-    </li>
-  </ul>
+                <li>
+                  The candidate must have passed Class 12th or a comparable exam in Physics,
+                  Chemistry, Biology/Biotechnology, and English.
+                </li>
+                <li>
+                  They must submit their qualifying exam score report and proof of completion.
+                  Students who are taking their final year examinations can also apply, but they must
+                  submit the necessary paperwork later.
+                </li>
+                <li>A valid NEET scorecard and rank.</li>
+                <li>
+                  Candidates who fall under the SC, ST, or OBC categories are required to submit a
+                  caste certificate issued by an appropriate body.
+                </li>
+                <li>
+                  Finally, international nationals must apply for a student visa at the Indian consulate
+                  there.
+                </li>
+              </ul>
             </div>
           </motion.div>
         </div>
@@ -165,7 +165,7 @@ const BhmsIndia = () => {
       >
         <div className="bg-white overflow-hidden p-6 text-center mb-10">
           <h2 className="text-4xl text-gold-main font-bold mb-4">
-            Don't Hesitate, Contact Us for Any Information
+            <span className="text-blue-main">Don't Hesitate, Contact Us</span>  for Any Information
           </h2>
           <button className="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition">
             Get Free Counselling

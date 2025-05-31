@@ -3,6 +3,8 @@ import { Container, Typography, Grid, Card, CardHeader, CardContent, Button, Acc
 import { motion } from 'framer-motion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import bvScImage from '../../assets/BannerService.png';
+import { useFetchBlogMutation } from '../../slices/adminApiSlice';
+import { useSelector } from 'react-redux';
 
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -53,6 +55,13 @@ const BvScIndia = () => {
     "Veterinary Medicine, Public Health & Hygiene",
     "Veterinary Pathology"
   ];
+  const [FetchBlog] = useFetchBlogMutation();
+
+  const getTruncatedContent = (text, maxChars = 95) => {
+    if (!text) return '';
+    return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+  };
+  const { blog } = useSelector((state) => state.blog);
 
   return (
     <div className=" mx-auto ">
@@ -94,22 +103,37 @@ const BvScIndia = () => {
               About <span className='text-gold-main'>B.V.Sc & AH</span>
             </h2>
             <p className="text-base md:text-lg mb-6 leading-relaxed">
-              Bachelor in Veterinary Sciences & Animal Husbandry (B.V.Sc. & A.H.) is a 5½ years undergraduate program under the medical discipline. It focuses on the study of medical diagnostics and treatment of animal diseases. The course includes subjects like Veterinary Anatomy, Histology, Physiology, Biochemistry, Pharmacology, and Toxicology.
+              The Bachelor of Veterinary Sciences & Animal Husbandry (B.V.Sc. & A.H.) is a prestigious undergraduate degree in the field of veterinary medicine and animal care. The course spans 5.5 years, including 4.5 years of academic coursework and 1 year of compulsory rotating internship. It is designed for students who are passionate about animal health, welfare, livestock management, and public health.
+
+This program focuses on the diagnosis, treatment, and prevention of diseases in animals—ranging from pets and livestock to wild animals. It also equips students with the knowledge and skills to manage animal husbandry practices, breeding, and the nutritional well-being of animals.
+
+Veterinarians play a vital role in both human and animal health ecosystems, especially in controlling zoonotic diseases (infections that spread between animals and humans), ensuring food safety, and improving livestock productivity.
             </p>
-            <p className="text-base md:text-lg mb-6 leading-relaxed">
-              Eligibility: Students must have passed 10+2 with Physics, Chemistry, Biology, and English, with a minimum of 50% marks. The minimum age required is 19 years. NEET is the entrance exam required for admission.
-            </p>
+            
           </motion.div>
         </div>
         <div className="hidden md:block">
-          <div className="p-6 shadow-lg rounded-lg bg-white">
-            <h3 className="text-lg font-semibold mb-4">Interested in Studying B.V.Sc & AH?</h3>
-            <p className="mb-4">
-              Get expert guidance and counseling to help you make an informed decision about pursuing a career in veterinary sciences.
-            </p>
-            <button className="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700 transition">Contact Us</button>
-          </div>
+            <h1 className='text-3xl font-bold text-blue-main mt-3'>-Latest <span className='text-gold-main'>Blog</span></h1>
+          {blog?.slice(0, 3).map((blog) => (
+              <div
+                onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex shadow-lg mt-2 gap-3 '>
+                <img
+                  src={blog.thumbnailURL}
+                  className='rounded-xl w-[90px] h-[85px] object-cover'
+                  alt={blog.title}
+                />
+                <div className='flex flex-col'>
+                  <p className='text-sm text-gold-main font-semibold'>Feb 28, 2025</p>
+                  <div
+                    className="prose max-w-none text-sm pt-1 text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: getTruncatedContent(blog?.content) }}
+                  />
+                </div>
+              </div>
+            ))}
+
         </div>
+        
       </div>
 
       {/* Course Details Section */}

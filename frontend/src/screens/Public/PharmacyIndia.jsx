@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import heroImage from '../../assets/BannerService.png';
 import dPharmaImage from '../../assets/LoginHero.png';
@@ -7,7 +7,10 @@ import bPharmaLateralImage from '../../assets/LoginHero.png';
 import bPharmaHonsImage from '../../assets/LoginHero.png';
 import bPharmaAyurvedaImage from '../../assets/LoginHero.png';
 import mPharmaImage from '../../assets/LoginHero.png';
-
+import { useFetchBlogMutation } from '../../slices/adminApiSlice';
+import { FetchBlogs } from '../../slices/blogSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 const pageVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
@@ -53,6 +56,14 @@ const courses = [
 ];
 
 const PharmacyPage = () => {
+  const [FetchBlog] = useFetchBlogMutation();
+
+  const getTruncatedContent = (text, maxChars = 95) => {
+    if (!text) return '';
+    return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+  };
+  const { blog } = useSelector((state) => state.blog);
+
   return (
     <div className="">
       {/* Hero Section */}
@@ -84,7 +95,7 @@ const PharmacyPage = () => {
       {/* Content Section */}
       <div className="flex flex-col md:flex-row gap-8">
         {/* Left Content */}
-        <div className="w-full md:w-2/3">
+        <div className="w-full">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -285,11 +296,33 @@ const PharmacyPage = () => {
         </div>
 
         {/* Right Sidebar */}
-        <div className="hidden md:block w-full md:w-1/3">
-          <div className="bg-white p-6 shadow-lg rounded-lg">
+        <div className="hidden md:block w-[30%]">
+
+          <div className="hidden md:block w-full mt-5">
+            <h1 className='text-3xl font-bold text-blue-main mb-5'>-Latest <span className='text-gold-main'>Blog</span></h1>
+            {blog?.slice(0, 7).map((blog) => (
+              <div
+                onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex shadow-lg mt-7 p-1 gap-3 '>
+                <img
+                  src={blog.thumbnailURL}
+                  className='rounded-xl w-[90px] h-[85px] object-cover'
+                  alt={blog.title}
+                />
+                <div className='flex flex-col'>
+                  <p className='text-sm text-gold-main font-semibold'>Feb 28, 2025</p>
+                  <div
+                    className="prose max-w-none text-sm pt-1 text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: getTruncatedContent(blog?.content) }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-white p-6 mt-10 shadow-lg rounded-lg">
             <h4 className="text-lg font-semibold mb-4">Interested in Our Courses?</h4>
             <p className="mb-4">
-              
+
               Get in touch with us to learn more about our pharmacy programs and how they can
               benefit your career.
             </p>
@@ -297,7 +330,11 @@ const PharmacyPage = () => {
               Contact Us
             </button>
           </div>
+
         </div>
+
+
+
 
       </div>
     </div>

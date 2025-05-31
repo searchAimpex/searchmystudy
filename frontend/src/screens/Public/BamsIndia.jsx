@@ -43,6 +43,71 @@ const BamsIndia = () => {
   const { ref: futureScopeRef, inView: futureScopeInView } = useInView({ triggerOnce: true });
   const { ref: eligibilityRef, inView: eligibilityInView } = useInView({ triggerOnce: true });
   const { ref: faqRef, inView: faqInView } = useInView({ triggerOnce: true });
+  const colleges = [
+    { name: "YMT AYURVEDIC COLLEGE", location: "NAVI MUMBAI" },
+    { name: "AYURVEDIC MEDICAL COLLEGE", location: "NALASOPARA" },
+    { name: "BSD TRUST’S AYURVEDIC MAHAVIDYALAYA VAGHOL", location: "PUNE" },
+    { name: "PDEA’s AYURVED MAHAVIDYALAYA AND SANSHODHAN KENDRA", location: "PUNE" },
+    { name: "SUMATIBHAI SHAH AYURVED MAHAVIDYALAYA HADAPSAR", location: "PUNE" },
+    { name: "AYURVEDIC MEDICAL COLLEGE", location: "KOLHAPUR" },
+    { name: "JJ MAGDUM AYURVED MAHAVIDYALAY", location: "JAISINGPUR" },
+    { name: "YESHWANT AYURVEDIC MAHAVIDYALAYA", location: "KOLHAPUR" },
+    { name: "LKRSS AYURVEDIC COLLEGE", location: "KOLHAPUR" },
+    { name: "HON.SHRI.ANNASAHEB DANGE AYU. MED. COL.", location: "SANGLI" },
+    { name: "SANGAM SEVABHAVI TRUST’S AYURVEDIC COLLEGE", location: "SANGAMNER" },
+    { name: "SHRI VIVEKANAND NURSING HOME’S AYU.COL.", location: "RAHURI" },
+    { name: "PRAVARA MED. TRUST’S AYU MAHAVIDYALAY & EKNATH AYU HOSP", location: "AHMEDNAGAR" },
+    { name: "SIDDHAKALA AYURVED MAHAVIDYALAYA", location: "SANGAMNER" },
+    { name: "SHREE SAPTASHRINGI AYURVEDIC COLLEGE", location: "NASIK" },
+    { name: "KC AJMERA AYURVED MAHAVIDYALAYA", location: "DHULE" },
+    { name: "KDMG AYURVEDIC MEDICAL COLLEGE", location: "CHALISGAON" },
+    { name: "CHAITANYA AYURVED MAHAVIDYALAYA", location: "SAKEGAON" },
+    { name: "ASHVIN RURAL AYURVED MAHAVIDYALAY", location: "SANGAMNER" },
+    { name: "LRP AYURVED MAHAVIDYALAYA", location: "SANGLI" },
+    { name: "MES AYURVED MAHAVIDYALAYA", location: "RATNAGIRI" },
+    { name: "SMBT AYURVED MAHAVIDYALAY", location: "NASIK" },
+    { name: "MATOSHRI ASARABAI DARADE AYURVED MAHAVIDYALAY", location: "NASIK" },
+    { name: "SAI AYURVEDIC COLLEGE", location: "SOLAPUR" },
+    { name: "SWAMI VIVEKANAND AYURVEDIC COLLEGE", location: "AHMEDNAGAR" },
+    { name: "SANT GAJANAN MAHARAJ AYURVEDIC COLLEGE", location: "GADHINGLAJ" },
+    { name: "DR DEEPAK PATIL AYURVEDIC COLLEGE", location: "KOLHAPUR" },
+    { name: "ASVM’s BHIMASHANKAR AYURVEDIC COLLEGE", location: "PUNE" },
+    { name: "B.R. HARNE AYURVEDIC COLLEGE", location: "AMBERNATH" },
+    { name: "RASHTRASANT JANARDAN SWAMI AYURVEDIC COLLEGE", location: "AHMEDNAGAR" },
+    { name: "IDEAL COLLEGE OF AYURVED", location: "PALGHAR" },
+    { name: "ASHOKRAO MANE AYURVEDIC MEDICAL COLLEGE", location: "KOLHAPUR" },
+    { name: "MATOSHRI AYURVED MAHAVIDYALAY", location: "NASHIK" },
+    { name: "GRAMIN AYURVED MAHAVIDYALAYA", location: "NAVEGAON" },
+    { name: "SHREE GAJANAN MAHARAJ SANSTHAN AYU. COL.", location: "PUSAD YAVATMAL" },
+    { name: "APES’S MS AYURVEDIC M COLLEGE", location: "GONDIA" },
+    { name: "SUNIL RAMSINGHJI CHUNAWALA AYU. MAHA.", location: "BULDHANA" },
+    { name: "JUPITER AYURVEDIC MEDICAL COLLEGE", location: "NAGPUR" },
+    { name: "SKR PANDAV AYURVED MAHAVIDYALAYA", location: "NAGPUR" },
+    { name: "MUPS AYURVED MAHAVIDYALAYA", location: "WASHIM" },
+    { name: "SMT. VIMLADEVI AYURVEDIC COLLEGE", location: "CHANDRAPUR" },
+    { name: "ASPM AYURVED COLLEGE AND RESEARCH INSTITUTE", location: "BULDHANA" },
+    { name: "DR.R.N.LAHOTI AYURVDIC COLLEGE", location: "BULDHANA" },
+    { name: "DR. RAJENDRA GHODE AYU. MAHAVIDYALAYA", location: "AMRAVATI" },
+    { name: "B MULAK AYURVED MAHAVIDYALAYA", location: "NAGPUR" },
+    { name: "DATTA MEGHE AYURVED MEDICAL COLLEGE", location: "NAGPUR" },
+    { name: "SMT. SHANLINITAI MEGHE AYURVED COLLEGE", location: "BHILEWADA" },
+    { name: "CSMSS AYURVED MAHAVIDYALAYA", location: "AURANGABAD" },
+    { name: "LATE BABRUWAN VILLALRAO KALE AYURVED COLLEGE", location: "LATUR" },
+    { name: "BSPM’S DHANWANTARI AYU. MAHAVIDYALAYA UDGIR", location: "LATUR" },
+    { name: "BSS’S RAMRAO PATIL AYU. MAHAVIDYALAYA", location: "PURNA" },
+    { name: "SAU. SHANTADEVI VEDPRAKASH PATIL AYURVED MAHAVIDYALAYA", location: "HINGOLI" },
+    { name: "SHIVA TRUST’S YESHVANTRAO CHAVAN AYURVED MAHAVIDYALAYA", location: "AURANGABAD" },
+    { name: "DR.VEDPRAKASH AYURVED MAHAVIDYALAYA REVGAON", location: "JALNA" },
+    { name: "ANAND AYURVED MEDICAL COLLEGE", location: "VAIJAPUR" },
+    { name: "SAI AYURVEDIC MEDICAL COLLEGE AND RESEARCH", location: "AURANGABAD" },
+    { name: "DHANESHWARI AYURVEDIC COLLEGE", location: "AURANGABAD" },
+  ];
+
+  function toTitleCase(str) {
+    return str.replace(/\w\S*/g, (txt) =>
+      txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    );
+  }
 
   React.useEffect(() => {
     if (aboutInView) controls.start("visible");
@@ -209,54 +274,87 @@ const BamsIndia = () => {
 
 
               <div>
-                  
 
-              <div class="overflow-x-auto p-4 space-y-10">
-  {/* <!-- UTTAR PRADESH Table --> */}
-  <table class="table-auto w-full border border-gray-300">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold">UTTAR PRADESH (INDIA) Colleges</th>
-        <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold">Location</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr><td class="border px-4 py-2">Guru Gorakshnath Institute of Medical Sciences</td><td class="border px-4 py-2">Gorakhpur</td></tr>
-      <tr><td class="border px-4 py-2">SAS Ayurvedic Medical College and Hospital</td><td class="border px-4 py-2">Varanasi</td></tr>
-      <tr><td class="border px-4 py-2">Kalawati Ayurvedic Medical College and Research Center</td><td class="border px-4 py-2">Kasganj</td></tr>
-      <tr><td class="border px-4 py-2">Shamm-E-Gausiya Minority Ayurvedic Medical College</td><td class="border px-4 py-2">Ghazipur</td></tr>
-      <tr><td class="border px-4 py-2">Gangasheel Ayurvedic Medical College &amp; Hospital</td><td class="border px-4 py-2">Bareilly</td></tr>
-      <tr><td class="border px-4 py-2">Ankerite Ayurvedic Medical College &amp; Hospital</td><td class="border px-4 py-2">Lucknow</td></tr>
-      <tr><td class="border px-4 py-2">Sardar Patel Institute of Ayurvedic Medical Sciences &amp; Research Centre</td><td class="border px-4 py-2">Lucknow</td></tr>
-      <tr><td class="border px-4 py-2">RB Ayurvedic Medical College &amp; Hospital</td><td class="border px-4 py-2">Agra</td></tr>
-      <tr><td class="border px-4 py-2">R.K. Ayurvedic Medical College and Hospital</td><td class="border px-4 py-2">Azamgarh</td></tr>
-      <tr><td class="border px-4 py-2">Jeevan Jyoti Ayurvedic Medical College &amp; Hospital</td><td class="border px-4 py-2">Aligarh</td></tr>
-    </tbody>
-  </table>
 
-  {/* <!-- MAHARASHTRA Table --> */}
-  <table class="table-auto w-full border border-gray-300">
-    <thead class="bg-gray-100 ">
+                <div class="overflow-x-auto p-4 space-y-10">
+                  {/* <!-- UTTAR PRADESH Table --> */}
+                  <table class="table-auto w-full border border-gray-300">
+                    <thead class="bg-gray-100">
+                      <tr>
+                        <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold"> Colleges (INDIA)</th>
+                        <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold">Location</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-gray-700">
+                      {[
+                        ["Guru Gorakshnath Institute of Medical Sciences", "Gorakhpur"],
+                        ["SAS Ayurvedic Medical College and Hospital", "Varanasi"],
+                        ["Kalawati Ayurvedic Medical College and Research Center", "Kasganj"],
+                        ["Shamm-E-Gausiya Minority Ayurvedic Medical College", "Ghazipur"],
+                        ["Gangasheel Ayurvedic Medical College & Hospital", "Bareilly"],
+                        ["Ankerite Ayurvedic Medical College & Hospital", "Lucknow"],
+                        ["Sardar Patel Institute of Ayurvedic Medical Sciences & Research Centre", "Lucknow"],
+                        ["RB Ayurvedic Medical College & Hospital", "Agra"],
+                        ["R.K. Ayurvedic Medical College and Hospital", "Azamgarh"],
+                        ["Jeevan Jyoti Ayurvedic Medical College & Hospital", "Aligarh"],
+                        ["Dr. Vijay Ayurvedic Medical College Hospital & Research Center", "Varanasi"],
+                        ["Prakash Institute of Ayurvedic Medical Sciences and Research", "Bulandshahr"],
+                        ["Shri Ramchandra Vaidya Ayurvedic Medical College & Hospital", "Lucknow"],
+                        ["Shivalik Ayurvedic Medical College", "Azamgarh"],
+                        ["WTM Ayurvedic Medical College & Hospital", "Amroha"],
+                        ["G S Ayurveda Medical College & Hospital", "Hapur"],
+                        ["Shri Babu Singh Jay Singh Ayurvedic Medical College and Hospital", "Farrukhabad"],
+                        ["S.R.S. Ayurvedic Medical College", "Agra"],
+                        ["Bapu Ayurvedic Medical College and Hospital", "Mau"],
+                        ["SKS Ayurvedic Medical College & Hospital", "Mathura"],
+                        ["Shree Satya Ayurvedic Medical College & Hospital", "Moradabad"],
+                        ["Sanjeevani Ayurvedic Medical College", "Amroha"],
+                        ["Vaidya Yagya Dutt Sharma Ayurved Mahavidyalaya", "Bulandshahr"],
+                        ["Sanskriti Ayurvedic Medical College & Hospital", "Mathura"],
+                        ["Prabuddh Ayurvedic Medical College, Hospital and Research Center", "Lucknow"],
+                        ["Dhanvantari Ayurvedic Medical College and Hospital", "Bareilly"],
+                        ["Kunwar Shekhar Vijendra Ayurved Medical College & Research Center", "Gangoh"],
+                        ["Divya Jyoti Ayurvedic Medical College & Hospital", "Modinagar"],
+                        ["Vivek College of Ayurvedic Sciences and Hospital", "Bijnor"],
+                        ["Sri Sai Ayurvedic Medical College and Hospital", "Aligarh"],
+                        ["Jeevak Ayurvedic Medical College And Hospital Research Centre", "Chandauli"]
+                      ].map(([name, city], index) => (
+                        <tr key={index} className="hover:bg-gray-50">
+                          {/* <td className="px-4 py-2 border-b">{index + 1}</td> */}
+                          <td className="px-4 py-2 border-b">{name}</td>
+                          <td className="px-4 py-2 border-b">{city}</td>
+                        </tr>
+                      ))}
+                      {colleges.map((college, index) => (
+                        <tr
+                          key={index}
+                          className="border-b border-gray-200 "
+                        >
+                          <td className="px-6 text-gray-800">
+                            {toTitleCase(college.name)}
+                          </td>
+                          <td className="px-6 py-2 text-gray-600 ">
+                            {toTitleCase(college.location)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  {/* <!-- MAHARASHTRA Table --> */}
+                  <table class="table-auto w-full border border-gray-300">
+                    {/* <thead class="bg-gray-100 ">
       <tr>
         <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold">MAHARASHTRA (INDIA) Colleges</th>
         <th class="border border-gray-300 px-4 py-2 text-left text-lg font-semibold">Location</th>
       </tr>
-    </thead>
-    <tbody>
-      <tr><td class="border px-4 py-2">YMT Ayurvedic College</td><td class="border px-4 py-2">Navi Mumbai</td></tr>
-      <tr><td class="border px-4 py-2">Ayurvedic Medical College</td><td class="border px-4 py-2">Nalasopara</td></tr>
-      <tr><td class="border px-4 py-2">BSD Trust’s Ayurvedic Mahavidyalaya Vaghol</td><td class="border px-4 py-2">Pune</td></tr>
-      <tr><td class="border px-4 py-2">PDEA’s Ayurved Mahavidyalaya and Sanshodhan Kendra</td><td class="border px-4 py-2">Pune</td></tr>
-      <tr><td class="border px-4 py-2">Sumatibhai Shah Ayurved Mahavidyalaya Hadapsar</td><td class="border px-4 py-2">Pune</td></tr>
-      <tr><td class="border px-4 py-2">Ayurvedic Medical College</td><td class="border px-4 py-2">Kolhapur</td></tr>
-      <tr><td class="border px-4 py-2">JJ Magdum Ayurved Mahavidyalay</td><td class="border px-4 py-2">Jaisingpur</td></tr>
-      <tr><td class="border px-4 py-2">Yeshwant Ayurvedic Mahavidyalaya</td><td class="border px-4 py-2">Kolhapur</td></tr>
-      <tr><td class="border px-4 py-2">LKRSS Ayurvedic College</td><td class="border px-4 py-2">Kolhapur</td></tr>
-      <tr><td class="border px-4 py-2">Hon. Shri. Annasaheb Dange Ayu. Med. Col.</td><td class="border px-4 py-2">Sangli</td></tr>
-      {/* <!-- Add more Maharashtra rows below as needed, using the same structure --> */}
-    </tbody>
-  </table>
-</div>
+    </thead> */}
+                    <tbody>
+
+                    </tbody>
+
+                  </table>
+                </div>
 
 
 
@@ -265,40 +363,45 @@ const BamsIndia = () => {
           </section>
         </div>
 
-        <div className=" w-[100%]">
-          {faq.map((item, index) => (
-            <Accordion
-              key={index}
-              sx={{
-                borderRadius: "10px",
-                mb: 2,
-                minWidth: "80%",
-                ml: 5,
-                transition: "transform 0.3s, box-shadow 0.3s",
-                cursor: "pointer",
-                "&:hover": {
-                  transform: "scale(1.02)",
-                  boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                },
-              }}
-            >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+        <div className="w-[200%] flex justify-center">
+          <div className="w-full max-w-6xl">
+            {faq.map((item, index) => (
+              <Accordion
+                key={index}
                 sx={{
-                  backgroundColor: "#e7f0ff",
                   borderRadius: "10px",
-                  minHeight: "56px",
+                  mb: 2,
+                  transition: "transform 0.3s, box-shadow 0.3s",
+                  cursor: "pointer",
+                  "&:hover": {
+                    transform: "scale(1.02)",
+                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+                  },
+                  // Added margin bottom spacing
+                  marginBottom: "16px",
                 }}
               >
-                <Typography fontWeight="bold" color="#007bff">
-                  {item.question}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Typography color="#555">{item.answer}</Typography>
-              </AccordionDetails>
-            </Accordion>
-          ))}
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  sx={{
+                    backgroundColor: "#e7f0ff",
+                    borderRadius: "10px",
+                    minHeight: "56px",
+                    "& .MuiAccordionSummary-content": {
+                      margin: 0,
+                    },
+                  }}
+                >
+                  <Typography fontWeight="bold" color="#007bff">
+                    {item.question}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography color="#555">{item.answer}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </div>
         </div>
       </Grid>
     </div>
