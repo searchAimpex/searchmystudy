@@ -337,7 +337,7 @@ export default function PublicNavBar() {
                     </div>
 
                     <ul className="hidden md:flex">
-                        <li>  <Link to="/"  className="font-semibold text-gold-main relative flex items-center text-left md:cursor-pointer group px-4  first:border-none  mt-2">HOME</Link> </li>
+                        <li>  <Link to="/" className="font-semibold text-gold-main relative flex items-center text-left md:cursor-pointer group px-4  first:border-none  mt-2">HOME</Link> </li>
                         <li>  <Link to="/services" className="relative flex items-center text-left text-gray-600 md:cursor-pointer group px-4  border-l  border-gray-200 h-[100%] ">SERVICE</Link> </li>
 
                         {menuLinks?.map((link, index) => (
@@ -405,7 +405,7 @@ export default function PublicNavBar() {
 
                                                         </Link>
                                                     </li>
-                                                    
+
                                                 </div>
                                             ))}
                                         </div>
@@ -450,9 +450,19 @@ export default function PublicNavBar() {
 
                     {/* Login Button */}
                     <div className="">
-                        <button onClick={() => navigate('/Signin')} className="px-3 py-1 text-sm text-white font-bold rounded-lg bg-blue-500 hover:bg-blue-600 transition">
+                        {/* <button 
+                        onClick={() => navigate('/login')}
+                         className="px-3 py-1 text-sm text-white font-bold rounded-lg bg-blue-500 hover:bg-blue-600 transition">
                             LOGIN
+                        </button> */}
+                        <button
+                            onClick={() => window.location.href = 'https://coursefinder.co.in/'}
+                            className="px-4 py-1 text-sm font-semibold text-white rounded-xl bg-orange-500 hover:bg-orange-600 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
+                        >
+                            PARTNER LOGIN
                         </button>
+
+
                     </div>
                 </div>
 
@@ -519,7 +529,7 @@ export default function PublicNavBar() {
                                 </Link>
                             )
                         ))}
-                         <div><Link to="/services" onClick={() => setIsOpen(false)} className="pl-4 font-semibold">SERVICE</Link></div>
+                        <div><Link to="/services" onClick={() => setIsOpen(false)} className="pl-4 font-semibold">SERVICE</Link></div>
                     </div>
                 </Drawer>
 

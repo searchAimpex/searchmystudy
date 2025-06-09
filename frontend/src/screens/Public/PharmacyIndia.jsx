@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import heroImage from '../../assets/BannerService.png';
 import dPharmaImage from '../../assets/LoginHero.png';
@@ -56,13 +56,34 @@ const courses = [
 ];
 
 const PharmacyPage = () => {
-  const [FetchBlog] = useFetchBlogMutation();
+  // const [FetchBlog] = useFetchBlogMutation();
+
+  
+    const [FetchBlog] = useFetchBlogMutation();
+    const [blog, setblog] = useState()
+  
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const res = await FetchBlog();
+          // dispatch(FetchBlogs(res.data));
+          console.log(res.data,"---------------------------");
+          setblog(res.data)
+        } catch (error) {
+          toast.error('Failed to fetch data');
+        }
+      };
+  
+      fetchData();
+    }, []);
+  
+  
 
   const getTruncatedContent = (text, maxChars = 95) => {
     if (!text) return '';
     return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
   };
-  const { blog } = useSelector((state) => state.blog);
 
   return (
     <div className="">

@@ -18,13 +18,16 @@ import {
 import CounsellerHero from '../../assets/counsellerHero.png';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useCounsellerCreateLeadMutation, useTestimonialFetchAllMutation } from '../../slices/adminApiSlice';
+import { useCounsellerCreateLeadMutation, useFetchBlogMutation, useTestimonialFetchAllMutation } from '../../slices/adminApiSlice';
 import { FetchAllTestimonial } from '../../slices/testimonialSlice';
 import { motion } from 'framer-motion';
+import { toast } from 'react-toastify';
 
 export default function CounsellorAll() {
   const [openStepper, setOpenStepper] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
+  const [FetchBlog] = useFetchBlogMutation();
+  const [blog, setBlog] = useState()
   const [formValues, setFormValues] = useState({
     name: '',
     phone: '',
@@ -41,6 +44,25 @@ export default function CounsellorAll() {
   const navigate = useNavigate();
   const [TestimonialFetchAll, { isSuccess, isLoading }] = useTestimonialFetchAllMutation();
   const { testimonial } = useSelector((state) => state.testimonial);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await FetchBlog();
+        // const a = dispatch(FetchBlog(res.data));
+        setBlog(res.data)
+        console.log(res.data, "+++++++++++++++++");
+      } catch (error) {
+        toast.error('Failed to fetch data');
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const getTruncatedContent = (text, maxChars = 95) => {
+    if (!text) return '';
+    return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,35 +106,63 @@ export default function CounsellorAll() {
 
   return (
     <div className="flex flex-col">
-      <section className="relative bg-gradient-to-r from-blue-300 to-blue-500 p-4 md:p-8 mb-8 shadow-lg">
+      <section className="relative bg-gradient-to-r from-blue-300 to-blue-500 h-[300px] p-4 md:p-8 mb-8 shadow-lg">
         <div className="absolute inset-0 z-0 bg-blue-500 opacity-30"></div>
         <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex-1 text-white text-center lg:text-left">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">Set Your Future Now</h1>
-            <p className="mb-6 text-lg md:text-xl">Get expert guidance and start your journey today.</p>
+            <h1 className="text-3xl md:text-4xl lg:text-2xl font-bold mb-4">Your Journey Begins Here – Talk to Our Counsellors</h1>
+            <p className="mb-6 text-lg md:text-xl res">Choosing the right career or studying abroad can be challenging. Our expert counsellors guide you through every step—from selecting courses to understanding requirements—so you can make confident, informed decisions.
+
+            </p>
             <Button variant="contained" color="primary" className="bg-blue-900 text-white hover:bg-blue-800">
               Get Counselling
             </Button>
           </div>
           <div className="flex-1 w-full max-w-md mx-auto">
-            <img src={CounsellerHero} alt="Counsellor Hero" className="w-full h-auto max-h-[450px] object-contain" />
+            <img src={CounsellerHero} alt="Counsellor Hero" className="res w-full  max-h-[250px] object-contain" />
           </div>
         </div>
       </section>
 
       <section className="flex flex-col lg:flex-row gap-8 px-4 sm:px-8 lg:px-16 xl:px-32">
-        <motion.div className="flex flex-col space-y-8 w-full lg:w-2/3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+        <motion.div
+          className="flex flex-col space-y-8 w-full lg:w-2/3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
           {testimonial.map((item) => (
-            <motion.div key={item._id} className="flex flex-col md:flex-row bg-white border border-gray-200 rounded-lg p-4 shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer">
-              <img src={item.imageURL} alt={item.title} className="w-full md:w-64 h-64 rounded-lg object-cover" />
-              <div className="flex-1 p-4 flex flex-col justify-between">
+            <motion.div
+              key={item._id}
+              className="flex flex-col md:flex-row bg-white border border-gray-100 rounded-2xl p-1 shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out hover:scale-[1.02] group"
+            >
+              <div className="w-full md:w-64 h-64 rounded-xl overflow-hidden shadow-sm">
+                <img
+                  src={item.imageURL}
+                  alt={item.title}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+
+              <div className="flex-1 md:ml-6 mt-4 md:mt-0 flex flex-col justify-between">
                 <div>
-                  <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                  <p className="text-gray-600 mb-2">{item.description}</p>
+                  <h3 className="text-2xl font-semibold text-gray-800 mb-2 uppercase transition-colors duration-300 group-hover:text-blue-700">
+                    {item.title}
+                  </h3>
+                  <p className="text-gray-600 text-base text-sm leading-relaxed">{item.description}</p>
                 </div>
-                <div>
-                  <Rating value={item.rating} readOnly className="mb-2" />
-                  <Button variant="contained" color="primary" className="bg-blue-900 text-white hover:bg-blue-800 w-full" onClick={(e) => { e.stopPropagation(); handleOpenStepper(); }}>
+
+                <div className="mt-4">
+                  <Rating value={item.rating} readOnly className="mb-3" />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className="bg-gradient-to-r from-blue-700 to-blue-900 text-white w-full py-2 rounded-md shadow-md hover:from-blue-600 hover:to-blue-800 transition-all"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleOpenStepper();
+                    }}
+                  >
                     Book Counselling
                   </Button>
                 </div>
@@ -121,13 +171,29 @@ export default function CounsellorAll() {
           ))}
         </motion.div>
 
+
         <motion.div className="w-full lg:w-1/3 mt-8 lg:mt-0" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
-          <h2 className="text-2xl font-bold mb-4">Recent Blogs</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-md">
-            <img src="/path-to-blog-image.jpg" alt="Blog" className="w-full h-auto rounded-lg mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Blog Title</h3>
-            <p className="text-gray-600">Blog summary or excerpt...</p>
-          </div>
+          {/* Latest Blog List */}
+          <h1 className='text-gray-700 font-bold text-2xl mb-4'>
+            <span className='text-gold-main'>—</span> Latest Blog
+          </h1>
+          {blog?.slice(0, 7).map((blog) => (
+            <div
+              onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex gap-3 pb-5'>
+              <img
+                src={blog.thumbnailURL}
+                className='rounded-xl w-[90px] h-[85px] object-cover'
+                alt={blog.title}
+              />
+              <div className='flex flex-col'>
+                <p className='text-sm text-gold-main font-semibold'>Feb 28, 2025</p>
+                <div
+                  className="prose max-w-none text-sm pt-1 text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: getTruncatedContent(blog?.content) }}
+                />
+              </div>
+            </div>
+          ))}
         </motion.div>
       </section>
 

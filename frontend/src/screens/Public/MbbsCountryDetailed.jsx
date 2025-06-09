@@ -290,17 +290,17 @@ export default function MbbsCountryDetailed() {
             >
               <div
                 style={{ backgroundImage: `url(${uni.heroURL})` }}
-                className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:scale-95"
+                className="absolute top-0 left-0 w-full h-[130px] bg-cover bg-center rounded-t-2xl transition-all duration-500 group-hover:h-full group-hover:rounded-2xl "
               />
               <div
                 className="w-[95px] h-[95px] border-2 border-white rounded-full mt-[80px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.6] group-hover:-translate-x-[100%] group-hover:-translate-y-[110%]"
                 style={{ backgroundImage: `url(${uni.logo})` }}
               />
               <div className="relative z-10 flex flex-col items-center gap-2 transition-transform duration-500 group-hover:-translate-y-1/4">
-                <span className="font-semibold bg-gold-main px-3 py-1  text-white text-l leading-tight">
+                <span className="font-semibold bg-gold-main px-3 py-1 w-full  text-white text-sm leading-tight">
                   {uni.name}
                 </span>
-                <span className="font-semibold bg-blue-main px-3 py-1  text-white">
+                <span className="font-semibold bg-blue-main py-1 text-sm px-2 rounded-lg text-white">
                   {singleCountry?.name}
                 </span>
               </div>

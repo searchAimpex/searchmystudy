@@ -40,7 +40,7 @@ export default function BlogScreen() {
     if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
-  const getTruncatedContent = (text, maxChars = 95) => {
+  const getTruncatedContent = (text, maxChars = 70) => {
     if (!text) return '';
     return text.length > maxChars ? text.substring(0, maxChars) + '...' : text;
   };
@@ -193,6 +193,10 @@ export default function BlogScreen() {
             <div className="flex flex-wrap gap-2">
               {medicalStudyAbroadTags.slice(0, 5).map((tag, index) => (
                 <span
+                  onClick={() => {
+                    setSearchQuery(tag);
+                    setCurrentPage(1); // Reset to first page on search
+                  }}
                   key={index}
                   className="hover:cursor-pointer text-gold-main font-medium text-sm px-2 py-[2px] rounded-full border border-gold-main transition-all duration-200 hover:bg-gold-main hover:text-white"
                 >
@@ -229,6 +233,6 @@ export default function BlogScreen() {
 
         </div>
       </div>
-    </div>
+    </div >
   );
 }
