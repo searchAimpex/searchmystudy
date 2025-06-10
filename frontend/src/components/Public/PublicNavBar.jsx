@@ -458,9 +458,7 @@ export default function PublicNavBar() {
                         <button
                             onClick={() => window.location.href = 'https://coursefinder.co.in/'}
                             className="px-4 py-1 text-sm font-semibold text-white rounded-xl bg-orange-500 hover:bg-orange-600 shadow-md hover:shadow-lg transition-all duration-300 ease-in-out"
-                        >
-                            PARTNER LOGIN
-                        </button>
+                        >PARTNER LOGIN</button>
 
 
                     </div>
