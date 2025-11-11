@@ -1,0 +1,80 @@
+/* ServiceScreen.css */
+.card {
+  position: relative; /* Ensure cards stack over each other */
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
+}
+
+.expanded {
+  transform: translateY(-20px); /* Adjust as needed for animation */
+}
+
+/* Add other styles as per your design */
+.service-title {
+  margin-top: 20px;
+  font-size: 32px;
+  display: flex;
+  justify-content: center;
+  margin-left: 100px;
+  margin-right: 100px;
+  align-items: center;
+ 
+     
+}
+.service-banner {
+  height: 70vh;
+  width: 100%;
+  border: none;
+}
+.service-description{
+  margin-left: 100px;
+  margin-right: 100px;
+  font-size: 18px !important;
+}
+
+.service-cards{
+ margin-top: 50px;
+ margin-left: 100px;
+ margin-right: 100px;
+}
+.text-color-1{
+      /* Specify the background image as a linear gradient */
+      background-image: linear-gradient(to right, #ae999e, #ff4b2b);
+      /* Use the text-fill-color to fill text with gradient */
+      -webkit-background-clip: text;
+      background-clip: text;
+      /* Set transparent as fallback */
+      color: transparent;
+}
+
+.card {
+  padding: 10px;
+  border-radius: 20px;
+  transition: height 1s ease-out, padding 1s ease-out;
+  overflow: hidden;
+  height: auto;
+}
+.card.expanded {
+  height: 400px; /* Adjust height as per your design */
+  padding: 40px; /* Adjust padding as per your design */
+}
+.card-header {
+  padding: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  color: white !important;
+  font-weight: 800;
+
+}
+.card-body {
+  padding: 20px;
+}
+
+
+
+
+
+
+
+
+

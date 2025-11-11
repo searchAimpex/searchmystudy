@@ -1,0 +1,96 @@
+/* Wrapper for the slider */
+.vertical-card-slider-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  background-color: #f3f4f6; /* Light background */
+  border-radius: 20px;
+  padding: 10px 0;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Outer container to hold all cards */
+.vertical-card-slider-outer {
+  display: flex;
+  transition: transform 1s ease-in-out;
+}
+
+/* Each card in the slider */
+.vertical-card-slider-card {
+  flex: 0 0 100%; /* Show one card at a time */
+  padding: 20px;
+  height: 300px; /* Adjust height */
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #e0f2ff, #f5faff); /* Soft gradient */
+  border-radius: 15px;
+  margin: 0 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.vertical-card-slider-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Image container */
+.img-container {
+  border-radius: 50%;
+  width: 100px; /* Smaller image */
+  height: 100px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  border: 4px solid #e0e0e0;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Content inside the card */
+.content {
+  text-align: center;
+  color: #333;
+}
+
+.details h3 {
+  font-size: 1.5rem;
+  color: #1e3a8a;
+}
+
+.details p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Navigation buttons */
+.vertical-card-slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.1);
+  border: none;
+  font-size: 1.5rem;
+  color: #333;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.vertical-card-slider-button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.vertical-card-slider-button.left {
+  left: 15px;
+}
+
+.vertical-card-slider-button.right {
+  right: 15px;
+}
