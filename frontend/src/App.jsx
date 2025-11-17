@@ -11,9 +11,8 @@ const App = () => {
     {/* <Header /> */}
       <ScrollToTop />
       <ToastContainer />
-
       <div>
-        <Outlet />
+        <Outlet />   
       </div>
     </>
   );

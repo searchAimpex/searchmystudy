@@ -236,6 +236,9 @@ const registerUser = asyncHandler(async (req, res) => {
     city,
     state,
     zipCode,
+    registration,
+    mou,
+    OfficePhoto,
     address,
     FrontAdhar,
     BackAdhar,
@@ -270,12 +273,16 @@ const registerUser = asyncHandler(async (req, res) => {
       CenterCode: user.CenterCode,
       DateOfBirth: user.DateOfBirth,
       bio:user.bio,
+      OfficePhoto:user.OfficePhoto,
       city: user.city,
+      registration: user.registration,
       state: user.state,
+      mouthZip: user.mouthZip,
       zipCode: user.zipCode,
       address: user.address,
       FrontAdhar: user.FrontAdhar,
       BackAdhar: user.BackAdhar,
+      OwnerPhoto:user.OwnerPhoto,
       PanCard: user.PanCard,
       ProfilePhoto: user.ProfilePhoto,
       VistOffice: user.VistOffice,
@@ -555,7 +562,6 @@ const test = async (req, res) => {
 };
 const getAllUserProfile = asyncHandler(async (req, res) => {
   const user = await User.find({role:'partner'});
-
   if (user) {
     res.json(user);
   } else {
@@ -563,6 +569,8 @@ const getAllUserProfile = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+
+
 const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
   const user = await User.find({role:'franchise'});
   console.log("user ",user)

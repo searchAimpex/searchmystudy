@@ -214,7 +214,7 @@ function CreateUserPop({ open, handleClose }) {
         </DialogContentText>
         
         <Grid container spacing={2}>
-          {/* Existing Grid items with error handling */}
+          {/* Existing Grid items with error handling */}  
           <Grid item xs={12} sm={6}>
             <TextField
               id="email"
