@@ -91,6 +91,22 @@ const userSchema = mongoose.Schema(
     type: String,
     default:""
   },
+  OwnerPhoto:{
+      type: String,
+      default:""
+  },
+  OfficePhoto:{
+      type: String,
+      default:""
+  },
+  mou:{
+      type: String,
+      default:""
+  },
+  registration:{
+      type: String,
+      default:""
+  },
   VistOffice : {
       type:String,
       default:""

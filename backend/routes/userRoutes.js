@@ -42,6 +42,8 @@ router
   .put(protect, updateUserProfile);
 router.put('/block/:id',blockUser);
 router.delete('/profile/delete/:id',deleteUserProfile)
+router.delete('/profile/delete',deleteUserProfile)
+
 router.get('/profile/all',getAllUserProfile)
 router.get('/profile/frenchise',getAllFrenchiseProfile)
 router.get('/test',test);

@@ -7,6 +7,7 @@ import Counsellor from '../models/counsellorModel.js';
 import SecondCountry from '../models/secondCountryModel.js';
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
+import { log } from 'console';
 
 // import asyncHandler from "express-async-handler";
 // import bcrypt from "bcryptjs";
@@ -187,27 +188,34 @@ const registerUser = asyncHandler(async (req, res) => {
     block,
     OwnerName,
     OwnerFatherName,
-    InsitutionName,
+    InstitutionName,
     ContactNumber,
-    WhatappNumber,
+    WhatsAppNumber,
     CenterCode,
     DateOfBirth,
+    OfficePhoto,
+    
+    registration,
+    // MOU,
     city,
     state,
     zipCode,
     address,
-    FrontAdhar,
-    BackAdhar,
+    OwnerPhoto,
+    FrontAadhar,
+    BackAadhar,
     PanCard,
     ProfilePhoto,
-    VistOffice,
+    VisitOffice,
     CancelledCheck,
     Logo,
     accountedDetails,
     IFSC,
+    MOU,
     bankName
   } = req.body;
-
+  console.log(req.body,"++++++++++++++");
+  
   // Check if user with the same email already exists
   const userExists = await User.findOne({ email });
 
@@ -227,28 +235,31 @@ const registerUser = asyncHandler(async (req, res) => {
     createdBy,
     block,
     OwnerName,
+    OfficePhoto,
     OwnerFatherName,
-    InsitutionName,
+    InsitutionName:InstitutionName,
     ContactNumber,
-    WhatappNumber,
+    WhatappNumber:WhatsAppNumber,
     CenterCode,
+    OwnerPhoto,
     DateOfBirth,
     city,
     state,
     zipCode,
     registration,
-    mou,
+    mou:MOU,
     OfficePhoto,
     address,
-    FrontAdhar,
-    BackAdhar,
+    FrontAdhar:FrontAadhar,
+    BackAdhar:BackAadhar,
     PanCard,
     ProfilePhoto,
-    VistOffice,
+    VistOffice:VisitOffice,
     CancelledCheck,
     Logo,
     accountedDetails,
     IFSC,
+
     bankName
   });
 
@@ -583,14 +594,25 @@ const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
 });
 
 const deleteUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndDelete({_id:req.params.id});
-  if (user) {
-    res.json(user);
+  const { ids } = req.body;   // Array of user IDs
+
+  if (!ids || !Array.isArray(ids)) {
+    return res.status(400).json({ message: "IDs array is required" });
+  }
+
+  const result = await User.deleteMany({ _id: { $in: ids } });
+
+  if (result.deletedCount > 0) {
+    res.json({
+      message: "Users deleted successfully",
+      deletedCount: result.deletedCount
+    });
   } else {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("No users found to delete");
   }
 });
+
 // @desc    Get all countries
 // @route   GET /api/secondCountries
 // @access  Public
