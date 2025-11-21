@@ -42,7 +42,7 @@ function CreateSecondCountryPop({ open, handleClose }) {
   // Handle form value change
   const handleChange = async (event) => {
     const { name, type, files, value } = event.target;
-
+    
     if (type === 'file') {
       const file = files[0];
       if (file) {
