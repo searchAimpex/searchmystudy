@@ -8,6 +8,7 @@ import SecondCountry from '../models/secondCountryModel.js';
 import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import { log } from 'console';
+import Country from '../models/countryModel.js';
 
 // import asyncHandler from "express-async-handler";
 // import bcrypt from "bcryptjs";
@@ -630,24 +631,32 @@ const getAllCountries = async (req, res) => {
 // @access  Public
 const getCountryById = async (req, res) => {
   try {
-    const country = await SecondCountry.findById(req.params.id);
-    
-    if (country) {
-      res.json(country);
-    } else {
-      res.status(404).json({ message: 'Country not found' });
+    const countries = await SecondCountry.findById(req.params.id);
+    if (!countries) {
+      return res.status(404).json({ message: 'Country not found' });
     }
+
+    const countryData = await Country.findOne({ name: countries.name });
+
+    res.json({
+      secondCountry: countries,
+      mainCountry: countryData
+    });
+
+    console.log(countryData, "countryData++++++++++++++++++++++");
   } catch (error) {
+    console.error(error);
     res.status(500).json({ message: 'Error retrieving country' });
   }
 };
+
 
 // @desc    Create a new country
 // @route   POST /api/secondCountries
 // @access  Private
 const createCountry = async (req, res) => {
   const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
-
+  
   if (!name || !flagURL || !currency || !code) {
     return res.status(400).json({ message: 'Please provide all required fields' });
   }
