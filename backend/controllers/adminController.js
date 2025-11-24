@@ -1319,110 +1319,113 @@ const deleteCourse = asyncHandler(async (req, res) => {
     res.status(404).json({ message: "No courses found with given IDs" });
   }
 });
+// import asyncHandler from 'express-async-handler';
+// import Course from '../models/courseModel.js'; // adjust path as needed
 
-const getCourses = asyncHandler(async (req, res) => {
+// @desc    Fetch courses by University ID
+// @route   GET /api/courses/university/:universityId
+// @access  Public
+
+// import mongoose from "mongoose";
+
+const getCourses = async (req, res) => {
   try {
     const {
+      country,
+      university,
+      type,
+      programLevel,
+      category,
+      gradeRank,
+      intakeDate,
+      universityName,
       mciApproval,
       ecfmgApproval,
       nmcApproval,
-      whoApproval,
-      country,
-      programLevel,
-      category,
-      university,
-      type,
-      intakeDate,
-      maxFees,
-      minFees
+      whoApproval
     } = req.query;
-    console.log(req.query,"::::::::::::::::::::::::::");
-    
-    let filter = {};
-    let universityQuery = {};
 
-    if (country) universityQuery.Country = new mongoose.Types.ObjectId(country);
-    if (type) universityQuery.type = type;
+    console.log(req.query, "||||||||||+++++++++++++++|||||||||||||||||||");
 
-    if (country || type) {
-      const universities = await University.find(universityQuery).select('_id');
-      const universityIds = universities.map(u => u._id);
-      if (universityIds.length === 0) return res.status(200).json([]);
-      filter.University = { $in: universityIds };
+    const filters = {};
+
+    // ------------------------
+    // University filter
+    // ------------------------
+    if (university && mongoose.Types.ObjectId.isValid(university)) {
+      filters.University = university;
     }
 
-    if (university) filter.University = new mongoose.Types.ObjectId(university);
-    if (category) filter.Category = category;
-    if (programLevel) filter.ProgramLevel = programLevel;
-    if (intakeDate) filter.Intake = { $elemMatch: { date: intakeDate } };
-
-    // 🔹 Aggregation pipeline
-    let pipeline = [
-      { $match: filter },
-      {
-        $addFields: {
-          feeAsNumber: { $toDouble: "$completeFees.amount" }
-        }
-      },
-      // 🔹 Lookup University
-      {
-        $lookup: {
-          from: "universities",
-          localField: "University",
-          foreignField: "_id",
-          as: "University"
-        }
-      },
-      { $unwind: "$University" },
-      // 🔹 Lookup Country
-      {
-        $lookup: {
-          from: "countries",
-          localField: "University.Country",
-          foreignField: "_id",
-          as: "University.Country"
-        }
-      },
-      { $unwind: "$University.Country" }
-    ];
-
-    // 🔹 Approval filters on University
-    const approvalConditions = [];
-    if (mciApproval === "true" || mciApproval === true) approvalConditions.push({ "University.MCI": true });
-    if (ecfmgApproval === "true" || ecfmgApproval === true) approvalConditions.push({ "University.ECFMG": true });
-    if (nmcApproval === "true" || nmcApproval === true) approvalConditions.push({ "University.NMC": true });
-    if (whoApproval === "true" || whoApproval === true) approvalConditions.push({ "University.WHO": true });
-
-    if (approvalConditions.length > 0) {
-      pipeline.push({ $match: { $and: approvalConditions } });
+    // ------------------------
+    // Program Level filter
+    // ------------------------
+    if (programLevel && programLevel !== "") {
+      filters.ProgramLevel = programLevel;
     }
 
-    // 🔹 Fees filter
-    let feeMatch = {};
-    if (minFees) feeMatch.feeAsNumber = { ...feeMatch.feeAsNumber, $gte: Number(minFees) };
-    if (maxFees) feeMatch.feeAsNumber = { ...feeMatch.feeAsNumber, $lte: Number(maxFees) };
-    if (Object.keys(feeMatch).length > 0) pipeline.push({ $match: feeMatch });
+    // ------------------------
+    // Category filter
+    // ------------------------
+    if (category && category !== "") {
+      filters.Category = category;
+    }
 
-    const courses = await Course.aggregate(pipeline);
+    // ------------------------
+    // Intake date filter (inside array)
+    // ------------------------
+    if (intakeDate && intakeDate !== "") {
+      filters["Intake.date"] = intakeDate;
+    }
 
-    // 🔹 Clean unwanted fields
-    const cleanedCourses = courses.map(course => {
-      if (!course.province) delete course.province;
-      if (course.scholarships === "false") delete course.scholarships;
-      if (!course.languageRequirement) delete course.languageRequirement;
-      if (!course.standardizeRequirement) delete course.standardizeRequirement;
-      return course;
-    });
+    // ------------------------
+    // Country filter (based on populated University)
+    // ------------------------
+    if (country && country !== "") {
+      filters["University.country"] = country;
+    }
 
-    res.status(200).json(cleanedCourses);
+    // ------------------------
+    // University name filter
+    // ------------------------
+    if (universityName && universityName !== "") {
+      filters["University.name"] = new RegExp(universityName, "i"); // case-insensitive search
+    }
+
+    // ------------------------
+    // Approval filters (from University)
+    // ------------------------
+    if (mciApproval === "true") filters["University.mciApproval"] = true;
+    if (ecfmgApproval === "true") filters["University.ecfmgApproval"] = true;
+    if (nmcApproval === "true") filters["University.nmcApproval"] = true;
+    if (whoApproval === "true") filters["University.whoApproval"] = true;
+
+    // ------------------------
+    // Pagination
+    // ------------------------
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    // ------------------------
+    // Query & populate
+    // ------------------------
+
+    const courses = await Course.find(filters)
+      .skip(skip)
+      .limit(limit)
+      // .populate("University")
+      // .populate("Province");
+
+    res.json({ filters, courses });
 
   } catch (error) {
-    console.error("❌ Error fetching courses:", error);
-    res.status(500).json({ message: "Server Error" });
+    console.log(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
 
+// export { getCoursesByUniversity };
 
 const updateOnCourse = asyncHandler(async (req, res) => {
 

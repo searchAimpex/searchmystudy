@@ -19,8 +19,8 @@ const Levels = [
 ];
 
 export default function CourseFinder() {
-    const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
-      const [courses, setCourses] = useState([]);
+  const [AllCourse, { isLoading, isError }] = useAllCourseMutation();
+  const [courses, setCourses] = useState([]);
   const [filters, setFilters] = useState({
     category: '',
     programLevel: '',
@@ -55,16 +55,16 @@ export default function CourseFinder() {
   };
 
 
-    const handleSearch = async () => {
+  const handleSearch = async () => {
     try {
       const result = await AllCourse(filters).unwrap();
-      console.log("my results------------", filters)
-      if (Array.isArray(result)) {
-        setCourses(result);
- navigate('/course/all', { state: { filters } });
-      } else {
-        console.error('Expected an array but got:', result);
-      }
+      console.log("my results------------", result)
+      // if (Array.isArray(result,courses)) {
+        setCourses(result.courses);
+        navigate('/course/all', { state: { filters } });
+      // } else {
+        // console.log('Expected an array but got:', result);
+      // }
     } catch (error) {
       console.error('Error during search:', error);
     }

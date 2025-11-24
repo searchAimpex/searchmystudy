@@ -248,7 +248,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `${USERS_URL}/course/All`,
                 method: 'GET',
                 params: filter
-            }),
+            }),  
         }),
         UpdateCourseOne: builder.mutation({
             query: (data) => ({

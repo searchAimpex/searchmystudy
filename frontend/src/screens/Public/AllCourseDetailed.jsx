@@ -173,11 +173,11 @@ const AllCourseDetailed = () => {
       };
       const result = await AllCourse(searchFilters).unwrap();
       console.log("my results------------", searchFilters)
-      if (Array.isArray(result)) {
-        setCourses(result);
-      } else {
-        console.error('Expected an array but got:', result);
-      }
+      // if (Array.isArray(result)) {
+        setCourses(result.courses);
+      // } else {
+        // console.error('Expected an array but got:', result);
+      // }
     } catch (error) {
       console.error('Error during search:', error);
     }
