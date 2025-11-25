@@ -309,7 +309,7 @@ router.get('/student/:id',fetchByUserStudent)
 router.get('/student',fetchStudent)
 router.put('/student/status/:id',UpdateStudentStatus)
 router.put('/student/detail/:id',updateStudentdetails)
-router.delete('/student/:id',DeleteStudent)
+router.delete('/student',DeleteStudent)
 router.get("/student/one/:id",GetOneStudent)
 router.get('/student/track/:id',GetOneStudentByTracking)
 /******************************************************************/

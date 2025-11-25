@@ -2464,16 +2464,33 @@ const UpdateStudentStatus = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const DeleteStudent = async (req, res) => {
   try {
-    const student = await Student.findOneAndDelete({ _id: req.params.id });
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found.' });
+    const  ids  = req.body;
+    console.log(ids);
+    
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Please provide an array of student IDs." });
     }
-    res.json(student);
+
+    const result = await Student.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No students found to delete." });
+    }
+
+    res.json({
+      message: "Students deleted successfully.",
+      deletedCount: result.deletedCount
+    });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error, please try again later.', error });
+    res.status(500).json({ 
+      message: "Server error, please try again later.", 
+      error 
+    });
   }
-}
+};
+
 
 // @desc    Create a new student
 // @route   DELETE /api/students/:id
