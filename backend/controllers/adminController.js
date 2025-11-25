@@ -2464,8 +2464,8 @@ const UpdateStudentStatus = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const DeleteStudent = async (req, res) => {
   try {
-    const  ids  = req.body;
-    console.log(ids);
+    const  {ids}  = req.body;
+    console.log(ids,"????????????????????????????");
     
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
