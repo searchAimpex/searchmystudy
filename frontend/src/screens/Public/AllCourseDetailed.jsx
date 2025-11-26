@@ -424,7 +424,7 @@ const AllCourseDetailed = () => {
                 {
                   university?.map((ele) => {
                     return (
-                      <option value="">{ele.name}</option>
+                      <option value={ele._id}>{ele.name}</option>
                     );
                   })
                 }

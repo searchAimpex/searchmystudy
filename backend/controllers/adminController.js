@@ -1403,19 +1403,20 @@ const getCourses = async (req, res) => {
     // Pagination
     // ------------------------
     const page = parseInt(req.query.page) || 1;
-    const limit = 10;
+    const limit = 20;
     const skip = (page - 1) * limit;
 
     // ------------------------
     // Query & populate
     // ------------------------
 
+    console.log(filters, "===================filtered courses===================");
     const courses = await Course.find(filters)
       .skip(skip)
       .limit(limit)
-      // .populate("University")
+      .populate("University")
       // .populate("Province");
-
+      
     res.json({ filters, courses });
 
   } catch (error) {
