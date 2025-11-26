@@ -94,7 +94,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getWebsiteDetails,
       deleteMultipleWebsiteDetails,
       updateWebsiteDetail,
-      verifyToken
+      verifyToken,
+      profileUpdate
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -344,7 +345,8 @@ router.post('/profile',createProfile)
 router.get('/profile/:id',fetchByUserProfile)
 router.get('/profile',getAllProfiles)
 router.put('/profile/status/:id',UpdateProfileStatus)
-router.delete('/profile/:id',deleteProfile)
+router.delete('/profile',deleteProfile)
+router.put('/profile/update/:id',profileUpdate)
 /**************************************************/
 
 //////////////// PopUP Route ****************/

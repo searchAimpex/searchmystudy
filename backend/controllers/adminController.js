@@ -2760,15 +2760,35 @@ const getAllProfiles = async (req, res) => {
 // @access  Private
 const deleteProfile = async (req, res) => {
   try {
-    const profile = await Profile.findByIdAndDelete(req.params.id);
+    const { ids } = req.body; // array of profile IDs
 
-    if (!profile) {
-      return res.status(404).json({ message: 'Profile not found' });
+    console.log(ids,"||||||||||||||||||||||||||||||||||||||||");
+    
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: 'No profile IDs provided' });
     }
-    // or use `findByIdAndDelete(req.params.id)`
-    res.status(200).json({ message: 'Profile deleted successfully', deletedProfile: profile });
+
+    // Find profiles first (to return after delete)
+    const profiles = await Profile.find({ _id: { $in: ids } });
+
+    if (profiles.length === 0) {
+      return res.status(404).json({ message: 'No profiles found' });
+    }
+
+    // Delete all profiles
+    await Profile.deleteMany({ _id: { $in: ids } });
+
+    res.status(200).json({
+      message: 'Profiles deleted successfully',
+      deletedProfiles: profiles,
+    });
+
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete profile', error: error.message });
+    res.status(500).json({
+      message: 'Failed to delete profiles',
+      error: error.message,
+    });
   }
 };
 
@@ -2811,6 +2831,33 @@ const UpdateProfileStatus = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 }
+
+export const profileUpdate = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const updatedProfile = await Profile.findByIdAndUpdate(
+      id,
+      updateData,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedProfile) {
+      return res.status(404).json({ message: "Profile not found" });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      profile: updatedProfile
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error", error });
+  }
+};
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // @desc    Create a new popup
