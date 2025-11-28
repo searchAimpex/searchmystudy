@@ -88,11 +88,17 @@ const AllCourseDetailed = () => {
 
   useEffect(() => {
     const fetchCourses = async () => {
+          const searchFilters = {
+        ...filters,
+        minFees: values[0],
+        maxFees: values[1]
+      };
       try {
-        console.log(filters, ":::::::::::::::::::::::::::::::::::::::");
-        const result = await AllCourse(filters).unwrap();
-        if (Array.isArray(result)) {
-          setCourses(result);
+        // console.log(filters, ":::::::::::::::::::::::::::::::::::::::");
+        const result = await AllCourse(searchFilters).unwrap();
+        // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", result)
+        if (Array.isArray(result?.courses)) {
+          setCourses(result?.courses);
         } else {
           console.error('Expected an array but got:', result);
         }
@@ -420,7 +426,7 @@ const AllCourseDetailed = () => {
                 // value={filters?.university}
                 onChange={handleFilterChange}
                 className="w-full p-2 border border-gray-300 rounded"
-              >
+              >   <option value="">Select University</option>
                 {
                   university?.map((ele) => {
                     return (
@@ -565,6 +571,87 @@ const AllCourseDetailed = () => {
           <p className="text-red-600">Error loading courses</p>
         ) : (
           <div className="flex flex-col gap-8">
+            {
+              courses?.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 px-4">
+                  <div className="bg-white rounded-lg shadow-md p-12 max-w-md w-full text-center">
+                    {/* Icon */}
+                    <div className="mb-6 flex justify-center">
+                      <div className="bg-blue-50 rounded-full p-6">
+                        <svg
+                          className="w-12 h-12 text-blue-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={1.5}
+                            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Heading */}
+                    <h3 className="text-2xl font-bold text-gray-800 mb-2">
+                      No Courses Found
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-gray-600 mb-6 leading-relaxed">
+                      We couldn't find any courses matching your filters. Try adjusting your search criteria or browse all available courses.
+                    </p>
+
+                    {/* Suggestions */}
+                    <div className="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                      <p className="text-sm font-semibold text-gray-700 mb-3">Try:</p>
+                      <ul className="text-sm text-gray-600 space-y-2">
+                        <li className="flex items-start">
+                          <span className="text-blue-500 mr-2">•</span>
+                          <span>Changing your country or university selection</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-500 mr-2">•</span>
+                          <span>Adjusting the fees range</span>
+                        </li>
+                        <li className="flex items-start">
+                          <span className="text-blue-500 mr-2">•</span>
+                          <span>Selecting a different program level</span>
+                        </li>
+                      </ul>
+                    </div>
+
+                    {/* Action Button */}
+                    <button
+                      onClick={() => {
+                        setFilters({
+                          country: '',
+                          university: '',
+                          type: "",
+                          programLevel: '',
+                          category: '',
+                          gradeRank: '',
+                          intakeDate: '',
+                          universityName: '',
+                          mciApproval: false,
+                          ecfmgApproval: false,
+                          nmcApproval: false,
+                          whoApproval: false,
+                        });
+
+                        setValues([2000, 10000000]);
+                        handleSearch();
+                      }}
+                      className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200"
+                    >
+                      Reset Filters
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                 <div className="flex flex-col gap-8">
             {courses.map((course) =>
               course?.University?.Country?.mbbsAbroad ? (
                 <div
@@ -932,6 +1019,9 @@ const AllCourseDetailed = () => {
                 // <></>
               )
             )}
+          </div>
+              )
+            }
           </div>
         )}
       </div>

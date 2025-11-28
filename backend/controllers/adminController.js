@@ -44,7 +44,7 @@ import jwt from 'jsonwebtoken';
 export const verifyToken = (req, res) => {
   const token = req.params.token;
 
-  console.log(token,"::::::::::::::::::::::::::::::::::::::")
+  console.log(token, "::::::::::::::::::::::::::::::::::::::")
   if (!token) {
     return res.status(400).json({
       success: false,
@@ -1133,7 +1133,7 @@ const createCourse = asyncHandler(async (req, res) => {
           .status(400)
           .json({ message: "For total mode, totalAmount is required" });
       }
-      req.body.Fees.breakdown = []; 
+      req.body.Fees.breakdown = [];
     }
   }
 
@@ -1243,7 +1243,7 @@ const updateCourse = async (req, res) => {
 //           });
 //         }
 
-        
+
 //         updates.Fees.breakdown = breakdown.map((item, index) => ({
 //           label:
 //             item.label ||
@@ -1333,90 +1333,97 @@ const getCourses = async (req, res) => {
     const {
       country,
       university,
-      type,
       programLevel,
       category,
-      gradeRank,
       intakeDate,
       universityName,
       mciApproval,
       ecfmgApproval,
       nmcApproval,
-      whoApproval
+      whoApproval,
+      minFees,
+      maxFees
     } = req.query;
 
-    console.log(req.query, "||||||||||+++++++++++++++|||||||||||||||||||");
+    console.log(req.query, "REQ QUERY ========== ");
 
     const filters = {};
 
-    // ------------------------
-    // University filter
-    // ------------------------
+    // ------------------------------------------
+    // Course Filters
+    // ------------------------------------------
     if (university && mongoose.Types.ObjectId.isValid(university)) {
       filters.University = university;
     }
 
-    // ------------------------
-    // Program Level filter
-    // ------------------------
-    if (programLevel && programLevel !== "") {
-      filters.ProgramLevel = programLevel;
+    if (programLevel) filters.ProgramLevel = programLevel;
+    if (category) filters.Category = category;
+
+    // Intake inside array
+    if (intakeDate) filters["Intake.date"] = intakeDate;
+
+    // ------------------------------------------
+    // University Filters (Filters based on populated fields)
+    // ------------------------------------------
+    const uniFilters = {};
+
+    if (country) uniFilters.Country = country;
+    if (universityName) uniFilters.name = new RegExp(universityName, "i");
+
+    if (mciApproval === "true") uniFilters.mciApproval = true;
+    if (ecfmgApproval === "true") uniFilters.ecfmgApproval = true;
+    if (nmcApproval === "true") uniFilters.nmcApproval = true;
+    if (whoApproval === "true") uniFilters.whoApproval = true;
+
+    let allowedUniversityIds = [];
+
+    // Only run if any university filter exists
+    if (Object.keys(uniFilters).length > 0) {
+      const uniList = await University.find(uniFilters).select("_id");
+      allowedUniversityIds = uniList.map((u) => u._id);
+
+      if (allowedUniversityIds.length === 0) {
+        return res.json({ courses: [] });
+      }
+
+      filters.University = { $in: allowedUniversityIds };
     }
 
-    // ------------------------
-    // Category filter
-    // ------------------------
-    if (category && category !== "") {
-      filters.Category = category;
+    // ------------------------------------------
+    // Fees Filter (minFees / maxFees)
+    // ------------------------------------------
+    if (minFees || maxFees) {
+      filters.$or = [];
+
+      const feeRange = {};
+
+      if (minFees) feeRange.$gte = Number(minFees);
+      if (maxFees) feeRange.$lte = Number(maxFees);
+
+      // Fees.totalAmount
+      filters.$or.push({ "Fees.totalAmount": feeRange });
+
+      // completeFees.amount
+      filters.$or.push({ "completeFees.amount": feeRange });
     }
 
-    // ------------------------
-    // Intake date filter (inside array)
-    // ------------------------
-    if (intakeDate && intakeDate !== "") {
-      filters["Intake.date"] = intakeDate;
-    }
-
-    // ------------------------
-    // Country filter (based on populated University)
-    // ------------------------
-    if (country && country !== "") {
-      filters["University.country"] = country;
-    }
-
-    // ------------------------
-    // University name filter
-    // ------------------------
-    if (universityName && universityName !== "") {
-      filters["University.name"] = new RegExp(universityName, "i"); // case-insensitive search
-    }
-
-    // ------------------------
-    // Approval filters (from University)
-    // ------------------------
-    if (mciApproval === "true") filters["University.mciApproval"] = true;
-    if (ecfmgApproval === "true") filters["University.ecfmgApproval"] = true;
-    if (nmcApproval === "true") filters["University.nmcApproval"] = true;
-    if (whoApproval === "true") filters["University.whoApproval"] = true;
-
-    // ------------------------
+    // ------------------------------------------
     // Pagination
-    // ------------------------
+    // ------------------------------------------
     const page = parseInt(req.query.page) || 1;
     const limit = 20;
     const skip = (page - 1) * limit;
 
-    // ------------------------
-    // Query & populate
-    // ------------------------
+    console.log(filters, "FINAL FILTERS ================");
 
-    console.log(filters, "===================filtered courses===================");
+    // ------------------------------------------
+    // Final Query
+    // ------------------------------------------
     const courses = await Course.find(filters)
-      .skip(skip)
-      .limit(limit)
-      .populate("University")
-      // .populate("Province");
-      
+      // .skip(skip)
+      // .limit(limit)
+      .populate("University");
+
     res.json({ filters, courses });
 
   } catch (error) {
@@ -1424,6 +1431,8 @@ const getCourses = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 
 // export { getCoursesByUniversity };
@@ -1590,7 +1599,7 @@ const webinar_sendEmail = asyncHandler(async (req, res) => {
     await data.save()
     res.status(200).json({ message: 'Emails sent successfully.' });
   } catch (error) {
-    console.error( error);
+    console.error(error);
     res.status(500).json({ message: 'Failed to send email.y' });
   }
 });
@@ -2085,13 +2094,13 @@ export const createQuery = async (req, res) => {
 export const getAllQueries = async (req, res) => {
   try {
     const queries = await query.find().sort({ createdAt: -1 }); // newest first
-      const leads = await HomeLead.find({});
+    const leads = await HomeLead.find({});
     const contactLeads = await ContactLead.find({});
     res.status(200).json({
       message: 'Queries fetched successfully',
       query: queries,
       contact: contactLeads,
-      leads:leads
+      leads: leads
     });
   } catch (error) {
     console.error('Error in getAllQueries:', error);
@@ -2465,9 +2474,9 @@ const UpdateStudentStatus = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const DeleteStudent = async (req, res) => {
   try {
-    const  {ids}  = req.body;
-    console.log(ids,"????????????????????????????");
-    
+    const { ids } = req.body;
+    console.log(ids, "????????????????????????????");
+
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ message: "Please provide an array of student IDs." });
@@ -2485,9 +2494,9 @@ const DeleteStudent = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ 
-      message: "Server error, please try again later.", 
-      error 
+    res.status(500).json({
+      message: "Server error, please try again later.",
+      error
     });
   }
 };
@@ -2763,8 +2772,8 @@ const deleteProfile = async (req, res) => {
   try {
     const { ids } = req.body; // array of profile IDs
 
-    console.log(ids,"||||||||||||||||||||||||||||||||||||||||");
-    
+    console.log(ids, "||||||||||||||||||||||||||||||||||||||||");
+
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
       return res.status(400).json({ message: 'No profile IDs provided' });
@@ -2912,7 +2921,7 @@ const getAllPartnerPopups = async (req, res) => {
 // @route   DELETE /api/popups/:id
 // @access  Private
 const deletePopup = async (req, res) => {
-  const { ids } = req.body; 
+  const { ids } = req.body;
 
   try {
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
@@ -2925,14 +2934,14 @@ const deletePopup = async (req, res) => {
       return res.status(404).json({ message: 'No popups found to delete' });
     }
 
-    res.status(200).json({ 
+    res.status(200).json({
       message: `${result.deletedCount} popups deleted successfully`,
       result
     });
   } catch (error) {
-    res.status(500).json({ 
-      message: 'Failed to delete popups', 
-      error: error.message 
+    res.status(500).json({
+      message: 'Failed to delete popups',
+      error: error.message
     });
   }
 };
@@ -3491,7 +3500,7 @@ export const deleteMultipleWebsiteDetails = async (req, res) => {
 };
 
 
-export const fetchWebProfile = async (req,res)=>{
+export const fetchWebProfile = async (req, res) => {
   try {
     const data = await websiteProfile()
     res.send(data)
