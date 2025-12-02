@@ -2427,6 +2427,24 @@ export const fetchByUserStudent = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
+
+export const fetchByTrackingId = async (req, res) => {
+  try {
+    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",req.params.id);
+    
+    const trackingID = req.params.id;
+    const students = await Student.find({trackingId:trackingID}).populate('User'); // Populate with 'name' for easier identification
+
+    if (!students || students.length === 0) {
+      return res.status(404).json({ message: 'No students found for this user and sub-users.' });
+    }
+
+    res.json(students);
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error, please try again later.', error });
+  }
+};
 const fetchStudent = async (req, res) => {
   try {
     // Fetch students and populate all related fields
@@ -2831,6 +2849,8 @@ const fetchByUserProfile = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const UpdateProfileStatus = async (req, res) => {
   try {
+    console.log(req.body,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    
     const student = await Profile.findOneAndUpdate({ _id: req.params.id }, { status: req.body.status });
     if (!student) {
       return res.status(404).json({ message: 'Profile not found.' });

@@ -95,7 +95,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       deleteMultipleWebsiteDetails,
       updateWebsiteDetail,
       verifyToken,
-      profileUpdate
+      profileUpdate,
+      fetchByTrackingId
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -307,6 +308,7 @@ router.get('/notfiy-all',getAllNotifications)
 /********************* student Routes  ***********************/
 router.post('/student', createStudent);
 router.get('/student/:id',fetchByUserStudent)
+router.get('/student/track/:id',fetchByTrackingId)
 router.get('/student',fetchStudent)
 router.put('/student/status/:id',UpdateStudentStatus)
 router.put('/student/detail/:id',updateStudentdetails)

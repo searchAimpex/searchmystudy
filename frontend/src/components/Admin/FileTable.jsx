@@ -294,6 +294,7 @@ function FileTable() {
     const [FetchFile, { isSuccess }] = useFetchFileMutation();
     const [DeleteMyFile,DeleteState] = useDeleteMyFileMutation(); // Hook for deleting banner
     const dispatch = useDispatch();
+  console.log(file);
   
     useEffect(() => {
       if (isSuccess) {
