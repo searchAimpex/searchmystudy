@@ -3321,21 +3321,52 @@ const getAllFiles = async (req, res) => {
   }
 };
 
-// Delete a file by ID
-const deleteFile = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const file = await Files.findByIdAndDelete(id);
 
-    if (!file) {
-      return res.status(404).json({ message: 'File not found.' });
+// ✅ Update Website Detail
+export const updateFile = async (req, res) => {
+  try {
+    const detail = await Files.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!detail) {
+      return res.status(404).json({ message: "Files detail not found" });
     }
 
-    res.status(200).json(file);
+    res.status(200).json(detail);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update detail", error: error.message });
+  }
+};
+
+
+
+// Delete a file by ID
+// Delete multiple files by IDs
+const deleteFile = async (req, res) => {
+  try {
+    const { ids } = req.body; // Expecting an array of IDs
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: 'IDs array is required.' });
+    }
+
+    const result = await Files.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No files found to delete.' });
+    }
+
+    res.status(200).json({
+      message: 'Files deleted successfully.',
+      deletedCount: result.deletedCount,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 // Delete a file by ID
