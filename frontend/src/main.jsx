@@ -115,7 +115,6 @@ const router = createBrowserRouter(
         <Route path='/admin/transaction' element={< AdminTransactionLedgerManagement />} />
         <Route path='/admin/addcountry' element={< CountryAdd />} />
         <Route path='/admin/MbbsAbroad' element={< MbbsAbroad />} />
-
         <Route path='/admin/addprovince' element={< ProvinceAdd />} />
         <Route path='/admin/adduniversity' element={< AddUniversitys />} />
 

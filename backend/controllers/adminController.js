@@ -2430,16 +2430,16 @@ export const fetchByUserStudent = async (req, res) => {
 
 export const fetchByTrackingId = async (req, res) => {
   try {
-    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",req.params.id);
     
     const trackingID = req.params.id;
-    const students = await Student.find({trackingId:trackingID}).populate('User'); // Populate with 'name' for easier identification
+    const students = await Profile.find({trackingId:trackingID}).populate('User'); // Populate with 'name' for easier identification
+    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",students);
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });
     }
 
-    res.json(students);
+    res.json(students);   
 
   } catch (error) {
     res.status(500).json({ message: 'Server error, please try again later.', error });
@@ -3325,6 +3325,7 @@ const getAllFiles = async (req, res) => {
 // ✅ Update Website Detail
 export const updateFile = async (req, res) => {
   try {
+    console.log(req.body)
     const detail = await Files.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
