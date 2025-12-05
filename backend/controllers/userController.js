@@ -714,19 +714,28 @@ const updateCountry = async (req, res) => {
 // @access  Private
 const deleteCountrys = async (req, res) => {
   try {
-    console.log("fix",req.params.id)
-    const country = await SecondCountry.findByIdAndDelete(req.params.id);
+    const { ids } = req.body;
 
-    if (country) {
-      
-      res.json(country);
-    } else {
-      res.status(404).json({ message: 'Country not found' });
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "No IDs provided" });
     }
+
+    const result = await SecondCountry.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount > 0) {
+      return res.status(200).json({
+        message: "Countries deleted successfully",
+        deletedCount: result.deletedCount
+      });
+    } else {
+      return res.status(404).json({ message: "No countries found for given IDs" });
+    }
+
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete country' });
+    res.status(500).json({ message: "Failed to delete multiple countries", error });
   }
 };
+
 export {
   authUser,
   registerUser,

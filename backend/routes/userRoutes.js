@@ -54,7 +54,7 @@ router.post('/secondcountry', createCountry);
 router.get('/secondcountry/:id',getCountryById);
 router.get('/secondcountry',getAllCountries);
 router.put('/secondcountry/:id',updateCountry);
-router.delete('/secondcountry/:id',deleteCountrys);
+router.delete('/secondcountry',deleteCountrys);
 /**********************************************************************/
 
 
