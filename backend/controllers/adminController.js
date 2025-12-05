@@ -1422,8 +1422,11 @@ const getCourses = async (req, res) => {
     const courses = await Course.find(filters)
       // .skip(skip)
       // .limit(limit)
-      .populate("University");
-
+      .populate({
+        path: "University",
+        populate: {
+          path: "Country"
+        }})
     res.json({ filters, courses });
 
   } catch (error) {
