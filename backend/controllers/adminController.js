@@ -2537,6 +2537,7 @@ const GetOneStudent = async (req, res) => {
 }
 const GetOneStudentByTracking = async (req, res) => {
   try {
+    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",req.params.id);
     const student = await Student.findOne({ trackingId: req.params.id }).populate('University').populate('Course');
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
@@ -3126,7 +3127,7 @@ const createLoan = async (req, res) => {
 const getLoansByUser = async (req, res) => {
   try {
     const loans = await Loan.find({ User: req.params.id }); // Find loans by User ID
-    if (!loans.length) return res.status(404).json({ message: 'No loans found for this user' }); // If no loans are found
+    // if (!loans.length) return res.status(404).json({ message: 'No loans found for this user' }); // If no loans are found
 
     res.status(200).json(loans); // Return loans with a 200 status
   } catch (error) {
@@ -3139,7 +3140,7 @@ const getLoansByUser = async (req, res) => {
 // @access  Public
 const getLoans = async (req, res) => {
   try {
-    const loans = await Loan.find({}); // Find loans by User ID
+    const loans = await Loan.find().populate('User'); // Find loans by User ID
     if (!loans.length) return res.status(404).json({ message: 'No loans found for this user' }); // If no loans are found
 
     res.status(200).json(loans); // Return loans with a 200 status
@@ -3168,17 +3169,23 @@ const UpdateLoanStatus = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const DeleteLoan = async (req, res) => {
   try {
-    console.log("fix", req.body, req.params.id)
-    const student = await Loan.findOneAndDelete({ _id: req.params.id });
-    if (!student) {
-      return res.status(404).json({ message: 'Profile not found.' });
+    const { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "No IDs provided." });
     }
-    res.json(student);
+
+    const result = await Loan.deleteMany({ _id: { $in: ids } });
+
+    return res.json({
+      message: "Loans deleted successfully.",
+      deletedCount: result.deletedCount
+    });
 
   } catch (error) {
-    res.status(500).json({ message: 'Server error, please try again later.', error });
+    res.status(500).json({ message: "Server error.", error });
   }
-}
+};
 
 
 
@@ -3314,8 +3321,37 @@ const createFile = async (req, res) => {
 // Get all files
 const getAllFiles = async (req, res) => {
   try {
-    const files = await Files.find().populate('SecondCountry');
+    const files = await Files.aggregate([
+      {
+        $lookup: {
+          from: "secondcountries",
+          localField: "SecondCountry",
+          foreignField: "_id",
+          as: "SecondCountry"
+        }
+      },
+      {
+        $unwind: "$SecondCountry"
+      },
+      {
+        $group: {
+          _id: "$SecondCountry.name",
+          SecondCountry: { $first: "$SecondCountry" },
+          items: { $push: "$$ROOT" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$_id",
+          SecondCountry: 1,
+          items: 1
+        }
+      }
+    ]);
+
     res.status(200).json(files);
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

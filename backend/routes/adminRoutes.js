@@ -315,7 +315,7 @@ router.put('/student/status/:id',UpdateStudentStatus)
 router.put('/student/detail/:id',updateStudentdetails)
 router.delete('/student',DeleteStudent)
 router.get("/student/one/:id",GetOneStudent)
-router.get('/student/track/:id',GetOneStudentByTracking)
+router.get('/track/:id',GetOneStudentByTracking)
 /******************************************************************/
 
 
@@ -384,7 +384,7 @@ router.post('/loan',createLoan)
 router.get('/loan/:id',getLoansByUser)
 router.get('/loan',getLoans)
 router.put('/loan/status/:id',UpdateLoanStatus)
-router.delete('/loan/:id',DeleteLoan)
+router.delete('/loan',DeleteLoan)
 ///////////////////////////////////////////////
 
 
