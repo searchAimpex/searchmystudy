@@ -3357,7 +3357,14 @@ const getAllFiles = async (req, res) => {
   }
 };
 
-
+export const allFiles = async (req,res)=>{
+  try {
+    const data = await Files.find().populate("SecondCountry")
+    res.json({success:true,data})
+  } catch (error) {
+    console.log(error)
+  }
+}
 // ✅ Update Website Detail
 export const updateFile = async (req, res) => {
   try {

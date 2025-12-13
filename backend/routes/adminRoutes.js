@@ -97,7 +97,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       verifyToken,
       profileUpdate,
       fetchByTrackingId,
-      updateFile
+      updateFile,
+      allFiles
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -408,6 +409,7 @@ router.get('/CenterCheck/:id',checkUser)
 ////////////////// FILE ////////////////////
 router.post('/file',createFile)
 router.get('/file', getAllFiles)
+router.get('/files',allFiles)
 router.put('/file/:id',updateFile)
 router.get('/file/:id',findOneFile)
 router.delete('/file',deleteFile)
