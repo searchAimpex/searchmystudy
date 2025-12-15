@@ -2740,17 +2740,29 @@ const fetchAllPromotional = asyncHandler(async (req, res, next) => {
 // @desc    Admin Get All Banner & 
 // @route   DELETE /api/admin/DeletePromotional/:id
 // @access  Admin 
-const deletePromotional = asyncHandler(async (req, res, next) => {
+const deletePromotional = asyncHandler(async (req, res) => {
   try {
-    const bannerId = req.params.id;
-    const banner = await Promotional.findOneAndDelete({ _id: bannerId })
-    res.json(banner);
+    const { ids } = req.body; // array of banner IDs
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      res.status(400);
+      throw new Error("Please provide an array of IDs");
+    }
+
+    const result = await Promotional.deleteMany({
+      _id: { $in: ids }
+    });
+
+    res.status(200).json({
+      message: "Promotional banners deleted successfully",
+      deletedCount: result.deletedCount
+    });
 
   } catch (error) {
     res.status(400);
-    throw new Error('Not Able to delete');
+    throw new Error("Not able to delete promotional banners");
   }
-})
+});
 
 
 // @desc    Create a new profile

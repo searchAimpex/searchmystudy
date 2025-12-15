@@ -341,7 +341,7 @@ router.get('/matrix/:id',getStudentMetrics)
 /***********Promotional ROUTES *********/
 router.post('/createPromotional', createPromotional);
 router.get('/FetchAllPromotional',fetchAllPromotional)
-router.delete('/DeletePromotional/:id',deletePromotional)
+router.delete('/DeletePromotional',deletePromotional)
 /***********Promotional ROUTES *********/
 
 
