@@ -3099,15 +3099,34 @@ const getFrenchiseCommission = async (req, res) => {
 // @access  Public
 const deleteCommission = async (req, res) => {
   try {
-    const upload = await Commission.findByIdAndDelete(req.params.id);
-    if (!upload) {
-      return res.status(404).json({ message: 'Upload not found' });
+    const { ids } = req.body;
+
+    // validation
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "No commission IDs provided" });
     }
-    res.status(200).json({ message: 'Upload deleted successfully' });
+
+    const result = await Commission.deleteMany({
+      _id: { $in: ids }
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No commissions found to delete" });
+    }
+
+    res.status(200).json({
+      message: "Commissions deleted successfully",
+      deletedCount: result.deletedCount
+    });
+
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete upload', error: error.message });
+    res.status(500).json({
+      message: "Failed to delete commissions",
+      error: error.message
+    });
   }
 };
+
 // @desc    Create Loan Lead
 // @route   POST /api/loan
 // @access  Public

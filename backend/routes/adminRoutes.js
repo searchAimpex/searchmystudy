@@ -374,7 +374,7 @@ router.get('/upload/frenchise',getFrenchiseUploads)
 //////////////// COMMISSION ROUTE ****************/
 router.post('/commission',createCommission)
 router.get('/commission',getAllCommission)
-router.delete('/commission/:id',deleteCommission)
+router.delete('/commission',deleteCommission)
 router.get('/commission/partner',getPartnerCommission)
 router.get('/commission/frenchise',getFrenchiseCommission)
 ///////////////////////////////////////////////

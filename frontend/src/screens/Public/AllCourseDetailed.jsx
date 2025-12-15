@@ -149,9 +149,7 @@ const AllCourseDetailed = () => {
 
     const fetchInitialCourses = async () => {
       try {
-
         const result = await AllCourse().unwrap();
-
         if (Array.isArray(result)) {
         } else {
           console.error('Expected an array but got:', result);
@@ -160,7 +158,6 @@ const AllCourseDetailed = () => {
         console.error('Error during search:', error);
       }
     };
-
     getCountries();
     fetchInitialCourses();
   }, [fetchCountries, AllCourse, filters]);
@@ -178,9 +175,9 @@ const AllCourseDetailed = () => {
         maxFees: values[1]
       };
       const result = await AllCourse(searchFilters).unwrap();
-      console.log("my results------------", searchFilters)
+      // console.log("my results------------", searchFilters)
       // if (Array.isArray(result)) {
-        setCourses(result.courses);
+        setCourses(result.courses);    
       // } else {
         // console.error('Expected an array but got:', result);
       // }
@@ -273,7 +270,7 @@ const AllCourseDetailed = () => {
           className="flex justify-between items-center cursor-pointer"
           onClick={() => setIsExpanded(!isExpanded)}
         >
-          <h2 className="text-xl font-bold mb-4">Filters</h2>
+          <h2 className="text-xl font-bold mb-4">Filters</h2>   
           {isExpanded ? <FaChevronUp /> : <FaChevronDown />}
         </div>
 
