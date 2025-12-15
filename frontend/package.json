@@ -15,7 +15,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.16.4",
     "@mui/joy": "^5.0.0-beta.47",
-    "@mui/lab": "^6.0.0-beta.18",
+    "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.16.9",
     "@mui/styles": "^5.16.1",
     "@reduxjs/toolkit": "^1.9.5",

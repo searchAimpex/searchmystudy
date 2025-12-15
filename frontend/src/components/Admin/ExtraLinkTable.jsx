@@ -286,6 +286,8 @@ function ExtraLinkTable() {
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
     const { navItems } = useSelector((state) => state.nav.nav);
     const banner = navItems
+    console.log(banner,"|||||||||||||||||||||||||||||||||||||||||");
+    
     const [FetchNav, { isSuccess }] = useFetchNavMutation();
     const [DeleteMyNav,DeleteState] = useDeleteMyNavMutation(); // Hook for deleting banner
     const dispatch = useDispatch();
@@ -453,7 +455,7 @@ function ExtraLinkTable() {
               .map((row, index) => {
                 const isItemSelected = isSelected(row._id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-  
+           
                 return (
                   <tr
                     onClick={(event) => handleClick(event, row._id)}
