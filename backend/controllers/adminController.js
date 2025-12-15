@@ -3263,17 +3263,41 @@ const getAllNavItems = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+export const updateNav = async (req, res) => {
+  try {
+    console.log(req.body)
+    const detail = await Nav.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
 
+    if (!detail) {
+      return res.status(404).json({ message: "Files detail not found" });
+    }
+
+    res.status(200).json(detail);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update detail", error: error.message });
+  }
+};
 // Delete a navigation item by ID
 const deleteNavItem = async (req, res) => {
   try {
-    const navItem = await Nav.findByIdAndDelete(req.params.id);
+    const { ids } = req.body; // expect array of ids
 
-    if (!navItem) {
-      return res.status(404).json({ message: 'Navigation item not found' });
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: 'Please provide an array of IDs' });
     }
 
-    res.status(200).json({ message: 'Navigation item deleted successfully', navItem });
+    const result = await Nav.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No navigation items found to delete' });
+    }
+
+    res.status(200).json({
+      message: `${result.deletedCount} navigation items deleted successfully`,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -98,7 +98,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       profileUpdate,
       fetchByTrackingId,
       updateFile,
-      allFiles
+      allFiles,
+      updateNav
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -401,7 +402,8 @@ router.delete('/transaction/:id',deleteTransactions)
 ///////////////////////NAVLINKS ///////////////////
 router.get('/nav',getAllNavItems)
 router.post('/nav',createNavItem)
-router.delete('/nav/:id',deleteNavItem)
+router.delete('/nav',deleteNavItem)
+router.put('/nav/:id',updateNav)
 //////////////////////////////////////////////////
 
 router.get('/CenterCheck/:id',checkUser)
