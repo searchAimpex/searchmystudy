@@ -99,7 +99,11 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       fetchByTrackingId,
       updateFile,
       allFiles,
-      updateNav
+      updateNav,
+      getAllContact,
+      createContact,
+      deleteContact,
+      updateContact
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -405,7 +409,11 @@ router.post('/nav',createNavItem)
 router.delete('/nav',deleteNavItem)
 router.put('/nav/:id',updateNav)
 //////////////////////////////////////////////////
-
+/////////////////////////contact
+router.get('/contact/all',getAllContact)
+router.post('/contact',createContact)
+router.delete('/contact',deleteContact)
+router.put('/contact/:id',updateContact)
 router.get('/CenterCheck/:id',checkUser)
 
 ////////////////// FILE ////////////////////

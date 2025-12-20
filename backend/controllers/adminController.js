@@ -37,6 +37,7 @@ import websiteDetail from '../models/websiteDetails.js';
 import websiteProfile from '../models/webProfile.js';
 import webinarleads from '../models/webinarLead.js';
 import jwt from 'jsonwebtoken';
+import contacts from '../models/contactModel.js';
 
 // import jwt from 'jsonwebtoken';
 
@@ -1099,7 +1100,6 @@ const getCourseById = asyncHandler(async (req, res) => {
 });
 
 
-
 const createCourse = asyncHandler(async (req, res) => {
   if (!req.body.Province || req.body.Province === "") {
     req.body.Province = null;
@@ -1168,11 +1168,9 @@ const updateCourse = async (req, res) => {
         const cleanedBreakdown = breakdown
           .filter(item => item.amount !== null && item.amount !== undefined && item.amount !== "")
           .map((item, index) => ({
-            label:
-              item.label ||
-              (mode === "semester"
-                ? `Semester ${index + 1}`
-                : `Year ${index + 1}`),
+            label: item.label || (mode === "semester"
+              ? `Semester ${index + 1}`
+              : `Year ${index + 1}`),
             amount: Number(item.amount) || 0,
           }));
 
@@ -1955,9 +1953,12 @@ const createHomeLead = asyncHandler(async (req, res) => {
 // const transporter = nodemailer.createTransport({
 //   service: 'gmail',
 //   auth: {
-//     user: process.env.EMAIL_USER,      // your email
-//     pass: process.env.EMAIL_PASS,      // your app password
-//   },
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS,
+
+
+
+//   }
 // });
 
 // const mailOptions = {
@@ -2740,7 +2741,7 @@ const fetchAllPromotional = asyncHandler(async (req, res, next) => {
 // @desc    Admin Get All Banner & 
 // @route   DELETE /api/admin/DeletePromotional/:id
 // @access  Admin 
-const deletePromotional = asyncHandler(async (req, res) => {
+const deletePromotional = asyncHandler(async (req, res, next) => {
   try {
     const { ids } = req.body; // array of banner IDs
 
@@ -2969,7 +2970,6 @@ const deletePopup = async (req, res) => {
 
     res.status(200).json({
       message: `${result.deletedCount} popups deleted successfully`,
-      result
     });
   } catch (error) {
     res.status(500).json({
@@ -3078,7 +3078,7 @@ const createCommission = async (req, res) => {
 // @access  Public
 const getAllCommission = async (req, res) => {
   try {
-    const uploads = await Commission.find({}).populate('SecondCountry');
+    const uploads = await Commission.find().populate('SecondCountry');
     res.status(200).json(uploads);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
@@ -3196,7 +3196,7 @@ const UpdateLoanStatus = async (req, res) => {
 }
 
 // @desc    Create a new student
-// @route   PUT /api/loan/:id
+// @route   DELETE /api/loan/:id
 // @access  Public (or Private, depending on your setup)
 const DeleteLoan = async (req, res) => {
   try {
@@ -3266,7 +3266,26 @@ const deleteTransactions = async (req, res) => {
 
 
 
-// Create a new navigation item
+// Create a new contact
+export const createContact = async (req, res) => {
+  try {
+    const contact = new contacts(req.body);
+    await contact.save();
+
+    res.status(201).json({
+      success: true,
+      message: "Contact created successfully",
+      data: contact,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+
 const createNavItem = async (req, res) => {
   try {
     const { name, url } = req.body;
@@ -3280,6 +3299,19 @@ const createNavItem = async (req, res) => {
   }
 };
 
+export const getAllContact = async (req, res) => {
+  try {
+    const navItems = await contacts.find();
+
+    if (navItems.length === 0) {
+      return res.status(404).json({ message: 'No contnacts items found' });
+    }
+
+    res.status(200).json({ navItems });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 // Get all navigation items
 const getAllNavItems = async (req, res) => {
   try {
@@ -3309,6 +3341,47 @@ export const updateNav = async (req, res) => {
     res.status(200).json(detail);
   } catch (error) {
     res.status(500).json({ message: "Failed to update detail", error: error.message });
+  }
+};
+
+export const updateContact = async (req, res) => {
+  try {
+    // console.log(req.body)
+    const detail = await contacts.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!detail) {
+      return res.status(404).json({ message: "Files detail not found" });
+    }
+
+    res.status(200).json(detail);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update detail", error: error.message });
+  }
+};
+
+
+export const deleteContact = async (req, res) => {
+  try {
+    const { ids } = req.body; // expect array of ids
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: 'Please provide an array of IDs' });
+    }
+
+    const result = await contacts.deleteMany({ _id: { $in: ids } });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: 'No contacts found to delete' });
+    }
+
+    res.status(200).json({
+      message: `${result.deletedCount} contacts deleted successfully`,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 // Delete a navigation item by ID
@@ -3352,7 +3425,7 @@ const checkUser = async (req, res) => {
 
 const createFile = async (req, res) => {
   try {
-    const { SecondCountry, name, template, broucher, type } = req.body;
+    const { SecondCountry, name, template, broucher, type,university } = req.body;
 
     // Check if all required fields are provided
     if (!SecondCountry || !type || (!template && !broucher)) {
@@ -3363,6 +3436,7 @@ const createFile = async (req, res) => {
       SecondCountry,
       name,
       template,
+      university,
       broucher,
       type,
     });
@@ -3377,6 +3451,7 @@ const createFile = async (req, res) => {
 const getAllFiles = async (req, res) => {
   try {
     const files = await Files.aggregate([
+      // 1️⃣ SecondCountry lookup
       {
         $lookup: {
           from: "secondcountries",
@@ -3385,9 +3460,25 @@ const getAllFiles = async (req, res) => {
           as: "SecondCountry"
         }
       },
+      { $unwind: "$SecondCountry" },
+    
+      // 2️⃣ University lookup (FIXED)
       {
-        $unwind: "$SecondCountry"
+        $lookup: {
+          from: "universities",
+          localField: "university",   // ✅ correct field name
+          foreignField: "_id",
+          as: "university"
+        }
       },
+      {
+        $unwind: {
+          path: "$university",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+    
+      // 3️⃣ Group by country
       {
         $group: {
           _id: "$SecondCountry.name",
@@ -3395,6 +3486,8 @@ const getAllFiles = async (req, res) => {
           items: { $push: "$$ROOT" }
         }
       },
+    
+      // 4️⃣ Final shape
       {
         $project: {
           _id: 0,
@@ -3404,7 +3497,7 @@ const getAllFiles = async (req, res) => {
         }
       }
     ]);
-
+  
     res.status(200).json(files);
 
   } catch (error) {
@@ -3414,7 +3507,7 @@ const getAllFiles = async (req, res) => {
 
 export const allFiles = async (req,res)=>{
   try {
-    const data = await Files.find().populate("SecondCountry")
+    const data = await Files.find().populate("SecondCountry").populate("university")
     res.json({success:true,data})
   } catch (error) {
     console.log(error)
@@ -3630,7 +3723,6 @@ export const updateWebsiteDetail = async (req, res) => {
     res.status(500).json({ message: "Failed to update detail", error: error.message });
   }
 };
-
 
 
 

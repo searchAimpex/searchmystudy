@@ -20,9 +20,15 @@ const fileSchema = mongoose.Schema(
         type:{
             type:String,
             enum:['TEMPLATE',"BROUCHER"]
+        },
+      
+        university:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'University',
+            required: true,
         }
-        
     },
+
     {
       timestamps: true,
     }
