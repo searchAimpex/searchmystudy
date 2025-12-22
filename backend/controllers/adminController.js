@@ -2211,7 +2211,10 @@ const extraUser = asyncHandler(async (req, res) => {
     throw new Error('Invalid user data');
   }
 });
-
+export const extraUserAll = asyncHandler(async (req, res) => {
+  const userExists = await User.find();
+  res.status(200).json(userExists);
+});
 
 // @desc    GET EXTRA user
 // @route   GET /api/extraUser
@@ -3254,12 +3257,21 @@ const getTransactionsByCenterCode = async (req, res) => {
 
 const deleteTransactions = async (req, res) => {
   try {
-    const transactions = await Transaction.findOneAndDelete({ _id: req.params.id }); // Find by centerCode
-    if (!transactions.length) return res.status(404).json({ message: 'No transactions found for this center code' }); // If none found
+    const { ids } = req.body;
 
-    res.status(200).json(transactions); // Return transactions
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "No transaction IDs provided" });
+    }
+
+    const deleteData = await Transaction.deleteMany({
+      _id: { $in: ids }
+    });
+
+    res.json({
+      message: `${deleteData.deletedCount} transactions deleted successfully`,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message }); // Handle server errors
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -103,7 +103,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getAllContact,
       createContact,
       deleteContact,
-      updateContact
+      updateContact,
+      extraUserAll
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -299,6 +300,7 @@ router.delete('/deleteQueryById',deleteQueryById)
 
 /********************* Extra User Routes  ***********************/
 router.post('/extrauser',extraUser)
+router.get('/extrauserall',extraUserAll)
 router.get('/extrauser/:id',extraUserFetch)
 /******************************************************************/
 
@@ -399,7 +401,8 @@ router.delete('/loan',DeleteLoan)
 router.post('/transaction',createTransaction)
 router.get('/transaction',getAllTransactions)
 router.get('/transaction/:centerCode',getTransactionsByCenterCode)
-router.delete('/transaction/:id',deleteTransactions)
+router.delete('/transaction',deleteTransactions)
+// router.put('/')
 ////////////////////////////////////////////////////////
 
 
