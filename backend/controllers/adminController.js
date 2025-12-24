@@ -2213,6 +2213,7 @@ const extraUser = asyncHandler(async (req, res) => {
 });
 export const extraUserAll = asyncHandler(async (req, res) => {
   const userExists = await User.find();
+  console.log(userExists,":::::::::::::::::::::::::::::::::::::::")
   res.status(200).json(userExists);
 });
 
@@ -2236,7 +2237,15 @@ const extraUserFetch = asyncHandler(async (req, res) => {
   }
 });
 
-
+export const deleteCounsellorCoursefinder = async (req,res)=>{
+  try {
+    const {ids} = req.body
+    const deleteData = await User.deleteMany({_id:{$in:ids}})
+    res.json({deleteData})
+  } catch (error) {
+  console.log(error)    
+  }
+}
 
 // Function to send notifications to users with a specific role
 const sendNotificationToRole = async (req, res) => {

@@ -104,7 +104,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       createContact,
       deleteContact,
       updateContact,
-      extraUserAll
+      extraUserAll,
+      deleteCounsellorCoursefinder
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -302,6 +303,7 @@ router.delete('/deleteQueryById',deleteQueryById)
 router.post('/extrauser',extraUser)
 router.get('/extrauserall',extraUserAll)
 router.get('/extrauser/:id',extraUserFetch)
+router.delete('/deleteExtrauser',deleteCounsellorCoursefinder)
 /******************************************************************/
 
 
