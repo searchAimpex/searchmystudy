@@ -2212,8 +2212,8 @@ const extraUser = asyncHandler(async (req, res) => {
   }
 });
 export const extraUserAll = asyncHandler(async (req, res) => {
-  const userExists = await User.find();
-  console.log(userExists,":::::::::::::::::::::::::::::::::::::::")
+  const userExists = await User.find().populate("createdBy");
+  // console.log(userExists,":::::::::::::::::::::::::::::::::::::::")
   res.status(200).json(userExists);
 });
 
