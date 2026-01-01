@@ -42,6 +42,10 @@ const userSchema = mongoose.Schema(
       type:String,
       default:""
     },
+    status:{
+      type:Boolean,
+      defaut:false
+    },
     WhatappNumber: {
       type:String,
       default:""

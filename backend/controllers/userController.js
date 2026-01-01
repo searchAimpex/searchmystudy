@@ -17,15 +17,15 @@ import Country from '../models/countryModel.js';
 
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  console.log(password,"++++++++++++++++++++++++");
-  
+  console.log(password, "++++++++++++++++++++++++");
+
   // Find user by email
   const user = await User.findOne({ email });
 
   // const user = await User.findOne({ email });
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-console.log(hashedPassword,'-----------------------------');
+  console.log(hashedPassword, '-----------------------------');
 
 
 
@@ -67,8 +67,8 @@ export const passwordReset = asyncHandler(async (req, res) => {
 
   // Generate JWT token valid for 5 minutes
   const token = jwt.sign(
-    { id: user._id }, 
-    process.env.JWT_SECRET, 
+    { id: user._id },
+    process.env.JWT_SECRET,
     { expiresIn: "5m" }
   );
   const resetLink = `https://admin.coursefinder.co.in/change-password/${token}`;
@@ -122,7 +122,7 @@ export const changePwd = asyncHandler(async (req, res) => {
     // 🔎 find user by email and update password
     const user = await User.findOneAndUpdate(
       { email },
-      { 
+      {
         password: hashedPassword,
         passwordTracker: password, // ⚠️ for testing only, don’t store plain text in prod
       },
@@ -133,9 +133,9 @@ export const changePwd = asyncHandler(async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ 
-      message: "Password updated successfully", 
-      user 
+    res.status(200).json({
+      message: "Password updated successfully",
+      user
     });
   } catch (error) {
     console.error("Change password error:", error);
@@ -155,11 +155,11 @@ const authPartner = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('Invalid email or password');
   }
-  if(user.role === 'admin'){
+  if (user.role === 'admin') {
     res.status(401);
     throw new Error('Acess Denied');
   }
-  if(user.block){
+  if (user.block) {
     res.status(401);
     throw new Error('User Blocked');
   }
@@ -179,90 +179,30 @@ const authPartner = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  const {
-    name,
-    email,
-    bio,
-    password,
-    role,
-    createdBy,
-    block,
-    OwnerName,
-    OwnerFatherName,
-    InstitutionName,
-    ContactNumber,
-    WhatsAppNumber,
-    CenterCode,
-    DateOfBirth,
-    OfficePhoto,
-    
-    registration,
-    // MOU,
-    city,
-    state,
-    zipCode,
-    address,
-    OwnerPhoto,
-    FrontAadhar,
-    BackAadhar,
-    PanCard,
-    ProfilePhoto,
-    VisitOffice,
-    CancelledCheck,
-    Logo,
-    accountedDetails,
-    IFSC,
-    MOU,
-    bankName
-  } = req.body;
-  console.log(req.body,"++++++++++++++");
-  
   // Check if user with the same email already exists
-  const userExists = await User.findOne({ email });
-
+  const userExists = await User.findOne({ email: req.body.email });
+  const whatsappNumber = await User.findOne({ WhatappNumber: req.body.WhatsAppNumber });
+  const phoneNumber = await User.findOne({ ContactNumber: req.body.ContactNumber })
+  const centerCode = await User.findOne({ CenterCode: req.body.CenterCode })
   if (userExists) {
     res.status(400);
-    throw new Error('User already exists');
+    throw new Error('User already exists!');
+  }
+  if (whatsappNumber) {
+    res.status(400);
+    throw new Error('Whats App Already Exists!');
+  }
+  if (centerCode) {
+    res.status(400);
+    throw new Error('Center Code Is Unavailable!')
   }
 
+  if (phoneNumber) {
+    res.status(400);
+    throw new Error('Phone Number Is Already Exists!')
+  }
   // Create a new user with all the provided fields
-  const user = await User.create({
-    name,
-    email,
-    password,
-    passwordTracker:password,
-    role,
-    bio,
-    createdBy,
-    block,
-    OwnerName,
-    OfficePhoto,
-    OwnerFatherName,
-    InsitutionName:InstitutionName,
-    ContactNumber,
-    WhatappNumber:WhatsAppNumber,
-    CenterCode,
-    OwnerPhoto,
-    DateOfBirth,
-    city,
-    state,
-    zipCode,
-    registration,
-    mou:MOU,
-    OfficePhoto,
-    address,
-    FrontAdhar:FrontAadhar,
-    BackAdhar:BackAadhar,
-    PanCard,
-    ProfilePhoto,
-    VistOffice:VisitOffice,
-    CancelledCheck,
-    Logo,
-    accountedDetails,
-    IFSC,
-
-    bankName
-  });
+  const user = await User.create({...req.body,passwordTracker: req.body.password,});
 
   // If user creation is successful
   if (user) {
@@ -270,46 +210,38 @@ const registerUser = asyncHandler(async (req, res) => {
     generateToken(res, user._id);
 
     // Send the created user data in response
-    res.status(201).json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      createdBy: user.createdBy,
-      block: user.block,
-      OwnerName: user.OwnerName,
-      OwnerFatherName: user.OwnerFatherName,
-      InsitutionName: user.InsitutionName,
-      ContactNumber: user.ContactNumber,
-      WhatappNumber: user.WhatappNumber,
-      CenterCode: user.CenterCode,
-      DateOfBirth: user.DateOfBirth,
-      bio:user.bio,
-      OfficePhoto:user.OfficePhoto,
-      city: user.city,
-      registration: user.registration,
-      state: user.state,
-      mouthZip: user.mouthZip,
-      zipCode: user.zipCode,
-      address: user.address,
-      FrontAdhar: user.FrontAdhar,
-      BackAdhar: user.BackAdhar,
-      OwnerPhoto:user.OwnerPhoto,
-      PanCard: user.PanCard,
-      ProfilePhoto: user.ProfilePhoto,
-      VistOffice: user.VistOffice,
-      CancelledCheck: user.CancelledCheck,
-      Logo: user.Logo,
-      accountedDetails:user.accountedDetails,
-      IFSC:user.IFSC,
-      bankName:user.bankName
-    });
+    res.status(201).json({user});
 
   } else {
     res.status(400);
     throw new Error('Invalid user data');
   }
 });
+
+export const statusUpdate = asyncHandler(async (req, res) => {
+  console.log(req.body,"++++++++++++++++++++++++++++++")
+  const { status, id } = req.body;
+  const data = await User.findByIdAndUpdate(
+    id,
+    { status: status },     
+    { new: true }           
+  );
+
+  if (!data) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Status updated successfully",
+    data,
+  });
+});
+
+
 export const updateUser = asyncHandler(async (req, res) => {
   const userId = req.params.id;
   const updateData = { ...req.body }; // clone body
@@ -373,9 +305,9 @@ export const updateUser = asyncHandler(async (req, res) => {
 });
 export const getUserById = asyncHandler(async (req, res) => {
   try {
-    console.log(req.params,"+++++++++++++++++++++++++++++++++");
-    
-    const userId = req.params.id; 
+    console.log(req.params, "+++++++++++++++++++++++++++++++++");
+
+    const userId = req.params.id;
     const user = await User.findById(userId);
 
     if (!user) {
@@ -426,12 +358,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.body.userId);
 
   if (user) {
-    console.log("fix",user)
-    console.log("updatte",req.body)
+    console.log("fix", user)
+    console.log("updatte", req.body)
     // Update general fields
     user.name = req.body.data.name || user.name;
     user.email = req.body.data.email || user.email;
-    
+
     // Update additional fields
     user.role = req.body.data.role || user.role;
     user.OwnerName = req.body.data.OwnerName || user.OwnerName;
@@ -464,7 +396,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     }
 
     const updatedUser = await user.save();
-    console.log("update user",updatedUser);
+    console.log("update user", updatedUser);
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
@@ -509,16 +441,16 @@ const updateUserOneProfile = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
-    console.log("fix",user)
-    console.log("updatte",req.body)
+    console.log("fix", user)
+    console.log("updatte", req.body)
     // Update general fields
- 
-    user.Logo = req.body.Logo || user.Logo;
-   
 
-  
+    user.Logo = req.body.Logo || user.Logo;
+
+
+
     const updatedUser = await user.save();
-    console.log("update user",updatedUser);
+    console.log("update user", updatedUser);
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
@@ -554,11 +486,11 @@ const updateUserOneProfile = asyncHandler(async (req, res) => {
   }
 });
 
-const blockUser = asyncHandler(async (req,res)=>{
-  const user = await User.findByIdAndUpdate(req.params.id,{block:req.body.block},{new:true});
-  if(user) {
+const blockUser = asyncHandler(async (req, res) => {
+  const user = await User.findByIdAndUpdate(req.params.id, { block: req.body.block }, { new: true });
+  if (user) {
     res.json(user).status(200)
-  }else {
+  } else {
     res.status(401);
     throw new Error('User not found');
   }
@@ -566,14 +498,14 @@ const blockUser = asyncHandler(async (req,res)=>{
 
 const test = async (req, res) => {
   try {
-    res.json({ msg:"working fine" });
+    res.json({ msg: "working fine" });
   } catch (error) {
     res.status(401);
-    throw new Error('Please enter all required fields' );
+    throw new Error('Please enter all required fields');
   }
 };
 const getAllUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.find({role:'partner'});
+  const user = await User.find({ role: 'partner' });
   if (user) {
     res.json(user);
   } else {
@@ -584,8 +516,8 @@ const getAllUserProfile = asyncHandler(async (req, res) => {
 
 
 const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
-  const user = await User.find({role:'franchise'});
-  console.log("user ",user)
+  const user = await User.find({ role: 'franchise' });
+  console.log("user ", user)
   if (user) {
     res.json(user);
   } else {
@@ -656,7 +588,7 @@ const getCountryById = async (req, res) => {
 // @access  Private
 const createCountry = async (req, res) => {
   const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
-  
+
   if (!name || !flagURL || !currency || !code) {
     return res.status(400).json({ message: 'Please provide all required fields' });
   }
@@ -688,7 +620,7 @@ const updateCountry = async (req, res) => {
 
   try {
     const country = await SecondCountry.findById(req.params.id);
-    
+
     if (country) {
       country.name = name || country.name;
       country.flagURL = flagURL || country.flagURL;

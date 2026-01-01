@@ -22,6 +22,7 @@ import {
   getUserById,
   passwordReset,
   changePwd,
+  statusUpdate,
 } from '../controllers/userController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { getAllPopups } from '../controllers/adminController.js';
@@ -29,6 +30,7 @@ import { getAllPopups } from '../controllers/adminController.js';
 const router = express.Router();
 
 router.post('/', registerUser);
+router.put('/statusUpdate/:id', statusUpdate);
 router.put('/updateUser/:id', updateUser);
 router.get('/getDataById/:id',getUserById)
 router.post('/auth', authUser);
