@@ -219,8 +219,9 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const statusUpdate = asyncHandler(async (req, res) => {
-  console.log(req.body,"++++++++++++++++++++++++++++++")
-  const { status, id } = req.body;
+  // console.log(req.params,"++++++++++++++++++++++++++++++")
+  const { status} = req.body;
+  const {id} = req.params
   const data = await User.findByIdAndUpdate(
     id,
     { status: status },     
