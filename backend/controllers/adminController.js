@@ -2178,10 +2178,21 @@ const extraUser = asyncHandler(async (req, res) => {
   const { name, email, password, role, createdBy, CounsellorCode, ProfilePhoto, WhatsAppNumber } = req.body;
 
   const userExists = await User.findOne({ email });
+  const userByCode = await User.findOne({CounsellorCode:CounsellorCode})
+  const userByWhatsAppNumber = await User.findOne({WhatsAppNumber:WhatsAppNumber})
+
 
   if (userExists) {
     res.status(400);
     throw new Error('User already exists');
+  }
+  if(userByCode){
+    res.status(400);
+    throw new Error("Counsellor code is unavailable!")
+  }
+  if(userByWhatsAppNumber){
+    res.status(400);
+    throw new Error("Number already exist!")
   }
 
   const user = await User.create({

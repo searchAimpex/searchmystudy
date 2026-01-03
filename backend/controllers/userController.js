@@ -58,7 +58,7 @@ const authUser = asyncHandler(async (req, res) => {
 
 export const passwordReset = asyncHandler(async (req, res) => {
   const email = req.params.email;
-
+  console.log(email,"::::::::::::::::::::::::::::::::::::::;")
   const user = await User.findOne({ email });
   if (!user) {
     res.status(404);
@@ -66,12 +66,13 @@ export const passwordReset = asyncHandler(async (req, res) => {
   }
 
   // Generate JWT token valid for 5 minutes
+
   const token = jwt.sign(
     { id: user._id },
     process.env.JWT_SECRET,
     { expiresIn: "5m" }
   );
-  const resetLink = `https://admin.coursefinder.co.in/change-password/${token}`;
+  const resetLink = `https://admin.coursefinder.co.in/change-password/${email}/${token}`;
 
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -220,8 +221,8 @@ const registerUser = asyncHandler(async (req, res) => {
 
 export const statusUpdate = asyncHandler(async (req, res) => {
   // console.log(req.params,"++++++++++++++++++++++++++++++")
-  const { status} = req.body;
-  const {id} = req.params
+  const {status} = req.body;
+  const {id} = req.params   
   const data = await User.findByIdAndUpdate(
     id,
     { status: status },     
