@@ -507,18 +507,22 @@ const test = async (req, res) => {
   }
 };
 const getAllUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.find({ role: 'partner' });
-  if (user) {
-    res.json(user);
+  const users = await User.find({ role: "partner" })
+    .sort({ createdAt: -1 }); // ✅ newest first
+
+  if (users.length > 0) {
+    res.status(200).json(users);
   } else {
     res.status(404);
-    throw new Error('User not found');
+    throw new Error("User not found");
   }
 });
 
 
+
 const getAllFrenchiseProfile = asyncHandler(async (req, res) => {
-  const user = await User.find({ role: 'franchise' });
+  const user = await User.find({ role: 'franchise' })
+    .sort({ createdAt: -1 }); ;
   console.log("user ", user)
   if (user) {
     res.json(user);
