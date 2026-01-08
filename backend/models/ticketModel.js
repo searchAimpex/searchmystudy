@@ -51,6 +51,9 @@ const ticketResponseSchema = mongoose.Schema(
         ref: 'Ticket',
         required: true,
       },
+      remark:{
+        type:String,
+      },
       content: {
         type: String,
         required: true,

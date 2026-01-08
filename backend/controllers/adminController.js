@@ -2577,10 +2577,11 @@ const GetOneStudentByTracking = async (req, res) => {
 
 // POST /api/tickets
 const createTicket = async (req, res) => {
-  const { title, description, priority, category, attachments, userId } = req.body;
+  const { title, description, priority, category, attachments, userId,remark } = req.body;
   try {
     const newTicket = new Ticket({
       title,
+      remark,
       description,
       priority,
       category,
