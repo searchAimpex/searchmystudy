@@ -2578,6 +2578,7 @@ const GetOneStudentByTracking = async (req, res) => {
 // POST /api/tickets
 const createTicket = async (req, res) => {
   const { title, description, priority, category, attachments, userId,remark } = req.body;
+  // console.log(remark,"************************************")
   try {
     const newTicket = new Ticket({
       title,
@@ -2588,6 +2589,7 @@ const createTicket = async (req, res) => {
       attachments,
       createdBy: userId,
     });
+    // console.log(newTicket,"********************")
     const savedTicket = await newTicket.save();
     res.status(201).json(savedTicket);
   } catch (error) {
@@ -2670,22 +2672,32 @@ const deleteOneTicket = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 }
-
 const updateTicketStatus = async (req, res) => {
   try {
-    const ticket = await Ticket.findByIdAndUpdate(req.params.id, { status: req.body.status }).populate({
-      path: 'responses', populate: {
-        path: 'respondedBy',
-        select: 'name email',
-      },
-    }).populate('createdBy', 'name email role');
+    const ticket = await Ticket.findByIdAndUpdate(
+      req.params.id,
+      { status: req.body.status, remark: req.body.remark },
+      {
+        new: true, // <- important to return the updated document
+      }
+    )
+      .populate({
+        path: 'responses',
+        populate: {
+          path: 'respondedBy',
+          select: 'name email',
+        },
+      })
+      .populate('createdBy', 'name email role');
+
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
-    ticket.save()
+
     res.status(200).json(ticket);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
+
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 

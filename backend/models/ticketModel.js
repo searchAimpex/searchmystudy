@@ -11,6 +11,9 @@ const ticketSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+     remark:{
+        type:String,
+      },
     status: {
       type: String,
       enum: ['open', 'in-progress', 'resolved', 'closed'],
@@ -51,9 +54,7 @@ const ticketResponseSchema = mongoose.Schema(
         ref: 'Ticket',
         required: true,
       },
-      remark:{
-        type:String,
-      },
+     
       content: {
         type: String,
         required: true,

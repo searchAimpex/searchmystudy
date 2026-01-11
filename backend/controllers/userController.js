@@ -180,39 +180,70 @@ const authPartner = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
-  // Check if user with the same email already exists
+  console.log(req.body, "|||||||||||||||||||||||||||");
+
+  // Check if user with the same email or other identifiers already exists
   const userExists = await User.findOne({ email: req.body.email });
   const whatsappNumber = await User.findOne({ WhatappNumber: req.body.WhatsAppNumber });
-  const phoneNumber = await User.findOne({ ContactNumber: req.body.ContactNumber })
-  const centerCode = await User.findOne({ CenterCode: req.body.CenterCode })
+  const phoneNumber = await User.findOne({ ContactNumber: req.body.ContactNumber });
+  const centerCode = await User.findOne({ CenterCode: req.body.CenterCode });
+
   if (userExists) {
     res.status(400);
-    throw new Error('User already exists!');
+    throw new Error('Email already exists!');
   }
   if (whatsappNumber) {
     res.status(400);
-    throw new Error('Whats App Already Exists!');
+    throw new Error('WhatsApp number already exists!');
   }
   if (centerCode) {
     res.status(400);
-    throw new Error('Center Code Is Unavailable!')
+    throw new Error('Center code is unavailable!');
   }
-
   if (phoneNumber) {
     res.status(400);
-    throw new Error('Phone Number Is Already Exists!')
+    throw new Error('Phone number already exists!');
   }
-  // Create a new user with all the provided fields
-  const user = await User.create({...req.body,passwordTracker: req.body.password,});
 
-  // If user creation is successful
+  // Create a new user
+  const user = await User.create({
+    ...req.body,
+    passwordTracker: req.body.password,
+  });
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS, // App Password
+    },
+  });
   if (user) {
-    // Generate token (assuming a generateToken function exists)
+    // Generate token (if you have a generateToken function)
     generateToken(res, user._id);
 
-    // Send the created user data in response
-    res.status(201).json({user});
+    // Send registration success email
+    try {
+      const mailOptions = {
+        from: process.env.EMAIL_USER, // your verified email
+        to: user.email,               // user's email
+        subject: 'Registration Successful',
+        text: `Hello ${user.InsitutionName},\n\nYour registration was successful! Welcome to our platform.
+        \n\nEmail:${user?.email}
+        \nPassword:${user?.passwordTracker}
+        \n\nRegards,
+        \nTeam`,
+      };
 
+      const info = await transporter.sendMail(mailOptions);
+      console.log('Email sent: ' + info.response);
+    } catch (error) {
+      console.error('Error sending registration email:', error);
+    }
+
+    // Respond with user data
+    res.status(201).json({ user });
   } else {
     res.status(400);
     throw new Error('Invalid user data');
