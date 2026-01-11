@@ -2174,12 +2174,17 @@ const authPartner = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/extraUser
 // @access  Public
+
 const extraUser = asyncHandler(async (req, res) => {
-  const { name, email, password, role, createdBy, CounsellorCode, ProfilePhoto, WhatappNumber } = req.body;
+  const { name, email, password, role, createdBy, ProfilePhoto, WhatappNumber } = req.body;
   console.log(name, email, password, role, createdBy, CounsellorCode, ProfilePhoto, WhatappNumber )
   const userExists = await User.findOne({ email });
   const userByCode = await User.findOne({CounsellorCode:CounsellorCode})
   const userByWhatsAppNumber = await User.findOne({WhatappNumber:WhatappNumber})
+
+  const random = Math.floor(100 + Math.random() * 900);
+  const time = Date.now().toString().slice(-3);
+  
 
 
   if (userExists) {
@@ -2202,7 +2207,7 @@ const extraUser = asyncHandler(async (req, res) => {
     password,
     role,
     createdBy,
-    CounsellorCode,
+    CounsellorCOde:`CL-${time}${random}`,
     ProfilePhoto,
     WhatappNumber
   });
