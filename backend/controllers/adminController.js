@@ -2111,23 +2111,50 @@ export const getAllQueries = async (req, res) => {
 
 export const deleteQueryById = async (req, res) => {
   try {
-    const { ids } = req.body; // expecting array of query IDs
+    const { leads = [], contact = [], query = [] } = req.body.ids;
 
-    if (!ids || !Array.isArray(ids) || ids.length === 0) {
-      return res.status(400).json({ error: "Invalid request: 'ids' array required" });
+    const results = { 
+      leadsDeleted: 0,
+      contactDeleted: 0,
+      queryDeleted: 0,
+    };
+    console.log(leads,"||||||||||||||||||+++|")
+    // 🔴 Delete Leads
+    if (Array.isArray(leads) && leads.length > 0) {
+      const response = await HomeLead.deleteMany({
+        _id: { $in: leads},
+      });
+      results.leadsDeleted = response.deletedCount;
+      console.log(response,"+++++++++++++++++++++++")
     }
-    const result = await query.deleteMany({ _id: { $in: ids } });
-    res.status(200).json({
-      message: "Queries deleted successfully",
-      deletedCount: result.deletedCount,
-      deletedIds: ids,
+
+    // 🔴 Delete Contact Leads
+    if (Array.isArray(contact) && contact.length > 0) {
+      const response = await ContactLead.deleteMany({
+        _id: { $in: contact },
+      });
+      results.contactDeleted = response.deletedCount;
+    }
+
+    // 🔴 Delete Queries
+    if (Array.isArray(query) && query.length > 0) {
+      const response = await Query.deleteMany({
+        _id: { $in: query },
+      });
+      results.queryDeleted = response.deletedCount;
+    }
+
+    return res.status(200).json({
+      message: "Deleted successfully",
+      results,
     });
   } catch (error) {
-    console.error("Error in deleteQueriesByIds:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error in deleteQueries:", error);
+    return res.status(500).json({
+      error: "Internal server error",
+    });
   }
 };
-
 
 
 

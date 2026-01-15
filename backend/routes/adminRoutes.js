@@ -105,7 +105,8 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       deleteContact,
       updateContact,
       extraUserAll,
-      deleteCounsellorCoursefinder
+      deleteCounsellorCoursefinder,
+      // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
 const router = express.Router();
@@ -292,7 +293,8 @@ router.delete('/contactlead',deleteContactLead)
 // *****************************************************************
 router.post('/createQuery',createQuery)
 router.get('/getAllQuery',getAllQueries)
-router.delete('/deleteQueryById',deleteQueryById)
+// router.delete("/deleteQueries",deleteMultipleQueries)
+router.delete('/deleteQueries',deleteQueryById)
 // *****************************************************************
 
 

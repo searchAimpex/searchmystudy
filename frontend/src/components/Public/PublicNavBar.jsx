@@ -90,6 +90,9 @@ export default function PublicNavBar() {
     const [LinkFetch] = useLinkFetchMutation();
     const { services } = useSelector((state) => state.service);
     const { countries } = useSelector((state) => state.country);
+    const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
     const [menuLinks, setMenuLinks] = useState(initialLinks);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -193,8 +196,31 @@ useEffect(() => {
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
-    // console.log(menuLinks,"::::::::::::::::::::::::;;---------------");
+
+  useEffect(() => {
+    const fetchWebDetails = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/admin/getWebsiteDetails"
+        );
+
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWebDetails();
+  }, []);
     
+  console.log(data[0],"+++++++++++++++++++++   ")
     return (
         <div className="sticky top-0 z-50 bg-white shadow-md">
             {/* Social Media Icons */}
@@ -203,8 +229,10 @@ useEffect(() => {
                 <div className="res flex items-center space-x-2">
                     <RoomIcon style={{ color: "white", fontSize: 20 }} />
                     <p className="text-xs sm:text-sm whitespace-nowrap">
-                        Plot No 57, 2nd Floor, Sewak Park, Dwarka Mor, New Delhi - 110059
-                        near metro station pillar No - 776
+{data?.map((ele) => {
+    return <span key={ele._id}>{ele?.address}</span>;
+})}
+
                     </p>
                 </div>
 
@@ -252,7 +280,7 @@ useEffect(() => {
                         {/* Icon with shake effect on hover */}
                         <HeadsetMicOutlinedIcon className="shakable-icon text-red-600 text-xl sm:text-2xl" style={{ fontSize: "35px" }} />
                         <p className="ml-2 text-sm sm:text-base font-bold text-red-600">Get Counselling</p>
-                    </a>
+                    </a>    
 
 
                     <div className="res h-10 w-[0.5px] bg-gray mx-4" style={{ backgroundColor: "#cccccc" }}></div>
@@ -266,7 +294,12 @@ useEffect(() => {
                         <CallOutlinedIcon className="text-red-600 text-2xl sm:text-3xl ring-bell" style={{ fontSize: "30px" }} />
                         <div className="ml-2">
                             <p className="text-sm sm:text-base font-semibold text-red-600">Contact Us</p>
-                            <p className="text-lg font-bold text-red-600">9266952233</p>
+                            <p className="text-lg font-bold text-red-600">
+                                {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.counselling_no}</span>;
+})}
+
+                                </p>
                         </div>
                     </a>
 
@@ -286,7 +319,12 @@ useEffect(() => {
                         />
                         <div className="ml-2">
                             <p className="text-sm sm:text-base font-semibold text-black">WhatsApp</p>
-                            <p className="text-lg font-bold text-[#09953e]">9266952233</p>
+                            <p className="text-lg font-bold text-[#09953e]">
+                                {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.whatsapp_no}</span>;
+})}
+
+                                </p>
                         </div>
                     </a>
 

@@ -152,6 +152,12 @@ const authPartner = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email }).populate('createdBy');
+
+
+  
+
+
+
   if (!user) {
     res.status(401);
     throw new Error('Invalid email or password');
@@ -164,10 +170,14 @@ const authPartner = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error('User Blocked');
   }
+  if(user?.createdBy?.block){
+    res.status(401);
+    throw new Error('User Blocked');
+  }
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
 
-    res.json(user);
+       res.json(user);
   } else {
     res.status(401);
     throw new Error('Invalid email or password');
@@ -256,7 +266,7 @@ export const statusUpdate = asyncHandler(async (req, res) => {
   const {id} = req.params   
   const data = await User.findByIdAndUpdate(
     id,
-    { status: status },     
+    { block: status },     
     { new: true }           
   );
 
@@ -521,6 +531,9 @@ const updateUserOneProfile = asyncHandler(async (req, res) => {
 
 const blockUser = asyncHandler(async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, { block: req.body.block }, { new: true });
+    // const userExists = await User.find({ createdBy: createdBy }).populate('createdBy');
+  
+  
   if (user) {
     res.json(user).status(200)
   } else {

@@ -18,6 +18,9 @@ export default function Footer() {
     const [LinkFetch] = useLinkFetchMutation();
     const [extraLink,setExtraLink] = useState()
     const { countries } = useSelector((state) => state.country);
+    const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -33,7 +36,28 @@ export default function Footer() {
         };
         fetchData();
     }, [CountryFetch, dispatch]);
+  useEffect(() => {
+    const fetchWebDetails = async () => {
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/admin/getWebsiteDetails"
+        );
 
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWebDetails();
+  }, []);
     return (
         <footer className="bg-blue-main text-white py-10">
         <div className="container mx-auto px-4 space-y-10">
@@ -51,7 +75,12 @@ export default function Footer() {
               <div>
                 <h3 className="text-xl sm:text-2xl font-bold mb-4">Head Office</h3>
                 <p className="text-sm sm:text-base">
-                 Plot No 57, 2nd Floor, Sewak Park, Dwarka Mor, New Delhi - 110059 near metro station pillar No - 776
+                 
+                  {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.address}</span>;
+})}
+
+                 
                 </p>
               </div>
       
@@ -62,12 +91,20 @@ export default function Footer() {
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center">
                       <EmailOutlinedIcon className="mr-2" />
-                      <a href="mailto:info@company.com" className="hover:text-gray-300">info@company.com</a>
+                      <a href={`
+                        ${data?.map((ele) => {
+    return <span key={ele._id}>{ele?.mail}</span>;
+})}
+                        `} className="hover:text-gray-300">
+                                         {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.mail}</span>;
+})}
+                      </a>
                     </li>
-                    <li className="flex items-center">
+                    {/* <li className="flex items-center">
                       <EmailOutlinedIcon className="mr-2" />
                       <a href="mailto:support@company.com" className="hover:text-gray-300">support@company.com</a>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
                 <div>
@@ -75,11 +112,22 @@ export default function Footer() {
                   <ul className="space-y-2 text-sm">
                     <li className="flex items-center">
                       <PhoneOutlinedIcon className="mr-2" />
-                      <a href="tel:+1234567890" className="hover:text-gray-300">+91 9266952233</a>
+                      <a href="tel:+1234567890" className="hover:text-gray-300">
+                                         {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.call_no}</span>;
+})}
+                      </a>
                     </li>
                     <li className="flex items-center">
                       <PhoneOutlinedIcon className="mr-2" />
-                      <a href="tel:+0987654321" className="hover:text-gray-300">+91 9266952233 </a>
+                      <a href={`
+                        ${data?.map((ele) => {
+                            return <span key={ele._id}>{ele?.counselling_no}</span>;
+                        })}`} className="hover:text-gray-300">
+                          {data?.map((ele) => {
+    return <span key={ele._id}>{ele?.counselling_no}</span>;
+})}
+                      </a>
                     </li>
                   </ul>
                 </div>
@@ -89,10 +137,28 @@ export default function Footer() {
               <div>
                 <h4 className="text-xl font-bold mb-2">Socials</h4>
                 <div className="flex space-x-4 mt-2">
-                  <a target='blank' href="https://www.facebook.com/profile.php?id=61578705533772" className="hover:text-gray-300"><FacebookIcon /></a>
-                  <a target='blank' href="https://twitter.com" className="hover:text-gray-300"><TwitterIcon /></a>
-                  <a target='blank' href="https://www.instagram.com/searchmystudy/" className="hover:text-gray-300"><InstagramIcon /></a>
-                  <a target='blank' href="https://linkedin.com" className="hover:text-gray-300"><LinkedInIcon /></a>
+                  <a target='blank' href={`
+                     ${data?.map((ele) => {
+    return <span key={ele._id}>{ele?.facebook}</span>;
+})}
+                    `} className="hover:text-gray-300"><FacebookIcon /></a>
+                  <a target='blank'  href={`
+                     ${data?.map((ele) => {
+    return <span key={ele._id}>{ele?.twitter}</span>;
+})}
+                    `} className="hover:text-gray-300"><TwitterIcon /></a>
+                  <a target='blank'  href={`
+                     ${data?.map((ele) => {
+    return <span key={ele._id}>{ele?.insta}</span>;
+})}
+                    `} className="hover:text-gray-300"><InstagramIcon /></a>
+                  <a target='blank' 
+                    href={`
+                     ${data?.map((ele) => {
+    return <span key={ele._id}>{ele?.linkedIn}</span>;
+})}
+                    `}
+                  className="hover:text-gray-300"><LinkedInIcon /></a>
                 </div>
               </div>
             </div>
