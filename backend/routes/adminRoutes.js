@@ -85,7 +85,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       webinar_sendEmail,
       createQuery,
       getAllQueries,
-      deleteQueryById,
+      // deleteQueryById,
       deleteCountries,
       updateVideo,
       updateCounsellor,
@@ -106,6 +106,9 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       updateContact,
       extraUserAll,
       deleteCounsellorCoursefinder,
+      fetchwebinarleads,
+      deleteQueryById,
+      deleteWebinarLeads,
       // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
@@ -208,6 +211,7 @@ router.route('/webinar')
 
 router.route('/webinar/register')
   .post(webinar_sendEmail);
+router.get('/fetchAll',fetchwebinarleads)
 
 router.route('/webinar/:id')
   .get(getWebinarById)
@@ -293,8 +297,9 @@ router.delete('/contactlead',deleteContactLead)
 // *****************************************************************
 router.post('/createQuery',createQuery)
 router.get('/getAllQuery',getAllQueries)
-// router.delete("/deleteQueries",deleteMultipleQueries)
+router.delete("/delete",deleteWebinarLeads)
 router.delete('/deleteQueries',deleteQueryById)
+
 // *****************************************************************
 
 

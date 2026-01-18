@@ -1510,7 +1510,14 @@ const createWebinar = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Failed to create webinar", error: error.message });
   }
 });
-
+const fetchwebinarleads = asyncHandler( async (req,res)=>{
+  try {
+    const data = await webinarleads.find()
+    res.json(data)
+  } catch (error) {
+    res.status(500).json({message:"Server error!"})
+  }
+})
 
 
 const webinar_sendEmail = asyncHandler(async (req, res) => {
@@ -2109,7 +2116,39 @@ export const getAllQueries = async (req, res) => {
   }
 };
 
-export const deleteQueryById = async (req, res) => {
+const deleteWebinarLeads = async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    // validation
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please provide an array of IDs",
+      });
+    }
+
+    const result = await webinarleads.deleteMany({
+      _id: { $in: ids },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Webinar leads deleted successfully",
+      deletedCount: result.deletedCount,
+    });
+
+  } catch (error) {
+    console.error("Error deleting webinar leads:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error!",
+    });
+  }
+};
+
+
+const deleteQueryById = async (req, res) => {
   try {
     const { leads = [], contact = [], query = [] } = req.body.ids;
 
@@ -3830,6 +3869,7 @@ export const fetchWebProfile = async (req, res) => {
 
 
 export {
+  fetchwebinarleads,deleteQueryById,deleteWebinarLeads,
   createBanner, test, fetchAllBanner, deleteBanner,
   deleteService, updateService, getService, getServices, createService,
   deleteTestimonial, updateTestimonial, getTestimonialById, getTestimonials, createTestimonial,

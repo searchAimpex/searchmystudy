@@ -40,7 +40,7 @@ export default function Footer() {
     const fetchWebDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/admin/getWebsiteDetails"
+          "https://searchmystudy.com/api/admin/getWebsiteDetails"
         );
 
         if (!response.ok) {

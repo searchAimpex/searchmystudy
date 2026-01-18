@@ -201,7 +201,7 @@ useEffect(() => {
     const fetchWebDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:3000/api/admin/getWebsiteDetails"
+          "https://searchmystudy.com/api/admin/getWebsiteDetails"
         );
 
         if (!response.ok) {
@@ -220,7 +220,7 @@ useEffect(() => {
     fetchWebDetails();
   }, []);
     
-  console.log(data[0],"+++++++++++++++++++++   ")
+//   console.log(data[0],"+++++ ++++++++++++++++   ")
     return (
         <div className="sticky top-0 z-50 bg-white shadow-md">
             {/* Social Media Icons */}
