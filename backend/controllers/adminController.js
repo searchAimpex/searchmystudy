@@ -2719,16 +2719,12 @@ const getTicket = async (req, res) => {
 const getAllTicket = async (req, res) => {
 
   try {
-    const ticket = await Ticket.find().populate({
-      path: 'responses', populate: {
-        path: 'respondedBy',
-        select: 'name email',
-      },
-    }).populate('createdBy', 'name email role');
+  const tickets = await Ticket.find().populate("createdBy");
 
-    if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
 
-    res.status(200).json(ticket);
+    if (!tickets) return res.status(404).json({ message: 'Ticket not found' });
+
+    res.status(200).json(tickets);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -2736,13 +2732,16 @@ const getAllTicket = async (req, res) => {
 
 const deleteOneTicket = async (req, res) => {
   try {
-    const ticket = await Ticket.findByIdAndDelete(req.params.id);
+    const {ids} = req.body;
+    const ticket = await Ticket.deleteMany({_id:{$in:ids}});
     if (!ticket) return res.status(404).json({ message: 'Ticket not found' });
     res.status(200).json(ticket);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 }
+
+
 const updateTicketStatus = async (req, res) => {
   try {
     const ticket = await Ticket.findByIdAndUpdate(

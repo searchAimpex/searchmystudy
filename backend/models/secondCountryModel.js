@@ -3,7 +3,10 @@ const secondCountrySchema = mongoose.Schema(
     {
         name:{
             type:String,
-            required:true
+        },
+        country:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Country', // Reference to the User model
         },
         flagURL : {
             type:String,

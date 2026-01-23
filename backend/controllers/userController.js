@@ -287,29 +287,30 @@ export const statusUpdate = asyncHandler(async (req, res) => {
 
 export const updateUser = asyncHandler(async (req, res) => {
   const userId = req.params.id;
-  const updateData = { ...req.body }; // clone body
+  const updateData = { ...req.body }; 
 
   const user = await User.findById(userId);
+
+
   if (!user) {
     res.status(404);
     throw new Error("User not found");
   }
 
-  // ✅ Handle password
   if (updateData.password && updateData.password.trim() !== "") {
     // generate salt and hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(updateData.password, salt);
 
     updateData.password = hashedPassword;
-    updateData.passwordTracker = req.body.password; // keep plain password if you’re tracking it
+    updateData.passwordTracker = req.body.passwordTracker; // keep plain password if you’re tracking it
   } else {
     // keep existing password if not provided
     updateData.password = user.password;
     updateData.passwordTracker = user.passwordTracker;
   }
 
-  // ✅ Update user
+
   const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
     new: true,
     runValidators: true,
@@ -603,12 +604,19 @@ const deleteUserProfile = asyncHandler(async (req, res) => {
 // @access  Public
 const getAllCountries = async (req, res) => {
   try {
-    const countries = await SecondCountry.find();
-    res.json(countries);
+    const countries = await SecondCountry
+      .find()
+      .populate('country'); // populate reference
+
+    res.status(200).json(countries);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve countries' });
+    res.status(500).json({
+      message: 'Failed to retrieve countries',
+      error: error.message,
+    });
   }
 };
+
 
 // @desc    Get single country by ID
 // @route   GET /api/secondCountries/:id
@@ -639,24 +647,15 @@ const getCountryById = async (req, res) => {
 // @route   POST /api/secondCountries
 // @access  Private
 const createCountry = async (req, res) => {
-  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
-
-  if (!name || !flagURL || !currency || !code) {
-    return res.status(400).json({ message: 'Please provide all required fields' });
-  }
-
+  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq ,country } = req.body;
+  // if (!name || !flagURL || !currency || !code || !country) {
+  //   return res.status(400).json({ message: 'Please provide all required fields' });
+  // }
+  console.log(req.body,"|||||||||||||||||||||||||||")
+  
   try {
-    const country = new SecondCountry({
-      name,
-      flagURL,
-      currency,
-      code,
-      vfs,
-      step,
-      whyThisCountry,
-      faq,
-    });
-
+    const country = new SecondCountry(req.body);
+    
     const createdCountry = await country.save();
     res.status(201).json(createdCountry);
   } catch (error) {

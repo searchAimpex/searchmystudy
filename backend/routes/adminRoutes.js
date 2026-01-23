@@ -341,7 +341,7 @@ router.post('/ticket', createTicket);
 router.post('/ticket/reply/:id',replyToTicket)
 router.get('/ticket/:id',getTicket)
 router.get('/ticket',getAllTicket)
-router.delete('/ticket/:id',deleteOneTicket)
+router.delete('/ticket',deleteOneTicket)
 router.put('/ticket/:id',updateTicketStatus)
 
 /******************************************************************/
