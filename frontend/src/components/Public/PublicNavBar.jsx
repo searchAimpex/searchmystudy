@@ -49,7 +49,7 @@ const initialLinks = [
 
         ]
     },
-   
+
     {
         name: "MEDICAL STUDY IN ABROAD",
         submenu: true,
@@ -82,17 +82,13 @@ const initialLinks = [
 
 ];
 
-export default function PublicNavBar() {
+export default function PublicNavBar({ webData }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [ServiceFetchAll] = useServiceFetchAllMutation();
     const [CountryFetch] = useCountryFetchMutation();
     const [LinkFetch] = useLinkFetchMutation();
-    const { services } = useSelector((state) => state.service);
-    const { countries } = useSelector((state) => state.country);
     const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
     const [menuLinks, setMenuLinks] = useState(initialLinks);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -132,95 +128,72 @@ export default function PublicNavBar() {
     // };
 
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const serviceResult = await ServiceFetchAll().unwrap();
-      dispatch(FetchAllServices(serviceResult));
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const serviceResult = await ServiceFetchAll().unwrap();
+                dispatch(FetchAllServices(serviceResult));
 
-      const countryResult = await CountryFetch().unwrap();
-    //   console.log("Fetched countries:", countryResult);
+                const countryResult = await CountryFetch().unwrap();
+                //   console.log("Fetched countries:", countryResult);
 
-      const filteredCountries = countryResult.filter(item => item.mbbsAbroad !== true);
+                const filteredCountries = countryResult.filter(item => item.mbbsAbroad !== true);
 
-      const linkResult = await LinkFetch().unwrap();
-      dispatch(FetchedLinked(linkResult));
+                const linkResult = await LinkFetch().unwrap();
+                dispatch(FetchedLinked(linkResult));
 
-      const updatedLinks = initialLinks.map(link => {
-        switch (link.name) {
-          case "OUR SERVICE":
-            return {
-              ...link,
-              sublinks: serviceResult.map(service => ({
-                name: service.title,
-                link: `/service/${service._id}`,
-                flagURL: service.card?.cardImage || ""
-              }))
-            };
+                const updatedLinks = initialLinks.map(link => {
+                    switch (link.name) {
+                        case "OUR SERVICE":
+                            return {
+                                ...link,
+                                sublinks: serviceResult.map(service => ({
+                                    name: service.title,
+                                    link: `/service/${service._id}`,
+                                    flagURL: service.card?.cardImage || ""
+                                }))
+                            };
 
-          case "OVERSEASE STUDY":
-            return {
-              ...link,
-              sublinks: filteredCountries.map(country => ({
-                name: country.name,
-                link: `/country/${country._id}`,
-                flagURL: country.flagURL
-              }))
-            };
+                        case "OVERSEASE STUDY":
+                            return {
+                                ...link,
+                                sublinks: filteredCountries.map(country => ({
+                                    name: country.name,
+                                    link: `/country/${country._id}`,
+                                    flagURL: country.flagURL
+                                }))
+                            };
 
-          case "MEDICAL STUDY IN ABROAD":
-            return {
-              ...link,
-              sublinks: linkResult.map(item => ({
-                name: item.name,
-                link: `/MbbsCountryDetailed/${item._id}`,
-                flagURL: item.flagURL || "https://i.imgur.com/0L7BLOw.png"
-              }))
-            };
+                        case "MEDICAL STUDY IN ABROAD":
+                            return {
+                                ...link,
+                                sublinks: linkResult.map(item => ({
+                                    name: item.name,
+                                    link: `/MbbsCountryDetailed/${item._id}`,
+                                    flagURL: item.flagURL || "https://i.imgur.com/0L7BLOw.png"
+                                }))
+                            };
 
-          default:
-            return link;
-        }
-      });
+                        default:
+                            return link;
+                    }
+                });
 
-      setMenuLinks(updatedLinks);
-    } catch (error) {
-      console.error("Failed to fetch data:", error);
-    }
-  };
+                setMenuLinks(updatedLinks);
+            } catch (error) {
+                console.error("Failed to fetch data:", error);
+            }
+        };
 
-  fetchData();
-}, [ServiceFetchAll, CountryFetch, LinkFetch, dispatch]);
+        fetchData();
+    }, [ServiceFetchAll, CountryFetch, LinkFetch, dispatch]);
     // console.log("fix", menuLinks)
 
     const handleTabChange = (event, newValue) => {
         setTabValue(newValue);
     };
 
-  useEffect(() => {
-    const fetchWebDetails = async () => {
-      try {
-        const response = await fetch(
-          "https://searchmystudy.com/api/admin/getWebsiteDetails"
-        );
 
-        if (!response.ok) {
-          throw new Error("Something went wrong");
-        }
-
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWebDetails();
-  }, []);
-    
-//   console.log(data[0],"+++++ ++++++++++++++++   ")
     return (
         <div className="sticky top-0 z-50 bg-white shadow-md">
             {/* Social Media Icons */}
@@ -229,22 +202,31 @@ useEffect(() => {
                 <div className="res flex items-center space-x-2">
                     <RoomIcon style={{ color: "white", fontSize: 20 }} />
                     <p className="text-xs sm:text-sm whitespace-nowrap">
-{data?.map((ele) => {
-    return <span key={ele._id}>{ele?.address}</span>;
-})}
+                       {webData?.address}
 
                     </p>
                 </div>
 
                 {/* Social Media Icons */}
                 <div className="flex space-x-3">
-                    <a target="blank" href="https://www.facebook.com/profile.php?id=61578705533772">                    <FaFacebook className="icon-color text-xl cursor-pointer hover:opacity-80" />
+                    {/* <a target="_blank" href={webData?.facebookLink}>   
+                    </a> */}
+                    <a target="_blank" href={webData?.facebook}>
+                        {/* helo */}
+                        <FaFacebook className="icon-color text-xl cursor-pointer hover:opacity-80" />
                     </a>
-                    <a target="blank" href="https://www.instagram.com/searchmystudy/">
+                    <a target="_blank" href={webData?.insta}>
                         <FaInstagramSquare className="icon-color text-xl cursor-pointer hover:opacity-80" />
                     </a>
+
+                    <a href={webData?.twitter}
+                    >
                     <FaTwitter className="icon-color text-xl cursor-pointer hover:opacity-80" />
+                    </a>
+
+                    <a href={webData?.linkedIn}>
                     <FaLinkedin className="icon-color text-xl cursor-pointer hover:opacity-80" />
+                    </a>
                 </div>
             </div>
 
@@ -280,7 +262,7 @@ useEffect(() => {
                         {/* Icon with shake effect on hover */}
                         <HeadsetMicOutlinedIcon className="shakable-icon text-red-600 text-xl sm:text-2xl" style={{ fontSize: "35px" }} />
                         <p className="ml-2 text-sm sm:text-base font-bold text-red-600">Get Counselling</p>
-                    </a>    
+                    </a>
 
 
                     <div className="res h-10 w-[0.5px] bg-gray mx-4" style={{ backgroundColor: "#cccccc" }}></div>
@@ -296,10 +278,10 @@ useEffect(() => {
                             <p className="text-sm sm:text-base font-semibold text-red-600">Contact Us</p>
                             <p className="text-lg font-bold text-red-600">
                                 {data?.map((ele) => {
-    return <span key={ele._id}>{ele?.counselling_no}</span>;
-})}
+                                    return <span key={ele._id}>{ele?.counselling_no}</span>;
+                                })}
 
-                                </p>
+                            </p>
                         </div>
                     </a>
 
@@ -321,10 +303,10 @@ useEffect(() => {
                             <p className="text-sm sm:text-base font-semibold text-black">WhatsApp</p>
                             <p className="text-lg font-bold text-[#09953e]">
                                 {data?.map((ele) => {
-    return <span key={ele._id}>{ele?.whatsapp_no}</span>;
-})}
+                                    return <span key={ele._id}>{ele?.whatsapp_no}</span>;
+                                })}
 
-                                </p>
+                            </p>
                         </div>
                     </a>
 
@@ -408,7 +390,7 @@ useEffect(() => {
                                                                 {["MBBS", "ABOUT US", "BLOG", "CONTACT US", "MD", "BAMS", "BHMS", "BDS", "NURSING", "PHARMACY", "Bv Sc"].includes(sublink?.name) ? (
                                                                     <p>{sublink?.name}</p>
                                                                 ) : (
-                                                                    <div>{link?.path === "/country"? "Study in ": "Mbbs in "}{sublink?.mbbsAbroad}{sublink?.name}</div>
+                                                                    <div>{link?.path === "/country" ? "Study in " : "Mbbs in "}{sublink?.mbbsAbroad}{sublink?.name}</div>
                                                                 )}
                                                             </h5>
 

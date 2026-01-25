@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ContactUs1 from '../../assets/ContactUs1.png';
 import ContactUs2 from '../../assets/ContactUs2.png';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -12,11 +12,14 @@ import { TextField } from '@mui/material';
 import { useCreateContactLeadMutation } from '../../slices/adminApiSlice';
 
 export default function ContactUs() {
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
   const [name, setName] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
   const [email, setEmail] = useState('');
   const [occupation, setOccupation] = useState('');
   const [comment, setComment] = useState('');
+  const [webData, setWebData] = useState(null);
 
   const [createContactLead, { isLoading, isError, isSuccess }] = useCreateContactLeadMutation();
 
@@ -34,6 +37,30 @@ export default function ContactUs() {
       console.error('Failed to submit form:', error);
     }
   };
+
+
+
+    useEffect(() => {
+      const fetchWebDetails = async () => {
+        try {
+          const response = await fetch(
+            'https://searchmystudy.com/api/admin/getWebsiteDetails'
+          );
+  
+          if (!response.ok) throw new Error('Failed to fetch website details');
+          const result = await response.json();
+          setWebData(Array.isArray(result) ? result[0] : result);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchWebDetails();
+      console.log(webData,">>>>>>>>>>>>>>>>>>>>>>>>>>")
+    }, []);
+
+
 
   return (
     <div>
@@ -92,7 +119,7 @@ export default function ContactUs() {
             </div>
             <div>
               {/* https://www.facebook.com/profile.php?id=61578705533772 */}
-              <span className='text-lg text-white '>Plot No 57, 2nd Floor, Sewak Park, Dwarka Mor, <br /> New Delhi - 110059 near metro station pillar No - 776</span>
+              <span className='text-lg text-white '>{webData?.address}</span>
             </div>
           </div>
           <div className='flex flex-row space-x-6'>
@@ -100,7 +127,7 @@ export default function ContactUs() {
               <LocalPhoneIcon />
             </div>
             <div>
-              <span className='text-lg text-white'>+91 9266952233</span>
+              <span className='text-lg text-white'>{webData?.call_no}</span>
             </div>
           </div>
           <div className='flex flex-row space-x-6'>
@@ -108,14 +135,16 @@ export default function ContactUs() {
               <EmailIcon />
             </div>
             <div>
-              <span className='text-lg text-white '>Mail Example</span>
+              <span className='text-lg text-white '>{webData?.mail}</span>
             </div>
           </div>
           <div className='flex flex-row space-x-3 text-white'>
-            <a href="https://www.facebook.com/profile.php?id=61578705533772"><FacebookIcon /></a>
+            <a href={webData?.facebook}><FacebookIcon /></a>
             
-            <a href="https://www.instagram.com/searchmystudy/"><InstagramIcon /></a>
+            <a href={webData?.insta}><InstagramIcon /></a>
+            <a href={webData?.linkedIn}>
             <LinkedInIcon />
+            </a>
             {/* <XIcon /> */}
           </div>
         </div>

@@ -45,7 +45,7 @@ import contacts from '../models/contactModel.js';
 export const verifyToken = (req, res) => {
   const token = req.params.token;
 
-  console.log(token, "::::::::::::::::::::::::::::::::::::::")
+  //console.log(token, "::::::::::::::::::::::::::::::::::::::")
   if (!token) {
     return res.status(400).json({
       success: false,
@@ -131,7 +131,7 @@ const fetchAllBanner = asyncHandler(async (req, res, next) => {
 const deleteBanner = asyncHandler(async (req, res, next) => {
   try {
     const bannerId = req.params.id;
-    console.log("params", req.params)
+    //console.log("params", req.params)
     const banner = await Banner.findOneAndDelete({ _id: bannerId })
     res.json(banner);
 
@@ -227,7 +227,7 @@ const deleteService = asyncHandler(async (req, res) => {
   const result = await Service.deleteMany({ _id: { $in: ids } });
 
   if (result.deletedCount > 0) {
-    console.log("Services deleted:", result.deletedCount);
+    //console.log("Services deleted:", result.deletedCount);
     res.json({ message: `${result.deletedCount} service(s) deleted successfully` });
   } else {
     res.status(404);
@@ -241,10 +241,10 @@ const deleteService = asyncHandler(async (req, res) => {
 // @access  Admin
 const createTestimonial = asyncHandler(async (req, res) => {
 
-  console.log(req.body, "-------------------------------");
+  // //console.log(req.body, "-------------------------------");
   const testimonial = new Testimonial(req.body);
   const createdTestimonial = await testimonial.save();
-  console.log(testimonial, "-----------------------------------");
+  // //console.log(testimonial, "-----------------------------------");
   res.status(201).json(createdTestimonial);
 });
 
@@ -253,7 +253,7 @@ const createTestimonial = asyncHandler(async (req, res) => {
 // @access  Public
 const getTestimonials = asyncHandler(async (req, res) => {
   const testimonials = await Testimonial.find({});
-  console.log(testimonials, "------------------------------------------------------");
+  //console.log(testimonials, "------------------------------------------------------");
 
   res.json(testimonials);
 });
@@ -310,7 +310,7 @@ const deleteTestimonial = asyncHandler(async (req, res) => {
   const result = await Testimonial.deleteMany({ _id: { $in: ids } });
 
   if (result.deletedCount > 0) {
-    console.log("Testimonials deleted:", result.deletedCount);
+    //console.log("Testimonials deleted:", result.deletedCount);
     res.json({ message: `${result.deletedCount} testimonial(s) deleted successfully` });
   } else {
     res.status(404);
@@ -383,7 +383,7 @@ const getCounsellorById = async (req, res) => {
 // @access  Public
 const updateCounsellor = async (req, res) => {
   const { name, imageURL, experience, course } = req.body;
-  console.log(req.body, "--------------------------------------");
+  //console.log(req.body, "--------------------------------------");
 
   try {
     const counsellor = await Counsellor.findById(req.params.id);
@@ -535,7 +535,7 @@ const updateBlog = asyncHandler(async (req, res) => {
 // @access  Public
 const deleteBlog = asyncHandler(async (req, res) => {
   const { ids } = req.body; // Expecting an array of IDs in the request body
-  console.log(ids, "-------------------------------------------------")
+  //console.log(ids, "-------------------------------------------------")
   if (!Array.isArray(ids) || ids.length === 0) {
     res.status(400);
     throw new Error('No blog IDs provided');
@@ -608,7 +608,7 @@ const getAllCountries = asyncHandler(async (req, res) => {
 // @access  Public
 // const getCountryById = asyncHandler(async (req, res) => {
 //   const country = await Country.findById(req.params.id).populate('Province')
-//   console.log("country",country)
+//   //console.log("country",country)
 //   if (country) {
 //     res.json(country);
 //   } else {
@@ -625,7 +625,7 @@ const getCountryById = asyncHandler(async (req, res) => {
       if (country.Province) {
         await country.populate('Province'); // Populate Province if it exists
       }
-      console.log("country", country);
+      //console.log("country", country);
       res.json(country);
     } else {
       res.status(404).json({ message: 'Country not found' });
@@ -644,7 +644,7 @@ const getCountryById = asyncHandler(async (req, res) => {
 
 //   const country = await Country.findById(req.params.id);
 
-//   // console.log("counbtry",country,status)
+//   // //console.log("counbtry",country,status)
 //   if (country) {
 //     country.name = name || country.name;
 //     country.bannerURL = bannerURL || country.bannerURL;
@@ -671,7 +671,7 @@ const updateCountry = asyncHandler(async (req, res) => {
 
   if (country) {
     // Log the existing country data to compare with the incoming data
-    console.log("Existing country data:", country);
+    //console.log("Existing country data:", country);
 
     // Only update the fields that are provided, else keep existing values
     country.name = name || country.name;
@@ -684,7 +684,7 @@ const updateCountry = asyncHandler(async (req, res) => {
     country.MbbsSections = MbbsSections || country.MbbsSections;
 
     // Log the updated country data to verify the changes
-    console.log("Updated country data:", country);
+    //console.log("Updated country data:", country);
 
     // Save the updated country to the database
     const updatedCountry = await country.save();
@@ -701,7 +701,7 @@ const updateCountry = asyncHandler(async (req, res) => {
 // @route   DELETE /countries/:id
 // @access  Public
 // const deleteCountry = asyncHandler(async (req, res) => {
-//   console.log("fix-->",req.params.id)
+//   //console.log("fix-->",req.params.id)
 //   const country = await Country.findByIdAndDelete({_id:req.params.id});
 
 //   if (country) {
@@ -715,7 +715,7 @@ const updateCountry = asyncHandler(async (req, res) => {
 
 export const deleteCountries = asyncHandler(async (req, res) => {
   const { ids } = req.body; // <-- destructure here
-  console.log("Deleting IDs:", ids);
+  //console.log("Deleting IDs:", ids);
 
   if (!Array.isArray(ids) || ids.length === 0) {
     res.status(400);
@@ -747,16 +747,16 @@ const createProvince = asyncHandler(async (req, res) => {
   const country = await Country.findById(req.body.Country)
 
   // const province = await Province.findById(req.body.Province)
-  console.log("country", country)
+  //console.log("country", country)
   // province.University.push(createdUniversity._id)
   // await province.save();
   // if (!country) {
   //   return res.status(404).json({ message: 'Country not found' });
   // }
-  // console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
-  // console.log(req.body);
+  // //console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
+  // //console.log(req.body);
   const province = new Province({ ...req.body, Country: country });
-  // console.log(province,"+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  // //console.log(province,"+++++++++++++++++++++++++++++++++++++++++++++++++++++");
 
   await province.save();
 
@@ -795,7 +795,7 @@ const createProvince = asyncHandler(async (req, res) => {
 // @access  Public
 const getAllProvinces = asyncHandler(async (req, res) => {
   const provinces = await Province.find().populate('Country');
-  console.log(provinces, "+*+*+*+*+*+*+*+*+*+*+***+*+**+*+*+***+*+*+*+*+*+");
+  //console.log(provinces, "+*+*+*+*+*+*+*+*+*+*+***+*+**+*+*+***+*+*+*+*+*+");
 
   res.status(200).json(provinces);
 });
@@ -818,7 +818,7 @@ const getProvinceById = asyncHandler(async (req, res) => {
 const updateProvince = asyncHandler(async (req, res) => {
 
   const province = await Province.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  console.log("----->", req.body)
+  //console.log("----->", req.body)
   if (province) {
     res.status(200).json(province);
   } else {
@@ -902,7 +902,7 @@ const getUniversityById = asyncHandler(async (req, res) => {
 
 const createUniversity = asyncHandler(async (req, res) => {
   try {
-    console.log("Incoming body:", req.body);
+    //console.log("Incoming body:", req.body);
     const mci = req.body.MCI === 'true' || req.body.MCI === true;
     const ecfmg = req.body.ECFMG === 'true' || req.body.ECFMG === true;
     const WHO = req.body.WHO === 'true' || req.body.WHO === true;
@@ -923,8 +923,8 @@ const createUniversity = asyncHandler(async (req, res) => {
     const name = req.body.name;
     const countryId = req.body.Country;
 
-    console.log("Processed name:", name);
-    console.log("Country ID:", countryId);
+    //console.log("Processed name:", name);
+    //console.log("Country ID:", countryId);
 
     if (!name) {
       return res.status(400).json({ message: 'University name is required' });
@@ -935,14 +935,14 @@ const createUniversity = asyncHandler(async (req, res) => {
     }
 
     const existingUniversity = await University.findOne({ name: new RegExp(`^${name}$`, 'i') });
-    console.log("Existing University:", existingUniversity);
+    //console.log("Existing University:", existingUniversity);
     if (existingUniversity) {
       return res.status(400).json({ message: 'University with this name already exists.' });
     }
 
     // Validate country
     const country = await Country.findById(countryId);
-    console.log("Found Country:", country);
+    //console.log("Found Country:", country);
     if (!country) {
       return res.status(400).json({ message: 'Invalid country ID' });
     }
@@ -954,12 +954,12 @@ const createUniversity = asyncHandler(async (req, res) => {
         ? req.body.Province
         : [req.body.Province];
     }
-    console.log("Province IDs:", provinceIds);
+    //console.log("Province IDs:", provinceIds);
 
     // Random grade assignment
     const grades = ["A+", "A", "A++"];
     const randomGrade = grades[Math.floor(Math.random() * grades.length)];
-    console.log("Assigned Grade:", randomGrade);
+    //console.log("Assigned Grade:", randomGrade);
 
     // Create the university document 
     const university = new University({
@@ -982,11 +982,11 @@ const createUniversity = asyncHandler(async (req, res) => {
       UniLink: req.body.UniLink,
     });
 
-    console.log("University object before save:", university);
+    //console.log("University object before save:", university);
 
     // Save to DB
     const createdUniversity = await university.save();
-    console.log("Created University:", createdUniversity);
+    //console.log("Created University:", createdUniversity);
 
     // Return created object
     res.status(201).json(createdUniversity);
@@ -1053,7 +1053,7 @@ const updateUniversity = asyncHandler(async (req, res) => {
 
 const deleteUniversity = asyncHandler(async (req, res) => {
   const { ids } = req.body; // Expect an array of IDs in the body
-  console.log(ids);
+  //console.log(ids);
 
   if (!ids || !Array.isArray(ids) || ids.length === 0) {
     res.status(400);
@@ -1343,7 +1343,7 @@ const getCourses = async (req, res) => {
       maxFees
     } = req.query;
 
-    console.log(req.query, "REQ QUERY ========== ");
+    //console.log(req.query, "REQ QUERY ========== ");
 
     const filters = {};
 
@@ -1412,7 +1412,7 @@ const getCourses = async (req, res) => {
     const limit = 20;
     const skip = (page - 1) * limit;
 
-    console.log(filters, "FINAL FILTERS ================");
+    //console.log(filters, "FINAL FILTERS ================");
 
     // ------------------------------------------
     // Final Query
@@ -1425,7 +1425,7 @@ const getCourses = async (req, res) => {
     res.json({ filters, courses });
 
   } catch (error) {
-    console.log(error);
+    //console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -1475,14 +1475,14 @@ const getWebinars = asyncHandler(async (req, res) => {
 
 // const createWebinar = asyncHandler (async (req,res)=>{
 //   try {
-//     console.log(req.body,"//ssss///////////////////////////////")
+//     //console.log(req.body,"//ssss///////////////////////////////")
 //   } catch (error) {
 //     res.send(error)
 //   }
 // })
 
 const createWebinar = asyncHandler(async (req, res) => {
-  // console.log();  // Log to check incoming request data
+  // //console.log();  // Log to check incoming request data
 
   const { trainer_name, trainer_profession, title, imageURL, date, weekday, timeStart, timeEnd } = req.body;
 
@@ -1612,7 +1612,7 @@ const webinar_sendEmail = asyncHandler(async (req, res) => {
 
 // const webinar_sendEmail = asyncHandler(async (req, res) => {
 //   const { name, email,number,state,country } = req.body;
-//   console.log(req.body,"//////////////////////////////////////////////////////////////////////////////////////");
+//   //console.log(req.body,"//////////////////////////////////////////////////////////////////////////////////////");
 
 
 //   if (!email || !name) {
@@ -1871,7 +1871,7 @@ export const getLeadsByCounsellor = asyncHandler(async (req, res) => {
 const getLead = asyncHandler(async (req, res) => {
   try {
     const leads = await CounsellerLead.find()
-    console.log(leads[0].Counsellors);
+    //console.log(leads[0].Counsellors);
 
     res.status(200).json(leads);
   } catch (error) {
@@ -1985,7 +1985,7 @@ const createHomeLead = asyncHandler(async (req, res) => {
 // Send the email
 //   try {
 //     await transporter.sendMail(mailOptions);
-//     console.log('Email sent successfully');
+//     //console.log('Email sent successfully');
 //   } catch (err) {
 //     console.error('Email error:', err);
 //   }
@@ -2157,14 +2157,14 @@ const deleteQueryById = async (req, res) => {
       contactDeleted: 0,
       queryDeleted: 0,
     };
-    console.log(leads,"||||||||||||||||||+++|")
+    //console.log(leads,"||||||||||||||||||+++|")
     // 🔴 Delete Leads
     if (Array.isArray(leads) && leads.length > 0) {
       const response = await HomeLead.deleteMany({
         _id: { $in: leads},
       });
       results.leadsDeleted = response.deletedCount;
-      console.log(response,"+++++++++++++++++++++++")
+      //console.log(response,"+++++++++++++++++++++++")
     }
 
     // 🔴 Delete Contact Leads
@@ -2243,7 +2243,7 @@ const authPartner = asyncHandler(async (req, res) => {
 
 const extraUser = asyncHandler(async (req, res) => {
   const { name, email, password, role, createdBy, ProfilePhoto, WhatappNumber } = req.body;
-  console.log(name, email, password, role, createdBy, ProfilePhoto, WhatappNumber )
+  //console.log(name, email, password, role, createdBy, ProfilePhoto, WhatappNumber )
   const userExists = await User.findOne({ email });
   // const userByCode = await User.findOne({CounsellorCode:CounsellorCode})
   const userByWhatsAppNumber = await User.findOne({WhatappNumber:WhatappNumber})
@@ -2295,7 +2295,7 @@ const extraUser = asyncHandler(async (req, res) => {
 });
 export const extraUserAll = asyncHandler(async (req, res) => {
   const userExists = await User.find().populate("createdBy");
-  // console.log(userExists,":::::::::::::::::::::::::::::::::::::::")
+  // //console.log(userExists,":::::::::::::::::::::::::::::::::::::::")
   res.status(200).json(userExists);
 });
 
@@ -2325,7 +2325,7 @@ export const deleteCounsellorCoursefinder = async (req,res)=>{
     const deleteData = await User.deleteMany({_id:{$in:ids}})
     res.json({deleteData})
   } catch (error) {
-  console.log(error)    
+  //console.log(error)    
   }
 }
 
@@ -2528,7 +2528,7 @@ export const fetchByTrackingId = async (req, res) => {
     
     const trackingID = req.params.id;
     const students = await Profile.find({trackingId:trackingID}).populate('User'); // Populate with 'name' for easier identification
-    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",students);
+    //console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",students);
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });
@@ -2588,7 +2588,7 @@ const UpdateStudentStatus = async (req, res) => {
 const DeleteStudent = async (req, res) => {
   try {
     const { ids } = req.body;
-    console.log(ids, "????????????????????????????");
+    //console.log(ids, "????????????????????????????");
 
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
@@ -2632,7 +2632,7 @@ const GetOneStudent = async (req, res) => {
 }
 const GetOneStudentByTracking = async (req, res) => {
   try {
-    console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",req.params.id);
+    //console.log("trackingID++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++",req.params.id);
     const student = await Student.findOne({ trackingId: req.params.id }).populate('University').populate('Course');
     if (!student) {
       return res.status(404).json({ message: 'Student not found.' });
@@ -2649,7 +2649,7 @@ const GetOneStudentByTracking = async (req, res) => {
 // POST /api/tickets
 const createTicket = async (req, res) => {
   const { title, description, priority, category, attachments, userId,remark } = req.body;
-  // console.log(remark,"************************************")
+  // //console.log(remark,"************************************")
   try {
     const newTicket = new Ticket({
       title,
@@ -2660,7 +2660,7 @@ const createTicket = async (req, res) => {
       attachments,
       createdBy: userId,
     });
-    // console.log(newTicket,"********************")
+    // //console.log(newTicket,"********************")
     const savedTicket = await newTicket.save();
     res.status(201).json(savedTicket);
   } catch (error) {
@@ -2910,7 +2910,7 @@ const deleteProfile = async (req, res) => {
   try {
     const { ids } = req.body; // array of profile IDs
 
-    console.log(ids, "||||||||||||||||||||||||||||||||||||||||");
+    //console.log(ids, "||||||||||||||||||||||||||||||||||||||||");
 
 
     if (!ids || !Array.isArray(ids) || ids.length === 0) {
@@ -2969,7 +2969,7 @@ const fetchByUserProfile = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 const UpdateProfileStatus = async (req, res) => {
   try {
-    console.log(req.body,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+    //console.log(req.body,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
     
     const student = await Profile.findOneAndUpdate({ _id: req.params.id }, { status: req.body.status });
     if (!student) {
@@ -3443,7 +3443,7 @@ const getAllNavItems = async (req, res) => {
 };
 export const updateNav = async (req, res) => {
   try {
-    console.log(req.body)
+    //console.log(req.body)
     const detail = await Nav.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -3461,7 +3461,7 @@ export const updateNav = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   try {
-    // console.log(req.body)
+    // //console.log(req.body)
     const detail = await contacts.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -3524,7 +3524,7 @@ const deleteNavItem = async (req, res) => {
 
 const checkUser = async (req, res) => {
   try {
-    console.log("req", req.params.id);
+    //console.log("req", req.params.id);
     const user = await User.findOne({ CenterCode: req.params.id });
 
     if (!user) {
@@ -3625,13 +3625,13 @@ export const allFiles = async (req,res)=>{
     const data = await Files.find().populate("SecondCountry").populate("university")
     res.json({success:true,data})
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 // ✅ Update Website Detail
 export const updateFile = async (req, res) => {
   try {
-    console.log(req.body)
+    //console.log(req.body)
     const detail = await Files.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -3813,6 +3813,7 @@ export const createWebsiteDetail = async (req, res) => {
 export const getWebsiteDetails = async (req, res) => {
   try {
     const details = await websiteDetail.find();
+    console.log(details,"******************************")
     res.status(200).json(details);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch details", error: error.message });
@@ -3862,7 +3863,7 @@ export const fetchWebProfile = async (req, res) => {
     const data = await websiteProfile()
     res.send(data)
   } catch (error) {
-    console.log(error)
+    //console.log(error)
   }
 }
 

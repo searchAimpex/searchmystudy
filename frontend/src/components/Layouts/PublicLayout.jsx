@@ -9,6 +9,32 @@ function PublicLayout() {
   const [popups, setPopups] = useState([]);
   const [currentPopupIndex, setCurrentPopupIndex] = useState(0);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [webData, setWebData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+    useEffect(() => {
+      const fetchWebDetails = async () => {
+        try {
+          const response = await fetch(
+            'https://searchmystudy.com/api/admin/getWebsiteDetails'
+          );
+  
+          if (!response.ok) throw new Error('Failed to fetch website details');
+          const result = await response.json();
+          // console.log(result,"<<<<<<<<<<<<<<<<<<")
+          setWebData(Array.isArray(result) ? result[0] : result);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchWebDetails();
+    }, []);
+    
+    // console.log(webData,">>>>>>>>>>>>>>>>>>>>>>>>>>")
+
 
   useEffect(() => {
     const fetchPopups = async () => {
@@ -71,9 +97,9 @@ function PublicLayout() {
         </div>
       )}
 
-      <PublicNavBar />
-      <Outlet />
-      <Footer />
+      <PublicNavBar webData={webData} />
+      <Outlet webData={webData} />
+      <Footer webData={webData}/>
     </div>
 
   )
