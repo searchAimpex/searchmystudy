@@ -6,99 +6,85 @@ const generateTrackingId = () => {
 };
 
 const profileSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        default: ""
-    },
+    // Tracking & user ref
     trackingId: {
         type: String,
         unique: true
     },
-    middleName: {
-        type: String,
-        default: ""
-    },
-    lastName: {
-        type: String,
-        default: ""
-    },
-    passportNumber: {
-        type: String,
-        default: ""
-    },
-    dob: {
-        type: String,
-        default: ""
-    },
-    mobileNumber: {
-        type: String,
-        default: ''
-    },
-    emailID: {
-        type: String,
-        default: ''
-    },
-    Country: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Country',
-        default: null, // Set default to null
-    },
-    Course: {
-        type: String, 
-        default: '', // Set default to null
-
-    },
     User: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        default: null, // Set default to null
-
+        default: null
     },
+    // Personal
+    firstName: { type: String, default: "" },
+    middleName: { type: String, default: "" },
+    lastName: { type: String, default: "" },
+    city: { type: String, default: "" },
+    gender: { type: String, default: "" },
+    adhaar: { type: String, default: "" },
+    passportNumber: { type: String, default: "" },
+    dob: { type: String, default: "" },
+    address: { type: String, default: "" },
+    pincode: { type: String, default: "" },
+    // Contact
+    mobileNumber: { type: String, default: "" },
+    emailID: { type: String, default: "" },
+    // Course level & grade
+    courselevel: { type: String, default: "" },
+    grade: { type: String, default: "" },
+    // Qualified test
+    qualifiedTestName: { type: String, default: "" },
+    qualifiedTestYear: { type: String, default: "" },
+    qualifiedTestResultType: { type: String, default: "" }, // 'grade' | 'score'
+    qualifiedTestImage: { type: String, default: "" },
+    qualifiedTestGrade: { type: String, default: "" },
+    // Latest qualification
     lastEdu: {
-        type: String, 
-        default: "" ,
-        enum: ['10th','12th','BACHELOR DEGREE', 'MASTER DEGREE','DIPLOMA 10+3','BACHELOR IN TECHNOLOGY','MASTER IN TECHNOLOGY','POST GRADUATE'],
-
-    },
-    yearOfPassing: {
-        type: String,
-        default: ""
-    },
-    gradesInLastYear: {
-        type: String,
-        default: ""
-    },
-    english12Grade: {
-        type: String,
-        default: ""
-    },
-    englishTest : {
         type: String,
         default: "",
-        enum: ['WITH IELTS','WITHOUT IELTS'],
+        enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
     },
-    workExperience : {
+    lastQualificationCourseName: { type: String, default: "" },
+    lastQualificationSpecialization: { type: String, default: "" },
+    category: { type: String, default: "" },
+    lastQualificationResultType: { type: String, default: "" }, // 'grade' | 'score'
+    englishtestimage: { type: String, default: "" },
+    yearOfPassing: { type: String, default: "" },
+    gradesInLastYear: { type: String, default: "" },
+    // English test
+    english12Grade: { type: String, default: "" },
+    english12ResultType: { type: String, default: "" }, // 'grade' | 'cgpa'
+    englishTest: {
+        type: String,
+        default: "",
+        enum: ['WITH IELTS', 'WITHOUT IELTS']
+    },
+    englishTestYear: { type: String, default: "" },
+    remarks: { type: String, default: "" },
+    // Course
+    Country: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Country',
+        default: null
+    },
+    Course: { type: String, default: "" },
+    specialization: { type: String, default: "" },
+    // Documents
+    resume: { type: String, default: "" },
+    englishTestScorecard: { type: String, default: "" },
+    acadmics: { type: String, default: "" },
+    englishTestDoc: { type: String, default: "" },
+    workExperienceDoc: { type: String, default: "" },
+    workExperience: {
         type: Boolean,
         default: false
     },
-    remarks:{
+    // Status
+    status: {
         type: String,
-        default: ""
-    },
-    // Required fields
-
-    resume: { type: String},
-    englishTestScorecard: { type: String },
-    acadmics : { type: String},
-    englishTestDoc : { type: String },
-    workExperienceDoc : { type: String },
-
-    // Additional fields
-    status: { 
-        type: String, 
-        default: "pending" ,
-        enum: ['pending','shared','eligible','ineligible'],
-
+        default: "pending",
+        enum: ['pending', 'shared', 'eligible', 'ineligible']
     }
 }, 
 {

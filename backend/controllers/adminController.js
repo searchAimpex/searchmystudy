@@ -2877,6 +2877,7 @@ const deletePromotional = asyncHandler(async (req, res, next) => {
 // @access  Private
 const createProfile = async (req, res) => {
   try {
+    console.log(req.body, "????????????????????????????");
     const profile = new Profile(req.body); // Assuming the body contains the profile data
     const createdProfile = await profile.save();
     res.status(201).json(createdProfile);
