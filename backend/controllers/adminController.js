@@ -2477,7 +2477,7 @@ export const fetchByUserStudent = async (req, res) => {
     const userIds = [userId, ...subUsers.map(user => user._id)];
 
     // Fetch students created by the main user and their sub-user hierarchy
-    const students = await Student.find({ User: { $in: userIds } }).populate('User'); // Populate with 'name' for easier identification
+    const students = await Student.find({ User: { $in: userIds } }).populate('User').populate('Country').populate('University'); // Populate with 'name' for easier identification
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });

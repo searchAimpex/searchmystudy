@@ -105,25 +105,26 @@ const studentSchema = new mongoose.Schema({
         ref: 'Country',
         default: null, // Set default to null
     },
-    Province: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Province',
-        default: null, // Set default to null
+    // Province: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Province',
+    //     default: null, // Set default to null
 
-    },
+    // },
     University: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'University',
         default: null, // Set default to null
 
     },
-      Course: { type: String, default: "" },
     // Course: {
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Course',
     //     default: null, // Set default to null
 
     // },
+        Course: { type: String, default: "" },
+
     specialization: { type: String, default: "" },
     User: {
         type: mongoose.Schema.Types.ObjectId,
