@@ -117,12 +117,13 @@ const studentSchema = new mongoose.Schema({
         default: null, // Set default to null
 
     },
-    Course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-        default: null, // Set default to null
+      Course: { type: String, default: "" },
+    // Course: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Course',
+    //     default: null, // Set default to null
 
-    },
+    // },
     specialization: { type: String, default: "" },
     User: {
         type: mongoose.Schema.Types.ObjectId,

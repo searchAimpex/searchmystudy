@@ -67,12 +67,7 @@ const profileSchema = new mongoose.Schema({
         ref: 'Country',
         default: null
     },
-    Course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course',
-        default: null, // Set default to null
-
-    },
+    Course: { type: String, default: "" },
     specialization: { type: String, default: "" },
     // Documents
     resume: { type: String, default: "" },
