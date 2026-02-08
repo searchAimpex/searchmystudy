@@ -57,8 +57,7 @@ const profileSchema = new mongoose.Schema({
     english12ResultType: { type: String, default: "" }, // 'grade' | 'cgpa'
     englishTest: {
         type: String,
-        default: "",
-        enum: ['WITH IELTS', 'WITHOUT IELTS']
+        default: ""
     },
     englishTestYear: { type: String, default: "" },
     remarks: { type: String, default: "" },
