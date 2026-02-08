@@ -2386,41 +2386,8 @@ const getAllNotifications = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 export const createStudent = async (req, res) => {
   try {
-    const {
-      firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
-      photo, postCode, mobileNumber, emailID, address, country, state, city,
-      Country, Province, University, Course,
-      grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
-      grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
-      extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
-      letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
-      bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
-      declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
-      medicalCertificate, User
 
-    } = req.body;
-
-    // Check for required fields
-    // Check for empty ObjectId values
-
-
-    // Create the new student
-    const student = await Student.create({
-      firstName, middleName, lastName, passportNumber, dob, citizenship, gender,
-      photo, postCode, mobileNumber, emailID, address, country, state, city,
-      grade12Marksheet, grade10Marksheet, passportFrontBack, resume, englishTestScorecard,
-      grade10PassingCertificate, verificationForm, applicationFeeReceipt, statementOfPurpose,
-      extracurricularCertificates, gapJustification, workExperience, universityApplicationForm,
-      letterOfRecommendations, masterTranscripts, masterMarksheet, masterDegree, bachelorTranscripts,
-      bachelorMarksheet, bachelorDegree, grade12PassingCertificate, powerOfAttorney, registrationForm,
-      declarationForm, passportPhoto, portfolio, visaDocument, birthCertificate, policeClearanceCertificate,
-      medicalCertificate,
-      Country: Country ? Country : null, // Use null if Country is not provided
-      Province: Province ? Province : null, // Use null if Province is not provided
-      University: University ? University : null, // Use null if University is not provided
-      Course: Course ? Course : null, // Use null if Course is not provided
-      User: User ? User : null // Use null if User is not provided
-    });
+    const student = await Student.create(req.body);
     // Send a response
     res.status(201).json(student);
   } catch (error) {

@@ -70,6 +70,36 @@ const studentSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    adhaar: { type: String, default: "" },
+    pincode: { type: String, default: "" },
+    // Course level & grade
+    courselevel: { type: String, default: "" },
+    grade: { type: String, default: "" },
+    // Qualified test
+    qualifiedTestName: { type: String, default: "" },
+    qualifiedTestYear: { type: String, default: "" },
+    qualifiedTestResultType: { type: String, default: "" },
+    qualifiedTestImage: { type: String, default: "" },
+    qualifiedTestGrade: { type: String, default: "" },
+    // Latest qualification
+    lastEdu: {
+        type: String,
+        default: "",
+        enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
+    },
+    lastQualificationCourseName: { type: String, default: "" },
+    lastQualificationSpecialization: { type: String, default: "" },
+    category: { type: String, default: "" },
+    lastQualificationResultType: { type: String, default: "" },
+    englishtestimage: { type: String, default: "" },
+    yearOfPassing: { type: String, default: "" },
+    gradesInLastYear: { type: String, default: "" },
+    // English test
+    english12Grade: { type: String, default: "" },
+    english12ResultType: { type: String, default: "" },
+    englishTest: { type: String, default: "" },
+    englishTestYear: { type: String, default: "" },
+    remarks: { type: String, default: "" },
     Country: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Country',
@@ -93,6 +123,7 @@ const studentSchema = new mongoose.Schema({
         default: null, // Set default to null
 
     },
+    specialization: { type: String, default: "" },
     User: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -105,7 +136,10 @@ const studentSchema = new mongoose.Schema({
     passportFrontBack: { type: String },
     resume: { type: String},
     englishTestScorecard: { type: String },
-  
+    acadmics: { type: String, default: "" },
+    englishTestDoc: { type: String, default: "" },
+    workExperienceDoc: { type: String, default: "" },
+
     // Recommended fields
     grade10PassingCertificate: { type: String },
     verificationForm: { type: String },
