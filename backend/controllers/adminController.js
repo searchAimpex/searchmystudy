@@ -2466,6 +2466,7 @@ const getAllSubUsers = async (userId) => {
   return allSubUsers;
 };
 
+
 export const fetchByUserStudent = async (req, res) => {
   try {
     const userId = req.params.id;
@@ -2477,7 +2478,17 @@ export const fetchByUserStudent = async (req, res) => {
     const userIds = [userId, ...subUsers.map(user => user._id)];
 
     // Fetch students created by the main user and their sub-user hierarchy
-    const students = await Student.find({ User: { $in: userIds } }).populate('User').populate('Country').populate('University'); // Populate with 'name' for easier identification
+    const students = await Student.find({ User: { $in: userIds } }).populate({
+        path: 'User',
+        populate: {
+          path: 'createdBy', // Populate 'createdBy' from User
+          model: 'User', // Make sure it refers to the correct model
+        }
+      })
+      .populate('Country')
+      // .populate('Province')
+      .populate('University')
+      .populate('Course');// Populate with 'name' for easier identification
 
     if (!students || students.length === 0) {
       return res.status(404).json({ message: 'No students found for this user and sub-users.' });
@@ -2489,6 +2500,8 @@ export const fetchByUserStudent = async (req, res) => {
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
+
+
 
 export const fetchByTrackingId = async (req, res) => {
   try {
@@ -2519,7 +2532,7 @@ const fetchStudent = async (req, res) => {
         }
       })
       .populate('Country')
-      .populate('Province')
+      // .populate('Province')
       .populate('University')
       .populate('Course');
 
