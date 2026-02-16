@@ -235,16 +235,61 @@ const registerUser = asyncHandler(async (req, res) => {
 
     // Send registration success email
     try {
-      const mailOptions = {
-        from: process.env.EMAIL_USER, // your verified email
-        to: user.email,               // user's email
-        subject: 'Registration Successful',
-        text: `Hello ${user.InsitutionName},\n\nYour registration was successful! Welcome to our platform.
-        \n\nEmail:${user?.email}
-        \nPassword:${user?.passwordTracker}
-        \n\nRegards,
-        \nTeam`,
-      };
+   const mailOptions = {
+  from: process.env.EMAIL_USER,
+  to: user.email,
+  subject: 'WELCOME TO THE WORLD OF SEARCH MY STUDY!',
+  text: `Dear ${user?.name || user?.InsitutionName},
+
+${user?.InsitutionName}
+
+WELCOME TO THE WORLD OF SEARCH MY STUDY!
+
+Congratulations! You are now a Registered Business Associate of Search My Study.
+
+Now you can experience our specialized admission Portal for MBBS Abroad and Study Abroad programs.
+
+Through Search My Study, you can assist students in applying to 500+ universities across multiple countries for programs including:
+
+• MBBS / MD Abroad
+• Undergraduate Programs Abroad
+• Postgraduate Programs Abroad
+• Foundation & Pathway Programs
+• Study Abroad Programs in Medical & Non-Medical Fields
+
+
+Login Credentials
+
+You can now log in to your Business Associate Dashboard using the details below:
+
+Url: https://searchmystudy.com/
+Email ID: ${user?.email}
+Password: ${user?.passwordTracker}
+
+
+You are now ready to enter the world of online admission & application management, which will change the way you process MBBS and Study Abroad admissions.
+
+
+Key Advantages of Associating with Search My Study:
+
+• Absolute privacy of your student data
+• Only document-based processing – no physical hassle
+• No mediators for your student applications
+• High commissions on every successful admission
+• Transparent payout system
+• Offer letter support from selected universities
+• Dedicated backend & visa support team
+
+
+We look forward to a strong and successful association with you.
+
+Warm regards,  
+Team Search My Study  
+Official Email: support@searchmystudy.com  
+Support Number: +91-8400770308  
+Website: https://searchmystudy.com/
+`,
+};
 
       const info = await transporter.sendMail(mailOptions);
       console.log('Email sent: ' + info.response);

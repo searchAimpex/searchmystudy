@@ -109,6 +109,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       fetchwebinarleads,
       deleteQueryById,
       deleteWebinarLeads,
+      updateUpload,
       // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
@@ -380,8 +381,9 @@ router.get('/popup/partner',getAllPartnerPopups)
 
 //////////////// UPLOAD ROUTE ****************/
 router.post('/upload',createUpload)
+router.put('/upload/:id',updateUpload)
 router.get('/upload',getAllUploads)
-router.delete('/upload/:id',deleteUpload)
+router.delete('/upload',deleteUpload)
 router.get('/upload/partner',getPartnerUploads)
 router.get('/upload/frenchise',getFrenchiseUploads)
 ///////////////////////////////////////////////

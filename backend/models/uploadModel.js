@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const uploadSchema = mongoose.Schema(
-    {
+    {   
+        description:{
+            type:String,
+            default:""
+        },
         title:{
             type:String,
             required:true
@@ -15,8 +19,12 @@ const uploadSchema = mongoose.Schema(
             default:true
         },
         target:{
-            type:String,
-            default:"partner"
+            type:Boolean,
+            default:false
+        },
+        target1:{
+            type:Boolean,
+            default:false
         }
     },
     {

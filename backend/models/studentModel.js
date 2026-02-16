@@ -91,6 +91,8 @@ const studentSchema = new mongoose.Schema({
     lastQualificationSpecialization: { type: String, default: "" },
     category: { type: String, default: "" },
     lastQualificationResultType: { type: String, default: "" },
+    aadharPhoto:{type:String,default:""},
+    
     englishtestimage: { type: String, default: "" },
     yearOfPassing: { type: String, default: "" },
     gradesInLastYear: { type: String, default: "" },

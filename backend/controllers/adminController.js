@@ -2386,9 +2386,7 @@ const getAllNotifications = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 export const createStudent = async (req, res) => {
   try {
-
     const student = await Student.create(req.body);
-    // Send a response
     res.status(201).json(student);
   } catch (error) {
     res.status(500).json({ message: 'Server error, please try again later.', error });
@@ -3073,11 +3071,12 @@ const deletePopup = async (req, res) => {
 // @access  Public
 const createUpload = async (req, res) => {
   try {
-    const { title, imageURL, iconURL, target } = req.body;
+    const { title, imageURL, iconURL, target, description } = req.body;
 
     const newUpload = new Upload({
       title,
       imageURL,
+      description: description || '',
       iconURL: iconURL || '',
       target // Use default if not provided
     });
@@ -3088,6 +3087,37 @@ const createUpload = async (req, res) => {
     res.status(500).json({ message: 'Failed to create upload', error: error.message });
   }
 };
+
+const updateUpload = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, imageURL, iconURL, target, description } = req.body;
+
+    // Check if upload exists
+    const existingUpload = await Upload.findById(id);
+    if (!existingUpload) {
+      return res.status(404).json({ message: "Upload not found" });
+    }
+
+    // Update only provided fields
+    existingUpload.title = title ?? existingUpload.title;
+    existingUpload.imageURL = imageURL ?? existingUpload.imageURL;
+    existingUpload.iconURL = iconURL ?? existingUpload.iconURL;
+    existingUpload.target = target ?? existingUpload.target;
+    existingUpload.description = description ?? existingUpload.description;
+
+    const updatedUpload = await existingUpload.save();
+
+    res.status(200).json(updatedUpload);
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update upload",
+      error: error.message,
+    });
+  }
+};
+
 
 // @desc    Get all uploads
 // @route   GET /api/uploads
@@ -3105,7 +3135,7 @@ const getAllUploads = async (req, res) => {
 // @access  Public
 const getPartnerUploads = async (req, res) => {
   try {
-    const uploads = await Upload.find({ target: 'partner' });
+    const uploads = await Upload.find({ target: 'frenchise' });
     res.status(200).json(uploads);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
@@ -3127,16 +3157,33 @@ const getFrenchiseUploads = async (req, res) => {
 // @access  Public
 const deleteUpload = async (req, res) => {
   try {
-    const upload = await Upload.findByIdAndDelete(req.params.id);
-    if (!upload) {
-      return res.status(404).json({ message: 'Upload not found' });
+    const { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ message: "Please provide upload IDs" });
     }
 
-    res.status(200).json({ message: 'Upload deleted successfully' });
+    const result = await Upload.deleteMany({
+      _id: { $in: ids }
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({ message: "No uploads found to delete" });
+    }
+
+    res.status(200).json({
+      message: "Uploads deleted successfully",
+      deletedCount: result.deletedCount
+    });
+
   } catch (error) {
-    res.status(500).json({ message: 'Failed to delete upload', error: error.message });
+    res.status(500).json({
+      message: "Failed to delete uploads",
+      error: error.message
+    });
   }
 };
+
 
 
 // @desc    Create a new upload
@@ -3876,7 +3923,7 @@ export {
   createLoan, getLoansByUser, getLoans, UpdateLoanStatus, DeleteLoan,
   createTransaction, getAllTransactions, getTransactionsByCenterCode, deleteTransactions,
   createNavItem, getAllNavItems, deleteNavItem, checkUser,
-  createFile, getAllFiles, deleteFile, findOneFile,
+  createFile, getAllFiles, deleteFile, findOneFile,updateUpload,
   createVideo, getVideo, deleteVideo, updateVideo
 
 };
