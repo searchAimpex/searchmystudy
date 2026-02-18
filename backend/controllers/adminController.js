@@ -2853,9 +2853,78 @@ const deletePromotional = asyncHandler(async (req, res, next) => {
 // @desc    Create a new profile
 // @route   POST /api/profiles
 // @access  Private
+const validation = async (req, res) => {
+  try {
+    const {
+      firstName,
+      city,
+      gender,
+      adhaar,
+      passportNumber,
+      dob,
+      address,
+      pincode,
+      mobileNumber,
+      emailID,
+      courselevel,
+      Country,
+      Course,
+      status
+    } = req.body;
+
+    console.log(req.body, "????????????????????????????");
+
+    // ✅ Required Field Validation (No DB check)
+    if (!firstName) return res.status(400).json({ message: "First Name is required" });
+    if (!city) return res.status(400).json({ message: "City is required" });
+    if (!gender) return res.status(400).json({ message: "Gender is required" });
+    if (!adhaar) return res.status(400).json({ message: "Aadhar is required" });
+    if (!dob) return res.status(400).json({ message: "Date of Birth is required" });
+    if (!address) return res.status(400).json({ message: "Address is required" });
+    if (!pincode) return res.status(400).json({ message: "Pincode is required" });
+    if (!mobileNumber) return res.status(400).json({ message: "Mobile Number is required" });
+    if (!emailID) return res.status(400).json({ message: "Email is required" });
+    if (!courselevel) return res.status(400).json({ message: "Course Level is required" });
+    if (!Country) return res.status(400).json({ message: "Country is required" });
+    if (!Course) return res.status(400).json({ message: "Course is required" });
+
+    // ✅ Duplicate Check (Parallel Execution)
+    const [
+      emailCheck,
+      adhaarCheck,
+      passportCheck,
+      mobileCheck
+    ] = await Promise.all([
+      Profile.findOne({ emailID }),
+      Profile.findOne({ adhaar }),
+      passportNumber ? Profile.findOne({ passportNumber }) : null,
+      Profile.findOne({ mobileNumber })
+    ]);
+
+    if (emailCheck) return res.status(400).json({ message: "Email already exists" });
+    if (adhaarCheck) return res.status(400).json({ message: "Aadhar already exists" });
+    if (passportCheck) return res.status(400).json({ message: "Passport Number already exists" });
+    if (mobileCheck) return res.status(400).json({ message: "Mobile Number already exists" });
+
+    return res.status(200).json({ message: "Validation successful" });
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "Failed to validate profile",
+      error: error.message
+    });
+  }
+};
+
+
 const createProfile = async (req, res) => {
   try {
     console.log(req.body, "????????????????????????????");
+    const user = await Profile.findOne({ emailID: req.body.emailID });
+    if (user) {
+      return res.status(404).json({ message: 'Email already exists' });
+    }  
+    // req.body.User = user._id;
     const profile = new Profile(req.body); // Assuming the body contains the profile data
     const createdProfile = await profile.save();
     res.status(201).json(createdProfile);
@@ -3924,6 +3993,6 @@ export {
   createTransaction, getAllTransactions, getTransactionsByCenterCode, deleteTransactions,
   createNavItem, getAllNavItems, deleteNavItem, checkUser,
   createFile, getAllFiles, deleteFile, findOneFile,updateUpload,
-  createVideo, getVideo, deleteVideo, updateVideo
+  createVideo, getVideo, deleteVideo, updateVideo, validation
 
 };

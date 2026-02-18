@@ -40,11 +40,11 @@ const profileSchema = new mongoose.Schema({
     qualifiedTestImage: { type: String, default: "" },
     qualifiedTestGrade: { type: String, default: "" },
     // Latest qualification
-    lastEdu: {
-        type: String,
-        default: "",
-        enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
-    },
+    // lastEdu: {
+    //     type: String,
+    //     default: "",
+    //     enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
+    // },
     lastQualificationCourseName: { type: String, default: "" },
     lastQualificationSpecialization: { type: String, default: "" },
     category: { type: String, default: "" },
@@ -61,15 +61,15 @@ const profileSchema = new mongoose.Schema({
     },
     englishTestYear: { type: String, default: "" },
     remarks: { type: String, default: "" },
-    // Course
+    // Course    
     Country: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Country',
         default: null
     },
     Course: { type: String, default: "" },
-    specialization: { type: String, default: "" },
-    // Documents
+    specialization: { type: String, default: "" },  
+    // Documents  
     resume: { type: String, default: "" },
     englishTestScorecard: { type: String, default: "" },
     acadmics: { type: String, default: "" },
@@ -78,7 +78,7 @@ const profileSchema = new mongoose.Schema({
     workExperience: {
         type: Boolean,
         default: false
-    },
+    },  
     // Status
     status: {
         type: String,

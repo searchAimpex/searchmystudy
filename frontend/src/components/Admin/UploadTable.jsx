@@ -18,11 +18,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 // import {  useCountryFetchMutation, useCountryDeleteMutation } from '../../slices/adminApiSlice';
-
 import ImageViewPop from './PopUps/ImageViewPop.jsx';
 import { RemoveRedEye } from '@mui/icons-material';
 import { useState } from 'react';
-
 import CreateProvincePop from './PopUps/CreateProvincePop';
 import { useDeleteMyUploadMutation, useDeleteProvinceMutation, useFetchAllTicketMutation, useFetchMyUploadMutation, useFetchProvinceMutation, useRemoveOneTicketMutation, useUpdateOneTicketMutation } from '../../slices/adminApiSlice.js';
 import { DeleteOneProvince,  FetchProvinces } from '../../slices/provinceSlice.js';

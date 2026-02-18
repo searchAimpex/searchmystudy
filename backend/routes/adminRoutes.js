@@ -109,7 +109,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       fetchwebinarleads,
       deleteQueryById,
       deleteWebinarLeads,
-      updateUpload,
+      validation,
       // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
@@ -363,6 +363,7 @@ router.delete('/DeletePromotional',deletePromotional)
 
 /************************* Profile Assisment  **********************/
 router.post('/profile',createProfile)
+router.post('/validation',validation)
 router.get('/profile/:id',fetchByUserProfile)
 router.get('/profile',getAllProfiles)
 router.put('/profile/status/:id',UpdateProfileStatus)
@@ -381,9 +382,8 @@ router.get('/popup/partner',getAllPartnerPopups)
 
 //////////////// UPLOAD ROUTE ****************/
 router.post('/upload',createUpload)
-router.put('/upload/:id',updateUpload)
 router.get('/upload',getAllUploads)
-router.delete('/upload',deleteUpload)
+router.delete('/upload/:id',deleteUpload)
 router.get('/upload/partner',getPartnerUploads)
 router.get('/upload/frenchise',getFrenchiseUploads)
 ///////////////////////////////////////////////
