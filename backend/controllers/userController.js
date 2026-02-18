@@ -342,21 +342,21 @@ export const updateUser = asyncHandler(async (req, res) => {
     throw new Error("User not found");
   }
 
-  if (updateData.password && updateData.password.trim() !== "") {
-    // generate salt and hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(updateData.password, salt);
+  // if (updateData.password && updateData.password.trim() !== "") {
+  //   // generate salt and hash password
+ 
+  //   const hashedPassword = await bcrypt.hash(updateData.password, salt);
 
-    updateData.password = hashedPassword;
-    updateData.passwordTracker = req.body.passwordTracker; // keep plain password if you’re tracking it
-  } else {
-    // keep existing password if not provided
-    updateData.password = user.password;
-    updateData.passwordTracker = user.passwordTracker;
-  }
+  //   updateData.password = hashedPassword;
+  //   updateData.passwordTracker = req.body.passwordTracker; // keep plain password if you’re tracking it
+  // } else {
+  //   // keep existing password if not provided
+  //   updateData.password = user.password;
+  //   updateData.passwordTracker = user.passwordTracker;
+  // }
 
 
-  const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
     new: true,
     runValidators: true,
   });
@@ -392,6 +392,8 @@ export const updateUser = asyncHandler(async (req, res) => {
     bankName: updatedUser.bankName,
   });
 });
+
+
 export const getUserById = asyncHandler(async (req, res) => {
   try {
     console.log(req.params, "+++++++++++++++++++++++++++++++++");
