@@ -2386,6 +2386,7 @@ const getAllNotifications = async (req, res) => {
 // @access  Public (or Private, depending on your setup)
 export const createStudent = async (req, res) => {
   try {
+    console.log(req.body,"????????????????????????????");
     const student = await Student.create(req.body);
     res.status(201).json(student);
   } catch (error) {

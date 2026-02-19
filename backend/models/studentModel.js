@@ -82,11 +82,11 @@ const studentSchema = new mongoose.Schema({
     qualifiedTestImage: { type: String, default: "" },
     qualifiedTestGrade: { type: String, default: "" },
     // Latest qualification
-    lastEdu: {
-        type: String,
-        default: "",
-        enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
-    },
+    // lastEdu: {
+    //     type: String,
+    //     default: "",
+    //     enum: ['10th', '12th', 'BACHELOR DEGREE', 'MASTER DEGREE', 'DIPLOMA 10+3', 'BACHELOR IN TECHNOLOGY', 'MASTER IN TECHNOLOGY', 'POST GRADUATE']
+    // },
     lastQualificationCourseName: { type: String, default: "" },
     lastQualificationSpecialization: { type: String, default: "" },
     category: { type: String, default: "" },
