@@ -383,7 +383,7 @@ router.get('/popup/partner',getAllPartnerPopups)
 //////////////// UPLOAD ROUTE ****************/
 router.post('/upload',createUpload)
 router.get('/upload',getAllUploads)
-router.delete('/upload/:id',deleteUpload)
+router.delete('/upload',deleteUpload)
 router.get('/upload/partner',getPartnerUploads)
 router.get('/upload/frenchise',getFrenchiseUploads)
 ///////////////////////////////////////////////

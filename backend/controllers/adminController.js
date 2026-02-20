@@ -3205,10 +3205,10 @@ const getAllUploads = async (req, res) => {
 // @access  Public
 const getPartnerUploads = async (req, res) => {
   try {
-    const uploads = await Upload.find({ target: 'frenchise' });
+    const uploads = await Upload.find({ target: true });
     res.status(200).json(uploads);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+    res.status(500).json({ message: 'Failed to fetch upload s', error: error.message });
   }
 };
 // @desc    Get all uploads
@@ -3216,7 +3216,7 @@ const getPartnerUploads = async (req, res) => {
 // @access  Public
 const getFrenchiseUploads = async (req, res) => {
   try {
-    const uploads = await Upload.find({ target: 'frenchise' });
+    const uploads = await Upload.find({ target1: true });
     res.status(200).json(uploads);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
