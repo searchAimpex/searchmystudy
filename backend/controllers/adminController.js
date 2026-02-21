@@ -3141,11 +3141,12 @@ const deletePopup = async (req, res) => {
 // @access  Public
 const createUpload = async (req, res) => {
   try {
-    const { title, imageURL, iconURL, target, description } = req.body;
+    const { title, imageURL, iconURL, target, description,target1 } = req.body;
 
     const newUpload = new Upload({
       title,
       imageURL,
+      target1,
       description: description || '',
       iconURL: iconURL || '',
       target // Use default if not provided
@@ -3161,24 +3162,20 @@ const createUpload = async (req, res) => {
 const updateUpload = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, imageURL, iconURL, target, description } = req.body;
-
-    // Check if upload exists
+    const { title, imageURL, iconURL, target, description,target1 } = req.body;
     const existingUpload = await Upload.findById(id);
     if (!existingUpload) {
       return res.status(404).json({ message: "Upload not found" });
     }
-
-    // Update only provided fields
     existingUpload.title = title ?? existingUpload.title;
     existingUpload.imageURL = imageURL ?? existingUpload.imageURL;
     existingUpload.iconURL = iconURL ?? existingUpload.iconURL;
     existingUpload.target = target ?? existingUpload.target;
+    existingUpload.target1 = target1 ?? existingUpload.target1;
     existingUpload.description = description ?? existingUpload.description;
-
     const updatedUpload = await existingUpload.save();
-
-    res.status(200).json(updatedUpload);
+    
+    res.status(200).json(updatedUpload);        
 
   } catch (error) {
     res.status(500).json({
