@@ -3141,12 +3141,13 @@ const deletePopup = async (req, res) => {
 // @access  Public
 const createUpload = async (req, res) => {
   try {
-    const { title, imageURL, iconURL, target, description,target1 } = req.body;
+    const { title, imageURL, iconURL, target, description,target1,countryName } = req.body;
 
     const newUpload = new Upload({
       title,
       imageURL,
       target1,
+      countryName,
       description: description || '',
       iconURL: iconURL || '',
       target // Use default if not provided

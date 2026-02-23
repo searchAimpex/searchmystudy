@@ -6,6 +6,10 @@ const uploadSchema = mongoose.Schema(
             type:String,
             default:""
         },
+        countryName:{
+            type:String,
+            default:""
+        },
         title:{
             type:String,
             required:true

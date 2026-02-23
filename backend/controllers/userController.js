@@ -189,8 +189,9 @@ const authPartner = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-const registerUser = asyncHandler(async (req, res) => {
-  console.log(req.body, "|||||||||||||||||||||||||||");
+const 
+registerUser = asyncHandler(async (req, res) => {
+  // console.log(req.body, "|||||||||||||||||||||||||||");
 
   // Check if user with the same email or other identifiers already exists
   const userExists = await User.findOne({ email: req.body.email });
@@ -215,11 +216,19 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error('Phone number already exists!');
   }
 
+  
   // Create a new user
   const user = await User.create({
     ...req.body,
     passwordTracker: req.body.password,
   });
+  
+
+
+  console.log(user,"-++++++++++++++++++++++++++++++++++++++++")
+
+
+
   const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -239,7 +248,7 @@ const registerUser = asyncHandler(async (req, res) => {
   from: process.env.EMAIL_USER,
   to: user.email,
   subject: 'WELCOME TO THE WORLD OF SEARCH MY STUDY!',
-  text: `Dear ${user?.name || user?.InsitutionName},
+  text: `Dear ${user?.OwnerName || user?.InsitutionName},
 
 ${user?.InsitutionName}
 
@@ -698,7 +707,7 @@ const createCountry = async (req, res) => {
   // if (!name || !flagURL || !currency || !code || !country) {
   //   return res.status(400).json({ message: 'Please provide all required fields' });
   // }
-  console.log(req.body,"|||||||||||||||||||||||||||")
+  // console.log(req.body,"|||||||||||||||||||||||||||")
   
   try {
     const country = new SecondCountry(req.body);
