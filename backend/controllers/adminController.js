@@ -3142,7 +3142,7 @@ const deletePopup = async (req, res) => {
 const createUpload = async (req, res) => {
   try {
     const { title, imageURL, iconURL, target, description,target1,countryName } = req.body;
-
+    console.log(req.body,"::::::::::::::::::::::::::::::::::::::::::::");
     const newUpload = new Upload({
       title,
       imageURL,
