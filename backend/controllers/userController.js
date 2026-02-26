@@ -340,6 +340,7 @@ export const statusUpdate = asyncHandler(async (req, res) => {
 
 
 export const updateUser = asyncHandler(async (req, res) => {
+  console.log(req.body, "+++++++++++++++++++++++++++++++++");
   const userId = req.params.id;
   const updateData = { ...req.body }; 
 
