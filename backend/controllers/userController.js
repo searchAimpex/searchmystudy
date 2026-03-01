@@ -680,11 +680,12 @@ const getAllCountries = async (req, res) => {
 const getCountryById = async (req, res) => {
   try {
     const countries = await SecondCountry.findById(req.params.id);
+    console.log(countries, "countries++++++++++++++++++++++")
     if (!countries) {
       return res.status(404).json({ message: 'Country not found' });
     }
 
-    const countryData = await Country.findOne({ name: countries.name });
+    const countryData = await Country.findOne({ _id: countries.country });
 
     res.json({
       secondCountry: countries,

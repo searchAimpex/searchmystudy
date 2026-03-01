@@ -3653,54 +3653,60 @@ const createFile = async (req, res) => {
 // Get all files
 const getAllFiles = async (req, res) => {
   try {
-    const files = await Files.aggregate([
-      // 1️⃣ SecondCountry lookup
-      {
-        $lookup: {
-          from: "secondcountries",
-          localField: "SecondCountry",
-          foreignField: "_id",
-          as: "SecondCountry"
-        }
-      },
-      { $unwind: "$SecondCountry" },
-    
-      // 2️⃣ University lookup (FIXED)
-      {
-        $lookup: {
-          from: "universities",
-          localField: "university",   // ✅ correct field name
-          foreignField: "_id",
-          as: "university"
-        }
-      },
-      {
-        $unwind: {
-          path: "$university",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-    
-      // 3️⃣ Group by country
-      {
-        $group: {
-          _id: "$SecondCountry.name",
-          SecondCountry: { $first: "$SecondCountry" },
-          items: { $push: "$$ROOT" }
-        }
-      },
-    
-      // 4️⃣ Final shape
-      {
-        $project: {
-          _id: 0,
-          name: "$_id",
-          SecondCountry: 1,
-          items: 1
-        }
-      }
-    ]);
+  const files = await Files.aggregate([
+  // 1️⃣ Country lookup (FIXED collection name)
+  {
+    $lookup: {
+      from: "countries",   // ✅ correct collection name
+      localField: "SecondCountry",
+      foreignField: "_id",
+      as: "SecondCountry"
+    }
+  },
+  {
+    $unwind: {
+      path: "$SecondCountry",
+      preserveNullAndEmptyArrays: true  // safer
+    }
+  },
+
+  // 2️⃣ University lookup
+  {
+    $lookup: {
+      from: "universities",   // ✅ correct
+      localField: "university",
+      foreignField: "_id",
+      as: "university"
+    }
+  },
+  {
+    $unwind: {
+      path: "$university",
+      preserveNullAndEmptyArrays: true
+    }
+  },
+
+  // 3️⃣ Group by country name
+  {
+    $group: {
+      _id: "$SecondCountry.name",
+      SecondCountry: { $first: "$SecondCountry" },
+      items: { $push: "$$ROOT" }
+    }
+  },
+
+  // 4️⃣ Final shape
+  {
+    $project: {
+      _id: 0,
+      name: "$_id",
+      SecondCountry: 1,
+      items: 1
+    }
+  }
+]);
   
+    // const files = await Files.find().populate('SecondCountry').populate('university');
     res.status(200).json(files);
 
   } catch (error) {
