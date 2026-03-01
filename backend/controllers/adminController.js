@@ -38,6 +38,7 @@ import websiteProfile from '../models/webProfile.js';
 import webinarleads from '../models/webinarLead.js';
 import jwt from 'jsonwebtoken';
 import contacts from '../models/contactModel.js';
+import { da } from 'date-fns/locale';
 
 // import jwt from 'jsonwebtoken';
 
@@ -3637,22 +3638,13 @@ const checkUser = async (req, res) => {
 const createFile = async (req, res) => {
   try {
     const { SecondCountry, name, template, broucher, type,university } = req.body;
-
-    // Check if all required fields are provided
+    // console.log(req.body,"::::::::::::::::::::::::::::::::")   
     if (!SecondCountry || !type || (!template && !broucher)) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-    const newFile = new Files({
-      SecondCountry,
-      name,
-      template,
-      university,
-      broucher,
-      type,
-    });
-
-    await newFile.save();
+    const newFile = new Files(req.body);
+    const data = await newFile.save();
+    console.log(data,"::::::::::::::::::::::::::::::::")
     res.status(201).json(newFile);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -3716,14 +3708,21 @@ const getAllFiles = async (req, res) => {
   }
 };
 
+
+
 export const allFiles = async (req,res)=>{
   try {
-    const data = await Files.find().populate("SecondCountry").populate("university")
+    const data = await Files.find().populate("SecondCountry").populate("university");
+    console.log(data,"::::::::::::::::::::::::::::::::")
+    
     res.json({success:true,data})
   } catch (error) {
-    //console.log(error)
+    console.log(error)
   }
 }
+
+
+
 // ✅ Update Website Detail
 export const updateFile = async (req, res) => {
   try {

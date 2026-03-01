@@ -4,8 +4,8 @@ const fileSchema = mongoose.Schema(
     {
         SecondCountry : {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'SecondCountry',
-            required: true,
+            ref: 'Country'
+            // required: true,
         },
         name:{ 
             type:String,
