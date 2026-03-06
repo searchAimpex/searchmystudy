@@ -111,6 +111,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       deleteWebinarLeads,
       validation,
       updateUpload,
+      getAllFrenchisePopups,
       // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
@@ -379,6 +380,7 @@ router.get('/popup',getAllPopups)
 router.delete('/popup',deletePopup)
 router.get('/popup/main',getAllMainPopups)
 router.get('/popup/partner',getAllPartnerPopups)
+router.put('/popup/frenchise',getAllFrenchisePopups)
 ///////////////////////////////////////////////
 
 //////////////// UPLOAD ROUTE ****************/

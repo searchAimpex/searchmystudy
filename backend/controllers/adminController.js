@@ -3107,6 +3107,15 @@ const getAllPartnerPopups = async (req, res) => {
   }
 };
 
+export const getAllFrenchisePopups = async (req, res) => {
+  try {
+    const popups = await Popup.find({ target: 'frenchise' });
+    res.status(200).json(popups);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch popups', error: error.message });
+  }
+};
+
 // @desc    Delete a popup
 // @route   DELETE /api/popups/:id
 // @access  Private
