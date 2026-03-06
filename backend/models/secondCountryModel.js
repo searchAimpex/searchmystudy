@@ -10,15 +10,15 @@ const secondCountrySchema = mongoose.Schema(
         },
         flagURL : {
             type:String,
-            required:true,
+            // required:true,
         },
         currency: {
             type: String,
-            required:true,
+            // required:true,
         },
         code : {
             type: String,
-            required:true,
+            // required:true,
         },
         vfs:{
             type: String,
