@@ -167,26 +167,19 @@ const AllCourseDetailed = () => {
 
 
 
-  const handleSearch = async () => {
+  const handleSearch = async (searchFiltersOverride) => {
     try {
-      const searchFilters = {
+      const searchFilters = searchFiltersOverride ?? {
         ...filters,
         minFees: values[0],
         maxFees: values[1]
       };
       const result = await AllCourse(searchFilters).unwrap();
-      // console.log("my results------------", searchFilters)
-      // if (Array.isArray(result)) {
-        setCourses(result.courses);    
-      // } else {
-        // console.error('Expected an array but got:', result);
-      // }
+      setCourses(result?.courses ?? []);
     } catch (error) {
       console.error('Error during search:', error);
     }
   };
-
-
 
   const handleFilterChange = async (e) => {
     const { name, value, type, checked } = e.target;
@@ -202,14 +195,7 @@ const AllCourseDetailed = () => {
       maxFees: values[1]
     };
 
-    const result = await AllCourse(searchFilters).unwrap();
-    console.log(newFilters, "************************************{{{{{{{{{{{{{{{{{{{{{{{{{{{{****************");
-
-    if (Array.isArray(result)) {
-      setCourses(result);
-    }
-    // console.log('Country selected:', value);
-    // console.log('Updated filters:', newFilters);
+    await handleSearch(searchFilters);
   };
   const openBrochure = (url) => {
     window.open(url, '_blank', 'noopener,noreferrer');
@@ -360,7 +346,10 @@ const AllCourseDetailed = () => {
                 min={1000}
                 max={10000000}
                 values={values}
-                onChange={(vals) => setValues(vals)}
+                onChange={(vals) => {
+                  setValues(vals);
+                  handleSearch({ ...filters, minFees: vals[0], maxFees: vals[1] });
+                }}
                 renderTrack={({ props, children }) => (
                   <div
                     {...props}
@@ -762,7 +751,7 @@ const AllCourseDetailed = () => {
                             <p>: {course?.ProgramLevel}</p>
                             <p>: {course?.Duration}</p>
                             <p>: {course?.completeFees?.amount} {course?.completeFees?.currency}</p>
-                            {/* {course?.University?.MCI && <p>: Approved</p>} */}
+                            {course?.University?.MCI && <p>: Approved</p>}
                             {/* {course?.University?.WHO && <p>: Approved</p>}
                          */}
 
@@ -818,7 +807,7 @@ const AllCourseDetailed = () => {
                             <a target='_blank' href={`${course?.broucherURL}`}>
                               <StyledWrapper1 className="w-full sm:w-auto">
                                 <button
-                                  onClick={() => navigate()}
+                                  // onClick={() => navigate()}
                                   className="button w-full"
                                 >
                                   Download Brochure
@@ -865,7 +854,35 @@ const AllCourseDetailed = () => {
                       </div>
 
                       <div className="absolute bottom-2 left-2 px-2 py-1 text-green-500 font-bold text-base sm:text-lg z-20 ">
-                        Admission Open
+                      {course?.Intake && course.Intake.length > 0 ? (
+                        course.Intake.some(intake => intake.status === false) ? (
+                          <div
+                            // className="text-gray-800"
+                            style={{color:"green"}}
+                            // style={{ background: "#db7e1963", padding: "4px 30px" }}
+                          >
+                            Admission is Open 
+                            </div>
+                        ) : (
+                          <div
+                            // className="text-gray-800"
+                            style={{color:"red"}}
+                          >
+                            Admission Close
+                            </div>
+                        )
+                      ) : (
+                        <div 
+                        // className="text-gray-800"
+                         style={{ background: "#ccc", padding: "4px 30px" }}>
+                          Admission is not available
+                        </div>
+                      )}
+
+
+
+
+                        {/* Admission Open */}
                       </div>
                     </div>
 
@@ -877,7 +894,7 @@ const AllCourseDetailed = () => {
                             className="text-gray-800"
                             style={{ background: "#db7e1963", padding: "4px 30px" }}
                           >
-                            Admission is Closed for{" "}
+                            Admission is Open for{" "}
                             {course.Intake.find(intake => intake.status === false)?.date || "N/A"} Intake
                           </div>
                         ) : (
@@ -885,7 +902,7 @@ const AllCourseDetailed = () => {
                             className="text-gray-800"
                             style={{ background: "#2647903b", padding: "4px 30px" }}
                           >
-                            Admission Open for{" "}
+                            Admission Close for{" "}
                             {course.Intake.find(intake => intake.status === true)?.date || "N/A"} Intake
                           </div>
                         )
@@ -954,8 +971,8 @@ const AllCourseDetailed = () => {
                             {/* <p>: {course?.Category}</p> */}
                             <p>: {course?.completeFees?.amount} {course?.completeFees?.currency}</p>
                             <p>: {course?.Duration}</p>
-                            {/* {course?.University?.MCI && <p>: Approved</p>}
-                            {course?.University?.WHO && <p>: Approved</p>} */}
+                            {course?.University?.MCI && <p>: Approved</p>}
+                            {course?.University?.WHO && <p>: Approved</p>}
 
                             <div className="flex flex-wrap gap-2">
                               {course?.Intake?.slice(0, 2).map((intake, index) => {
@@ -998,7 +1015,7 @@ const AllCourseDetailed = () => {
                             <a target='_blank' href={`${course?.broucherURL}`}>
                               <StyledWrapper1 className="w-full sm:w-auto">
                                 <button
-                                  onClick={() => navigate()}
+                                  // onClick={() => navigate()}
                                   className="button w-full"
                                 >
                                   Download Brochure
