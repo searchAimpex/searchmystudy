@@ -3109,7 +3109,7 @@ const getAllPartnerPopups = async (req, res) => {
 
 export const getAllFrenchisePopups = async (req, res) => {
   try {
-    const popups = await Popup.find({ target: 'frenchise' });
+    const popups = await Popup.find({ target: 'franchise' });
     res.status(200).json(popups);
   } catch (error) {
     res.status(500).json({ message: 'Failed to fetch popups', error: error.message });
