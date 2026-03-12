@@ -11,6 +11,7 @@ const profileSchema = new mongoose.Schema({
         type: String,
         unique: true
     },
+    programLevel: { type: String, default: "" },
     User: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
