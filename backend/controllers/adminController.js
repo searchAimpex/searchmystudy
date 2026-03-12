@@ -2921,17 +2921,39 @@ const validation = async (req, res) => {
 
 const createProfile = async (req, res) => {
   try {
-    console.log(req.body, "????????????????????????????");
-    const user = await Profile.findOne({ emailID: req.body.emailID });
-    if (user) {
+    console.log(req.body, req.files, "Create profile payload");
+
+    // Map uploaded files to body fields (store file path or filename)
+    const fileFields = [
+      'acadmics',
+      'englishTestScorecard',
+      'qualifiedTestImage',
+      'englishTestDoc',
+      'workExperienceDoc',
+      'resume',
+    ];
+
+    if (req.files) {
+      fileFields.forEach((field) => {
+        if (req.files[field] && req.files[field][0]) {
+          // Save relative path or just filename as per your frontend usage
+          req.body[field] = `upload/${req.files[field][0].filename}`;
+        }
+      });
+    }
+
+    const existing = await Profile.findOne({ emailID: req.body.emailID });
+    if (existing) {
       return res.status(404).json({ message: 'Email already exists' });
-    }  
-    // req.body.User = user._id;
-    const profile = new Profile(req.body); // Assuming the body contains the profile data
+    }
+
+    const profile = new Profile(req.body);
     const createdProfile = await profile.save();
-    res.status(201).json(createdProfile);
+    return res.status(201).json(createdProfile);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to create profile', error: error.message });
+    return res
+      .status(500)
+      .json({ message: 'Failed to create profile', error: error.message });
   }
 };
 

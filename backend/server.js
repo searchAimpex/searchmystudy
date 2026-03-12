@@ -1,4 +1,3 @@
-import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -8,6 +7,8 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import cron from "node-cron";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -15,6 +16,10 @@ const port = process.env.PORT || 5001;
 connectDB();
 
 const app = express();
+
+// Resolve __dirname in ES module environment
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /* =======================
    ✅ CORS (FIXED)
@@ -51,6 +56,14 @@ app.options("*", cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+/* =======================
+   STATIC FILES (UPLOADS)
+======================= */
+app.use(
+  "/upload",
+  express.static(path.join(__dirname, "upload"))
+);
 
 /* =======================
    ROUTES

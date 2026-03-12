@@ -1,5 +1,12 @@
 import express from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import { protect } from '../middleware/authMiddleware.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import { createBanner,test,fetchAllBanner,deleteBanner,
       createService, deleteService, updateService, getService, getServices, 
       createTestimonial, getTestimonials, deleteTestimonial, updateTestimonial, getTestimonialById,
@@ -116,6 +123,26 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
 
       } from '../controllers/adminController.js';
 const router = express.Router();
+
+// Upload directory: absolute path so it works regardless of process cwd
+const profileUploadDir = path.join(__dirname, '..', 'upload');
+if (!fs.existsSync(profileUploadDir)) {
+  fs.mkdirSync(profileUploadDir, { recursive: true });
+}
+
+// Multer storage configuration for profile-related uploads
+const profileStorage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, profileUploadDir);
+  },
+  filename(req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const originalName = file.originalname || 'file';
+    cb(null, `${uniqueSuffix}-${originalName}`);
+  },
+});
+
+const profileUpload = multer({ storage: profileStorage });
 
 
 /***********BANNER ROUTES *********/
@@ -364,7 +391,18 @@ router.delete('/DeletePromotional',deletePromotional)
 
 
 /************************* Profile Assisment  **********************/
-router.post('/profile',createProfile)
+router.post(
+  '/profile',
+  profileUpload.fields([
+    { name: 'acadmics', maxCount: 1 },
+    { name: 'englishTestScorecard', maxCount: 1 },
+    { name: 'qualifiedTestImage', maxCount: 1 },
+    { name: 'englishTestDoc', maxCount: 1 },
+    { name: 'workExperienceDoc', maxCount: 1 },
+    { name: 'resume', maxCount: 1 },
+  ]),
+  createProfile
+)
 router.post('/validation',validation)
 router.get('/profile/:id',fetchByUserProfile)
 router.get('/profile',getAllProfiles)
