@@ -2382,18 +2382,53 @@ const getAllNotifications = async (req, res) => {
 
 
 
+// Student file fields: map uploaded files to req.body as upload/filename
+const STUDENT_FILE_FIELDS = [
+  'aadharPhoto', 'grade12Marksheet', 'grade10Marksheet', 'passportFrontBack',
+  'resume', 'englishTestScorecard', 'grade10PassingCertificate', 'verificationForm',
+  'applicationFeeReceipt', 'workExperience', 'universityApplicationForm',
+  'grade12PassingCertificate', 'registrationForm', 'visaDocument', 'birthCertificate',
+];
+
 // @desc    Create a new student
 // @route   POST /api/students
 // @access  Public (or Private, depending on your setup)
+
+// Normalize refs that may be sent as objects (e.g. { _id: '...' }) to ObjectId strings
+const normalizeRef = (val) => {
+  if (val == null || val === '') return null;
+  if (typeof val === 'string' && /^[a-fA-F0-9]{24}$/.test(val)) return val;
+  if (typeof val === 'object' && val._id) return val._id;
+  return null;
+};
+
 export const createStudent = async (req, res) => {
   try {
     console.log(req.body,"????????????????????????????");
+    // Map uploaded files to body (store path as upload/filename for static serving)
+    if (req.files) {
+      STUDENT_FILE_FIELDS.forEach((field) => {
+        if (req.files[field] && req.files[field][0]) {
+          req.body[field] = `upload/${req.files[field][0].filename}`;
+        }
+      });
+    }
+    // Ensure User, Country, University are ObjectId strings (frontend may send populated objects)
+    req.body.User = normalizeRef(req.body.User);
+    req.body.Country = normalizeRef(req.body.Country);
+    req.body.University = normalizeRef(req.body.University);
+    // Don't allow client-supplied _id on create (avoids E11000 duplicate key)
+    delete req.body._id;
+    delete req.body.__v;
     const student = await Student.create(req.body);
     res.status(201).json(student);
   } catch (error) {
+    console.log(error,"????????????????????????????");
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
+
+
 // @desc    Update an existing student
 // @route   PUT /api/students/:id
 // @access  Public (or Private, depending on your setup)

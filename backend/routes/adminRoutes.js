@@ -143,7 +143,7 @@ const profileStorage = multer.diskStorage({
 });
 
 const profileUpload = multer({ storage: profileStorage });
-
+const studentUpload = multer({ storage: profileStorage });
 
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
@@ -354,7 +354,27 @@ router.get('/notfiy-all',getAllNotifications)
 
 
 /********************* student Routes  ***********************/
-router.post('/student', createStudent);
+router.post(
+  '/student',
+  studentUpload.fields([
+    { name: 'aadharPhoto', maxCount: 1 },
+    { name: 'grade12Marksheet', maxCount: 1 },
+    { name: 'grade10Marksheet', maxCount: 1 },
+    { name: 'passportFrontBack', maxCount: 1 },
+    { name: 'resume', maxCount: 1 },
+    { name: 'englishTestScorecard', maxCount: 1 },
+    { name: 'grade10PassingCertificate', maxCount: 1 },
+    { name: 'verificationForm', maxCount: 1 },
+    { name: 'applicationFeeReceipt', maxCount: 1 },
+    { name: 'workExperience', maxCount: 1 },
+    { name: 'universityApplicationForm', maxCount: 1 },
+    { name: 'grade12PassingCertificate', maxCount: 1 },
+    { name: 'registrationForm', maxCount: 1 },
+    { name: 'visaDocument', maxCount: 1 },
+    { name: 'birthCertificate', maxCount: 1 },
+  ]),
+  createStudent
+);
 router.get('/student/:id',fetchByUserStudent)
 router.get('/student/track/:id',fetchByTrackingId)
 router.get('/student',fetchStudent)
