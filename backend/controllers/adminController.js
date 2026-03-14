@@ -2404,8 +2404,7 @@ const normalizeRef = (val) => {
 
 export const createStudent = async (req, res) => {
   try {
-    console.log(req.body,"????????????????????????????");
-    // Map uploaded files to body (store path as upload/filename for static serving)
+    // Map uploaded files to body: save path as upload/filename (files already on disk via multer)
     if (req.files) {
       STUDENT_FILE_FIELDS.forEach((field) => {
         if (req.files[field] && req.files[field][0]) {
@@ -2417,13 +2416,13 @@ export const createStudent = async (req, res) => {
     req.body.User = normalizeRef(req.body.User);
     req.body.Country = normalizeRef(req.body.Country);
     req.body.University = normalizeRef(req.body.University);
+    // console.log(req.body,"????????????????????????????");
     // Don't allow client-supplied _id on create (avoids E11000 duplicate key)
-    delete req.body._id;
-    delete req.body.__v;
+    // delete req.body._id;
+    // delete req.body.__v;
     const student = await Student.create(req.body);
     res.status(201).json(student);
   } catch (error) {
-    console.log(error,"????????????????????????????");
     res.status(500).json({ message: 'Server error, please try again later.', error });
   }
 };
