@@ -51,10 +51,11 @@ app.use(
 app.options("*", cors());
 
 /* =======================
-   BODY PARSERS
+   BODY PARSERS (increased limit to avoid 413 with file uploads)
+   If you still get 413 behind nginx, add: client_max_body_size 50m; in server { }
 ======================= */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ extended: true, limit: '100mb' }));
 app.use(cookieParser());
 
 /* =======================

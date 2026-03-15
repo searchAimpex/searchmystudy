@@ -142,8 +142,15 @@ const profileStorage = multer.diskStorage({
   },
 });
 
-const profileUpload = multer({ storage: profileStorage });
-const studentUpload = multer({ storage: profileStorage });
+// Allow up to 20MB per file to avoid 413 Request Entity Too Large
+const profileUpload = multer({
+  storage: profileStorage,
+  limits: { fileSize: 20 * 1024 * 1024 },
+});
+const studentUpload = multer({
+  storage: profileStorage,
+  limits: { fileSize: 20 * 1024 * 1024 },
+});
 
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
