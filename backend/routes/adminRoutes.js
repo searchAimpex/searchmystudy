@@ -344,7 +344,7 @@ router.delete('/deleteQueries',deleteQueryById)
 
 
 /********************* Extra User Routes  ***********************/
-router.post('/extrauser',extraUser)
+router.post('/extrauser', profileUpload.single('ProfilePhoto'), extraUser)
 router.get('/extrauserall',extraUserAll)
 router.get('/extrauser/:id',extraUserFetch)
 router.delete('/deleteExtrauser',deleteCounsellorCoursefinder)
