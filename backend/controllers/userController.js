@@ -15,6 +15,34 @@ import Country from '../models/countryModel.js';
 // import jwt from "jsonwebtoken";
 // import User from "../models/userModel.js"; // adjust path
 
+const mapPartnerUploadFields = (files = {}) => {
+  const fieldMap = {
+    FrontAdhar: 'FrontAdhar',
+    BackAdhar: 'BackAdhar',
+    PanCard: 'PanCard',
+    ProfilePhoto: 'ProfilePhoto',
+    CounsellorCode: 'CounsellorCOde',
+    OwnerPhoto: 'OwnerPhoto',
+    OfficePhoto: 'OfficePhoto',
+    mou: 'mou',
+    registration: 'registration',
+    VisitOffice: 'VistOffice',
+    CancelledCheck: 'CancelledCheck',
+    Logo: 'Logo',
+    accountedDetails: 'accountedDetails',
+  };
+
+  return Object.entries(fieldMap).reduce((acc, [incomingField, modelField]) => {
+    const file = files[incomingField]?.[0];
+
+    if (file?.filename) {
+      acc[modelField] = `/upload/${file.filename}`;
+    }
+
+    return acc;
+  }, {});
+};
+
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   console.log(password, "++++++++++++++++++++++++");
@@ -189,15 +217,16 @@ const authPartner = asyncHandler(async (req, res) => {
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-const 
-registerUser = asyncHandler(async (req, res) => {
-  // console.log(req.body, "|||||||||||||||||||||||||||");
+const registerUser = asyncHandler(async (req, res) => {
+  console.log(req.body, "|||||||||||||||||||||||||||");
+  const uploadedFiles = mapPartnerUploadFields(req.files);
+  const payload = { ...req.body, ...uploadedFiles };
 
   // Check if user with the same email or other identifiers already exists
-  const userExists = await User.findOne({ email: req.body.email });
-  const whatsappNumber = await User.findOne({ WhatappNumber: req.body.WhatsAppNumber });
-  const phoneNumber = await User.findOne({ ContactNumber: req.body.ContactNumber });
-  const centerCode = await User.findOne({ CenterCode: req.body.CenterCode });
+  const userExists = await User.findOne({ email: payload.email });
+  const whatsappNumber = await User.findOne({ WhatappNumber: payload.WhatappNumber });
+  const phoneNumber = await User.findOne({ ContactNumber: payload.ContactNumber });
+  const centerCode = await User.findOne({ CenterCode: payload.CenterCode });
 
   if (userExists) {
     res.status(400);
@@ -219,8 +248,8 @@ registerUser = asyncHandler(async (req, res) => {
   
   // Create a new user
   const user = await User.create({
-    ...req.body,
-    passwordTracker: req.body.password,
+    ...payload,
+    passwordTracker: payload.password,
   });
   
 
@@ -342,7 +371,8 @@ export const statusUpdate = asyncHandler(async (req, res) => {
 export const updateUser = asyncHandler(async (req, res) => {
   console.log(req.body, "+++++++++++++++++++++++++++++++++");
   const userId = req.params.id;
-  const updateData = { ...req.body }; 
+  const uploadedFiles = mapPartnerUploadFields(req.files);
+  const updateData = { ...req.body, ...uploadedFiles }; 
 
   const user = await User.findById(userId);
 

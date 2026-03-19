@@ -26,6 +26,7 @@ const __dirname = path.dirname(__filename);
 ======================= */
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5174",
   "https://searchmystudy.com",
   "https://www.searchmystudy.com",
   "https://admin.coursefinder.co.in",
@@ -35,7 +36,8 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      const isLocalhostOrigin = /^http:\/\/localhost:\d+$/.test(origin || "");
+      if (!origin || allowedOrigins.includes(origin) || isLocalhostOrigin) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
