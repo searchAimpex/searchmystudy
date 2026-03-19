@@ -459,7 +459,7 @@ router.get('/upload/frenchise',getFrenchiseUploads)
 
 
 //////////////// COMMISSION ROUTE ****************/
-router.post('/commission',createCommission)
+router.post('/commission', profileUpload.single('fileURL'), createCommission)
 router.get('/commission',getAllCommission)
 router.delete('/commission',deleteCommission)
 router.get('/commission/partner',getPartnerCommission)
@@ -478,7 +478,15 @@ router.delete('/loan',DeleteLoan)
 
 
 ////////////////////TRANSACTION //////////////////
-router.post('/transaction',createTransaction)
+router.post(
+  '/transaction',
+  profileUpload.fields([
+    { name: 'invoice', maxCount: 1 },
+    { name: 'receipt', maxCount: 1 },
+    { name: 'other', maxCount: 1 },
+  ]),
+  createTransaction
+)
 router.get('/transaction',getAllTransactions)
 router.get('/transaction/:centerCode',getTransactionsByCenterCode)
 router.delete('/transaction',deleteTransactions)

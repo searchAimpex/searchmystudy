@@ -7395,15 +7395,16 @@ const deleteUpload = async (req, res) => {
 // @access  Public
 const createCommission = async (req, res) => {
   try {
-    const { SecondCountry, fileURL, target, title } = req.body;
+    const { SecondCountry, target, title } = req.body;
+    const fileURL = req.file ? `upload/${req.file.filename}` : (req.body.fileURL || '');
 
     const newUpload = new Commission({
-      SecondCountry,
+      SecondCountry: normalizeRef(SecondCountry),
       fileURL,
       target,
-      title // Use default if not provided
+      title
     });
-    6
+
     const savedUpload = await newUpload.save();
     res.status(201).json(savedUpload);
   } catch (error) {
@@ -7561,11 +7562,26 @@ const DeleteLoan = async (req, res) => {
 //////////////Tranasction z///////////////////
 const createTransaction = async (req, res) => {
   try {
-    const newTransaction = new Transaction(req.body); // Create a new transaction from request body
-    const savedTransaction = await newTransaction.save(); // Save to database
-    res.status(201).json(savedTransaction); // Return the saved transaction with a 201 status
+    // Map uploaded files to req.body (save paths to upload folder)
+    const fileFields = [
+      { multerName: 'invoice', bodyName: 'invoice' },
+      { multerName: 'receipt', bodyName: 'recipt' }, // model has typo "recipt"
+      { multerName: 'other', bodyName: 'other' },
+    ];
+    if (req.files) {
+      fileFields.forEach(({ multerName, bodyName }) => {
+        if (req.files[multerName]?.[0]) {
+          req.body[bodyName] = `upload/${req.files[multerName][0].filename}`;
+        }
+      });
+    }
+
+    const newTransaction = new Transaction(req.body);
+    console.log(newTransaction,"::::::::::::::::::::::::::::::::::::::::::::");
+    const savedTransaction = await newTransaction.save();
+    res.status(201).json(savedTransaction);
   } catch (error) {
-    res.status(500).json({ message: error.message }); // Handle server errors
+    res.status(500).json({ message: error.message });
   }
 };
 
