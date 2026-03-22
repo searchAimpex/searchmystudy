@@ -508,7 +508,14 @@ router.put('/contact/:id',updateContact)
 router.get('/CenterCheck/:id',checkUser)
 
 ////////////////// FILE ////////////////////
-router.post('/file',createFile)
+router.post(
+  '/file',
+  profileUpload.fields([
+    { name: 'template', maxCount: 1 },
+    { name: 'broucher', maxCount: 1 },
+  ]),
+  createFile
+)
 router.get('/file', getAllFiles)
 router.get('/files',allFiles)
 router.put('/file/:id',updateFile)

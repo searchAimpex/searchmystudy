@@ -7788,19 +7788,33 @@ const checkUser = async (req, res) => {
 
 const createFile = async (req, res) => {
   try {
-    const { SecondCountry, name, template, broucher, type,university } = req.body;
-    // console.log(req.body,"::::::::::::::::::::::::::::::::")   
+    console.log(req.body,"::::::::::::::::::::::::::::::::")
+    // Save uploaded files to upload folder and set paths on body
+    if (req.files?.template?.[0]) {
+      req.body.template = `upload/${req.files.template[0].filename}`;
+    }
+    if (req.files?.broucher?.[0]) {
+      req.body.broucher = `upload/${req.files.broucher[0].filename}`;
+    }
+
+    console.log(req.files, "createFile uploads");
+    console.log(req.body, "createFile body");
+
+    const { SecondCountry, name, template, broucher, type, university } = req.body;
     if (!SecondCountry || !type || (!template && !broucher)) {
       return res.status(400).json({ message: "Missing required fields" });
     }
     const newFile = new Files(req.body);
     const data = await newFile.save();
-    console.log(data,"::::::::::::::::::::::::::::::::")
-    res.status(201).json(newFile);
+    console.log(data, "createFile saved");
+    res.status(201).json(data);
   } catch (error) {
+    console.log(error,"::::::::::::::::::::::::::::::::")
     res.status(500).json({ message: error.message });
   }
 };
+
+
 // Get all files
 const getAllFiles = async (req, res) => {
   try {
