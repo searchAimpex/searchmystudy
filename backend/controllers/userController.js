@@ -735,15 +735,18 @@ const getCountryById = async (req, res) => {
 // @route   POST /api/secondCountries
 // @access  Private
 const createCountry = async (req, res) => {
-  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq ,country } = req.body;
-  // if (!name || !flagURL || !currency || !code || !country) {
-  //   return res.status(400).json({ message: 'Please provide all required fields' });
-  // }
-  // console.log(req.body,"|||||||||||||||||||||||||||")
-  
   try {
-    const country = new SecondCountry(req.body);
+    const fileFields = ['flagURL', 'vfs', 'step', 'whyThisCountry', 'faq'];
     
+    if (req.files) {
+      fileFields.forEach((field) => {
+        if (req.files[field] && req.files[field][0]) {
+          req.body[field] = `upload/${req.files[field][0].filename}`;
+        }
+      });
+    }
+    // console.log(req.body,"req.body++++++++++++++++++++++")
+    const country = new SecondCountry(req.body);
     const createdCountry = await country.save();
     res.status(201).json(createdCountry);
   } catch (error) {
