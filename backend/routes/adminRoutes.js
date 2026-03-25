@@ -162,6 +162,13 @@ const maybeUploadFields = (fields) => (req, res, next) => {
   return next();
 };
 
+const maybeUploadSingle = (fieldName) => (req, res, next) => {
+  if (req.is('multipart/form-data')) {
+    return profileUpload.single(fieldName)(req, res, next);
+  }
+  return next();
+};
+
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
 router.get('/FetchAllBanner',fetchAllBanner)
@@ -522,9 +529,9 @@ router.put('/nav/:id',updateNav)
 //////////////////////////////////////////////////
 /////////////////////////contact
 router.get('/contact/all',getAllContact)
-router.post('/contact',createContact)
+router.post('/contact', maybeUploadSingle('profileImg'), createContact)
 router.delete('/contact',deleteContact)
-router.put('/contact/:id',updateContact)
+router.put('/contact/:id', maybeUploadSingle('profileImg'), updateContact)
 router.get('/CenterCheck/:id',checkUser)
 
 ////////////////// FILE ////////////////////

@@ -7693,6 +7693,9 @@ const deleteTransactions = async (req, res) => {
 // Create a new contact
 export const createContact = async (req, res) => {
   try {
+    if (req.file) {
+      req.body.profileImg = `upload/${req.file.filename}`;
+    }
     const contact = new contacts(req.body);
     await contact.save();
 
@@ -7770,7 +7773,9 @@ export const updateNav = async (req, res) => {
 
 export const updateContact = async (req, res) => {
   try {
-    // //console.log(req.body)
+    if (req.file) {
+      req.body.profileImg = `upload/${req.file.filename}`;
+    }
     const detail = await contacts.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
