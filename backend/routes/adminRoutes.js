@@ -54,6 +54,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       UpdateProfileStatus,
       deleteProfile,
       createPopup,
+      updatePopup,
       getAllPopups,
       deletePopup,
       getAllMainPopups,
@@ -151,6 +152,15 @@ const studentUpload = multer({
   storage: profileStorage,
   limits: { fileSize: 20 * 1024 * 1024 },
 });
+
+// Run multer only for multipart/form-data requests.
+// This prevents breaking existing JSON requests (e.g., firebase URLs as strings).
+const maybeUploadFields = (fields) => (req, res, next) => {
+  if (req.is('multipart/form-data')) {
+    return profileUpload.fields(fields)(req, res, next);
+  }
+  return next();
+};
 
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
@@ -439,17 +449,27 @@ router.put('/profile/update/:id',profileUpdate)
 /**************************************************/
 
 //////////////// PopUP Route ****************/
-router.post('/popup',createPopup)
+router.post('/popup', profileUpload.single('imageURL'), createPopup)
 router.get('/popup',getAllPopups)
 // router.delete('/popup/:id',deletePopup)
 router.delete('/popup',deletePopup)
+router.put('/popup/:id', profileUpload.single('imageURL'), updatePopup)
 router.get('/popup/main',getAllMainPopups)
 router.get('/popup/partner',getAllPartnerPopups)
 router.get('/popup/frenchise',getAllFrenchisePopups)
 ///////////////////////////////////////////////
 
 //////////////// UPLOAD ROUTE ****************/
-router.post('/upload',createUpload)
+router.post(
+  '/upload',
+  maybeUploadFields([
+    { name: 'imageURL', maxCount: 1 },
+    { name: 'imageFile', maxCount: 1 },
+    { name: 'iconURL', maxCount: 1 },
+    { name: 'iconFile', maxCount: 1 },
+  ]),
+  createUpload
+)
 router.put('/upload/:id',updateUpload)        
 router.get('/upload',getAllUploads)
 router.delete('/upload',deleteUpload)

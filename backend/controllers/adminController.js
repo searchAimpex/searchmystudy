@@ -7190,14 +7190,62 @@ export const profileUpdate = async (req, res) => {
 // @route   POST /api/popups
 // @access  Private
 const createPopup = async (req, res) => {
-  const { title, target, imageURL } = req.body;
+  const { title, target, imageURL: imageURLFromBody } = req.body;
 
   try {
+    const imageURL = req.file ? `upload/${req.file.filename}` : imageURLFromBody;
     const newPopup = new Popup({ title, imageURL, target });
+    console.log(newPopup,"newPopup++++++++++++++++++++++++++++++++++++++");
     await newPopup.save();
     res.status(201).json(newPopup);
   } catch (error) {
     res.status(500).json({ message: 'Failed to create popup', error: error.message });
+  }
+};
+
+// @desc    Update an existing popup
+// @route   PUT /api/popups/:id
+// @access  Private
+// const updatePopup = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { title, target, imageURL: imageURLFromBody } = req.body;
+//     console.log(req.body,"req.body++++++++++++++++++++++++++++++++++++++");
+//     const imageURL = req.file ? `upload/${req.file.filename}` : imageURLFromBody;
+
+//     const existingPopup = await Popup.findById(id);
+    
+//     if (!existingPopup) {
+//       return res.status(404).json({ message: 'Popup not found' });
+//     }
+
+//     if (title !== undefined) existingPopup.title = title;
+//     if (target !== undefined) existingPopup.target = target;
+//     if (imageURL) existingPopup.imageURL = imageURL;
+
+//     await existingPopup.save();
+//     res.status(200).json(existingPopup);
+    
+//   } catch (error) {
+//     res.status(500).json({ message: 'Failed to update popup', error: error.message });
+//   }
+// };
+
+ const updatePopup = async (req, res) => {
+  try {
+    // console.log(detail,"detail++++++++++++++++++++++++++++++++++++++");
+    console.log(req.body)
+    const detail = await Popup.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!detail) {
+      return res.status(404).json({ message: "Files detail not found" });
+    }
+
+    res.status(200).json(detail);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update detail", error: error.message });
   }
 };
 
@@ -7277,8 +7325,21 @@ const deletePopup = async (req, res) => {
 // @access  Public
 const createUpload = async (req, res) => {
   try {
-    const { title, imageURL, iconURL, target, description,target1,countryName } = req.body;
-    console.log(req.body,"::::::::::::::::::::::::::::::::::::::::::::");
+    const { title, target, description, target1, countryName } = req.body;
+
+    // Prefer multer-uploaded files when present; otherwise fallback to values from body.
+    const uploadedImage =
+      req.files?.imageURL?.[0] || req.files?.imageFile?.[0];
+    const uploadedIcon =
+      req.files?.iconURL?.[0] || req.files?.iconFile?.[0];
+
+    const imageURL = uploadedImage
+      ? `upload/${uploadedImage.filename}`
+      : req.body.imageURL || '';
+    const iconURL = uploadedIcon
+      ? `upload/${uploadedIcon.filename}`
+      : req.body.iconURL || '';
+
     const newUpload = new Upload({
       title,
       imageURL,
@@ -8210,7 +8271,7 @@ export {
   createTicket, replyToTicket, getTicket, getAllTicket, deleteOneTicket, updateTicketStatus, getStudentMetrics,
   createPromotional, fetchAllPromotional, deletePromotional,
   createProfile, getAllProfiles, deleteProfile, fetchByUserProfile, UpdateProfileStatus,
-  createPopup, getAllPopups, deletePopup, getAllMainPopups, getAllPartnerPopups,
+  createPopup, updatePopup, getAllPopups, deletePopup, getAllMainPopups, getAllPartnerPopups,
   createUpload, getAllUploads, deleteUpload, getFrenchiseUploads, getPartnerUploads,
   createCommission, getAllCommission, deleteCommission, getFrenchiseCommission, getPartnerCommission,
   createLoan, getLoansByUser, getLoans, UpdateLoanStatus, DeleteLoan,

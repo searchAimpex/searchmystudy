@@ -524,6 +524,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 body: data
             }),
         }),
+        UpdateMyPopup: builder.mutation({
+            query: (data) => ({
+                url: `${USERS_URL}/popup/${data.id}`,
+                method: 'PUT',
+                // Support both `data.raw` and direct multipart FormData in case you pass it directly.
+                body: data.raw ?? data.formData ?? data.body ?? data,
+            }),
+        }),
         FetchMyPopup: builder.mutation({
             query: () => ({
                 url: `${USERS_URL}/popup`,
@@ -704,6 +712,7 @@ export const { useCreateBannerMutation, useGetAllBannerMutation, useDeleteBanner
     useCreatePromotionalMutation, useGetAllPromotionalMutation, useDeletePromotionalMutation,
     useFetchAllProfileMutation, useChangeStatusProfileMutation, useProfileDeleteMutation,
     useCreateMyPopupMutation, useFetchMyPopupMutation, useDeleteMyPopupMutation, useFetchMainPopupMutation,
+    useUpdateMyPopupMutation,
     useCreateMyUploadMutation, useFetchMyUploadMutation, useDeleteMyUploadMutation,
     useCreateMyCommissionMutation, useFetchMyCommissionMutation,
     useFetchLoanMutation, useUpdateLoanMutation, useDeleteLoansMutation,
