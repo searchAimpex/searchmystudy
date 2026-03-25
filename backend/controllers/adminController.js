@@ -7789,6 +7789,28 @@ const checkUser = async (req, res) => {
 const createFile = async (req, res) => {
   try {
     console.log(req.body,"::::::::::::::::::::::::::::::::")
+    const normalizeObjectIdField = (value) => {
+      if (!value) return value;
+      if (typeof value === "object") {
+        return value._id || value.id || value;
+      }
+      if (typeof value === "string") {
+        if (value === "[object Object]") return undefined;
+        if (value.trim().startsWith("{")) {
+          try {
+            const parsed = JSON.parse(value);
+            return parsed?._id || parsed?.id || value;
+          } catch {
+            return value;
+          }
+        }
+      }
+      return value;
+    };
+
+    req.body.SecondCountry = normalizeObjectIdField(req.body.SecondCountry);
+    req.body.university = normalizeObjectIdField(req.body.university);
+
     // Save uploaded files to upload folder and set paths on body
     if (req.files?.template?.[0]) {
       req.body.template = `upload/${req.files.template[0].filename}`;
@@ -7897,7 +7919,40 @@ export const allFiles = async (req,res)=>{
 // ✅ Update Website Detail
 export const updateFile = async (req, res) => {
   try {
-    //console.log(req.body)
+    console.log(req.body, "updateFile body before uploads");
+    const normalizeObjectIdField = (value) => {
+      if (!value) return value;
+      if (typeof value === "object") {
+        return value._id || value.id || value;
+      }
+      if (typeof value === "string") {
+        if (value === "[object Object]") return undefined;
+        if (value.trim().startsWith("{")) {
+          try {
+            const parsed = JSON.parse(value);
+            return parsed?._id || parsed?.id || value;
+          } catch {
+            return value;
+          }
+        }
+      }
+      return value;
+    };
+
+    req.body.SecondCountry = normalizeObjectIdField(req.body.SecondCountry);
+    req.body.university = normalizeObjectIdField(req.body.university);
+
+    // Save uploaded files to upload folder and set paths on body
+    if (req.files?.template?.[0]) {
+      req.body.template = `upload/${req.files.template[0].filename}`;
+    }
+    if (req.files?.broucher?.[0]) {
+      req.body.broucher = `upload/${req.files.broucher[0].filename}`;
+    }
+
+    console.log(req.files, "updateFile uploads");
+    console.log(req.body, "updateFile body");
+
     const detail = await Files.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,

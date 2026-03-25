@@ -518,7 +518,14 @@ router.post(
 )
 router.get('/file', getAllFiles)
 router.get('/files',allFiles)
-router.put('/file/:id',updateFile)
+router.put(
+  '/file/:id',
+  profileUpload.fields([
+    { name: 'template', maxCount: 1 },
+    { name: 'broucher', maxCount: 1 },
+  ]),
+  updateFile
+)
 router.get('/file/:id',findOneFile)
 router.delete('/file',deleteFile)
 ////////////////////////////////////////////
