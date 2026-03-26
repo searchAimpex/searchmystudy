@@ -451,6 +451,13 @@ const deleteCounsellor = async (req, res) => {
 // @route   POST /api/blogs
 // @access  Public
 const createBlog = asyncHandler(async (req, res) => {
+  if (req.files?.bannerURL?.[0]) {
+    req.body.bannerURL = `upload/${req.files.bannerURL[0].filename}`;
+  }
+  if (req.files?.thumbnailURL?.[0]) {
+    req.body.thumbnailURL = `upload/${req.files.thumbnailURL[0].filename}`;
+  }
+
   const { title, bannerURL, content, thumbnailURL, date } = req.body;
 
   // Field-wise validation
@@ -513,6 +520,13 @@ const getBlogById = asyncHandler(async (req, res) => {
 // @route   PUT /api/blogs/:id
 // @access  Public
 const updateBlog = asyncHandler(async (req, res) => {
+  if (req.files?.bannerURL?.[0]) {
+    req.body.bannerURL = `upload/${req.files.bannerURL[0].filename}`;
+  }
+  if (req.files?.thumbnailURL?.[0]) {
+    req.body.thumbnailURL = `upload/${req.files.thumbnailURL[0].filename}`;
+  }
+
   const { title, bannerURL, content, thumbnailURL } = req.body;
 
   const blog = await Blog.findById(req.params.id);
@@ -2665,9 +2679,11 @@ const GetOneStudentByTracking = async (req, res) => {
 
 // POST /api/tickets
 const createTicket = async (req, res) => {
-  const { title, description, priority, category, attachments, userId,remark } = req.body;
+  const { title, description, priority, category, userId,remark } = req.body;
   // //console.log(remark,"************************************")
   try {
+    const attachments = (req.files || []).map((file) => `upload/${file.filename}`);
+
     const newTicket = new Ticket({
       title,
       remark,
@@ -7545,6 +7561,13 @@ const deleteCommission = async (req, res) => {
 
 const createLoan = async (req, res) => {
   try {
+    if (req.files?.offerLetter?.[0]) {
+      req.body.offerLetter = `upload/${req.files.offerLetter[0].filename}`;
+    }
+    if (req.files?.passportDoc?.[0]) {
+      req.body.passportDoc = `upload/${req.files.passportDoc[0].filename}`;
+    }
+
     const newLoan = new Loan(req.body); // Create a new loan from request body
     const savedLoan = await newLoan.save(); // Save the loan to the database
     res.status(201).json(savedLoan); // Return the saved loan with a 201 status
@@ -7646,6 +7669,40 @@ const createTransaction = async (req, res) => {
   }
 };
 
+const updateTransaction = async (req, res) => {
+  try {
+    const fileFields = [
+      { multerName: 'invoice', bodyName: 'invoice' },
+      { multerName: 'receipt', bodyName: 'recipt' },
+      { multerName: 'other', bodyName: 'other' },
+    ];
+    if (req.files) {
+      fileFields.forEach(({ multerName, bodyName }) => {
+        if (req.files[multerName]?.[0]) {
+          req.body[bodyName] = `upload/${req.files[multerName][0].filename}`;
+        }
+      });
+    }
+
+    const updatedTransaction = await Transaction.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!updatedTransaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    res.status(200).json(updatedTransaction);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllTransactions = async (req, res) => {
   try {
     const transactions = await Transaction.find(); // Fetch all transactions from the database
@@ -7657,7 +7714,7 @@ const getAllTransactions = async (req, res) => {
 
 const getTransactionsByCenterCode = async (req, res) => {
   try {
-    const transactions = await Transaction.find({ centerCode: req.params.centerCode }); // Find by centerCode
+    const transactions = await Transaction.find({ id: req.params.id }); // Find by centerCode
     if (!transactions.length) return res.status(404).json({ message: 'No transactions found for this center code' }); // If none found
 
     res.status(200).json(transactions); // Return transactions
@@ -8280,7 +8337,7 @@ export {
   createUpload, getAllUploads, deleteUpload, getFrenchiseUploads, getPartnerUploads,
   createCommission, getAllCommission, deleteCommission, getFrenchiseCommission, getPartnerCommission,
   createLoan, getLoansByUser, getLoans, UpdateLoanStatus, DeleteLoan,
-  createTransaction, getAllTransactions, getTransactionsByCenterCode, deleteTransactions,
+  createTransaction, updateTransaction, getAllTransactions, getTransactionsByCenterCode, deleteTransactions,
   createNavItem, getAllNavItems, deleteNavItem, checkUser,
   createFile, getAllFiles, deleteFile, findOneFile,updateUpload,
   createVideo, getVideo, deleteVideo, updateVideo, validation

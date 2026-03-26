@@ -74,6 +74,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       getLoans,
       UpdateLoanStatus,
       createTransaction,
+      updateTransaction,
       getAllTransactions,
       getTransactionsByCenterCode,
       deleteTransactions,
@@ -208,8 +209,20 @@ router.put('/UpdateCounsellors/:id',updateCounsellor)
 
 
 /*************** BLOGS ROUTES **********************/
-router.route('/Blog').post(createBlog).get(getAllBlogs);
-router.route('/Blog/:id').get(getBlogById).put(updateBlog);
+router.route('/Blog').post(
+  profileUpload.fields([
+    { name: 'bannerURL', maxCount: 1 },
+    { name: 'thumbnailURL', maxCount: 1 },
+  ]),
+  createBlog
+).get(getAllBlogs);
+router.route('/Blog/:id').get(getBlogById).put(
+  profileUpload.fields([
+    { name: 'bannerURL', maxCount: 1 },
+    { name: 'thumbnailURL', maxCount: 1 },
+  ]),
+  updateBlog
+);
 router.delete('/blogs', deleteBlog); // Endpoint: DELETE /blogs
 /*************** BLOGS ROUTES **********************/
 
@@ -411,7 +424,7 @@ router.get('/track/:id',GetOneStudentByTracking)
 
 
 /********************* ticket Routes  ***********************/
-router.post('/ticket', createTicket);
+router.post('/ticket', profileUpload.array('attachments', 10), createTicket);
 router.post('/ticket/reply/:id',replyToTicket)
 router.get('/ticket/:id',getTicket)
 router.get('/ticket',getAllTicket)
@@ -495,7 +508,14 @@ router.get('/commission/frenchise',getFrenchiseCommission)
 
 
 //////////////// LOAN ROUTE ****************/
-router.post('/loan',createLoan)
+router.post(
+  '/loan',
+  profileUpload.fields([
+    { name: 'offerLetter', maxCount: 1 },
+    { name: 'passportDoc', maxCount: 1 },
+  ]),
+  createLoan
+)
 router.get('/loan/:id',getLoansByUser)
 router.get('/loan',getLoans)
 router.put('/loan/status/:id',UpdateLoanStatus)
@@ -514,8 +534,17 @@ router.post(
   ]),
   createTransaction
 )
+router.put(
+  '/transaction/:id',
+  profileUpload.fields([
+    { name: 'invoice', maxCount: 1 },
+    { name: 'receipt', maxCount: 1 },
+    { name: 'other', maxCount: 1 },
+  ]),
+  updateTransaction
+)
 router.get('/transaction',getAllTransactions)
-router.get('/transaction/:centerCode',getTransactionsByCenterCode)
+router.get('/transaction/:id',getTransactionsByCenterCode)
 router.delete('/transaction',deleteTransactions)
 // router.put('/')
 ////////////////////////////////////////////////////////
