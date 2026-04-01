@@ -96,7 +96,7 @@ router.put('/profile/:id',updateUserOneProfile)
 router.post('/secondcountry', upload.fields([{ name: 'flagURL', maxCount: 1 }, { name: 'vfs', maxCount: 1 }, { name: 'step', maxCount: 1 }, { name: 'whyThisCountry', maxCount: 1 }, { name: 'faq', maxCount: 1 }]), createCountry);
 router.get('/secondcountry/:id',getCountryById);
 router.get('/secondcountry',getAllCountries);
-router.put('/secondcountry/:id',updateCountry);
+router.put('/secondcountry/:id',upload.fields([{ name: 'flagURL', maxCount: 1 }, { name: 'vfs', maxCount: 1 }, { name: 'step', maxCount: 1 }, { name: 'whyThisCountry', maxCount: 1 }, { name: 'faq', maxCount: 1 }]), updateCountry);
 router.delete('/secondcountry',deleteCountrys);
 /**********************************************************************/
 

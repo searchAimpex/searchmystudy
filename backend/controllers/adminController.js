@@ -241,6 +241,9 @@ const deleteService = asyncHandler(async (req, res) => {
 // @route   POST /api/testimonials/create
 // @access  Admin
 const createTestimonial = asyncHandler(async (req, res) => {
+  if (req.file?.filename) {
+    req.body.imageURL = `upload/${req.file.filename}`;
+  }
 
   // //console.log(req.body, "-------------------------------");
   const testimonial = new Testimonial(req.body);
@@ -278,6 +281,10 @@ const getTestimonialById = asyncHandler(async (req, res) => {
 // @access  Admin
 
 const updateTestimonial = asyncHandler(async (req, res) => {
+  if (req.file?.filename) {
+    req.body.imageURL = `upload/${req.file.filename}`;
+  }
+
   const updatedTestimonial = await Testimonial.findByIdAndUpdate(
     req.params.id,
     { ...req.body }, // update everything from req.body
@@ -327,7 +334,11 @@ const deleteTestimonial = asyncHandler(async (req, res) => {
 // @route   POST /CreateCounsellor
 // @access  Public
 const createCounsellor = async (req, res) => {
-  const { name, imageURL, experience, course } = req.body;
+  let { name, imageURL, experience, course } = req.body;
+
+  if (req.file) {
+    imageURL = `upload/${req.file.filename}`;
+  }
 
   if (!name || !imageURL || !course || !experience) {
     res.status(400).json({ message: 'Please provide all required fields' });
@@ -383,17 +394,24 @@ const getCounsellorById = async (req, res) => {
 // @route   PUT /UpdateCounsellors/:id
 // @access  Public
 const updateCounsellor = async (req, res) => {
-  const { name, imageURL, experience, course } = req.body;
-  //console.log(req.body, "--------------------------------------");
+  let { name, imageURL, experience, course } = req.body;
+
+  if (req.file) {
+    imageURL = `upload/${req.file.filename}`;
+  }
 
   try {
     const counsellor = await Counsellor.findById(req.params.id);
 
     if (counsellor) {
-      counsellor.name = name || counsellor.name;
-      counsellor.imageURL = imageURL || counsellor.imageURL;
-      counsellor.experience = experience || counsellor.experience;
-      counsellor.course = course || counsellor.course;
+      if (name !== undefined && String(name).trim() !== '') counsellor.name = name;
+      if (imageURL !== undefined && String(imageURL).trim() !== '') {
+        counsellor.imageURL = imageURL;
+      }
+      if (experience !== undefined && String(experience).trim() !== '') {
+        counsellor.experience = experience;
+      }
+      if (course !== undefined && String(course).trim() !== '') counsellor.course = course;
 
       const updatedCounsellor = await counsellor.save();
       res.json(updatedCounsellor);
@@ -1775,6 +1793,12 @@ const getMediaItems = asyncHandler(async (req, res) => {
 // @route   POST /api/media
 // @access  Public
 const createMediaItem = asyncHandler(async (req, res) => {
+  if (req.files?.imageURL?.[0]) {
+    req.body.imageURL = `upload/${req.files.imageURL[0].filename}`;
+  }
+  if (req.files?.articalURL?.[0]) {
+    req.body.articalURL = `upload/${req.files.articalURL[0].filename}`;
+  }
   const { title, imageURL, articalURL, description } = req.body;
 
   const mediaItem = new Media({
@@ -1783,6 +1807,8 @@ const createMediaItem = asyncHandler(async (req, res) => {
     articalURL,
     description,
   });
+
+  console.log(mediaItem, "????????????");
 
   const createdMediaItem = await mediaItem.save();
   res.status(201).json(createdMediaItem);
@@ -1806,6 +1832,12 @@ const getMediaItemById = asyncHandler(async (req, res) => {
 // @route   PUT /api/media/:id
 // @access  Public
 const updateMediaItem = asyncHandler(async (req, res) => {
+  if (req.files?.imageURL?.[0]) {
+    req.body.imageURL = `upload/${req.files.imageURL[0].filename}`;
+  }
+  if (req.files?.articalURL?.[0]) {
+    req.body.articalURL = `upload/${req.files.articalURL[0].filename}`;
+  }
   const { title, imageURL, articalURL, description } = req.body;
 
   const mediaItem = await Media.findById(req.params.id);
@@ -7491,15 +7523,27 @@ const createCommission = async (req, res) => {
 
 // @desc    Get all uploads
 // @route   GET /api/commission
-// @access  Public
+
+// @access Public
 const getAllCommission = async (req, res) => {
   try {
-    const uploads = await Commission.find().populate('SecondCountry');
+    const uploads = await Commission.find().populate({
+      path: 'SecondCountry',
+      populate: {
+        path: 'country',
+      },
+    });
+
     res.status(200).json(uploads);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch uploads', error: error.message });
+    res.status(500).json({
+      message: 'Failed to fetch uploads',
+      error: error.message,
+    });
   }
 };
+
+
 // @desc    Get all uploads
 // @route   GET /api/commission/partner
 // @access  Public
@@ -7525,6 +7569,29 @@ const getFrenchiseCommission = async (req, res) => {
 // @desc    Delete an upload
 // @route   DELETE /api/commission/:id
 // @access  Public
+
+const updateCommission = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { SecondCountry, target, title } = req.body;
+    const fileURL = req.file ? `upload/${req.file.filename}` : (req.body.fileURL || '');
+    const existingCommission = await Commission.findById(id);
+    if (!existingCommission) {
+      return res.status(404).json({ message: "Commission not found" });
+    }
+    existingCommission.SecondCountry = normalizeRef(SecondCountry);
+    existingCommission.fileURL = fileURL;
+    existingCommission.target = target;
+    existingCommission.title = title;
+    const updatedCommission = await existingCommission.save();
+    res.status(200).json(updatedCommission);
+  } catch (error) {
+    res.status(500).json({
+      message: "Failed to update commission",
+      error: error.message,
+    });
+  }
+};
 const deleteCommission = async (req, res) => {
   try {
     const { ids } = req.body;
@@ -8140,7 +8207,14 @@ const findOneFile = async (req, res) => {
 // @route   POST /VideoCounsellor
 // @access  Public
 const createVideo = async (req, res) => {
-  const { name, videoURL, thumbnailURL } = req.body;
+  let { name, videoURL, thumbnailURL } = req.body;
+
+  if (req.files?.videoURL?.[0]) {
+    videoURL = `upload/${req.files.videoURL[0].filename}`;
+  }
+  if (req.files?.thumbnailURL?.[0]) {
+    thumbnailURL = `upload/${req.files.thumbnailURL[0].filename}`;
+  }
 
   if (!name || !videoURL || !thumbnailURL) {
     res.status(400).json({ message: 'Please all required fields' });
@@ -8161,16 +8235,19 @@ const createVideo = async (req, res) => {
   }
 };
 
-// @desc    Get all counsellors
-// @route   GET /GetVideo/all
+// @desc    Get all videos (thumbnail/video paths point at files under server `upload/`, saved on create/update)
+// @route   GET /api/admin/Video/all
 // @access  Public
 const getVideo = async (req, res) => {
   try {
+    const videos = await Video.find({})
+      .sort({ createdAt: -1 })
+      .lean();
 
-    const counsellors = await Video.find({});
-    res.json(counsellors);
+    res.status(200).json(videos);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('getVideo:', error);
+    res.status(500).json({ message: error.message || 'Failed to fetch videos' });
   }
 };
 
@@ -8216,9 +8293,20 @@ const deleteVideo = async (req, res) => {
 // Update video by ID
 const updateVideo = async (req, res) => {
   try {
-    const { name, videoURL, thumbnailURL } = req.body;
+    let { name, videoURL, thumbnailURL } = req.body;
 
-    if (!name && !videoURL && !thumbnailURL) {
+    if (req.files?.videoURL?.[0]) {
+      videoURL = `upload/${req.files.videoURL[0].filename}`;
+    }
+    if (req.files?.thumbnailURL?.[0]) {
+      thumbnailURL = `upload/${req.files.thumbnailURL[0].filename}`;
+    }
+
+    const hasName = name !== undefined && name !== null && String(name).trim() !== '';
+    const hasVideo = videoURL !== undefined && videoURL !== null && String(videoURL).trim() !== '';
+    const hasThumb = thumbnailURL !== undefined && thumbnailURL !== null && String(thumbnailURL).trim() !== '';
+
+    if (!hasName && !hasVideo && !hasThumb) {
       return res.status(400).json({ message: 'Please provide at least one field to update' });
     }
 
@@ -8230,9 +8318,9 @@ const updateVideo = async (req, res) => {
     }
 
     // Update only provided fields
-    if (name) video.name = name;
-    if (videoURL) video.videoURL = videoURL;
-    if (thumbnailURL) video.thumbnailURL = thumbnailURL;
+    if (hasName) video.name = name;
+    if (hasVideo) video.videoURL = videoURL;
+    if (hasThumb) video.thumbnailURL = thumbnailURL;
 
     const updatedVideo = await video.save();
 

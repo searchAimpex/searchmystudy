@@ -124,6 +124,7 @@ import { createBanner,test,fetchAllBanner,deleteBanner,
       // deleteMultipleQueries
 
       } from '../controllers/adminController.js';
+import { updateCommission } from '../../../admin_searchmystudy/src/slice/comission.js';
 const router = express.Router();
 
 // Upload directory: absolute path so it works regardless of process cwd
@@ -153,6 +154,24 @@ const studentUpload = multer({
   storage: profileStorage,
   limits: { fileSize: 20 * 1024 * 1024 },
 });
+
+/** Video uploads: same `upload/` folder as profileStorage, larger limit for video files */
+const videoFileUpload = multer({
+  storage: profileStorage,
+  limits: { fileSize: 250 * 1024 * 1024 },
+});
+
+const videoUploadFields = [
+  { name: 'thumbnailURL', maxCount: 1 },
+  { name: 'videoURL', maxCount: 1 },
+];
+
+const maybeVideoUploadFields = (fields) => (req, res, next) => {
+  if (req.is('multipart/form-data')) {
+    return videoFileUpload.fields(fields)(req, res, next);
+  }
+  return next();
+};
 
 // Run multer only for multipart/form-data requests.
 // This prevents breaking existing JSON requests (e.g., firebase URLs as strings).
@@ -194,17 +213,17 @@ router.delete('/DeleteService',deleteService)
 /****************TESTIMONIAL ROUTES *****************/
 router.get('/Testimonials/all',getTestimonials)
 router.get('/Testimonials/:id',getTestimonialById)
-router.post('/CreateTestimonials',createTestimonial)
-router.put('/UpdateTestimonials/:id',updateTestimonial)
+router.post('/CreateTestimonials', profileUpload.single('imageURL'), createTestimonial)
+router.put('/UpdateTestimonials/:id', profileUpload.single('imageURL'), updateTestimonial)
 router.delete('/DeleteTestimonials',deleteTestimonial)
 /****************TESTIMONIAL ROUTES *****************/
 
 
 /****************COUNSELLOR ROUTES ******************/
-router.post('/CreateCounsellor',createCounsellor)
-router.get('/Counsellor/all',getCounsellors)
-router.delete('/DeleteCounsellors',deleteCounsellor)
-router.put('/UpdateCounsellors/:id',updateCounsellor)
+router.post('/CreateCounsellor', maybeUploadSingle('imageURL'), createCounsellor);
+router.get('/Counsellor/all', getCounsellors);
+router.delete('/DeleteCounsellors', deleteCounsellor);
+router.put('/UpdateCounsellors/:id', maybeUploadSingle('imageURL'), updateCounsellor);
 /****************COUNSELLOR ROUTES ******************/
 
 
@@ -297,11 +316,23 @@ router.delete('/webinar',deleteWebinar)
 
 router.route('/media')
   .get(getMediaItems)
-  .post(createMediaItem);
+  .post(
+    profileUpload.fields([
+      { name: 'imageURL', maxCount: 1 },
+      { name: 'articalURL', maxCount: 1 },
+    ]),
+    createMediaItem
+  );
 
 router.route('/media/:id')
   .get(getMediaItemById)
-  .put(updateMediaItem);
+  .put(
+    profileUpload.fields([
+      { name: 'imageURL', maxCount: 1 },
+      { name: 'articalURL', maxCount: 1 },
+    ]),
+    updateMediaItem
+  );
   
 router.route('/media')
   .delete(deleteMediaItem);
@@ -502,6 +533,7 @@ router.get('/upload/frenchise',getFrenchiseUploads)
 router.post('/commission', profileUpload.single('fileURL'), createCommission)
 router.get('/commission',getAllCommission)
 router.delete('/commission',deleteCommission)
+router.put('/commission/:id',updateCommission)
 router.get('/commission/partner',getPartnerCommission)
 router.get('/commission/frenchise',getFrenchiseCommission)
 ///////////////////////////////////////////////
@@ -588,10 +620,10 @@ router.delete('/file',deleteFile)
 
 
 /****************VIDEO ROUTES *****************/
-router.post('/CreateVideo',createVideo)
-router.get('/Video/all',getVideo)
-router.put('/UpdateVideo/:id',updateVideo)
-router.delete('/DeleteVideo',deleteVideo)
+router.post('/CreateVideo', maybeVideoUploadFields(videoUploadFields), createVideo);
+router.get('/Video/all', getVideo);
+router.put('/UpdateVideo/:id', maybeVideoUploadFields(videoUploadFields), updateVideo);
+router.delete('/DeleteVideo', deleteVideo);
 /****************VIDEO ROUTES *****************/
 
 // websitedetails

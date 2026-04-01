@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler';
+import mongoose from 'mongoose';
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 
@@ -754,32 +755,80 @@ const createCountry = async (req, res) => {
   }
 };
 
-// @desc    Update country by ID
-// @route   PUT /api/secondCountries/:id
+// @desc    Update second-country by ID (multipart: text fields + optional files)
+// @route   PUT /api/users/secondcountry/:id
 // @access  Private
 const updateCountry = async (req, res) => {
-  const { name, flagURL, currency, code, vfs, step, whyThisCountry, faq } = req.body;
-
   try {
-    const country = await SecondCountry.findById(req.params.id);
-
-    if (country) {
-      country.name = name || country.name;
-      country.flagURL = flagURL || country.flagURL;
-      country.currency = currency || country.currency;
-      country.code = code || country.code;
-      country.vfs = vfs || country.vfs;
-      country.step = step || country.step;
-      country.whyThisCountry = whyThisCountry || country.whyThisCountry;
-      country.faq = faq || country.faq;
-
-      const updatedCountry = await country.save();
-      res.json(updatedCountry);
-    } else {
-      res.status(404).json({ message: 'Country not found' });
+    console.log(req.body, "req.body++++++++++++++++++++++")
+    const { id } = req.params;
+    console.log(id, "id++++++++++++++++++++++")
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: 'Invalid country id' });
     }
+
+    const fileFields = ['flagURL', 'vfs', 'step', 'whyThisCountry', 'faq'];
+    if (req.files) {
+      fileFields.forEach((field) => {
+        const file = req.files[field]?.[0];
+        if (file?.filename) {
+          req.body[field] = `upload/${file.filename}`;
+        }
+      });
+    }
+
+    const body = req.body || {};
+    const {
+      name,
+      flagURL,
+      currency,
+      code,
+      vfs,
+      step,
+      whyThisCountry,
+      faq,
+      country: parentCountryId,
+    } = body;
+
+    const doc = await SecondCountry.findById(id);
+    if (!doc) {
+      return res.status(404).json({ message: 'Country not found' });
+    }
+
+    if (name !== undefined && name !== null) doc.name = name || doc.name;
+    if (
+      parentCountryId !== undefined &&
+      parentCountryId !== null &&
+      String(parentCountryId).trim() !== ''
+    ) {
+      const pid = String(parentCountryId).trim();
+      if (!mongoose.Types.ObjectId.isValid(pid)) {
+        return res.status(400).json({ message: 'Invalid parent country id' });
+      }
+      doc.country = pid;
+    }
+
+    if (flagURL !== undefined && flagURL !== null) doc.flagURL = flagURL || doc.flagURL;
+    if (currency !== undefined && currency !== null) doc.currency = currency || doc.currency;
+    if (code !== undefined && code !== null) doc.code = code || doc.code;
+    if (vfs !== undefined && vfs !== null) doc.vfs = vfs || doc.vfs;
+    if (step !== undefined && step !== null) doc.step = step || doc.step;
+    if (whyThisCountry !== undefined && whyThisCountry !== null) {
+      doc.whyThisCountry = whyThisCountry || doc.whyThisCountry;
+    }
+    if (faq !== undefined && faq !== null) doc.faq = faq || doc.faq;
+
+    const updatedCountry = await doc.save();
+    return res.status(200).json(updatedCountry);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to update country' });
+    if (error.name === 'CastError') {
+      return res.status(400).json({ message: 'Invalid id or reference' });
+    }
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ message: error.message });
+    }
+    console.error('updateCountry:', error);
+    return res.status(500).json({ message: 'Failed to update country' });
   }
 };
 
