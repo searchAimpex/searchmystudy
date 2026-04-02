@@ -584,11 +584,82 @@ const deleteBlog = asyncHandler(async (req, res) => {
   }
 });
 
+// Multipart: bannerURL, flagURL files + repeated `sectionUrl` → sections[i].url = upload/<filename>
+const parseCountryBodyJson = (val, fallback) => {
+  if (val === undefined || val === null || val === '') return fallback;
+  if (typeof val === 'object' && val !== null) return val;
+  try {
+    return JSON.parse(val);
+  } catch {
+    return fallback;
+  }
+};
+
+// FormData often sends the rest of the country as one JSON string (e.g. field `data` / `payload` / `country`)
+const mergeCountryJsonPayloadFields = (req) => {
+  for (const key of ['data', 'payload', 'country', 'body']) {
+    const raw = req.body[key];
+    if (typeof raw !== 'string' || !raw.trim()) continue;
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        Object.assign(req.body, parsed);
+      }
+    } catch {
+      // ignore invalid JSON
+    }
+  }
+};
+
+const applyCountryUploadFiles = (req, existingSections = null) => {
+  if (!req.files) return;
+  const banner =
+    req.files.bannerURL?.[0] || req.files.bannerFile?.[0] || req.files.banner?.[0];
+  const flag =
+    req.files.flagURL?.[0] || req.files.flagFile?.[0] || req.files.flag?.[0];
+  const sectionFiles = req.files.sectionUrl;
+  if (banner) req.body.bannerURL = `upload/${banner.filename}`;
+  if (flag) req.body.flagURL = `upload/${flag.filename}`;
+  if (Array.isArray(sectionFiles) && sectionFiles.length > 0) {
+    let base = parseCountryBodyJson(req.body.sections, existingSections);
+    if (!Array.isArray(base)) {
+      base = Array.isArray(existingSections) ? [...existingSections] : [];
+    }
+    const sections = [...base];
+    sectionFiles.forEach((file, i) => {
+      const prev = sections[i] && typeof sections[i] === 'object' ? { ...sections[i] } : {};
+      sections[i] = { ...prev, url: `upload/${file.filename}` };
+    });
+    req.body.sections = sections;
+  }
+};
+
 // @desc    Create a new country
 // @route   POST /countries
 // @access  Public
 const createCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, mbbsAbroad, flagURL, elegiblity, bullet, faq, MbbsSections } = req.body;
+  applyCountryUploadFiles(req, null);
+
+  let {
+    name,
+    bannerURL,
+    description,
+    sections,
+    mbbsAbroad,
+    flagURL,
+    elegiblity,
+    bullet,
+    faq,
+    MbbsSections,
+  } = req.body;
+
+  console.log(req.body, "req.body++++++++++++++++++++++")
+
+  sections = parseCountryBodyJson(sections, []);
+  if (!Array.isArray(sections)) sections = [];
+  faq = parseCountryBodyJson(faq, []);
+  MbbsSections = parseCountryBodyJson(MbbsSections, []);
+  elegiblity = parseCountryBodyJson(elegiblity, []);
 
   // Check if country with the same name already exists
   const existingCountry = await Country.findOne({ name });
@@ -697,27 +768,41 @@ const getCountryById = asyncHandler(async (req, res) => {
 // });
 
 const updateCountry = asyncHandler(async (req, res) => {
-  const { name, bannerURL, description, sections, provinces, mbbsAbroad, faq, MbbsSections } = req.body;
-
-  // Ensure that we find the country by ID
+  console.log(req.body, "req.body++++++++++++++++++++++")
   const country = await Country.findById(req.params.id);
 
   if (country) {
-    // Log the existing country data to compare with the incoming data
-    //console.log("Existing country data:", country);
+    applyCountryUploadFiles(req, country.sections);
 
-    // Only update the fields that are provided, else keep existing values
+    const {
+      name,
+      bannerURL,
+      description,
+      sections: sectionsRaw,
+      provinces,
+      mbbsAbroad,
+      faq: faqRaw,
+      MbbsSections: mRaw,
+    } = req.body;
+
+    let sections = country.sections;
+    if (sectionsRaw !== undefined) {
+      sections = parseCountryBodyJson(sectionsRaw, country.sections);
+      if (!Array.isArray(sections)) sections = country.sections;
+    }
+
+    const faq = faqRaw !== undefined ? parseCountryBodyJson(faqRaw, country.faq) : country.faq;
+    const MbbsSections =
+      mRaw !== undefined ? parseCountryBodyJson(mRaw, country.MbbsSections) : country.MbbsSections;
+
     country.name = name || country.name;
     country.bannerURL = bannerURL || country.bannerURL;
     country.description = description || country.description;
-    country.sections = sections || country.sections;
+    country.sections = sections;
     country.provinces = provinces || country.provinces;
     country.mbbsAbroad = mbbsAbroad !== undefined ? mbbsAbroad : country.mbbsAbroad;  // Avoid overwriting with undefined
     country.faq = faq || country.faq;
     country.MbbsSections = MbbsSections || country.MbbsSections;
-
-    // Log the updated country data to verify the changes
-    //console.log("Updated country data:", country);
 
     // Save the updated country to the database
     const updatedCountry = await country.save();
@@ -933,8 +1018,22 @@ const getUniversityById = asyncHandler(async (req, res) => {
 
 
 
+const applyUniversityImageUploads = (req) => {
+  if (!req.files) return;
+  if (req.files.bannerURL?.[0]) {
+    req.body.bannerURL = `upload/${req.files.bannerURL[0].filename}`;
+  }
+  if (req.files.heroURL?.[0]) {
+    req.body.heroURL = `upload/${req.files.heroURL[0].filename}`;
+  }
+  if (req.files.logo?.[0]) {
+    req.body.logo = `upload/${req.files.logo[0].filename}`;
+  }
+};
+
 const createUniversity = asyncHandler(async (req, res) => {
   try {
+    applyUniversityImageUploads(req);
     //console.log("Incoming body:", req.body);
     const mci = req.body.MCI === 'true' || req.body.MCI === true;
     const ecfmg = req.body.ECFMG === 'true' || req.body.ECFMG === true;
@@ -1041,6 +1140,7 @@ const createUniversity = asyncHandler(async (req, res) => {
 // @route   PUT /universities/:id
 // @access  Private/Admin
 const updateUniversity = asyncHandler(async (req, res) => {
+  applyUniversityImageUploads(req);
   const { name, bannerURL, Country, heroURL, description, sections, eligiblity, Province, logo, campusLife, hostel, rank, UniLink, type } = req.body;
 
   const university = await University.findById(req.params.id);

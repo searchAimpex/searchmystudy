@@ -166,8 +166,13 @@ const videoUploadFields = [
   { name: 'videoURL', maxCount: 1 },
 ];
 
+const isMultipartRequest = (req) =>
+  String(req.headers['content-type'] || '')
+    .toLowerCase()
+    .includes('multipart/form-data');
+
 const maybeVideoUploadFields = (fields) => (req, res, next) => {
-  if (req.is('multipart/form-data')) {
+  if (isMultipartRequest(req)) {
     return videoFileUpload.fields(fields)(req, res, next);
   }
   return next();
@@ -176,18 +181,36 @@ const maybeVideoUploadFields = (fields) => (req, res, next) => {
 // Run multer only for multipart/form-data requests.
 // This prevents breaking existing JSON requests (e.g., firebase URLs as strings).
 const maybeUploadFields = (fields) => (req, res, next) => {
-  if (req.is('multipart/form-data')) {
+  if (isMultipartRequest(req)) {
     return profileUpload.fields(fields)(req, res, next);
   }
   return next();
 };
 
 const maybeUploadSingle = (fieldName) => (req, res, next) => {
-  if (req.is('multipart/form-data')) {
+  if (isMultipartRequest(req)) {
     return profileUpload.single(fieldName)(req, res, next);
   }
   return next();
 };
+
+// Country: banner + flag files (field names `bannerURL` / `flagURL` or `bannerFile` / `flagFile`)
+// + repeated `sectionUrl` for sections[i].url
+const countryUploadFields = [
+  { name: 'bannerURL', maxCount: 1 },
+  { name: 'bannerFile', maxCount: 1 },
+  { name: 'banner', maxCount: 1 },
+  { name: 'flagURL', maxCount: 1 },
+  { name: 'flagFile', maxCount: 1 },
+  { name: 'flag', maxCount: 1 },
+  { name: 'sectionUrl', maxCount: 30 },
+];
+
+const universityUploadFields = [
+  { name: 'bannerURL', maxCount: 1 },
+  { name: 'heroURL', maxCount: 1 },
+  { name: 'logo', maxCount: 1 },
+];
 
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
@@ -198,8 +221,6 @@ router.get('/test',test)
 
 
 router.put('/verifyToken/:token',verifyToken)
-
-
 
 /***********SERVICES ROUTES *********/
 router.get('/Services/all',getServices)
@@ -248,11 +269,11 @@ router.delete('/blogs', deleteBlog); // Endpoint: DELETE /blogs
 
 /*************** COUNTRY ROUTES **********************/
 router.route('/countries')
-  .post(createCountry)
+  .post(profileUpload.fields(countryUploadFields), createCountry)
   .get(getCountries);
 router.route('/countries/:id')
   .get(getCountryById)
-  .put(updateCountry)
+  .put(profileUpload.fields(countryUploadFields), updateCountry)
   // .delete(deleteCountry);
 
 
@@ -279,11 +300,11 @@ router.route('/province')
 
 /*************** UNIVERSITY ROUTES **********************/
 router.route('/university')
-  .post(createUniversity)
+  .post(profileUpload.fields(universityUploadFields), createUniversity)
   .get(getAllUniversities);
 router.route('/university/:id')
   .get(getUniversityById)
-  .put(updateUniversity)
+  .put(profileUpload.fields(universityUploadFields), updateUniversity)
 
 router.route('/university')
   .delete(deleteUniversity);
