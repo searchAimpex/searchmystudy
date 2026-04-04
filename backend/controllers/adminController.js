@@ -1774,9 +1774,8 @@ const getWebinars = asyncHandler(async (req, res) => {
 // })
 
 const createWebinar = asyncHandler(async (req, res) => {
-  // //console.log();  // Log to check incoming request data
-
-  const { trainer_name, trainer_profession, title, imageURL, date, weekday, timeStart, timeEnd } = req.body;
+  const { trainer_name, trainer_profession, title, date, weekday, timeStart, timeEnd } = req.body;
+  const imageURL = req.file ? `upload/${req.file.filename}` : req.body.imageURL;
 
   if (!trainer_name || !trainer_profession || !title || !imageURL || !date || !weekday || !timeStart || !timeEnd) {
     return res.status(400).json({ message: "All fields are required" });
@@ -1983,6 +1982,9 @@ const getWebinarById = asyncHandler(async (req, res) => {
 // @route   PUT /api/webinars/:id
 // @access  Public
 const updateWebinar = asyncHandler(async (req, res) => {
+  if (req.file) {
+    req.body.imageURL = `upload/${req.file.filename}`;
+  }
   const {
     title,
     imageURL,

@@ -333,7 +333,7 @@ router.route('/university')
 
 router.route('/webinar')
   .get(getWebinars)
-  .post(createWebinar);
+  .post(profileUpload.single('imageURL'), createWebinar);
 
 router.route('/webinar/register')
   .post(webinar_sendEmail);
@@ -341,7 +341,7 @@ router.get('/fetchAll',fetchwebinarleads)
 
 router.route('/webinar/:id')
   .get(getWebinarById)
-  .put(updateWebinar)
+  .put(profileUpload.single('imageURL'), updateWebinar)
   // .delete(deleteWebinar);
 
 router.delete('/webinar',deleteWebinar)
