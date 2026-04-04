@@ -599,14 +599,28 @@ const parseCountryBodyJson = (val, fallback) => {
 const mergeCountryJsonPayloadFields = (req) => {
   for (const key of ['data', 'payload', 'country', 'body']) {
     const raw = req.body[key];
-    if (typeof raw !== 'string' || !raw.trim()) continue;
-    try {
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
-        Object.assign(req.body, parsed);
+    if (raw === undefined || raw === null || raw === '') continue;
+
+    // Common case: multipart/form-data fields send JSON as a string.
+    if (typeof raw === 'string') {
+      if (!raw.trim()) continue;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          Object.assign(req.body, parsed);
+          delete req.body[key];
+        }
+      } catch {
+        // ignore invalid JSON
       }
-    } catch {
-      // ignore invalid JSON
+      continue;
+    }
+
+    // Fallback: if the field is already an object (some middleware may parse it),
+    // merge it directly.
+    if (typeof raw === 'object' && !Array.isArray(raw)) {
+      Object.assign(req.body, raw);
+      delete req.body[key];
     }
   }
 };
@@ -620,17 +634,84 @@ const applyCountryUploadFiles = (req, existingSections = null) => {
   const sectionFiles = req.files.sectionUrl;
   if (banner) req.body.bannerURL = `upload/${banner.filename}`;
   if (flag) req.body.flagURL = `upload/${flag.filename}`;
+  const baseSections = parseCountryBodyJson(req.body.sections, existingSections);
+  const normalizedSections = Array.isArray(baseSections)
+    ? [...baseSections]
+    : Array.isArray(existingSections)
+      ? [...existingSections]
+      : [];
+
   if (Array.isArray(sectionFiles) && sectionFiles.length > 0) {
-    let base = parseCountryBodyJson(req.body.sections, existingSections);
-    if (!Array.isArray(base)) {
-      base = Array.isArray(existingSections) ? [...existingSections] : [];
-    }
-    const sections = [...base];
     sectionFiles.forEach((file, i) => {
-      const prev = sections[i] && typeof sections[i] === 'object' ? { ...sections[i] } : {};
-      sections[i] = { ...prev, url: `upload/${file.filename}` };
+      const prev =
+        normalizedSections[i] && typeof normalizedSections[i] === 'object'
+          ? { ...normalizedSections[i] }
+          : {};
+      normalizedSections[i] = { ...prev, url: `upload/${file.filename}` };
     });
-    req.body.sections = sections;
+  }
+
+  Object.entries(req.files).forEach(([fieldName, files]) => {
+    const match =
+      fieldName.match(/^sectionUrl_(\d+)$/) ||
+      fieldName.match(/^sections\[(\d+)\]\.url$/) ||
+      fieldName.match(/^sections\.(\d+)\.url$/);
+    if (!match || !files?.[0]) return;
+    const index = Number(match[1]);
+    const prev =
+      normalizedSections[index] && typeof normalizedSections[index] === 'object'
+        ? { ...normalizedSections[index] }
+        : {};
+    normalizedSections[index] = { ...prev, url: `upload/${files[0].filename}` };
+  });
+
+  if (normalizedSections.length > 0) {
+    req.body.sections = normalizedSections;
+  }
+};
+
+const applyProvinceUploadFiles = (req, existingSections = null) => {
+  if (!req.files) return;
+  const banner = req.files.bannerURL?.[0];
+  const hero = req.files.heroURL?.[0];
+  const sectionFiles = req.files.sectionUrl;
+
+  if (banner) req.body.bannerURL = `upload/${banner.filename}`;
+  if (hero) req.body.heroURL = `upload/${hero.filename}`;
+
+  const baseSections = parseCountryBodyJson(req.body.sections, existingSections);
+  const normalizedSections = Array.isArray(baseSections)
+    ? [...baseSections]
+    : Array.isArray(existingSections)
+      ? [...existingSections]
+      : [];
+
+  if (Array.isArray(sectionFiles) && sectionFiles.length > 0) {
+    sectionFiles.forEach((file, i) => {
+      const prev =
+        normalizedSections[i] && typeof normalizedSections[i] === 'object'
+          ? { ...normalizedSections[i] }
+          : {};
+      normalizedSections[i] = { ...prev, url: `upload/${file.filename}` };
+    });
+  }
+
+  Object.entries(req.files).forEach(([fieldName, files]) => {
+    const match =
+      fieldName.match(/^sectionUrl_(\d+)$/) ||
+      fieldName.match(/^sections\[(\d+)\]\.url$/) ||
+      fieldName.match(/^sections\.(\d+)\.url$/);
+    if (!match || !files?.[0]) return;
+    const index = Number(match[1]);
+    const prev =
+      normalizedSections[index] && typeof normalizedSections[index] === 'object'
+        ? { ...normalizedSections[index] }
+        : {};
+    normalizedSections[index] = { ...prev, url: `upload/${files[0].filename}` };
+  });
+
+  if (normalizedSections.length > 0) {
+    req.body.sections = normalizedSections;
   }
 };
 
@@ -861,25 +942,27 @@ export const deleteCountries = asyncHandler(async (req, res) => {
 // @route   POST /provinces
 // @access  Public
 const createProvince = asyncHandler(async (req, res) => {
+  mergeCountryJsonPayloadFields(req);
+  applyProvinceUploadFiles(req, null);
 
-  const country = await Country.findById(req.body.Country)
+  let sections = parseCountryBodyJson(req.body.sections, []);
+  if (!Array.isArray(sections)) sections = [];
 
-  // const province = await Province.findById(req.body.Province)
-  //console.log("country", country)
-  // province.University.push(createdUniversity._id)
-  // await province.save();
-  // if (!country) {
-  //   return res.status(404).json({ message: 'Country not found' });
-  // }
-  // //console.log("++++++++++++++++++++++++++++++++++++++++++++++++")
-  // //console.log(req.body);
-  const province = new Province({ ...req.body, Country: country });
-  // //console.log(province,"+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+  const country = await Country.findById(req.body.Country);
+  if (!country) {
+    return res.status(404).json({ message: 'Country not found' });
+  }
+
+  const province = new Province({
+    ...req.body,
+    sections,
+    Country: country._id,
+  });
 
   await province.save();
 
-  country.Province.push(province._id)
-  country.save();
+  country.Province.push(province._id);
+  await country.save();
 
   res.status(201).json(province);
 });
@@ -934,14 +1017,42 @@ const getProvinceById = asyncHandler(async (req, res) => {
 // @route   PUT /provinces/:id
 // @access  Public
 const updateProvince = asyncHandler(async (req, res) => {
+  mergeCountryJsonPayloadFields(req);
 
-  const province = await Province.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  //console.log("----->", req.body)
-  if (province) {
-    res.status(200).json(province);
-  } else {
-    res.status(404).json({ message: 'Province not found' });
+  const province = await Province.findById(req.params.id);
+  if (!province) {
+    return res.status(404).json({ message: 'Province not found' });
   }
+
+  applyProvinceUploadFiles(req, province.sections);
+
+  const sectionsRaw = req.body.sections;
+  const sections =
+    sectionsRaw !== undefined
+      ? parseCountryBodyJson(sectionsRaw, province.sections)
+      : province.sections;
+
+  let countryId = req.body.Country || province.Country;
+  if (countryId && typeof countryId === 'object') {
+    countryId = countryId._id || countryId.id || countryId;
+  }
+
+  if (countryId) {
+    const country = await Country.findById(countryId);
+    if (!country) {
+      return res.status(404).json({ message: 'Country not found' });
+    }
+    province.Country = country._id;
+  }
+
+  province.name = req.body.name ?? province.name;
+  province.bannerURL = req.body.bannerURL ?? province.bannerURL;
+  province.heroURL = req.body.heroURL ?? province.heroURL;
+  province.description = req.body.description ?? province.description;
+  province.sections = Array.isArray(sections) ? sections : province.sections;
+
+  const updatedProvince = await province.save();
+  res.status(200).json(updatedProvince);
 });
 
 // @desc    Delete a province by ID
@@ -1029,6 +1140,37 @@ const applyUniversityImageUploads = (req) => {
   if (req.files.logo?.[0]) {
     req.body.logo = `upload/${req.files.logo[0].filename}`;
   }
+  const sectionFiles = req.files.sectionUrl;
+  const baseSections = parseCountryBodyJson(req.body.sections, []);
+  const normalizedSections = Array.isArray(baseSections) ? [...baseSections] : [];
+
+  if (Array.isArray(sectionFiles) && sectionFiles.length > 0) {
+    sectionFiles.forEach((file, i) => {
+      const prev =
+        normalizedSections[i] && typeof normalizedSections[i] === 'object'
+          ? { ...normalizedSections[i] }
+          : {};
+      normalizedSections[i] = { ...prev, url: `upload/${file.filename}` };
+    });
+  }
+
+  Object.entries(req.files).forEach(([fieldName, files]) => {
+    const match =
+      fieldName.match(/^sectionUrl_(\d+)$/) ||
+      fieldName.match(/^sections\[(\d+)\]\.url$/) ||
+      fieldName.match(/^sections\.(\d+)\.url$/);
+    if (!match || !files?.[0]) return;
+    const index = Number(match[1]);
+    const prev =
+      normalizedSections[index] && typeof normalizedSections[index] === 'object'
+        ? { ...normalizedSections[index] }
+        : {};
+    normalizedSections[index] = { ...prev, url: `upload/${files[0].filename}` };
+  });
+
+  if (normalizedSections.length > 0) {
+    req.body.sections = normalizedSections;
+  }
 };
 
 const createUniversity = asyncHandler(async (req, res) => {
@@ -1093,6 +1235,10 @@ const createUniversity = asyncHandler(async (req, res) => {
     const randomGrade = grades[Math.floor(Math.random() * grades.length)];
     //console.log("Assigned Grade:", randomGrade);
 
+    // Multipart / FormData sends sections as a JSON string; schema expects [{ title, description, url }]
+    let sections = parseCountryBodyJson(req.body.sections, []);
+    if (!Array.isArray(sections)) sections = [];
+
     // Create the university document 
     const university = new University({
       name,
@@ -1101,7 +1247,7 @@ const createUniversity = asyncHandler(async (req, res) => {
       bannerURL: req.body.bannerURL,
       heroURL: req.body.heroURL,
       description: req.body.description,
-      sections: req.body.sections,
+      sections,
       grade: randomGrade,
       logo: req.body.logo,
       campusLife: req.body.campusLife,
@@ -1151,7 +1297,10 @@ const updateUniversity = asyncHandler(async (req, res) => {
     university.heroURL = heroURL || university.heroURL;
     university.description = description || university.description;
     university.Country = Country || university.Country
-    university.sections = sections || university.sections;
+    if (sections !== undefined && sections !== null) {
+      const parsed = parseCountryBodyJson(sections, university.sections);
+      university.sections = Array.isArray(parsed) ? parsed : university.sections;
+    }
     university.eligiblity = eligiblity || university.eligiblity;
     university.Province = Province || university.Province;
     university.logo = logo || university.logo;
@@ -1234,6 +1383,11 @@ const getCourseById = asyncHandler(async (req, res) => {
 
 
 const createCourse = asyncHandler(async (req, res) => {
+  mergeCountryJsonPayloadFields(req);
+  if (req.files?.broucherURL?.[0]) {
+    req.body.broucherURL = `upload/${req.files.broucherURL[0].filename}`;
+  }
+
   if (!req.body.Province || req.body.Province === "") {
     req.body.Province = null;
   }
@@ -1279,6 +1433,11 @@ const createCourse = asyncHandler(async (req, res) => {
 
 const updateCourse = async (req, res) => {
   try {
+    mergeCountryJsonPayloadFields(req);
+    if (req.files?.broucherURL?.[0]) {
+      req.body.broucherURL = `upload/${req.files.broucherURL[0].filename}`;
+    }
+
     const { id } = req.params; // courseId from URL
     let updates = { ...req.body }; // copy body
 

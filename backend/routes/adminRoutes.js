@@ -194,6 +194,13 @@ const maybeUploadSingle = (fieldName) => (req, res, next) => {
   return next();
 };
 
+const buildIndexedSectionUploadFields = (count = 30) =>
+  Array.from({ length: count }, (_, index) => ([
+    { name: `sectionUrl_${index}`, maxCount: 1 },
+    { name: `sections[${index}].url`, maxCount: 1 },
+    { name: `sections.${index}.url`, maxCount: 1 },
+  ])).flat();
+
 // Country: banner + flag files (field names `bannerURL` / `flagURL` or `bannerFile` / `flagFile`)
 // + repeated `sectionUrl` for sections[i].url
 const countryUploadFields = [
@@ -204,13 +211,25 @@ const countryUploadFields = [
   { name: 'flagFile', maxCount: 1 },
   { name: 'flag', maxCount: 1 },
   { name: 'sectionUrl', maxCount: 30 },
+  ...buildIndexedSectionUploadFields(),
 ];
 
 const universityUploadFields = [
   { name: 'bannerURL', maxCount: 1 },
   { name: 'heroURL', maxCount: 1 },
   { name: 'logo', maxCount: 1 },
+  { name: 'sectionUrl', maxCount: 30 },
+  ...buildIndexedSectionUploadFields(),
 ];
+
+const provinceUploadFields = [
+  { name: 'bannerURL', maxCount: 1 },
+  { name: 'heroURL', maxCount: 1 },
+  { name: 'sectionUrl', maxCount: 30 },
+  ...buildIndexedSectionUploadFields(),
+];
+
+const courseUploadFields = [{ name: 'broucherURL', maxCount: 1 }];
 
 /***********BANNER ROUTES *********/
 router.post('/createBanner', createBanner);
@@ -286,11 +305,11 @@ router.route('/allcountries').get(getAllCountries);
 
 /*************** PROVINCE ROUTES **********************/
 router.route('/province')
-  .post(createProvince)
+  .post(maybeUploadFields(provinceUploadFields), createProvince)
   .get(getAllProvinces);
 router.route('/province/:id')
   .get(getProvinceById)
-  .put(updateProvince)
+  .put(maybeUploadFields(provinceUploadFields), updateProvince)
 
 
 router.route('/province')
@@ -370,12 +389,12 @@ router.get('/course/medical',getCoursesForIndiaMedical)
 
 router.route('/course')
   .get(getAllCourses)
-  .post(createCourse);
+  .post(profileUpload.fields(courseUploadFields), createCourse);
 
 
 router.route('/course/:id')
   .get(getCourseById)
-  .put(updateCourse);
+  .put(profileUpload.fields(courseUploadFields), updateCourse);
 
 router.route('/course')
   .delete(deleteCourse);
