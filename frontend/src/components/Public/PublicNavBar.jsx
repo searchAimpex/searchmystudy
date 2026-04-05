@@ -384,7 +384,7 @@ export default function PublicNavBar({ webData }) {
                                                         >
                                                             <img
                                                                 className="object-contained h-[25px] w-[25px]"
-                                                                src={sublink?.flagURL}
+                                                                src={`https://backend.searchmystudy.com/${sublink?.flagURL}`}
                                                             />
                                                             <h5>
                                                                 {["MBBS", "ABOUT US", "BLOG", "CONTACT US", "MD", "BAMS", "BHMS", "BDS", "NURSING", "PHARMACY", "Bv Sc"].includes(sublink?.name) ? (
@@ -425,7 +425,7 @@ export default function PublicNavBar({ webData }) {
                                                         <Link to={sublink.link} className="flex space-x-2 flex-row">
                                                             <img
                                                                 className="object-contained h-[25px] w-[25px]"
-                                                                src={sublink?.flagURL}
+                                                                src={`https://backend.searchmystudy.com/${sublink?.flagURL}`}
                                                             />
                                                             <span>{sublink?.name}asdcasdc</span>
 
@@ -494,7 +494,7 @@ export default function PublicNavBar({ webData }) {
                                                 onClick={() => setIsOpen(false)}
                                             >
                                                 <img
-                                                    src={sublink.flagURL || "https://i.imgur.com/0L7BLOw.png"}
+                                                    src={`https://backend.searchmystudy.com/${sublink.flagURL}`}
                                                     alt="flag"
                                                     className="h-5 w-5 object-cover rounded-full"
                                                 />

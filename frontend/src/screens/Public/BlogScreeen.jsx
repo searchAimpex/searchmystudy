@@ -180,7 +180,7 @@ export default function BlogScreen() {
             <div
               onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex gap-3 pb-5'>
               <img
-                src={blog.thumbnailURL}
+                src={`https://backend.searchmystudy.com/${blog.thumbnailURL}`}
                 className='rounded-xl w-[90px] h-[85px] object-cover'
                 alt={blog.title}
               />
@@ -245,7 +245,7 @@ export default function BlogScreen() {
                       className='hover:cursor-pointer'
                       onClick={() => navigate(`/blog/${blog._id}`)}
                     >
-                      <img src={blog.thumbnailURL} className='mt-5' />
+                      <img src={`https://backend.searchmystudy.com/${blog.thumbnailURL}`} className='mt-5' />
                     </div>
                   )
                 })
@@ -262,7 +262,7 @@ export default function BlogScreen() {
                   className="flex items-center gap-4 p-2 py-5 bg-white rounded-xl shadow-md border hover:border-gold-main hover:bg-gold-main-100 group"
                 >
                   <img
-                    src={country.flagURL}
+                    src={`https://backend.searchmystudy.com/${country.flagURL}`}
                     className="w-20 h-20 rounded-full border-2 border-red-200 shadow-sm group-hover:scale-105 transition-transform"
                     alt={country.name}
                   />

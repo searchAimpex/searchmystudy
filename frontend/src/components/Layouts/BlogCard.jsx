@@ -19,7 +19,7 @@ const BlogCard = ({ blog }) => {
       {/* Thumbnail */}
       <div className="w-full md:w-[600px] relative">
         <img
-          src={blog.thumbnailURL}
+          src={`https://backend.searchmystudy.com/${blog.thumbnailURL}`}
           alt="Loading..."
           className="w-full h-auto md:h-[377px] object-contain"
         />
