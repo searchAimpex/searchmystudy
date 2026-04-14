@@ -103,7 +103,7 @@ export default function UniversityDetailed() {
                          >
                            <div className="w-full h-[200px] sm:h-[100%] md:h-[100%] lg:h-[100%] overflow-hidden">
                              <img
-                               src={singleUniversity.bannerURL}
+                               src={`https://backend.searchmystudy.com/${singleUniversity.bannerURL}`}
                                alt="Country Banner"
                                className="w-full h-full object-cover object-center"
                              />
@@ -122,7 +122,7 @@ export default function UniversityDetailed() {
                     >
                         <div className='rounded-full'>
                             <img
-                                src={singleUniversity.logo}
+                                src={`https://backend.searchmystudy.com/${singleUniversity.logo}`}
                                 className='w-[100px] sm:w-[120px] md:w-[150px] h-[100px] sm:h-[120px] md:h-[150px] rounded-full  object-cover'
                                 alt='University Logo'
                             />
@@ -219,7 +219,7 @@ export default function UniversityDetailed() {
                         {courseByUnivesity?.map((course, index) => (
                             <div key={index} className="flex items-center space-x-3 border rounded-lg p-3 shadow-sm">
                                 <img
-                                    src={course?.University?.bannerURL}
+                                    src={`https://backend.searchmystudy.com/${course?.University?.bannerURL}`}
                                     alt={course?.ProgramName}
                                     className="w-14 h-14 rounded-full object-cover border"
                                 />

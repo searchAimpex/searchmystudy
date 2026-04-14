@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -34,8 +34,8 @@ export default function MbbsCountryDetailed() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-    const [countryValue , setCountryValue] = useState(9)
-  
+  const [countryValue, setCountryValue] = useState(9)
+
   const [showAll, setShowAll] = useState(false);
   const [AllCountries, setAllCountries] = useState()
   const { singleCountry, countries } = useSelector((state) => state.country);
@@ -54,7 +54,7 @@ export default function MbbsCountryDetailed() {
   const [refFaq, inViewFaq] = useInView({ triggerOnce: true });
   const [universitiesToDisplay, setuniversitiesToDisplay] = useState([])
   console.log(universitiesToDisplay);
-  
+
   const [CountryFetch, { isSuccess }] = useCountryAllFetchMutation();
 
   useEffect(() => {
@@ -96,15 +96,6 @@ export default function MbbsCountryDetailed() {
     fetchData();
   }, [id, setuniversitiesToDisplay, dispatch, CountryFetch, CountryFetchOne, FetchUniversity]);
 
-  const scrollRef = useRef(null); // ✅ hooks must be on top, directly.
-
-  const scrollDown = () => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollBy({ top: 100, behavior: "smooth" });
-    }
-  };
-
-
   const handleChange = (e) => {
     setQuery({ ...query, [e.target.id]: e.target.value });
   };
@@ -123,6 +114,8 @@ export default function MbbsCountryDetailed() {
       console.error('Failed to create query:', error);
     }
   };
+
+
   // const universitiesToDisplay = showAll ? university : university.slice(0, 10);
   return (
     <div className=" text-white">
@@ -135,7 +128,7 @@ export default function MbbsCountryDetailed() {
       >
         <div className="w-full h-[200px] sm:h-[100%] md:h-[100%] lg:h-[100%] overflow-hidden">
           <img
-            src={singleCountry?.bannerURL}
+            src={`https://backend.searchmystudy.com/${singleCountry?.bannerURL}`}
             alt="Country Banner"
             className="w-full h-full object-cover object-center"
           />
@@ -167,47 +160,39 @@ export default function MbbsCountryDetailed() {
           </motion.div>
 
           {singleCountry?.sections?.length > 0 && (
-            <div className=" mt-16  ">
+            <div className="mt-10 sm:mt-16">
               {singleCountry.sections.map((section) => (
-                <section key={section._id} className=" ">
-                  <h2 className="text-3xl font-bold text-blue-main mb-4 mt-8">{section.title}</h2>
+                <section key={section._id} className="border-b border-gray-100 pb-10 last:border-0 last:pb-0 sm:pb-12">
+                  <h2 className="mb-4 mt-8 text-xl font-bold text-blue-main sm:text-2xl md:text-3xl">
+                    {section.title}
+                  </h2>
 
-                  <div className="flex">
-                    {/* Text Section */}
+                  <div className="flex flex-col gap-6 md:flex-row md:gap-8 md:items-start">
                     <div
-                      ref={scrollRef}
-                      className=" text-[20px] text-gray-800  w-full"
+                      className="min-w-0 w-full flex-1 text-base leading-relaxed text-gray-800 sm:text-lg [&_img]:max-w-full [&_img]:h-auto [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto"
                       dangerouslySetInnerHTML={{
                         __html: truncateText(section.description, 110),
                       }}
                     />
 
-                    {/* Image Section */}
-                    {/* <div className="md:w-1/3  flex justify-center items-start">
-                      <img
-                        src={section.url}
-                        alt={section.title}
-                        className="w-[300px] "
-                      />
-                    </div> */}
-
-                    {/* Optional Scroll Button */}
-                    {/* 
-  <button
-    onClick={scrollDown}
-    className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-gold-main hover:bg-yellow-500 text-white px-4 py-1.5 text-sm rounded-full shadow-md transition-all"
-  >
-    Scroll Up ↑
-  </button>
-  */}
-
+                    {section.url ? (
+                      <div className="mx-auto w-full max-w-lg shrink-0 md:mx-0 md:max-w-none md:shrink-0 lg:basis-1/3">
+                        <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+                          <img
+                            src={`https://backend.searchmystudy.com/${String(section.url).replace(/^\//, '')}`}
+                            alt={section.title || 'Section'}
+                            className=" "
+                            loading="lazy"
+                          />
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
-
                 </section>
               ))}
             </div>
           )}
-        
+
 
 
         </div>
@@ -293,14 +278,14 @@ export default function MbbsCountryDetailed() {
           <div>
             <p className="text-blue-main font-bold text-2xl ">Top countries for study abroad</p>
             <div className="rounded-xl my-4 space-y-4 ">
-              {AllCountries?.slice(0,countryValue).map((country) => (
+              {AllCountries?.slice(0, countryValue).map((country) => (
                 <Link
                   to={`/country/${country._id}`}
                   key={country._id}
                   className="flex items-center gap-4 p-2 bg-white rounded-xl shadow-md border hover:border-gold-main hover:bg-gold-main-100 group"
                 >
                   <img
-                    src={country.flagURL}
+                    src={`https://backend.searchmystudy.com/${country.flagURL}`}
                     className="w-14 h-14 rounded-full border-2 border-red-200 shadow-sm group-hover:scale-105 transition-transform"
                     alt={country.name}
                   />
@@ -310,95 +295,95 @@ export default function MbbsCountryDetailed() {
                 </Link>
               ))}
 
-              
-                       {countryValue > 9 ? (
+
+              {countryValue > 9 ? (
                 <div className="flex justify-center mt-8">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => navigate('/country') }
+                    onClick={() => navigate('/country')}
                     className="relative px-8 py-3 text-white font-semibold text-lg rounded-full 
                                bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 
                                shadow-lg hover:shadow-2xl transition-all"
                   >
                     Explore More
-                  </motion.button>
+                  </motion.button>  
                 </div>
-              ):(
+              ) : (
                 <div></div>
               )}
-              
+
             </div>
           </div>
         </div>
 
-        
+
       </div>
 
-        <div className="mt-12 text-center px-4">
-            <h1 className="text-blue-main text-4xl font-bold">
-              Top-Rated MBBS <span className="text-gold-main">Colleges and Universities</span> in{' '}
-              {singleCountry?.name}
-            </h1>
-            <div>
-              <div className="px-6 py-10">
-                {/* Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {universitiesToDisplay.slice(0, value).map((uni) => (
-                    <motion.div
-                      key={uni._id}
-                      whileHover={{ scale: 1.05, rotate: 1 }}
-                      transition={{ type: "spring", stiffness: 200 }}
-                    >
-                      <Link
-                        to={`/university/${uni._id}`}
-                        className="relative block h-[320px] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-b from-gray-100 to-white group"
-                      >
-                        {/* Hero Background */}
-                        <img src={uni?.heroURL}
-                          className="absolute top-0 left-0 w-full h-[180px] bg-cover bg-center transition-all duration-500 group-hover:h-full group-hover:brightness-75"
-                          
-                          alt="" />
-                          <img src={uni?.logo} 
-                          className="w-[95px] h-[95px] border-4 border-white shadow-md rounded-full mt-[90px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 group-hover:translate-y-[-50%]"
+      <div className="mt-12 text-center px-4">
+        <h1 className="text-blue-main text-4xl font-bold">
+          Top-Rated MBBS <span className="text-gold-main">Colleges and Universities</span> in{' '}
+          {singleCountry?.name}
+        </h1>
+        <div>
+          <div className="px-6 py-10">
+            {/* Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {universitiesToDisplay.slice(0, value).map((uni) => (
+                <motion.div
+                  key={uni._id}
+                  whileHover={{ scale: 1.05, rotate: 1 }}
+                  transition={{ type: "spring", stiffness: 200 }}
+                >
+                  <Link
+                    to={`/university/${uni._id}`}
+                    className="relative block h-[320px] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-b from-gray-100 to-white group"
+                  >
+                    {/* Hero Background */}
+                    <img src={`https://backend.searchmystudy.com/${uni?.heroURL}`}
+                      className="absolute top-0 left-0 w-full h-[180px] bg-cover bg-center transition-all duration-500 group-hover:h-full group-hover:brightness-75"
 
-                          alt="" />
+                      alt="" />
+                    <img src={`https://backend.searchmystudy.com/${uni?.logo}`}
+                      className="w-[95px] h-[95px] border-4 border-white shadow-md rounded-full mt-[90px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 group-hover:translate-y-[-50%]"
 
-                        {/* Content */}
-                        <div className="relative z-20 flex flex-col items-center gap-2 mt-4 px-3">
-                          <span className="font-bold text-lg text-gray-800 bg-white/80 px-3 py-1 rounded-full shadow-sm">
-                            {uni.name}
-                          </span>
-                          <span className="text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 rounded-full">
-                            {singleCountry?.name}
-                          </span>
-                        </div>
-                      </Link>
-                    </motion.div>
-                  ))}
-                </div>
+                      alt="" />
 
-                {/* Explore More Button */}
-                {universitiesToDisplay?.length > 8 && !showAll && (
-                  <div className="flex justify-center mt-8">
-                    <motion.button
-                      // onClick={scrollDown}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setValue(universitiesToDisplay?.length)}
-                      className="relative px-8 py-3 text-white font-semibold text-lg rounded-full 
+                    {/* Content */}
+                    <div className="relative z-20 flex flex-col items-center gap-2 mt-4 px-3">
+                      <span className="font-bold text-lg text-gray-800 bg-white/80 px-3 py-1 rounded-full shadow-sm">
+                        {uni.name}
+                      </span>
+                      <span className="text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-indigo-500 px-3 py-1 rounded-full">
+                        {singleCountry?.name}
+                      </span>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Explore More Button */}
+            {universitiesToDisplay?.length > 8 && !showAll && (
+              <div className="flex justify-center mt-8">
+                <motion.button
+                  // onClick={scrollDown}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setValue(universitiesToDisplay?.length)}
+                  className="relative px-8 py-3 text-white font-semibold text-lg rounded-full 
                        bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 
                        shadow-lg hover:shadow-2xl transition-all"
-                    >
-                      Explore More
-                    </motion.button>
-                  </div>
-                )}
+                >
+                  Explore More
+                </motion.button>
               </div>
-
-
-            </div>
+            )}
           </div>
+
+
+        </div>
+      </div>
 
       {/* Province Grid */}
       {/* <motion.div

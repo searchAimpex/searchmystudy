@@ -141,7 +141,7 @@ export default function MediaSection() {
                   whileHover={{ scale: 1.05 }}
                 >
                   <motion.img
-                    src={item.imageURL}
+                    src={`https://backend.searchmystudy.com/${item.imageURL}`}
                     alt="media"
                     className="w-full h-48 object-cover rounded-lg"
                     whileHover={{ scale: 1.08 }}

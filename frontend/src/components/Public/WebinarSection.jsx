@@ -72,7 +72,7 @@ export default function WebinarSection() {
             {/* Image */}
             <div className="relative h-[180px] sm:h-[200px] rounded-lg overflow-hidden">
               <img
-                src={items.imageURL}
+                src={`https://backend.searchmystudy.com/${items.imageURL}`}
                 alt="webinar"
                 className="w-full h-full object-cover rounded-lg"
               />

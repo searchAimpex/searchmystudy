@@ -240,7 +240,7 @@ export default function ServiceScreen() {
             <div className="relative w-full h-[500px] overflow-hidden">
                 {/* Responsive Fullscreen Image */}
                 <img
-                    src={ServiceHero}
+                    src={`https://backend.searchmystudy.com/${ServiceHero}`}
                     alt="Service Hero"
                     className="absolute inset-0 w-full h-full object-cover object-right" />
 
@@ -404,7 +404,7 @@ export default function ServiceScreen() {
                             <div
                                 onClick={() => navigate(`/blog/${blog._id}`)} key={blog._id} className='hover:cursor-pointer flex gap-3 pb-5'>
                                 <img
-                                    src={blog.thumbnailURL}
+                                    src={`https://backend.searchmystudy.com/${blog.thumbnailURL}`}
                                     className='rounded-xl w-[90px] h-[85px] object-cover'
                                     alt={blog.title}
                                 />
@@ -484,7 +484,7 @@ export default function ServiceScreen() {
                     </div>
                 </div>
                 <div className='md:w-1/2 mt-8 md:mt-0'>
-                    <img className='w-full h-auto object-cover rounded-lg' src={HowItWorks} alt="How It Works" />
+                    <img className='w-full h-auto object-cover rounded-lg' src={`https://backend.searchmystudy.com/${HowItWorks}`} alt="How It Works" />
                 </div>
             </div>
 

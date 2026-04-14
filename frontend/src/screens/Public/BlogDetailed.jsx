@@ -64,7 +64,7 @@ export default function BlogDetailed() {
                 {/* Banner Image */}
                 <img
                     className="object-cover h-full"
-                    src={SingleBlog.bannerURL}
+                    src={`https://backend.searchmystudy.com/${SingleBlog.bannerURL}`}
                     alt="Blog Banner"
                 />
 
@@ -90,7 +90,7 @@ export default function BlogDetailed() {
                             </div>
                             <img
                                 className="rounded-lg shadow"
-                                src={SingleBlog.thumbnailURL}
+                                src={`https://backend.searchmystudy.com/${SingleBlog.thumbnailURL}`}
                                 alt="Blog Banner"
                             />
                             <div className="absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden">
@@ -137,7 +137,7 @@ export default function BlogDetailed() {
                                 className="hover:cursor-pointer flex gap-3 pb-5"
                             >
                                 <img
-                                    src={blog.thumbnailURL}
+                                    src={`https://backend.searchmystudy.com/${blog.thumbnailURL}`}
                                     className="rounded-xl w-[80px] h-[70px] sm:w-[90px] sm:h-[85px] object-cover"
                                     alt={blog.title}
                                 />

@@ -104,7 +104,7 @@ const VerticalCardsSlider = () => {
                 >
                   <div className="w-36 h-36 rounded-full overflow-hidden ring-4 ring-indigo-100 shadow-xl">
                     <img
-                      src={counsellors[currentIndex]?.imageURL}
+                      src={`https://backend.searchmystudy.com/${counsellors[currentIndex]?.imageURL}`}
                       alt={counsellors[currentIndex]?.name}
                       className="w-full h-full object-cover"
                     />

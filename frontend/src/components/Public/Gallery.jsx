@@ -82,7 +82,7 @@ const Gallery = ({ testimonial, isLoading }) => {
                 {/* Image */}
                 <div className=" overflow-hidden">
                   <img
-                    src={exp.imageURL}
+                    src={`https://backend.searchmystudy.com/${exp.imageURL}`}
                     alt={exp.name}
                     className="h-full w-full object-cover"
                   />

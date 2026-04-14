@@ -384,7 +384,9 @@ export default function PublicNavBar({ webData }) {
                                                         >
                                                             <img
                                                                 className="object-contained h-[25px] w-[25px]"
-                                                                src={`https://backend.searchmystudy.com/${sublink?.flagURL}`}
+                                                                src={sublink?.flagURL === india_flag
+                                                                    ? sublink?.flagURL
+                                                                    : `https://backend.searchmystudy.com/${sublink?.flagURL}`}
                                                             />
                                                             <h5>
                                                                 {["MBBS", "ABOUT US", "BLOG", "CONTACT US", "MD", "BAMS", "BHMS", "BDS", "NURSING", "PHARMACY", "Bv Sc"].includes(sublink?.name) ? (

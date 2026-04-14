@@ -107,10 +107,10 @@ export default function CourseDetailed() {
       {singleCourse && (
         <>
           <motion.div className="relative mb-6" initial={{ scale: 0.95 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
-            <CardMedia component="img" height="250" image={singleCourse?.University?.bannerURL} alt={singleCourse?.University?.name} className="object-cover w-full " />
+            <CardMedia component="img" height="250" image={`https://backend.searchmystudy.com/${singleCourse?.University?.bannerURL}`} alt={singleCourse?.University?.name} className="object-cover w-full " />
             <div className="flex flex-col sm:flex-row items-center mt-6 space-y-6 sm:space-y-0 sm:space-x-6">
               <motion.img
-                src={singleCourse?.University?.logo}
+                src={`https://backend.searchmystudy.com/${singleCourse?.University?.logo}`}
                 alt={singleCourse?.University?.name}
                 className="w-28 h-28 sm:w-36 sm:h-36 rounded-full border-4 border-white shadow-lg"
                 initial={{ opacity: 0 }}

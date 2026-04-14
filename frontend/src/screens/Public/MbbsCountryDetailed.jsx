@@ -104,6 +104,7 @@ export default function MbbsCountryDetailed() {
       console.error('Failed to create query:', error);
     }
   };
+  
   return (
     <div className=" text-white">
       {/* Banner */}
@@ -115,7 +116,7 @@ export default function MbbsCountryDetailed() {
       >
         <div className="w-full h-[200px] sm:h-[100%] md:h-[100%] lg:h-[100%] overflow-hidden">
           <img
-            src={singleCountry?.bannerURL}
+            src={`https://backend.searchmystudy.com/${singleCountry?.bannerURL}`}
             alt="Country Banner"
             className="w-full h-full object-cover object-center"
           />
@@ -169,7 +170,7 @@ export default function MbbsCountryDetailed() {
                     {/* Image Section */}
                     <div className="md:w-1/3  flex justify-center items-start">
                       <img
-                        src={section.url}
+                        src={`https://backend.searchmystudy.com/${section.url}`}
                         alt={section.title}
                         className="w-full  "
                       />
@@ -281,7 +282,7 @@ export default function MbbsCountryDetailed() {
                   className="flex items-center gap-4 p-2 bg-white rounded-xl shadow-md border hover:border-gold-main hover:bg-gold-main-100 group"
                 >
                   <img
-                    src={country.flagURL}
+                    src={`https://backend.searchmystudy.com/${country.flagURL}`}
                     className="w-14 h-14 rounded-full border-2 border-red-200 shadow-sm group-hover:scale-105 transition-transform"
                     alt={country.name}
                   />
@@ -368,11 +369,11 @@ export default function MbbsCountryDetailed() {
                           className="relative block h-[320px] rounded-2xl overflow-hidden shadow-xl bg-gradient-to-b from-gray-100 to-white group"
                         >
                           {/* Hero Background */}
-                          <img src={uni?.heroURL}
+                          <img src={`https://backend.searchmystudy.com/${uni?.heroURL}`}
                           className="absolute top-0 left-0 w-full h-[180px] bg-cover bg-center transition-all duration-500 group-hover:h-full group-hover:brightness-75"
                           
                           alt="" />
-                          <img src={uni?.logo} 
+                          <img src={`https://backend.searchmystudy.com/${uni?.logo}`} 
                           className="w-[95px] h-[95px] border-4 border-white shadow-md rounded-full mt-[90px] mx-auto relative z-10 bg-cover bg-center transition-transform duration-500 group-hover:scale-110 group-hover:translate-y-[-50%]"
 
                           alt="" />

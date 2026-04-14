@@ -849,19 +849,22 @@ const getCountryById = asyncHandler(async (req, res) => {
 // });
 
 const updateCountry = asyncHandler(async (req, res) => {
-  console.log(req.body, "req.body++++++++++++++++++++++")
   const country = await Country.findById(req.params.id);
 
   if (country) {
     applyCountryUploadFiles(req, country.sections);
+    console.log(req.body, "req.body++++++++++++++++++++++");
 
     const {
       name,
       bannerURL,
+      flagURL,
+      bullet,
       description,
       sections: sectionsRaw,
-      provinces,
+      Province,
       mbbsAbroad,
+      elegiblity: eligibilityRaw,
       faq: faqRaw,
       MbbsSections: mRaw,
     } = req.body;
@@ -875,13 +878,28 @@ const updateCountry = asyncHandler(async (req, res) => {
     const faq = faqRaw !== undefined ? parseCountryBodyJson(faqRaw, country.faq) : country.faq;
     const MbbsSections =
       mRaw !== undefined ? parseCountryBodyJson(mRaw, country.MbbsSections) : country.MbbsSections;
+    const elegiblity =
+      eligibilityRaw !== undefined
+        ? parseCountryBodyJson(eligibilityRaw, country.elegiblity)
+        : country.elegiblity;
+    const provinceIds =
+      Province !== undefined
+        ? Array.isArray(Province)
+          ? Province
+          : Province
+            ? [Province]
+            : []
+        : country.Province;
 
     country.name = name || country.name;
     country.bannerURL = bannerURL || country.bannerURL;
+    country.flagURL = flagURL || country.flagURL;
+    country.bullet = bullet || country.bullet;
     country.description = description || country.description;
     country.sections = sections;
-    country.provinces = provinces || country.provinces;
+    country.Province = provinceIds;
     country.mbbsAbroad = mbbsAbroad !== undefined ? mbbsAbroad : country.mbbsAbroad;  // Avoid overwriting with undefined
+    country.elegiblity = Array.isArray(elegiblity) ? elegiblity : country.elegiblity;
     country.faq = faq || country.faq;
     country.MbbsSections = MbbsSections || country.MbbsSections;
 

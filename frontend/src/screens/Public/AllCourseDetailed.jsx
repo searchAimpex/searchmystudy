@@ -649,18 +649,18 @@ const AllCourseDetailed = () => {
                     <div className="relative w-full ">
                       <img
                         className="w-full h-full"
-                        src={course?.University?.heroURL}
+                        src={`https://backend.searchmystudy.com/${course?.University?.heroURL}`}
                         alt={course?.University?.name}
                       />
                       <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10" />
                     </div>
 
                     {/* University Logo */}
-                    <img
-                      className="absolute top-2 right-2 w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
-                      src={course?.University?.logo}
-                      alt={course?.University?.name}
-                    />
+                      <img
+                        className="absolute top-2 right-2 w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
+                        src={`https://backend.searchmystudy.com/${course?.University?.logo}`}
+                        alt={course?.University?.name}
+                      />
 
                     {/* University Type */}
                     <div className="absolute top-2 left-2 px-2 py-1 bg-green-600 text-white text-xs sm:text-sm font-semibold rounded-lg z-20">
@@ -837,7 +837,7 @@ const AllCourseDetailed = () => {
                       <div className="relative ">
                         <img
                           className=" w-full h-full"
-                          src={course?.University?.heroURL}
+                          src={`https://backend.searchmystudy.com/${course?.University?.heroURL}`}
                           alt={course?.University?.name}
                         />
                         <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-black/70 to-transparent z-10" />
@@ -845,7 +845,7 @@ const AllCourseDetailed = () => {
 
                       <img
                         className="absolute top-2 right-2 w-12 h-12 sm:w-16 sm:h-16 rounded-full border-2 border-white object-cover bg-white shadow-lg z-20"
-                        src={course?.University?.logo}
+                        src={`https://backend.searchmystudy.com/${course?.University?.logo}`} 
                         alt={course?.University?.name}
                       />
 

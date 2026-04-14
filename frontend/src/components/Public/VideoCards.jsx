@@ -68,7 +68,7 @@ const VideoCards = () => {
 
                       {/* Thumbnail Image */}
                       <img
-                        src={item.thumbnailURL}
+                        src={`https://backend.searchmystudy.com/${item.thumbnailURL}`}
                         alt={item.name}
                         className="w-full h-full object-cover rounded-lg"
                       />

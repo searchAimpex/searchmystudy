@@ -95,7 +95,7 @@ function CountriesSection() {
                   {/* Flag Image */}
                   <div className="w-[80px] h-[80px] rounded-full overflow-hidden border-2 border-[#dfdfdf] shadow-md bg-white flex items-center justify-center group-hover:bg-[#db7e19] group-hover:border-white transition-all duration-300">
                     <img
-                      src={item.flagURL}
+                      src={`https://backend.searchmystudy.com/${item.flagURL}`}
                       alt={item.name}
                       className="rotate-on-hover"
                     />
