@@ -151,7 +151,7 @@ export default function MbbsCountryDetailed() {
               <h1 className="text-sm sm:text-3xl md:text-4xl lg:text-2xl font-bold">{singleCountry?.name}</h1>
             </div>
             <div
-              className="mt-4 text-[22px] text-black"
+              className="mt-4 text-base sm:text-lg md:text-l lg:text-lg text-black"
               dangerouslySetInnerHTML={{
                 __html: truncateText(singleCountry?.description, 400),
               }}
@@ -162,7 +162,7 @@ export default function MbbsCountryDetailed() {
           {singleCountry?.sections?.length > 0 && (
             <div className="mt-10 sm:mt-16">
               {singleCountry.sections.map((section) => (
-                <section key={section._id} className="border-b border-gray-100 pb-10 last:border-0 last:pb-0 sm:pb-12">
+                <section key={section._id} className="border-b border-gray-100 ">
                   <h2 className="mb-4 mt-8 text-xl font-bold text-blue-main sm:text-2xl md:text-3xl">
                     {section.title}
                   </h2>
@@ -175,7 +175,7 @@ export default function MbbsCountryDetailed() {
                       }}
                     />
 
-                    {section.url ? (
+                    {/* {section.url ? (
                       <div className="mx-auto w-full max-w-lg shrink-0 md:mx-0 md:max-w-none md:shrink-0 lg:basis-1/3">
                         <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
                           <img
@@ -186,7 +186,7 @@ export default function MbbsCountryDetailed() {
                           />
                         </div>
                       </div>
-                    ) : null}
+                    ) : null} */}
                   </div>
                 </section>
               ))}
